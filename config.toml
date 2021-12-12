@@ -8,7 +8,7 @@ paginate = 5
   themeColor = "blue"
   showMenuItems = 3
   fullWidthTheme = false
-  centerTheme = false
+  centerTheme = true
 
 [languages]
   [languages.en]
