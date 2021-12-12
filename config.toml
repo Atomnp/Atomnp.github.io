@@ -1,6 +1,6 @@
 baseurl = "https://github.com/Atomnp/Atomnp.github.io"
 languageCode = "en-us"
-theme = "hugo-theme-terminal"
+theme = "terminal"
 paginate = 5
 
 [params]
@@ -8,7 +8,7 @@ paginate = 5
   themeColor = "blue"
   showMenuItems = 3
   fullWidthTheme = false
-  centerTheme = false
+  centerTheme = true
 
 [languages]
   [languages.en]
