@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Terminal</title><link>https://github.com/Atomnp/Atomnp.github.io/posts/</link><description>Recent content in Posts on Terminal</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 21 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://github.com/Atomnp/Atomnp.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Create Your Own Unix Like Shell</title><link>https://github.com/Atomnp/Atomnp.github.io/posts/shell_from_scratch/</link><pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate><guid>https://github.com/Atomnp/Atomnp.github.io/posts/shell_from_scratch/</guid><description>Major concepts of shell shell is a interpreter that interprets our command and convert them to respective systemcall or start some process from binary. we type command in the terminal and shell gets its input from the terminal.
+commands can be executed from shell in two ways one is to call the binary associated with the command, other is shell builtins, shell builtins are the command that live inside the shell code and our current process need not to fork before executing builtin command.</description><content>&lt;h3 id="major-concepts-of-shell">Major concepts of shell&lt;/h3>
+&lt;p>shell is a interpreter that interprets our command and convert them to respective systemcall or start some process from binary.
+we type command in the terminal and shell gets its input from the terminal.&lt;/p>
+&lt;p>commands can be executed from shell in two ways one is to call the binary associated with the command, other is shell builtins, shell builtins are the command that live inside the shell code and our current process need not to fork before executing builtin command.&lt;/p>
+&lt;h2 id="how-shell-executes-non-builtin-code">How shell executes non builtin code?&lt;/h2>
+&lt;p>when we execute the command that is not a builtin command we use fork() syscall which creates two processes, one we call child process and other we call parent process, &lt;code>fork()&lt;/code> method returns two times once to the parent process and other to the child process,&lt;/p>
+&lt;ul>
+&lt;li>fork returns 0 to the child process.&lt;/li>
+&lt;li>fork return process id of child to the parent process
+so, by this return value of fork() method we can determing where we are in parent
+process or child one.&lt;/li>
+&lt;/ul>
+&lt;p>Now that we have covered how fork() system call work we will now cover how does execution of non-builtin command take place in the shell. When we try to execute the non builtin command, our main process is forked into two processes child and parent, in the child process replaced by new process by &lt;code>exec()&lt;/code> system call. in the parent process we wait for child process to complete by using &lt;code>wait()&lt;/code> system call. The shell spawns a child process using exec and waits for it to complete, then continues with its own execution.&lt;/p>
+&lt;p>when we call &lt;code>exec()&lt;/code> function in our code process calling the &lt;code>exec()&lt;/code> function is wiped out of the memory and replaced by the next process that we want to execute. so &lt;code>exec()&lt;/code> function never return except on error, and code below the exec function will never execute because the process that contain exec function is wiped out of the memory by the new process&lt;/p>
+&lt;p>When you call a &lt;code>exec()&lt;/code> family method it doesn&amp;rsquo;t create a new process, instead &lt;code>exec()&lt;/code> replaces the current process memory and instruction set etc with the process you want to run.&lt;/p>
+&lt;h3 id="shell-pipes">Shell Pipes&lt;/h3>
+&lt;p>Pipes are the feature provided by an operating system for interprocess communication,The Unix/Linux systems allow stdout of a command to be connected to stdin of another command. We can make it do so by using the pipe character ‘|’.Pipe is used to combine two or more commands, and in this, the output of one command acts as input to another command, and this command’s output may act as input to the next command and so on&lt;/p>
+&lt;p>in our shell we implemented this using two new system calls &lt;code>dup2()&lt;/code> and &lt;code>pipe()&lt;/code>&lt;/p>
+&lt;p>&lt;code>dup2(int oldfd,int newfd)&lt;/code>:The dup() system call creates a copy of the file descriptor oldfd, using the newfd&lt;/p>
+&lt;p>&lt;code>pipe(int pipefd[2])&lt;/code>:The array pipefd is used to
+return two file descriptors referring to the ends of the pipe. pipefd[0] refers to the read end of the pipe. pipefd[1] refers to
+the write end of the pipe.&lt;/p>
+&lt;p>To implement pipes we loop through each pipelined command connecting stdout of one command to the std in of the other command, logic for this can be found in &lt;code>pipes_implementation.h&lt;/code> file of this project.&lt;/p>
+&lt;h3 id="how-to-know-more-about-syscalls">How to know more about syscalls?&lt;/h3>
+&lt;p>For specific syscalls&lt;/p>
+&lt;ul>
+&lt;li>man fork&lt;/li>
+&lt;li>man exec&lt;/li>
+&lt;li>main wait&lt;/li>
+&lt;/ul>
+&lt;p>To view all syscalls&lt;/p>
+&lt;ul>
+&lt;li>man syscalls&lt;/li>
+&lt;/ul>
+&lt;p>some useful links to understand why &lt;code>fork()&lt;/code> and &lt;code>exec()&lt;/code> calls are used to create new processes in unix based system&lt;/p>
+&lt;p>&lt;a href="https://www.google.comhttps://askubuntu.com/a/428460/942407">Why use fork and exec?&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://unix.stackexchange.com/a/136673/444490">why fork and exec?&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/Atomnp/Shell_from_scratch">implementation code&lt;/a>&lt;/p></content></item></channel></rss>
