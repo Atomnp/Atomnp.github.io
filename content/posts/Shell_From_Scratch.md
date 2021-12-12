@@ -3,6 +3,7 @@ title = "Create Your Own Unix Like Shell"
 date = "2020-12-21"
 author = "Aayush Neupane"
 readingTime = true
+cover = "img/shell1.png"
 description = "This post describes how you implement your own unix like shell from scratch accessing system calls through c programmig language"
 +++
 

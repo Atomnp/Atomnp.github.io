@@ -9,6 +9,9 @@ paginate = 5
   showMenuItems = 3
   fullWidthTheme = false
   centerTheme = true
+  favicon = "img/favicon.ico"
+  showLastUpdated= true
+  enableGitInfo = true
 
 [languages]
   [languages.en]
