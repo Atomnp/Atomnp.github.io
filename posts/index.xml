@@ -12,12 +12,12 @@
 &lt;code>P(A|B)=P(AnB)/P(B)&lt;/code>
 by thinking about them in terms of area&lt;/p>
 &lt;p>from above two equations we can easily derive that
-&lt;code>P(A|B)=P(B|A)P(A)/P(B)&lt;/code>&lt;/p>
+&lt;code>P(A|B)=P(B|A)*P(A)/P(B)&lt;/code>&lt;/p>
 &lt;p>Now to intuitively understand this bayes therem there is nothing much to understand since we already understood conditional probability. just think about numerator as the area of the intersecting region beteween regions &lt;code>A&lt;/code> and &lt;code>B&lt;/code> and dividing by &lt;code>P(B)&lt;/code> is just asking what portion of the B&amp;rsquo;s region is covered by the intersection region between region &lt;code>A&lt;/code> and &lt;code>B&lt;/code>.&lt;/p>
 &lt;h3 id="important-takeaways">important takeaways&lt;/h3>
 &lt;p>&lt;code>P(A|B&lt;/code>) represents what portion of the B&amp;rsquo;s region is covered by intersection region betwenn region A and B&lt;/p>
-&lt;p>so &lt;code>P(A|B)\*P(B)&lt;/code> translates to Area of the intersecting region&lt;/p>
-&lt;p>and hence &lt;code>P(B|A)=P(A|B)\*P(B)/P(A)&lt;/code> gives the portion of A&amp;rsquo;s region covered by the intersecting region because numerator gives the area of intersection region.&lt;/p></content></item><item><title>Create Your Own Unix Like Shell</title><link>/posts/shell_from_scratch/</link><pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate><guid>/posts/shell_from_scratch/</guid><description>Major concepts of shell shell is a interpreter that interprets our command and convert them to respective systemcall or start some process from binary. we type command in the terminal and shell gets its input from the terminal.
+&lt;p>so &lt;code>P(A|B)*P(B)&lt;/code> translates to Area of the intersecting region&lt;/p>
+&lt;p>and hence &lt;code>P(B|A)=P(A|B)*P(B)/P(A)&lt;/code> gives the portion of A&amp;rsquo;s region covered by the intersecting region because numerator gives the area of intersection region.&lt;/p></content></item><item><title>Create Your Own Unix Like Shell</title><link>/posts/shell_from_scratch/</link><pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate><guid>/posts/shell_from_scratch/</guid><description>Major concepts of shell shell is a interpreter that interprets our command and convert them to respective systemcall or start some process from binary. we type command in the terminal and shell gets its input from the terminal.
 commands can be executed from shell in two ways one is to call the binary associated with the command, other is shell builtins, shell builtins are the command that live inside the shell code and our current process need not to fork before executing builtin command.</description><content>&lt;h3 id="major-concepts-of-shell">Major concepts of shell&lt;/h3>
 &lt;p>shell is a interpreter that interprets our command and convert them to respective systemcall or start some process from binary.
 we type command in the terminal and shell gets its input from the terminal.&lt;/p>
