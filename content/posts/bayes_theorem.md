@@ -30,7 +30,7 @@ Now we are in the condition to get feeling for the equation
 by thinking about them in terms of area
 
 from above two equations we can easily derive that
-`P(A|B)=P(B|A)P(A)/P(B)`
+`P(A|B)=P(B|A)*P(A)/P(B)`
 
 Now to intuitively understand this bayes therem there is nothing much to understand since we already understood conditional probability. just think about numerator as the area of the intersecting region beteween regions `A` and `B` and dividing by `P(B)` is just asking what portion of the B's region is covered by the intersection region between region `A` and `B`.
 
@@ -38,6 +38,6 @@ Now to intuitively understand this bayes therem there is nothing much to underst
 
 `P(A|B`) represents what portion of the B's region is covered by intersection region betwenn region A and B
 
-so `P(A|B)\*P(B)` translates to Area of the intersecting region
+so `P(A|B)*P(B)` translates to Area of the intersecting region
 
-and hence `P(B|A)=P(A|B)\*P(B)/P(A)` gives the portion of A's region covered by the intersecting region because numerator gives the area of intersection region.
+and hence `P(B|A)=P(A|B)*P(B)/P(A)` gives the portion of A's region covered by the intersecting region because numerator gives the area of intersection region.
