@@ -23,14 +23,17 @@ Major interests: Swimming Driving Coding</description><content>&lt;h1 id="hi-im-
 &lt;li>Driving&lt;/li>
 &lt;li>Coding&lt;/li>
 &lt;/ul>
-&lt;hr></content></item><item><title>CV: Aayush Neupane</title><link>/cv/</link><pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate><guid>/cv/</guid><description>Personal Information Name: Aayush Neupane
+&lt;hr></content></item><item><title>CV: Aayush Neupane</title><link>/cv/</link><pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate><guid>/cv/</guid><description>Personal Information : Name: Aayush Neupane
 Employment Status: Student
 College: Pulchowk Campus, IOE
 Undergraduate: Bachelor in Computer Engineering
 Year: 3rd Year
 Email:
-neupane0403@gmail.com 075bct006.aayush@pcampus.edu.np Skills: Programming Languages -Python, C++, C and JavaScript Frameworks -Reactjs, Expressjs, Flask and Django Machine Learning : Beginner Deep Learning : Beginner Databases: Intermediate in SQL related databases and experienced in MongoDB Linux Adminstration and server management Version Control using Git Work Experince: Worked as a Full Stack Developer at Clamphook, an online entrance preparation website.</description><content>&lt;hr>
-&lt;h3 id="personal-information">Personal Information&lt;/h3>
+neupane0403@gmail.com 075bct006.aayush@pcampus.edu.np Skills: Programming Languages -Python, C++, C and JavaScript Frameworks -Reactjs, Expressjs, Flask and Django Machine Learning : Intermediate Deep Learning : Intermediate Databases: Intermediate in SQL related databases and experienced in MongoDB Linux Adminstration and server management Version Control using Git Work Experience: Worked as a Full Stack Developer at Clamphook, an online entrance preparation website.</description><content>&lt;!-- raw HTML omitted -->
+&lt;hr>
+&lt;!-- raw HTML omitted -->
+&lt;!-- raw HTML omitted -->
+&lt;h3 id="personal-information-">&lt;strong>Personal Information&lt;/strong> :&lt;/h3>
 &lt;p>&lt;strong>Name:&lt;/strong> Aayush Neupane&lt;br>
 &lt;strong>Employment Status:&lt;/strong> Student&lt;br>
 &lt;strong>College:&lt;/strong> Pulchowk Campus, IOE&lt;br>
@@ -46,19 +49,27 @@ neupane0403@gmail.com 075bct006.aayush@pcampus.edu.np Skills: Programming Langua
 &lt;ul>
 &lt;li>Programming Languages -Python, C++, C and JavaScript&lt;/li>
 &lt;li>Frameworks -Reactjs, Expressjs, Flask and Django&lt;/li>
-&lt;li>Machine Learning : Beginner&lt;/li>
-&lt;li>Deep Learning : Beginner&lt;/li>
+&lt;li>Machine Learning : Intermediate&lt;/li>
+&lt;li>Deep Learning : Intermediate&lt;/li>
 &lt;li>Databases: Intermediate in SQL related databases and experienced in MongoDB&lt;/li>
 &lt;li>Linux Adminstration and server management&lt;/li>
 &lt;li>Version Control using Git&lt;/li>
 &lt;/ul>
-&lt;h4 id="work-experince">Work Experince:&lt;/h4>
+&lt;h4 id="work-experience">Work Experience:&lt;/h4>
 &lt;ul>
 &lt;li>Worked as a &lt;strong>Full Stack Developer&lt;/strong> at &lt;strong>&lt;a href="https://clamphook.com/">Clamphook&lt;/a>&lt;/strong>, an online entrance preparation website.&lt;/li>
 &lt;li>Freelancer at &lt;strong>&lt;a href="https://www.upwork.com/freelancers/~0105f236d2f4b5599f">Upwork&lt;/a>&lt;/strong>&lt;/li>
 &lt;/ul>
 &lt;h4 id="academic-and-non-academic-projects">Academic And Non Academic Projects:&lt;/h4>
 &lt;ul>
+&lt;li>
+&lt;p>&lt;strong>&lt;a href="https://github.com/ashishlamsal/realtime-text-similarity-frontend">Realtime text similarity Identification&lt;/a>&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Academic Minor project&lt;/li>
+&lt;li>Real time text similarity matching by generating sentence embeddings&lt;/li>
+&lt;li>Different algorithms used, Average Word embeddings, Smooth Inverse Frequency,Sentence Transformers&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>
 &lt;p>&lt;strong>&lt;a href="https://github.com/Atomnp/Anubadak">Anubadak: interpreter implemented in C++&lt;/a>&lt;/strong>&lt;/p>
 &lt;ul>
@@ -95,10 +106,20 @@ neupane0403@gmail.com 075bct006.aayush@pcampus.edu.np Skills: Programming Langua
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
+&lt;h4 id="certifications">Certifications&lt;/h4>
+&lt;ul>
+&lt;li>GAJABAAR Infosecurity Mentorship Program&lt;/li>
+&lt;li>Qubit by Qubit Introduction to Quantum computing by IBM Quantum&lt;/li>
+&lt;li>Neural Networks and Deep Learning (Coursera)&lt;/li>
+&lt;li>Improving Deep Neural Networks: Hyperparameter Tuning, Regularization and Optimization (Coursera)&lt;/li>
+&lt;li>Structuring Machine Learning Projects (Coursera)&lt;/li>
+&lt;li>Third Nepal Winter School in AI organized by NAAMI&lt;/li>
+&lt;/ul>
 &lt;h4 id="links">Links:&lt;/h4>
 &lt;ul>
-&lt;li>&lt;strong>GitHub&lt;/strong>: &lt;a href="https://github.com/Atomnp">https://github.com/Atomnp&lt;/a>&lt;/li>
-&lt;li>&lt;strong>Stack Overflow&lt;/strong>: &lt;a href="https://stackoverflow.com/users/11594030/aayush-neupane">https://stackoverflow.com/users/11594030/aayush-neupane&lt;/a>&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://neupaneaayush.com.np/">Personal Website&lt;/a>&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://github.com/Atomnp">GitHub Profile&lt;/a>&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://stackoverflow.com/users/11594030/aayush-neupane">Stack Overflow Profile&lt;/a>&lt;/strong>&lt;/li>
 &lt;/ul>
 &lt;hr></content></item><item><title>Create Your Own Unix Like Shell</title><link>/posts/shell_from_scratch/</link><pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate><guid>/posts/shell_from_scratch/</guid><description>Major concepts of shell shell is a interpreter that interprets our command and convert them to respective systemcall or start some process from binary. we type command in the terminal and shell gets its input from the terminal.
 commands can be executed from shell in two ways one is to call the binary associated with the command, other is shell builtins, shell builtins are the command that live inside the shell code and our current process need not to fork before executing builtin command.</description><content>&lt;h3 id="major-concepts-of-shell">Major concepts of shell&lt;/h3>
