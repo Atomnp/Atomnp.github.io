@@ -68,9 +68,6 @@ author:
     - label: "Linkedin"
       icon: "fab fa-fw fa-linkedin"
       url: "https://www.linkedin.com/in/aayush-neupane-8703a4182/"
-    - label: "Subscribe"
-      icon: "fas fa-fw fa-envelope"
-      url: "https://atomnp.substack.com"
 
 footer:
   links:
