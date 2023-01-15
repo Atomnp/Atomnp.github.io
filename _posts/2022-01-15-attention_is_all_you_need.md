@@ -6,7 +6,7 @@ categories:
   - NLP
 permalink: /attention-simplified/
 classes: wide
-excerpt: This post describes transformer architecture for NMT along with self-attention mechanism
+excerpt: This post describes transformer's architecture focusing on the self-attention mechanism
 header:
   og_image: /images/transformer/Untitled%202.png
   teaser: /images/transformer/Untitled%202.png
@@ -24,13 +24,13 @@ The best-performing model before the attention mechanism and mainly two problems
 
 Attention was introduced before the transformer was introduced, transformer model only replaced the use RNN with self-attention. While talking about the transformers we should remember that there are two variants of the attention used in the transformer's architecture, **self-attention,** and **encoder-decoder-attention.** There are two **self-attention** one each in the encoder and decoder side and one **encoder-decoder-attention** block that is present in the decoder side of the network but attends to the outputs of the encoder side.
 
-![Untitled](</images/transformer/Untitled.png>)
+![Untitled](/images/transformer/Untitled.png)
 
 ## **Why use self-attention?**
 
 We can think of self-attention as a technique for obtaining more contextualized word embedding, that not only depends on global context but also depends on the current context, It is very much similar to `word2vec` and `Glove` in terms of what it helps to obtain. just imagine that we already have `word2vec` embeddings, using **self-attention** we can improve on this embedding giving them the values that depend on the context of the current context of embedding. Hence the best way of understanding **self-attention** is to think of it as a way to get better word embeddings
 
-![Untitled](</images/transformer/Untitled%201.png>)
+![Untitled](/images/transformer/Untitled%201.png)
 
 In the above example, The word “Bat” has different word embedding, which of course is what we want because they mean completely different things. Attention not only gives different word embedding for the same word in a different context it overall improves the embedding for all the words in a sentence. so **self-attention is the black box that gives better word embedding when we pass sentences to it.**
 
@@ -42,7 +42,7 @@ First, we need to understand what thing we are trying to generate by doing self-
 
 Let's look at the simplistic version of self-attention calculation first where we don’t use any of the key, query, and value vectors.
 
-![Untitled](</images/transformer/Untitled%202.png>)
+![Untitled](/images/transformer/Untitled%202.png)
 
 The figure above shows the self-attention calculation for the word ”Bat” in the sentence “**Bat is a mammal**”. To calculate the similarity score the embedding vector of the “Bat” is compared with the embedding vector of all the words. This gives the attention score of that word for all the other words in a sentence, which can be then used to weigh the embedding vector to calculate the final self-attention vector. We can think of the similarity score as a dot product score though in real applications scaled dot product version is used. But in the above isn’t the dot product between “Bat” with itself always 1? yes but for this example, I have knowingly made that mistake to explain the weighted sum.
 
@@ -58,7 +58,7 @@ Actually
 
 Hence, in conclusion, we pass the word embedding through three Linear layers to get key, query, and value vectors, and then
 
-![Untitled](</images/transformer/Untitled%203.png>)
+![Untitled](/images/transformer/Untitled%203.png)
 
 $Attention Score=Softmax(Dot(Queries("Bat"),Keys))/\sqrt{D_k})$
 
@@ -66,7 +66,7 @@ $Selfattention=WeightedSum(AttentionScore,Values)$
 
 The calculation of the self-attention value for the single word of the sentence is shown in the figure below. While calculating the attention values for all the words in a sentence the computation is made faster using Matrix calculations.
 
-![Calculation of self-attention for a single word](</images/transformer/Untitled%204.png>)
+![Calculation of self-attention for a single word](/images/transformer/Untitled%204.png)
 
 Calculation of self-attention for a single word
 
@@ -82,7 +82,7 @@ $$
 
 In the transformer model, we use multi-head attention. It's a very simple concept. We calculate self-attention multiple times and concatenate the result. For example, if we want the multiheaded attention with a number of heads equal to 8, then we will generate 8 triplets of the Q, K, and V matrix. And then **calculate self-attention 8 times**, At the end, the **result is concatenated** so the multiheaded attention value of a single word is 8 times the length of simple attention. Multiheaded attention help captures multiple relations that are present in the sentence. This improves the performance of the transformer significantly.
 
-![Figure showing multiheaded attention with 3 heads, K, Q, V is calculated 3 times using a different linear transformation.](</images/transformer/Untitled%205.png>)
+![Figure showing multiheaded attention with 3 heads, K, Q, V is calculated 3 times using a different linear transformation.](/images/transformer/Untitled%205.png)
 
 Figure showing multiheaded attention with 3 heads, K, Q, V is calculated 3 times using a different linear transformation.
 
