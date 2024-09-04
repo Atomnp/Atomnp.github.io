@@ -1,10 +1,3 @@
----
-permalink: /cv/
-title: "CV"
-classes: wide
-excerpt: Aayush Neupane's CV.
----
-
 # Aayush Neupane
 
 [neupane0403@gmail.com](mailto:neupane0403@gmail.com) | [+9779862206207](tel:+9779862206207) | Pulchowk, Lalitpur  

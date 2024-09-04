@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+      }
+      h1,
+      h2,
+      h3 {
+        text-transform: uppercase;
+        margin: 0;
+        padding: 10px 0;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .header h1 {
+        font-size: 2em;
+      }
+      .header a {
+        color: #0073b1;
+        text-decoration: none;
+        margin: 0 10px;
+      }
+      .section-header {
+        margin-top: 20px;
+        border-bottom: 2px solid #000;
+      }
+      .experience,
+      .education,
+      .skills,
+      .projects,
+      .honors {
+        margin: 20px 0;
+      }
+      .experience h3,
+      .education h3 {
+        font-weight: bold;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      ul li {
+        margin: 5px 0;
+      }
+      .contact-info {
+        text-align: center;
+      }
+      .skills-table {
+        width: 100%;
+        margin-top: 10px;
+      }
+      .skills-table td {
+        padding: 5px;
+        vertical-align: top;
+      }
+      .skills-table td:first-child {
+        width: 30%;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Profile Section -->
+    <div class="header">
+      <h1>Aayush Neupane</h1>
+      <p>
+        <a href="mailto:neupane0403@gmail.com">neupane0403@gmail.com</a> |
+        <a href="tel:+9779862206207">+9779862206207</a> | Pulchowk, Lalitpur
+      </p>
+      <p>
+        <a href="https://www.linkedin.com/in/aayushneupanee"
+          >linkedin.com/in/aayushneupanee</a
+        >
+        | <a href="https://github.com/atomnp">github.com/atomnp</a> |
+        <a href="https://neupaneaayush.com.np/">neupaneaayush.com.np</a>
+      </p>
+    </div>
+
+    <!-- Education Section -->
+    <div class="education">
+      <h2 class="section-header">Education</h2>
+      <h3>Pulchowk Campus, IOE, Tribhuwan University (4% acceptance rate)</h3>
+      <p>
+        Bachelors, Computer Engineering - Full Scholarship- Entrance (Rank 56) |
+        Sept 2019 - April 2023
+      </p>
+      <p>Percentage: <strong>79.23%</strong></p>
+
+      <h3>Vishwa Aadarsha Higher Secondary School</h3>
+      <p>Physics, Chemistry, Math, Computer Science | July 2016 - July 2018</p>
+      <p>GPA: <strong>3.71/4</strong></p>
+    </div>
+
+    <!-- Professional Experience Section -->
+    <div class="experience">
+      <h2 class="section-header">Professional Experience</h2>
+
+      <h3>Smart Data Solutions | Machine Learning Engineer</h3>
+      <p>Eagan, MN (Remote) | Jan 2024 - Present</p>
+      <ul>
+        <li>
+          Worked on information extraction from healthcare-related documents,
+          including insurance claims and medical records. Performed data
+          collection, cleaning, and model training for information extraction.
+        </li>
+        <li>
+          Developed an intelligent medical record processing system using models
+          like LayoutLM and Large Language Models.
+        </li>
+      </ul>
+
+      <h3>Naamche | Machine Learning/ Backend Engineer</h3>
+      <p>Kathmandu, Nepal | May 2023 - Dec 2023</p>
+      <ul>
+        <li>
+          Created chatbots using Large Language Models (LLMs) for real estate in
+          Florida and university extension centers.
+        </li>
+        <li>
+          Implemented RAG-based framework, using Scrapy, Metabase, AWS Sagemaker
+          for data collection, cleaning, and indexing.
+        </li>
+        <li>
+          Developed API using FastAPI framework and implemented guardrails for
+          chatbots.
+        </li>
+      </ul>
+
+      <h3>Sandbox Inc | Computer Vision/Backend Engineer</h3>
+      <p>Pokhara, Nepal (Remote) | Feb 2023 - May 2023</p>
+      <ul>
+        <li>Developed game bot for playing MOBA games using OpenCV.</li>
+        <li>Created APIs for bot platform using Django.</li>
+      </ul>
+
+      <h3>Wiseyak Inc | Machine Learning Internship</h3>
+      <p>Kathmandu, Nepal | Jan 2023 - April 2023</p>
+      <ul>
+        <li>
+          Worked on NLP, focusing on RNNs and Transformer-based models,
+          including attention mechanisms used by Transformers.
+        </li>
+      </ul>
+
+      <h3>LOCUS | Technical Coordinator</h3>
+      <p>Lalitpur, Nepal | Mar 2022 - Mar 2023 (Part-time)</p>
+      <ul>
+        <li>
+          Managed software events and maintained software systems at LOCUS,
+          including the website and online certification system.
+        </li>
+        <li>
+          Developed and launched the online certification system used at LOCUS.
+        </li>
+      </ul>
+
+      <h3>Upwork | Freelancer</h3>
+      <p>Remote | Aug 2021 - Present</p>
+      <ul>
+        <li>
+          Worked on web application development, web scraping, and NLP
+          techniques.
+        </li>
+        <li>
+          Collaborated with startup co-founders, delivering tailored software
+          solutions and earning Top Rated status on Upwork.
+        </li>
+      </ul>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="skills">
+      <h2 class="section-header">Skills</h2>
+      <table class="skills-table">
+        <tr>
+          <td>Programming Languages:</td>
+          <td>C/C++, Java, Python, JavaScript</td>
+        </tr>
+        <tr>
+          <td>Machine Learning:</td>
+          <td>Pytorch, Tensorflow, numpy, pandas, scikit-learn, OpenCV</td>
+        </tr>
+        <tr>
+          <td>Server Side Development:</td>
+          <td>FastAPI, Django, Flask, Node.js/Express</td>
+        </tr>
+        <tr>
+          <td>Tools / Platforms:</td>
+          <td>Git, GitHub, Docker, Linux Server Administration</td>
+        </tr>
+        <tr>
+          <td>Cloud Platforms:</td>
+          <td>AWS, GCP, Azure</td>
+        </tr>
+        <tr>
+          <td>Databases:</td>
+          <td>PostgreSQL, MongoDB, MySQL</td>
+        </tr>
+        <tr>
+          <td>Frontend:</td>
+          <td>React.js, Next.js</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Honors and Awards Section -->
+    <div class="honors">
+      <h2 class="section-header">Honors & Awards</h2>
+      <ul>
+        <li>
+          <strong>High School Topper, VAHSS</strong> - 1st rank holder among
+          200+ students, Graduating class of 2018
+        </li>
+        <li>
+          <strong>Achievement</strong> - Nation-wide rank 56 in the Engineering
+          entrance exam by Tribhuwan University
+        </li>
+        <li>
+          <strong>License</strong> - Registered and Licensed Engineer (Nepal
+          Engineering Council)
+        </li>
+      </ul>
+    </div>
+
+    <!-- <section class="projects">
+      <h2>Projects</h2>
+
+      <div class="project">
+          <h3><a href="https://www.easeannotate.com/">EaseAnnotate</a></h3>
+          <p><em>Nextjs, FastAPI, Pytorch, LLMs</em></p>
+          <ul>
+              <li>EaseAnnotate is my passion project. We ended up launching this product as SaaS. Our project also got funded by Microsoft for Startups. EaseAnnotate is a document AI tool that can be used for annotating documents as well as for extracting key information from the documents.</li>
+          </ul>
+      </div>
+
+      <div class="project">
+          <h3><a href="https://www.youtube.com/watch?v=ezt5WxrMHlE">Receipt Scanner</a></h3>
+          <p><em>Pytorch, FastAPI, Reactjs</em></p>
+          <ul>
+              <li>Developed a user-friendly software solution using a Transformer-based architecture with the pretrained LayoutLM model for annotating and training custom models for key information extraction from unstructured text arbitrary keys.</li>
+              <li>Implemented CI/CD pipelines with GitHub Actions and Docker for containerization and deployment.</li>
+          </ul>
+      </div>
+
+      <div class="project">
+          <h3><a href="https://github.com/Atomnp/realtime-text-similarity-frontend">Real time text similarity matching</a></h3>
+          <p><em>Pytorch, Annoy, BERT</em></p>
+          <ul>
+              <li>Implemented real-time text similarity matching by generating sentence embeddings.</li>
+              <li>Used various algorithms, including TF-IDF, Average Word Embeddings, Smooth Inverse Frequency (SIF), and BERT for generating sentence embeddings.</li>
+              <li>Used Annoy as vector database to perform an approximate nearest neighbor search on vectors.</li>
+          </ul>
+      </div>
+
+      <div class="project">
+          <h3><a href="https://github.com/Atomnp/certification-system-backend">Online Certification System</a></h3>
+          <p><em>Django, OpenCV</em></p>
+          <ul>
+              <li>Developed and managed an online certification system for LOCUS using Django Framework, OpenCV, and Azure VM (Docker), enabling bulk certificate generation, and automated email distribution.</li>
+              <li>Streamlined certificate management and deployment processes, enhancing scalability and efficiency through containerized deployment on Azure.</li>
+          </ul>
+      </div>
+
+      <div class="project">
+          <h3><a href="https://github.com/Atomnp/Anubadak">Anubadak: A simple interpreter</a></h3>
+          <p><em>C++</em></p>
+          <ul>
+              <li>Developed an interpreter for a `B`-like language as an academic project, demonstrating core concepts of Object-Oriented Programming and "Theory of Computation."</li>
+              <li>Implemented key compiler design principles such as lexical analysis, semantic analysis, and Abstract Syntax Tree (AST) construction.</li>
+          </ul>
+      </div>
+
+      <div class="project">
+          <h3><a href="https://github.com/Atomnp/ComputerGraphicsProject">3D City Modeling</a></h3>
+          <p><em>OpenGL, C++</em></p>
+          <ul>
+              <li>Developed a 3D renderer from scratch in C++ using OpenGL and GLSL, capable of rendering models created in Blender.</li>
+              <li>Implemented shading techniques including Gouraud and Phong shading, as well as Phong illumination for realistic rendering effects.</li>
+          </ul>
+      </div>
+
+      <div class="project">
+          <h3><a href="https://github.com/Atomnp/Shell_from_scratch">Unix Like Shell</a></h3>
+          <p><em>C, Linux</em></p>
+          <ul>
+              <li>Implemented a simple UNIX-like shell in C, utilizing various system calls through the C API.</li>
+              <li>Developed basic shell functionalities such as command execution.</li>
+          </ul>
+      </div>
+  </section>
+
+  <section class="certifications">
+      <h2>Certifications</h2>
+
+      <ul>
+          <li>Qubit by Qubit Introduction to Quantum Computing - <strong>IBM Quantum by Codingschool</strong></li>
+          <li>GAJABAAR Infosecurity Mentorship Program - <strong>GAJABAAR</strong></li>
+          <li>Neural Networks and Deep Learning - <strong>deeplearning.ai on Coursera</strong></li>
+          <li>Improving Deep Neural Networks: Hyperparameter Tuning, Regularization, and Optimization - <strong>deeplearning.ai on Coursera</strong></li>
+          <li>Structuring Machine Learning Projects - <strong>deeplearning.ai on Coursera</strong></li>
+          <li>Sequence Models - <strong>deeplearning.ai on Coursera</strong> <a href="https://www.coursera.org/account/accomplishments/verify/6H3RXLZSDW97">Verify Certificate</a></li>
+          <li>Participant in Third Nepal Winter School in AI - <strong>NAAMI</strong></li>
+          <li>AWS Academy Cloud Foundation - <strong>AWS Academy</strong></li>
+      </ul>
+  </section> -->
+    <!-- Projects Section -->
+    <div class="projects">
+      <h2 class="section-header">Projects</h2>
+
+      <h3>EaseAnnotate | <a href="https://www.easeannotate.com/">Link</a></h3>
+      <p>Next.js, FastAPI, Pytorch, LLMs</p>
+      <ul>
+        <li>
+          Developed EaseAnnotate, a document AI tool for annotating documents
+          and extracting key information. Funded by Microsoft for Startups.
+        </li>
+      </ul>
+
+      <h3>
+        Receipt Scanner |
+        <a href="https://www.youtube.com/watch?v=ezt5WxrMHlE">Video Link</a>
+      </h3>
+      <p>Pytorch, FastAPI, React.js</p>
+      <ul>
+        <li>
+          Developed a Transformer-based software solution using LayoutLM for key
+          information extraction from unstructured text.
+        </li>
+        <li>
+          Implemented CI/CD pipelines with GitHub Actions and Docker for
+          deployment.
+        </li>
+      </ul>
+
+      <h3>
+        Real-time Text Similarity Matching |
+        <a href="https://github.com/Atomnp/realtime-text-similarity-frontend"
+          >Link</a
+        >
+      </h3>
+      <p>Pytorch, Annoy, BERT</p>
+      <ul>
+        <li>
+          Implemented real-time text similarity matching using sentence
+          embeddings with Annoy for approximate nearest neighbor search.
+        </li>
+      </ul>
+
+      <h3>
+        <a href="https://github.com/Atomnp/certification-system-backend"
+          >Online Certification System</a
+        >
+      </h3>
+      <p><em>Django, OpenCV</em></p>
+      <ul>
+        <li>
+          Developed and managed an online certification system for LOCUS using
+          Django Framework, OpenCV, and Azure VM (Docker), enabling bulk
+          certificate generation, and automated email distribution.
+        </li>
+        <li>
+          Streamlined certificate management and deployment processes, enhancing
+          scalability and efficiency through containerized deployment on Azure.
+        </li>
+      </ul>
+      <h3>
+        <a href="https://github.com/Atomnp/Anubadak"
+          >Anubadak: A simple interpreter</a
+        >
+      </h3>
+      <p><em>C++</em></p>
+      <ul>
+        <li>
+          Developed an interpreter for a `B`-like language as an academic
+          project, demonstrating core concepts of Object-Oriented Programming
+          and "Theory of Computation."
+        </li>
+        <li>
+          Implemented key compiler design principles such as lexical analysis,
+          semantic analysis, and Abstract Syntax Tree (AST) construction.
+        </li>
+      </ul>
+
+      <h3>
+        <a href="https://github.com/Atomnp/ComputerGraphicsProject"
+          >3D City Modeling</a
+        >
+      </h3>
+      <p><em>OpenGL, C++</em></p>
+      <ul>
+        <li>
+          Developed a 3D renderer from scratch in C++ using OpenGL and GLSL,
+          capable of rendering models created in Blender.
+        </li>
+        <li>
+          Implemented shading techniques including Gouraud and Phong shading, as
+          well as Phong illumination for realistic rendering effects.
+        </li>
+      </ul>
+
+      <h3>
+        <a href="https://github.com/Atomnp/Shell_from_scratch"
+          >Unix Like Shell</a
+        >
+      </h3>
+      <p><em>C, Linux</em></p>
+      <ul>
+        <li>
+          Implemented a simple UNIX-like shell in C, utilizing various system
+          calls through the C API.
+        </li>
+        <li>
+          Developed basic shell functionalities such as command execution.
+        </li>
+      </ul>
+    </div>
+  
+    <div class="certifications">
+      <h2 class="section-headers">Certifications</h2>
+
+      <ul>
+          <li>Qubit by Qubit Introduction to Quantum Computing - <strong>IBM Quantum by Codingschool</strong></li>
+          <li>GAJABAAR Infosecurity Mentorship Program - <strong>GAJABAAR</strong></li>
+          <li>Neural Networks and Deep Learning - <strong>deeplearning.ai on Coursera</strong></li>
+          <li>Improving Deep Neural Networks: Hyperparameter Tuning, Regularization, and Optimization - <strong>deeplearning.ai on Coursera</strong></li>
+          <li>Structuring Machine Learning Projects - <strong>deeplearning.ai on Coursera</strong></li>
+          <li>Sequence Models - <strong>deeplearning.ai on Coursera</strong> <a href="https://www.coursera.org/account/accomplishments/verify/6H3RXLZSDW97">Verify Certificate</a></li>
+          <li>Participant in Third Nepal Winter School in AI - <strong>NAAMI</strong></li>
+          <li>AWS Academy Cloud Foundation - <strong>AWS Academy</strong></li>
+      </ul>
+  </section> 
+  </body>
+</html>
