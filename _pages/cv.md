@@ -1,3 +1,10 @@
+---
+permalink: /cv/
+title: "CV"
+classes: wide
+excerpt: Aayush Neupane's CV.
+---
+
 # Aayush Neupane
 
 [neupane0403@gmail.com](mailto:neupane0403@gmail.com) | [+9779862206207](tel:+9779862206207) | Pulchowk, Lalitpur  
@@ -57,12 +64,12 @@ Remote | Aug 2021 - Present
 
 ## Skills
 
-- **Programming Languages:** C/C++, Java, Python, Javascript  
-- **Machine Learning:** Pytorch, Tensorflow, numpy, pandas, scikit-learn, OpenCV  
-- **Server Side Development:** FastAPI, Django, Flask, Nodejs/Express  
-- **Tools / Platforms:** Git, Github, Docker, Server side administration using Linux  
-- **Cloud Platforms:** AWS, GCP, Azure  
-- **Databases:** PostgreSQL, MongoDB, MySQL  
+- **Programming Languages:** C/C++, Java, Python, Javascript
+- **Machine Learning:** Pytorch, Tensorflow, numpy, pandas, scikit-learn, OpenCV
+- **Server Side Development:** FastAPI, Django, Flask, Nodejs/Express
+- **Tools / Platforms:** Git, Github, Docker, Server side administration using Linux
+- **Cloud Platforms:** AWS, GCP, Azure
+- **Databases:** PostgreSQL, MongoDB, MySQL
 - **Frontend:** Reactjs, Nextjs
 
 ## Honors & Awards
@@ -74,36 +81,43 @@ Remote | Aug 2021 - Present
 ## Projects
 
 **EaseAnnotate** | [Link](https://www.easeannotate.com/)  
-*Nextjs, FastAPI, Pytorch, LLMs*  
+_Nextjs, FastAPI, Pytorch, LLMs_
+
 - EaseAnnotate is my passion project. We ended up launching this product as SaaS. Our project also got funded by Microsoft for Startups. EaseAnnotate is a document AI tool that can be used for annotating documents as well as for extracting key information from the documents.
 
 **Receipt Scanner** | [Video Link](https://www.youtube.com/watch?v=ezt5WxrMHlE)  
-*Pytorch, FastAPI, Reactjs*  
+_Pytorch, FastAPI, Reactjs_
+
 - Developed a user-friendly software solution using a Transformer-based architecture with the pretrained LayoutLM model for annotating and training custom models for key information extraction from unstructured text arbitrary keys.
 - Implemented CI/CD pipelines with GitHub Actions and Docker for containerization and deployment.
 
 **Real-time text similarity matching** | [Link](https://github.com/Atomnp/realtime-text-similarity-frontend)  
-*Pytorch, Annoy, BERT*  
+_Pytorch, Annoy, BERT_
+
 - Implemented real-time text similarity matching by generating sentence embeddings.
 - Used various algorithms, including TF-IDF, Average Word Embeddings, Smooth Inverse Frequency (SIF), and BERT for generating sentence embeddings.
 - Used Annoy as a vector database to perform an approximate nearest neighbor search on vectors.
 
 **Online Certification System** | [Link](https://github.com/Atomnp/certification-system-backend)  
-*Django, OpenCV*  
+_Django, OpenCV_
+
 - Developed and managed an online certification system for LOCUS using Django Framework, OpenCV, and Azure VM (Docker), enabling bulk certificate generation, and automated email distribution.
 - Streamlined certificate management and deployment processes, enhancing scalability and efficiency through containerized deployment on Azure.
 
 **Anubadak: A simple interpreter** | [Link](https://github.com/Atomnp/Anubadak)  
-*C++*  
+_C++_
+
 - Developed an interpreter for a `B`-like language as an academic project, demonstrating core concepts of Object-Oriented Programming and "Theory of Computation."
 - Implemented key compiler design principles such as lexical analysis, semantic analysis, and Abstract Syntax Tree (AST) construction.
 
 **3D City Modeling** | [Link](https://github.com/Atomnp/ComputerGraphicsProject)  
-*OpenGL, C++*  
+_OpenGL, C++_
+
 - Developed a 3D renderer from scratch in C++ using OpenGL and GLSL, capable of rendering models created in Blender.
 - Implemented shading techniques including Gouraud and Phong shading, as well as Phong illumination for realistic rendering effects.
 
 **Unix Like Shell** | [Link](https://github.com/Atomnp/Shell_from_scratch)  
-*C, Linux*  
+_C, Linux_
+
 - Implemented a simple UNIX-like shell in C, utilizing various system calls through the C API.
 - Developed basic shell functionalities such as command execution.
