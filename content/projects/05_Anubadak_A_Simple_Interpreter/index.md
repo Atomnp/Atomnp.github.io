@@ -3,7 +3,7 @@ title: Anubadak - A Simple Interpreter
 tags:
   - utils
 links:
-  - icon: ""
+  - icon: github
     icon_pack: fab
     name: Github
     url: "https://github.com/Atomnp/Anubadak"

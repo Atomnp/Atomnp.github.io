@@ -3,7 +3,7 @@ title: Receipt Scanner
 tags:
   - utils
 links:
-  - icon: ""
+  - icon: youtube
     icon_pack: fab
     name: Video Demo
     url: "https://www.youtube.com/watch?v=ezt5WxrMHlE"

@@ -3,7 +3,7 @@ title: Sorting Visualizer
 tags:
   - utils
 links:
-  - icon: ""
+  - icon: github
     icon_pack: fab
     name: GitHub
     url: "https://github.com/Atomnp/algoVisualizerCPP"

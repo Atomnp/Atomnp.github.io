@@ -3,7 +3,7 @@ title: Real-time Text Similarity Matching
 tags:
   - utils
 links:
-  - icon: ""
+  - icon: github
     icon_pack: fab
     name: Github
     url: "https://github.com/Atomnp/realtime-text-similarity-frontend"
