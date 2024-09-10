@@ -43,9 +43,9 @@ social:
 #   link: certificates/
 
 interests:
-  - Software Engineering
   - Machine Learning
-  - Parallel processing and optimization
+  - Security and Privacy
+  - NLP, Programming languages, Software systems, Theory of computation
 # Organizational groups that you belong to (for People widget)
 #   Set this to `[]` or comment out if you are not using People widget.
 # user_groups:
