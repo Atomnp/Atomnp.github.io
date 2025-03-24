@@ -8,9 +8,9 @@ main:
   # - name: Research
   #   url: "#research"
   #   weight: 40
-  # - name: Publications
-  #   url: '#publications'
-  #   weight: 50
+  - name: Publications
+    url: '#publications'
+    weight: 50
   - name: Projects
     url: "#projects"
     weight: 60

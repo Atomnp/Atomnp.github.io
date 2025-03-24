@@ -295,7 +295,6 @@ hugo.linux
 
 # others 
 go.sum
-content/publications/
 **/__latexindent_temp.tex
 **/tmp.*
 **/*.tmp

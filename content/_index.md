@@ -90,6 +90,18 @@ sections:
       columns: "2"
 
   - block: portfolio
+    id: publications
+    content:
+      title: Publications
+      filters:
+        folders:
+          - publications
+    design:
+      columns: "2"
+      view: 2
+      flip_alt_rows: false
+
+  - block: portfolio
     id: projects
     content:
       title: Projects
