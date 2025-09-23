@@ -114,7 +114,7 @@ sections:
       view: 2
       flip_alt_rows: false
 
-  - block: education
+  - block: experience
     id: education
     content:
       title: Education
