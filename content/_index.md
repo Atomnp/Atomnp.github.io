@@ -104,6 +104,18 @@ sections:
       flip_alt_rows: false
 
   - block: portfolio
+    id: education
+    content:
+      title: Education
+      filters:
+        folders:
+          - education
+    design:
+      columns: "2"
+      view: 2
+      flip_alt_rows: false
+
+  - block: portfolio
     id: projects
     content:
       title: Projects
