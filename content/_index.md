@@ -150,7 +150,8 @@ sections:
             - Object Oriented Programming with C++
             - Operating Systems
             - Distributed Systems
-
+    design:
+      columns: "2"
   - block: portfolio
     id: projects
     content:
