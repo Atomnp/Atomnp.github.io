@@ -13,6 +13,17 @@ sections:
       title: Experience
       date_format: Jan 2006
       items:
+        - title: Graduate Teaching Assistant
+          company: University of Kansas
+          company_url: "https://ku.edu"
+          # company_logo: sds
+          location: Lawrence, KS
+          date_start: "2025-08-18"
+          # date_end: "2025-07-30"
+
+          # date_end: "Present"
+          description: |2-
+            - Conduct weekly labs on C/C++, Git, and Docker for 30+ undergraduate  students; also grade assignments, in-class problems, and labs.
         - title: Machine Learning Engineer
           company: Smart Data Solutions
           company_url: "https://sdata.us/"
@@ -103,17 +114,42 @@ sections:
       view: 2
       flip_alt_rows: false
 
-  - block: portfolio
+  - block: education
     id: education
     content:
       title: Education
-      filters:
-        folders:
-          - education
-    design:
-      columns: "2"
-      view: 2
-      flip_alt_rows: false
+      date_format: Jan 2006
+      items:
+        - title: University of Kansas
+          company: Master of Science in Computer Science
+          company_url: "https://ku.edu"
+          # company_logo: sds
+          location: Lawrence, KS
+          date_start: "2025-08-18"
+          # date_end: "2025-07-30"
+
+          # date_end: "Present"
+          description: |2-
+            - Analysis of Algorithms  
+            - Advanced Data Science  
+            - Static Analysis
+
+        - title: Pulchowk Campus, IOE, Tribhuvan University
+          company: Bachelor in Computer Engineering
+          # company_url: "https://sdata.us/"
+          # company_logo: sds
+          location: Kathmandu, Nepal
+          date_start: "2019-01-01"
+          date_end: "2023-05-30"
+
+          # date_end: "Present"
+          description: |2-
+            - Artificial Intelligence
+            - Data Science
+            - Database Management System
+            - Object Oriented Programming with C++
+            - Operating Systems
+            - Distributed Systems
 
   - block: portfolio
     id: projects
