@@ -52,6 +52,8 @@ interests:
 #   - Researchers
 ---
 
-I am a Machine Learning Engineer working remotely with Smart Data Solutions, a company based in Eagan, MN, focusing on AI-driven solutions for extracting information from healthcare documents like medical records and insurance claims. With a background as a Backend Engineer, I have extensive experience in building scalable APIs. I am dedicated to creating software that delivers meaningful value to its users.
+I am currently pursuing a Master’s in Computer Science at the University of Kansas (Lawrence, KS), with a focus on Machine Learning and Artificial Intelligence. Before graduate school, I worked as a Machine Learning Engineer at Smart Data Solutions (Eagan, MN), where I developed AI-driven solutions for extracting information from healthcare documents such as medical records and insurance claims.
+
+With a prior background as a Backend Engineer, I have extensive experience in building scalable APIs and production-ready systems, bridging the gap between machine learning models and real-world deployment.
 
 As a curious and hardworking individual, I constantly seek opportunities to learn and grow, diving deep into complex problems and exploring innovative solutions. My collaborative nature makes me a strong team player who thrives in dynamic environments, fostering open communication and working closely with colleagues to achieve shared goals. Recently, I led the development and launch of [EaseAnnotate](https://easeannotate.com), a project selected for the Microsoft for Startups program, which received funding and recognition from Microsoft. My passion lies in solving complex problems and building impactful software that drives real-world improvements
