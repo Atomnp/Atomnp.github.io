@@ -165,7 +165,7 @@ sections:
       flip_alt_rows: false
 
   - block: portfolio
-    id: posts
+    id: blogs
     content:
       title: Blogs
       filters:
