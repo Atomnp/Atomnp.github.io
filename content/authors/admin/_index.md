@@ -7,7 +7,7 @@ authors:
   - "Aayush Neupane"
 
 # Role/position
-role: Machine Learning Engineer, Smart Data Solutions
+role: Grad Student, MSCS. Looking for Summer Internship 2026
 
 # Short bio (displayed in user profile at end of posts)
 bio: ""
@@ -52,8 +52,8 @@ interests:
 #   - Researchers
 ---
 
-I am currently pursuing a Master’s in Computer Science at the University of Kansas (Lawrence, KS), with a focus on Machine Learning and Artificial Intelligence. Before graduate school, I worked as a Machine Learning Engineer at Smart Data Solutions (Eagan, MN), where I developed AI-driven solutions for extracting information from healthcare documents such as medical records and insurance claims.
+I am a graduate student in Computer Science with a strong background in software, data, and machine learning engineering. Over the past few years, I have worked on projects that span from building large-scale data processing pipelines to deploying machine learning models in production environments. My work often sits at the intersection of software engineering and data science, designing reliable systems that can process, analyze, and learn from large and complex datasets.
 
-With a prior background as a Backend Engineer, I have extensive experience in building scalable APIs and production-ready systems, bridging the gap between machine learning models and real-world deployment.
+At Smart Data Solutions, I engineered data pipelines integrating Java and Python components for processing scanned medical documents and applied NLP and deep learning models to automate information extraction. I have also worked on backend systems using Django, Celery, and Airflow, handling high-volume data storage and retrieval across SQL, NoSQL, and Redshift databases. Earlier, at Naamche, I contributed to full-stack and AI projects that combined LLMs, semantic search, and vector databases for real-time knowledge retrieval.
 
-As a curious and hardworking individual, I constantly seek opportunities to learn and grow, diving deep into complex problems and exploring innovative solutions. My collaborative nature makes me a strong team player who thrives in dynamic environments, fostering open communication and working closely with colleagues to achieve shared goals. Recently, I led the development and launch of [EaseAnnotate](https://easeannotate.com), a project selected for the Microsoft for Startups program, which received funding and recognition from Microsoft. My passion lies in solving complex problems and building impactful software that drives real-world improvements
+I am passionate about building scalable, data-driven systems that bridge the gap between infrastructure and intelligence. My interests include data engineering, distributed systems, and applied machine learning. I enjoy working in collaborative environments where I can contribute to both system design and model integration, continuously learning new tools and techniques to make data processing faster, smarter, and more reliable.
