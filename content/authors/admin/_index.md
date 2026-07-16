@@ -7,7 +7,7 @@ authors:
   - "Aayush Neupane"
 
 # Role/position
-role: Grad Student, MSCS. Looking for Summer Internship 2026
+role: Grad Student, MSCS.
 
 # Short bio (displayed in user profile at end of posts)
 bio: ""
