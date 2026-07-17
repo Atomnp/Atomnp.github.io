@@ -1,34 +1,52 @@
-# researcher website-cv
+# neupaneaayush.com.np
 
-Reseacher website using [Hugo](https://gohugo.io/documentation/) and [HugoBlox Academic Group Theme](https://github.com/HugoBlox/theme-research-group) for `github-pages` and using [moderncv-latex](https://github.com/moderncv/moderncv) for `cv.pdf`.
+Personal website of Aayush Neupane — a hand-built static site (plain HTML, CSS, and
+vanilla JS, no framework or build step). Deployed to GitHub Pages.
 
-## requirements
+## Structure
 
-The project requires `hugo` and `texlive-extra`, which contains moderncv.
+```
+index.html          Home (profile, about, news, publications, experience, projects, writing)
+blog.html           All posts, with category filters
+post.html           Renders a single post: post.html?p=<slug>
+css/styles.css      All styles (light + dark themes via CSS variables)
+js/
+  site.js           Theme toggle, nav shadow, scroll reveals (shared)
+  home.js           Builds the homepage "Writing" list from posts.json
+  blog.js           Builds the blog index + filters from posts.json
+  post.js           Loads a post's Markdown and renders it (marked + highlight.js + KaTeX)
+posts/
+  posts.json        Post manifest (title, date, category, summary, slug)
+  <slug>/index.md   One folder per post, images alongside
+assets/             Avatar, favicons
+files/              Resume.pdf, CV.pdf
+vendor/             Local copies of marked, highlight.js, KaTeX (no CDN dependency)
+```
 
-On Ubuntu, you can install as below.
+## Add a blog post
 
-  ```bash
-  sudo apt-get install texlive-latex-extra texlive-fonts-extra
-  sudo snap install hugo
-  sudo snap install --classic node
-  ```
+1. Create `posts/<slug>/index.md` (Markdown; drop any images in the same folder).
+2. Add an entry to the top of `posts/posts.json`:
 
-On Windows, you can install them by [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) as below.
+   ```json
+   { "slug": "<slug>", "title": "…", "date": "YYYY-MM-DD",
+     "category": "…", "summary": "…", "math": false }
+   ```
 
-  ```bash
-  winget install Hugo.Hugo ChristianSchenk.MiKTeX
-  winget install StrawberryPerl.StrawberryPerl # optional,required only if you runing from gitbatsh
-  ```
+   Set `"math": true` if the post uses `$…$` / `$$…$$` LaTeX.
 
-## serve locally
+That's it — the homepage list, the blog index, and the post page all pick it up. No rebuild.
 
-  ```bash
-  cp latex/cv.pdf latex/certificates.pdf static/files/
-  sh scripts/update_publication.sh # run once
-  hugo server
-  ```
+## Run locally
 
-## deploy to gh-pages
+Any static file server works (the pages `fetch()` local files, so `file://` won't work):
 
-The deploy is done by a GitHub action when push.
+```bash
+python3 -m http.server 8000
+# open http://localhost:8000
+```
+
+## Deploy
+
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which publishes the repo to
+GitHub Pages. The custom domain is set in `CNAME`.
