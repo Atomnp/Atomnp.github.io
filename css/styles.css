@@ -154,6 +154,29 @@ h2.sec::before{content:"";width:6px;height:6px;border-radius:50%;background:var(
 .proj:hover h3 .arw{transform:translate(2px,-2px);color:var(--accent-ink)}
 .proj p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.5}
 
+/* teaching / tutorials */
+.teach-intro{color:var(--ink-2);margin:0 0 22px;font-size:.98rem;max-width:66ch}
+.teach-intro .ai{color:var(--muted);font-style:italic}
+.courses{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.courses{grid-template-columns:1fr}}
+a.course{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1px solid var(--hair);
+  border-radius:14px;padding:18px 20px;box-shadow:0 1px 2px rgba(20,23,28,.04);
+  transition:transform .2s ease,border-color .2s ease,box-shadow .25s ease}
+a.course:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 42%,var(--hair));
+  box-shadow:0 12px 28px -14px rgba(20,23,28,.28)}
+:root[data-theme="dark"] a.course:hover{box-shadow:0 14px 30px -16px rgba(0,0,0,.7)}
+.course-top{display:flex;align-items:center;gap:10px}
+.course .subj{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 9px;border-radius:6px;color:#fff;background:var(--accent);flex:0 0 auto}
+:root[data-theme="dark"] .course .subj{color:#0E1116}
+@media (prefers-color-scheme:dark){.course .subj{color:#0E1116}}
+.course h3{margin:0;font-size:1.06rem;font-weight:640;letter-spacing:-.015em;color:var(--ink);line-height:1.25}
+a.course:hover h3{color:var(--accent-ink)}
+.course .arw{margin-left:auto;color:var(--muted);transition:transform .2s,color .2s;flex:0 0 auto}
+a.course:hover .arw{transform:translate(2px,-2px);color:var(--accent-ink)}
+.course p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.5}
+.course .cmeta{font-family:var(--sans);font-size:.74rem;font-weight:600;color:var(--muted);margin-top:2px}
+
 footer.site{border-top:1px solid var(--hair);padding:26px 0;color:var(--muted);font-size:.82rem;font-family:var(--sans);
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
