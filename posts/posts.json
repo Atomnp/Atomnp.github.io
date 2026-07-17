@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "python-profiling-and-optimization",
+    "title": "Python Profiling and Optimization",
+    "date": "2023-01-14",
+    "category": "Python",
+    "summary": "A practical tour of profiling tools and the fundamentals of making Python code faster.",
+    "math": false
+  },
+  {
+    "slug": "attention-is-all-you-need",
+    "title": "Attention Is All You Need, Oversimplified",
+    "date": "2022-01-15",
+    "category": "NLP",
+    "summary": "The transformer architecture built up from the ground, focusing on the self-attention mechanism.",
+    "math": true
+  },
+  {
+    "slug": "neural-machine-translation-attention",
+    "title": "Neural Machine Translation with Encoder–Decoder Attention",
+    "date": "2022-01-07",
+    "category": "NLP",
+    "summary": "The encoder–decoder architecture for neural machine translation, and how attention fits in.",
+    "math": false
+  },
+  {
+    "slug": "rnn-as-an-encoder",
+    "title": "RNN as an Encoder",
+    "date": "2022-01-06",
+    "category": "NLP",
+    "summary": "How to use PyTorch's RNN implementation to encode sequential data into fixed vectors.",
+    "math": false
+  },
+  {
+    "slug": "intuitive-bayes-theorem",
+    "title": "Intuitive Conditional Probability & Bayes' Theorem",
+    "date": "2022-01-03",
+    "category": "Mathematics",
+    "summary": "Understanding conditional probability and Bayes' theorem intuitively, in terms of area.",
+    "math": false
+  },
+  {
+    "slug": "create-your-own-unix-like-shell",
+    "title": "Create Your Own Unix-like Shell",
+    "date": "2020-12-21",
+    "category": "Linux",
+    "summary": "Implementing a shell from scratch in C, reaching the kernel directly through system calls.",
+    "math": false
+  }
+]
