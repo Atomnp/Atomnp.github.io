@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 5 — Filling the Gaps: Deep Understanding</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181b24;--surface2:#1e222e;--border:#2a2f3e;--text:#e0e4ef;--text-muted:#8891a8;--accent:#6ee7b7;--accent-dim:#2d6a52;--warn:#fbbf24;--blue:#60a5fa;--pink:#f472b6;--orange:#fb923c;--red:#f87171;--purple:#a78bfa;--terminal-bg:#0a0c10;--terminal-green:#4ade80;--terminal-prompt:#6ee7b7;--lab-bg:#141820;--lab-border:#2a4a3a;--check:#22c55e;--correct:#22c55e;--wrong:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;min-height:100vh}.page-wrapper{max-width:880px;margin:0 auto;padding:2rem 1.5rem 6rem}
+.hero{text-align:center;padding:4rem 1rem 3rem}.hero-tag{display:inline-block;background:linear-gradient(135deg,#1a3a2a,#1a3a4a);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;padding:.35rem 1rem;border-radius:99px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem}.hero h1{font-family:'Source Serif 4',serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:1rem}.hero h1 span{color:var(--accent)}.hero-sub{color:var(--text-muted);font-size:1.1rem;max-width:600px;margin:0 auto;line-height:1.7}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:2.5rem 0 3rem}.toc h2{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.2rem}.toc-list{list-style:none}.toc-list li{padding:.5rem 0;border-bottom:1px solid var(--border)}.toc-list li:last-child{border-bottom:none}.toc-list a{color:var(--text);text-decoration:none;font-size:.95rem;display:flex;align-items:center;gap:.75rem;transition:color .2s}.toc-list a:hover{color:var(--accent)}.toc-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-muted);min-width:2rem}
+.lab-section{margin-bottom:4rem;scroll-margin-top:2rem}.section-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem}.lab-section h2{font-family:'Source Serif 4',serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:.5rem}.section-intro{color:var(--text-muted);margin-bottom:1.5rem;font-size:1rem}
+.concept{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.concept h3{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}.concept p,.concept div{font-size:.95rem;line-height:1.8}
+.analogy{background:linear-gradient(135deg,#1a1525,#1e1830);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.analogy-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.warning{background:linear-gradient(135deg,#1f1a10,#221e14);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.warning-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--warn);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.success{background:linear-gradient(135deg,#101f15,#142218);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.success-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.lab-task{background:var(--lab-bg);border:1px solid var(--lab-border);border-radius:12px;padding:1.75rem;margin:1.5rem 0;position:relative}.lab-task::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:12px 12px 0 0}.task-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}.task-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;background:var(--accent-dim);color:var(--accent);padding:.25rem .75rem;border-radius:99px;letter-spacing:.05em}.task-badge.debug{background:#4a1a1a;color:var(--red)}.task-title{font-weight:600;font-size:1.05rem;color:#fff}
+.terminal{background:var(--terminal-bg);border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}.terminal-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem}.terminal-dot{width:10px;height:10px;border-radius:50%}.terminal-dot.r{background:#f87171}.terminal-dot.y{background:#fbbf24}.terminal-dot.g{background:#4ade80}.terminal-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted);margin-left:.5rem}.terminal-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.terminal-body .prompt{color:var(--terminal-prompt)}.terminal-body .cmd{color:#fff}.terminal-body .output{color:var(--text-muted)}.terminal-body .err{color:var(--red)}
+.code-block{background:#0d1015;border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}.code-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between}.code-lang{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--warn);letter-spacing:.05em}.code-filename{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}.code-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.code-body .kw{color:var(--pink)}.code-body .fn{color:var(--blue)}.code-body .str{color:var(--accent)}.code-body .com{color:#555b70;font-style:italic}.code-body .num{color:var(--orange)}.code-body .var{color:#e0e4ef}.code-body .op{color:var(--warn)}.code-body .ln{color:#3a3f50;user-select:none}
+.mcq{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.mcq-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}.mcq p.mcq-q{font-size:.95rem;color:#fff;margin-bottom:1rem;font-weight:500}.mcq-options{display:flex;flex-direction:column;gap:.5rem}.mcq-opt{display:flex;align-items:center;gap:.75rem;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.65rem 1rem;cursor:pointer;transition:all .2s;font-size:.9rem;font-family:'JetBrains Mono',monospace}.mcq-opt:hover{border-color:var(--blue)}.mcq-opt.correct{border-color:var(--correct);background:#0f2018;color:var(--correct)}.mcq-opt.wrong{border-color:var(--wrong);background:#200f0f;color:var(--wrong);opacity:.7}.mcq-opt .letter{min-width:1.5rem;height:1.5rem;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--text-muted)}.mcq-opt.correct .letter{border-color:var(--correct);color:var(--correct);background:#0a1a0f}.mcq-opt.wrong .letter{border-color:var(--wrong);color:var(--wrong)}.mcq-explain{display:none;margin-top:1rem;padding:1rem;background:#0f1510;border-radius:8px;border:1px dashed #2a4a2a;font-size:.88rem;color:var(--accent);line-height:1.7}.mcq-explain.show{display:block}
+.answer-toggle{margin-top:.75rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.35rem .9rem;border-radius:6px;cursor:pointer;transition:all .2s}.answer-toggle:hover{border-color:var(--accent);color:var(--accent)}.answer-content{display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);color:var(--accent);font-size:.92rem;line-height:1.7}.answer-content.show{display:block}
+.debug-box{background:linear-gradient(135deg,#1f1015,#221418);border:1px solid #4a2a2a;border-radius:12px;padding:1.5rem;margin:1.5rem 0}.debug-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.fill-in{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.fill-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--pink);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}.fill-blank{display:inline-block;border-bottom:2px dashed var(--pink);min-width:80px;color:var(--pink);font-family:'JetBrains Mono',monospace;padding:0 .25rem;cursor:help}
+.traceback{background:#1a0a0a;border:1px solid #3a1a1a;border-radius:10px;padding:1rem 1.25rem;margin:1rem 0;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.traceback .tb-header{color:var(--red);font-weight:600}.traceback .tb-file{color:var(--blue)}.traceback .tb-line{color:var(--warn)}.traceback .tb-code{color:var(--text-muted)}.traceback .tb-error{color:var(--red);font-weight:700}
+.error-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;border-left:3px solid var(--red)}.error-card h4{font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--red);margin-bottom:.25rem}.error-card .error-desc{color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem}
+.pattern-box{background:var(--terminal-bg);border:1px solid #1e2230;border-radius:10px;padding:1.5rem;margin:1rem 0;font-family:'JetBrains Mono',monospace;font-size:1.1rem;line-height:1.6;color:var(--warn);text-align:center;letter-spacing:.3em;white-space:pre}
+.diagram{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1.5rem 0;text-align:center;overflow-x:auto}
+.checklist{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin:1.5rem 0}.checklist h3{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--check);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}.checklist label{display:flex;align-items:flex-start;gap:.75rem;padding:.5rem 0;cursor:pointer;font-size:.95rem}.checklist input[type="checkbox"]{appearance:none;width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:3px;cursor:pointer;position:relative}.checklist input[type="checkbox"]:checked{background:var(--check);border-color:var(--check)}.checklist input[type="checkbox"]:checked::after{content:'✓';position:absolute;color:#000;font-size:12px;font-weight:700;top:50%;left:50%;transform:translate(-50%,-50%)}
+.celebrate{background:linear-gradient(135deg,#1a2520,#152030);border:2px solid var(--accent);border-radius:14px;padding:2rem;margin:2rem 0;text-align:center}.celebrate .emoji{font-size:2.5rem;margin-bottom:.75rem}.celebrate h3{font-family:'Source Serif 4',serif;font-size:1.4rem;color:#fff;margin-bottom:.5rem}.celebrate p{color:var(--text-muted);font-size:.95rem;max-width:500px;margin:0 auto}
+code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.15rem .45rem;border-radius:4px;font-size:.88em;color:var(--pink)}.separator{border:none;border-top:1px solid var(--border);margin:3rem 0}strong{color:#fff}
+.ex-heading{font-family:'JetBrains Mono',monospace;font-size:.9rem;margin:2.5rem 0 1rem;text-transform:uppercase;letter-spacing:.08em}
+@media(max-width:600px){.hero h1{font-size:2rem}.page-wrapper{padding:1rem}}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<div class="hero">
+  <div class="hero-tag">Python Course — Day 5</div>
+  <h1>Filling the <span>Gaps</span></h1>
+  <p class="hero-sub">Today we slow down and deeply understand everything that felt confusing. By the end of this lesson, the foundations will feel rock-solid.</p>
+</div>
+
+<div class="toc">
+  <h2>Lab Modules</h2>
+  <ul class="toc-list">
+    <li><a href="#mod1"><span class="toc-num">01</span> Mastering print() — All the Ways to Show Output</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Booleans &amp; All the Operators</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Data Structures — Lists, Sets, Strings Explicitly</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Variables, Naming Rules &amp; Memory</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> Understanding Loops &amp; Conditionals Deeply</a></li>
+    <li><a href="#mod6"><span class="toc-num">06</span> The Complete Python Error Guide (13 Types)</a></li>
+    <li><a href="#mod7"><span class="toc-num">07</span> Pattern Printing — Thinking Like a Programmer</a></li>
+  </ul>
+</div>
+
+<!-- ╔═════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 1: PRINT MASTERY                                    ║ -->
+<!-- ╚═════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod1">
+  <div class="section-label">Module 01</div>
+  <h2>Mastering print()</h2>
+  <p class="section-intro">The <code>print()</code> function has one job: <strong>show something in the terminal</strong>. But there are many different ways to use it. Let's learn every single one.</p>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 1.1</span><span class="task-title">All the Ways to Use print()</span></div>
+    <p>Create <code>print_mastery.py</code> and type every line. Run it and study the output carefully.</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">print_mastery.py</span></div>
+      <div class="code-body"><span class="com"># === WAY 1: Print a string literal (text in quotes) ===</span>
+<span class="fn">print</span>(<span class="str">"Hello, World!"</span>)
+<span class="com"># Output: Hello, World!</span>
+
+<span class="com"># === WAY 2: Print a number directly ===</span>
+<span class="fn">print</span>(<span class="num">42</span>)
+<span class="com"># Output: 42</span>
+
+<span class="com"># === WAY 3: Print a variable ===</span>
+<span class="var">name</span> <span class="op">=</span> <span class="str">"Pooja"</span>
+<span class="fn">print</span>(<span class="var">name</span>)
+<span class="com"># Output: Pooja   (prints the VALUE inside the variable, not the word "name")</span>
+
+<span class="com"># === WAY 4: Print MULTIPLE things separated by commas ===</span>
+<span class="var">age</span> <span class="op">=</span> <span class="num">20</span>
+<span class="fn">print</span>(<span class="str">"Age:"</span>, <span class="var">age</span>)
+<span class="com"># Output: Age: 20   (Python automatically adds a space between comma-separated items)</span>
+
+<span class="fn">print</span>(<span class="str">"Name:"</span>, <span class="var">name</span>, <span class="str">"Age:"</span>, <span class="var">age</span>)
+<span class="com"># Output: Name: Pooja Age: 20</span>
+
+<span class="com"># === WAY 5: Print a calculation ===</span>
+<span class="fn">print</span>(<span class="num">10</span> <span class="op">+</span> <span class="num">5</span>)
+<span class="com"># Output: 15   (Python calculates first, then prints the result)</span>
+
+<span class="fn">print</span>(<span class="str">"Sum:"</span>, <span class="num">10</span> <span class="op">+</span> <span class="num">5</span>)
+<span class="com"># Output: Sum: 15</span>
+
+<span class="com"># === WAY 6: Print using string concatenation (+) ===</span>
+<span class="fn">print</span>(<span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>)
+<span class="com"># Output: Hello, Pooja!   (NO spaces added - you control everything)</span>
+
+<span class="com"># === WAY 7: Print an empty line ===</span>
+<span class="fn">print</span>()
+<span class="com"># Output: (just a blank line)</span>
+
+<span class="com"># === WAY 8: Print the type of something ===</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="var">name</span>))
+<span class="com"># Output: &lt;class 'str'&gt;</span></div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Comma vs Plus — The Key Difference</h3>
+    <div>
+      <strong>Comma (,)</strong> — <code>print("Age:", 20)</code> → <code>Age: 20</code><br>
+      Automatically adds a space. Can mix any types (strings, numbers, booleans). <strong>This is the easiest and safest way.</strong><br><br>
+      <strong>Plus (+)</strong> — <code>print("Age: " + str(20))</code> → <code>Age: 20</code><br>
+      No automatic space. ALL items MUST be strings (so you need <code>str()</code> to convert numbers). Gives you full control over formatting.
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>print("Result:", 3 + 4)</code> output?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> Result:3 + 4</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Result:7</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Result: 7</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain">Python first calculates <code>3 + 4 = 7</code>. Then <code>print</code> shows both items separated by a space: <code>Result: 7</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 2: BOOLEANS & OPERATORS                             ║ -->
+<!-- ╚═════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod2">
+  <div class="section-label">Module 02</div>
+  <h2>Booleans &amp; All the Operators</h2>
+  <p class="section-intro">We've used <code>int</code>, <code>float</code>, and <code>str</code>. There's a fourth essential type: <strong>bool</strong> (boolean). It can only be one of two values: <code>True</code> or <code>False</code>. This is the type Python uses every time it makes a decision in an <code>if</code> statement.</p>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 2.1</span><span class="task-title">Booleans — True and False</span></div>
+    <p>Create <code>booleans.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">booleans.py</span></div>
+      <div class="code-body"><span class="com"># Boolean values — only two possibilities</span>
+<span class="var">is_sunny</span> <span class="op">=</span> <span class="kw">True</span>
+<span class="var">is_raining</span> <span class="op">=</span> <span class="kw">False</span>
+
+<span class="fn">print</span>(<span class="var">is_sunny</span>)              <span class="com"># True</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="var">is_sunny</span>))       <span class="com"># &lt;class 'bool'&gt;</span>
+
+<span class="com"># Comparisons PRODUCE booleans</span>
+<span class="fn">print</span>(<span class="num">10</span> <span class="op">&gt;</span> <span class="num">5</span>)               <span class="com"># True</span>
+<span class="fn">print</span>(<span class="num">10</span> <span class="op">==</span> <span class="num">5</span>)              <span class="com"># False</span>
+<span class="fn">print</span>(<span class="num">3</span> <span class="op">!=</span> <span class="num">7</span>)               <span class="com"># True  (3 is NOT equal to 7)</span>
+<span class="fn">print</span>(<span class="str">"hello"</span> <span class="op">==</span> <span class="str">"hello"</span>) <span class="com"># True</span>
+<span class="fn">print</span>(<span class="str">"Hello"</span> <span class="op">==</span> <span class="str">"hello"</span>) <span class="com"># False (capital H ≠ lowercase h)</span></div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">Every <code>if</code> statement works by evaluating its condition to <code>True</code> or <code>False</code>. When you write <code>if age >= 18:</code>, Python computes <code>age >= 18</code> which becomes either <code>True</code> or <code>False</code>. If True, the indented block runs. If False, it's skipped.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 = vs == — This Is CRITICAL</h3>
+    <div>
+      <code style="color:var(--warn);background:#2a2510">=</code> &nbsp; <strong>Assignment</strong> — stores a value: <code>x = 10</code> means "put 10 into x"<br><br>
+      <code style="color:var(--accent);background:#102a20">==</code> &nbsp; <strong>Comparison</strong> — checks if equal: <code>x == 10</code> means "is x equal to 10?" and returns True or False<br><br>
+      If you accidentally write <code>if x = 5:</code> (one equals) instead of <code>if x == 5:</code> (two equals), you'll get a <strong>SyntaxError</strong>. Single <code>=</code> is never allowed inside an <code>if</code> condition.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 2.2</span><span class="task-title">All Operators in One Place</span></div>
+    <p>Create <code>operators_all.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">operators_all.py</span></div>
+      <div class="code-body"><span class="var">a</span> <span class="op">=</span> <span class="num">15</span>
+<span class="var">b</span> <span class="op">=</span> <span class="num">4</span>
+
+<span class="com"># --- ARITHMETIC OPERATORS (do math) ---</span>
+<span class="fn">print</span>(<span class="str">"a + b  ="</span>, <span class="var">a</span> <span class="op">+</span> <span class="var">b</span>)    <span class="com"># Addition       → 19</span>
+<span class="fn">print</span>(<span class="str">"a - b  ="</span>, <span class="var">a</span> <span class="op">-</span> <span class="var">b</span>)    <span class="com"># Subtraction    → 11</span>
+<span class="fn">print</span>(<span class="str">"a * b  ="</span>, <span class="var">a</span> <span class="op">*</span> <span class="var">b</span>)    <span class="com"># Multiplication → 60</span>
+<span class="fn">print</span>(<span class="str">"a / b  ="</span>, <span class="var">a</span> <span class="op">/</span> <span class="var">b</span>)    <span class="com"># Division       → 3.75 (always float)</span>
+<span class="fn">print</span>(<span class="str">"a // b ="</span>, <span class="var">a</span> <span class="op">//</span> <span class="var">b</span>)   <span class="com"># Floor division → 3    (drops decimal)</span>
+<span class="fn">print</span>(<span class="str">"a % b  ="</span>, <span class="var">a</span> <span class="op">%</span> <span class="var">b</span>)    <span class="com"># Modulo         → 3    (remainder)</span>
+<span class="fn">print</span>(<span class="str">"a ** 2 ="</span>, <span class="var">a</span> <span class="op">**</span> <span class="num">2</span>)   <span class="com"># Power          → 225  (15 squared)</span>
+
+<span class="fn">print</span>()
+
+<span class="com"># --- COMPARISON OPERATORS (produce True/False) ---</span>
+<span class="fn">print</span>(<span class="str">"a == b:"</span>, <span class="var">a</span> <span class="op">==</span> <span class="var">b</span>)   <span class="com"># Equal?            → False</span>
+<span class="fn">print</span>(<span class="str">"a != b:"</span>, <span class="var">a</span> <span class="op">!=</span> <span class="var">b</span>)   <span class="com"># Not equal?        → True</span>
+<span class="fn">print</span>(<span class="str">"a > b :"</span>, <span class="var">a</span> <span class="op">&gt;</span> <span class="var">b</span>)    <span class="com"># Greater?          → True</span>
+<span class="fn">print</span>(<span class="str">"a < b :"</span>, <span class="var">a</span> <span class="op">&lt;</span> <span class="var">b</span>)    <span class="com"># Less?             → False</span>
+<span class="fn">print</span>(<span class="str">"a >= b:"</span>, <span class="var">a</span> <span class="op">&gt;=</span> <span class="var">b</span>)   <span class="com"># Greater or equal? → True</span>
+<span class="fn">print</span>(<span class="str">"a <= b:"</span>, <span class="var">a</span> <span class="op">&lt;=</span> <span class="var">b</span>)   <span class="com"># Less or equal?    → False</span>
+
+<span class="fn">print</span>()
+
+<span class="com"># --- LOGICAL OPERATORS (combine True/False) ---</span>
+<span class="fn">print</span>(<span class="kw">True</span> <span class="kw">and</span> <span class="kw">True</span>)    <span class="com"># True  (both must be True)</span>
+<span class="fn">print</span>(<span class="kw">True</span> <span class="kw">and</span> <span class="kw">False</span>)   <span class="com"># False</span>
+<span class="fn">print</span>(<span class="kw">True</span> <span class="kw">or</span> <span class="kw">False</span>)    <span class="com"># True  (at least one True)</span>
+<span class="fn">print</span>(<span class="kw">not</span> <span class="kw">True</span>)         <span class="com"># False (flips the value)</span></div>
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="A">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What is <code>17 % 5</code>?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 2</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 3</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> 3.4</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> 12</div>
+    </div>
+    <div class="mcq-explain"><code>%</code> gives the remainder. 17 ÷ 5 = 3 remainder <strong>2</strong>. So <code>17 % 5 = 2</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 3: DATA STRUCTURES EXPLICIT                         ║ -->
+<!-- ╚═════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod3">
+  <div class="section-label">Module 03</div>
+  <h2>Data Structures — Explicitly</h2>
+  <p class="section-intro">Let's be very clear about the syntax for strings, lists, and sets. Every bracket and quote matters.</p>
+
+  <div class="concept">
+    <h3>💡 Strings: Single Quotes vs Double Quotes</h3>
+    <div>
+      In Python, single quotes <code>'hello'</code> and double quotes <code>"hello"</code> are <strong>exactly the same thing</strong>. Both create a string. Use whichever you like, but be consistent.<br><br>
+      <strong>When to use one over the other:</strong><br>
+      If your text contains a single quote: use double quotes outside → <code>"it's sunny"</code><br>
+      If your text contains double quotes: use single quotes outside → <code>'She said "hello"'</code><br>
+      This avoids confusion about where the string starts and ends.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.1</span><span class="task-title">Strings — Quotes Hands-On</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">quotes.py</span></div>
+      <div class="code-body"><span class="com"># Both are identical strings</span>
+<span class="var">a</span> <span class="op">=</span> <span class="str">"Hello"</span>
+<span class="var">b</span> <span class="op">=</span> <span class="str">'Hello'</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">==</span> <span class="var">b</span>)   <span class="com"># True — they're the same!</span>
+
+<span class="com"># Use double quotes when text has a single quote</span>
+<span class="var">c</span> <span class="op">=</span> <span class="str">"It's a beautiful day"</span>
+<span class="fn">print</span>(<span class="var">c</span>)
+
+<span class="com"># Use single quotes when text has double quotes</span>
+<span class="var">d</span> <span class="op">=</span> <span class="str">'She said "wow"'</span>
+<span class="fn">print</span>(<span class="var">d</span>)</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Lists Use Square Brackets [ ]</h3>
+    <div>
+      A list is created with <strong>square brackets</strong> <code>[ ]</code> and items are separated by <strong>commas</strong>:<br>
+      <code>my_list = [item1, item2, item3]</code><br><br>
+      <code>numbers = [10, 20, 30]</code> — a list of integers<br>
+      <code>names = ["Alice", "Bob"]</code> — a list of strings<br>
+      <code>empty_list = []</code> — a list with nothing in it<br>
+      <code>mixed = [1, "hello", 3.14, True]</code> — lists can mix types<br><br>
+      You can also create a list from other things: <code>list("hello")</code> → <code>['h', 'e', 'l', 'l', 'o']</code>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Sets Use Curly Braces { }</h3>
+    <div>
+      A <strong>set</strong> is like a list, but with two special rules: <strong>no duplicates</strong> and <strong>no order</strong>.<br>
+      <code>my_set = {item1, item2, item3}</code><br><br>
+      <code>colors = {"red", "green", "blue"}</code><br>
+      <code>nums = {1, 2, 2, 3, 3, 3}</code> → becomes <code>{1, 2, 3}</code> (duplicates removed!)<br>
+      <code>empty_set = set()</code> — NOT <code>{}</code> (that creates an empty dictionary, a different type)<br><br>
+      Use a set when you care about unique values. Example: finding all unique words in a text.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.2</span><span class="task-title">List vs Set — See the Difference</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">list_vs_set.py</span></div>
+      <div class="code-body"><span class="com"># LIST — keeps duplicates, keeps order, uses [ ]</span>
+<span class="var">my_list</span> <span class="op">=</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"apple"</span>, <span class="str">"cherry"</span>]
+<span class="fn">print</span>(<span class="str">"List:"</span>, <span class="var">my_list</span>)
+<span class="fn">print</span>(<span class="str">"List length:"</span>, <span class="fn">len</span>(<span class="var">my_list</span>))
+
+<span class="com"># SET — removes duplicates, no fixed order, uses { }</span>
+<span class="var">my_set</span> <span class="op">=</span> {<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"apple"</span>, <span class="str">"cherry"</span>}
+<span class="fn">print</span>(<span class="str">"Set:"</span>, <span class="var">my_set</span>)
+<span class="fn">print</span>(<span class="str">"Set length:"</span>, <span class="fn">len</span>(<span class="var">my_set</span>))
+
+<span class="com"># Convert between them</span>
+<span class="var">unique_fruits</span> <span class="op">=</span> <span class="fn">list</span>(<span class="var">my_set</span>)    <span class="com"># set → list</span>
+<span class="var">unique_check</span> <span class="op">=</span> <span class="fn">set</span>(<span class="var">my_list</span>)     <span class="com"># list → set (removes duplicates)</span>
+<span class="fn">print</span>(<span class="str">"Unique from list:"</span>, <span class="var">unique_check</span>)</div>
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>len({1, 2, 2, 3, 3, 3})</code> return?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 6</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 3</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Error</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> 1</div>
+    </div>
+    <div class="mcq-explain">A set removes duplicates: <code>{1, 2, 2, 3, 3, 3}</code> becomes <code>{1, 2, 3}</code> — that's 3 unique items.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 4: VARIABLES, NAMING, MEMORY                        ║ -->
+<!-- ╚═════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod4">
+  <div class="section-label">Module 04</div>
+  <h2>Variables, Naming &amp; Memory</h2>
+  <p class="section-intro">Let's understand exactly what happens inside the computer when you create a variable, and the rules for naming them.</p>
+
+  <div class="concept">
+    <h3>💡 What Actually Happens When You Write <code>x = 10</code></h3>
+    <div>
+      Remember from Day 0: your computer has <strong>RAM</strong> (fast, temporary memory). When your Python program runs, it uses RAM to store its variables.<br><br>
+      When you write <code>x = 10</code>:<br>
+      1. Python finds a small empty spot in RAM<br>
+      2. It stores the value <code>10</code> in that spot<br>
+      3. It sticks a label called <code>x</code> on that spot, so you can find it later<br><br>
+      A variable is essentially a <strong>name tag on a location in RAM</strong>. When you write <code>print(x)</code>, Python looks up the label "x", goes to that RAM location, reads the value (10), and shows it on screen.
+    </div>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg">
+      <text x="80" y="25" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="12" font-weight="600">YOUR CODE</text>
+      <rect x="20" y="35" width="120" height="40" rx="8" fill="#1a2030" stroke="#60a5fa" stroke-width="1.5"/>
+      <text x="80" y="60" text-anchor="middle" fill="#fff" font-family="JetBrains Mono" font-size="12">x = 10</text>
+      <path d="M150 55 L230 55" stroke="#6ee7b7" stroke-width="2" fill="none" marker-end="url(#ar)"/>
+      <text x="190" y="48" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="9">creates</text>
+      <text x="430" y="25" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="12" font-weight="600">RAM (Memory)</text>
+      <rect x="240" y="35" width="380" height="100" rx="10" fill="#0a0c10" stroke="#2a4a3a" stroke-width="1.5"/>
+      <rect x="260" y="55" width="80" height="60" rx="6" fill="#1a2520" stroke="#6ee7b7" stroke-width="1.5"/>
+      <text x="300" y="78" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="11" font-weight="600">x</text>
+      <text x="300" y="100" text-anchor="middle" fill="#fff" font-family="JetBrains Mono" font-size="16" font-weight="700">10</text>
+      <rect x="360" y="55" width="80" height="60" rx="6" fill="#1a2030" stroke="#2a4a6a" stroke-width="1" stroke-dasharray="4"/>
+      <text x="400" y="85" text-anchor="middle" fill="#3a4a5a" font-family="JetBrains Mono" font-size="10">empty</text>
+      <rect x="460" y="55" width="80" height="60" rx="6" fill="#1a2030" stroke="#2a4a6a" stroke-width="1" stroke-dasharray="4"/>
+      <text x="500" y="85" text-anchor="middle" fill="#3a4a5a" font-family="JetBrains Mono" font-size="10">empty</text>
+      <defs><marker id="ar" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6ee7b7"/></marker></defs>
+    </svg>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Variables Are Only Available AFTER the Line They're Created</h3>
+    <div>Python reads your code <strong>top to bottom, one line at a time</strong>. A variable doesn't exist until the line that creates it has been executed. You cannot use a variable above the line where it was created.</div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.1</span><span class="task-title">Step-by-Step Execution</span></div>
+    <p>Create <code>step_by_step.py</code>. Before running, <strong>trace through it yourself line by line on paper</strong>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">step_by_step.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">a</span> <span class="op">=</span> <span class="num">5</span>          <span class="com"># Line 1: RAM → a = 5</span>
+<span class="ln"> 2 </span><span class="var">b</span> <span class="op">=</span> <span class="num">3</span>          <span class="com"># Line 2: RAM → a = 5, b = 3</span>
+<span class="ln"> 3 </span><span class="var">c</span> <span class="op">=</span> <span class="var">a</span> <span class="op">+</span> <span class="var">b</span>      <span class="com"># Line 3: c = 5 + 3 = 8. RAM → a=5, b=3, c=8</span>
+<span class="ln"> 4 </span><span class="var">a</span> <span class="op">=</span> <span class="num">10</span>         <span class="com"># Line 4: a changes to 10. RAM → a=10, b=3, c=8</span>
+<span class="ln"> 5 </span><span class="fn">print</span>(<span class="var">a</span>, <span class="var">b</span>, <span class="var">c</span>) <span class="com"># Line 5: prints 10 3 8</span>
+<span class="com"># NOTE: c is still 8, NOT 13! c was calculated when a was 5.</span>
+<span class="com"># Changing a later does NOT automatically update c.</span></div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Variable Naming Rules</h3>
+    <div>
+      <strong>ALLOWED:</strong><br>
+      <code>name</code> <code>age</code> <code>student_name</code> <code>score1</code> <code>_private</code> <code>myVar</code><br><br>
+      <strong>NOT ALLOWED:</strong><br>
+      <code>1name</code> — cannot start with a number<br>
+      <code>my name</code> — cannot have spaces (use <code>my_name</code> instead)<br>
+      <code>my-name</code> — hyphens not allowed (use underscores)<br>
+      <code>class</code> <code>for</code> <code>if</code> <code>print</code> — these are Python keywords/built-ins, don't use them as variable names<br><br>
+      <strong>CASE SENSITIVE:</strong> <code>Name</code>, <code>name</code>, and <code>NAME</code> are three <em>completely different</em> variables.
+    </div>
+  </div>
+
+  <div class="warning">
+    <div class="warning-label">⚠️ Never Name a Variable After a Built-in</div>
+    <p>If you write <code>list = [1, 2, 3]</code>, you've just <strong>replaced</strong> the built-in <code>list()</code> function with your variable. Now <code>list()</code> won't work anymore in your program. Same for <code>str = "hello"</code>, <code>print = 5</code>, <code>type = "admin"</code>, etc. Always use descriptive names like <code>my_list</code>, <code>user_type</code>, etc.</p>
+  </div>
+
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">Which of these is a VALID variable name?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 2nd_place</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> my name</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> for</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> student_score</div>
+    </div>
+    <div class="mcq-explain"><code>2nd_place</code> starts with a number. <code>my name</code> has a space. <code>for</code> is a Python keyword. Only <code>student_score</code> follows all the rules.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 5: LOOPS & CONDITIONALS DEEP                        ║ -->
+<!-- ╚═════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod5">
+  <div class="section-label">Module 05</div>
+  <h2>Understanding Loops &amp; Conditionals Deeply</h2>
+  <p class="section-intro">Let's break down the exact anatomy of a <code>for</code> loop and understand every single word in the syntax.</p>
+
+  <div class="concept">
+    <h3>💡 Anatomy of <code>for i in range(1, 6):</code></h3>
+    <div>Let's label every single part:</div>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="70" width="660" height="45" rx="8" fill="#0d1015" stroke="#2a3a4a" stroke-width="1.5"/>
+      <text x="60" y="97" fill="var(--pink)" font-family="JetBrains Mono" font-size="16" font-weight="600">for</text>
+      <text x="110" y="97" fill="#fff" font-family="JetBrains Mono" font-size="16" font-weight="600">i</text>
+      <text x="140" y="97" fill="var(--pink)" font-family="JetBrains Mono" font-size="16" font-weight="600">in</text>
+      <text x="178" y="97" fill="var(--blue)" font-family="JetBrains Mono" font-size="16" font-weight="600">range</text>
+      <text x="236" y="97" fill="#fff" font-family="JetBrains Mono" font-size="16">(</text>
+      <text x="248" y="97" fill="var(--orange)" font-family="JetBrains Mono" font-size="16" font-weight="600">1</text>
+      <text x="262" y="97" fill="#fff" font-family="JetBrains Mono" font-size="16">,</text>
+      <text x="280" y="97" fill="var(--orange)" font-family="JetBrains Mono" font-size="16" font-weight="600">6</text>
+      <text x="294" y="97" fill="#fff" font-family="JetBrains Mono" font-size="16">)</text>
+      <text x="308" y="97" fill="var(--warn)" font-family="JetBrains Mono" font-size="16" font-weight="700">:</text>
+
+      <!-- labels pointing up -->
+      <line x1="60" y1="68" x2="60" y2="42" stroke="#f472b6" stroke-width="1"/><text x="60" y="36" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="9">KEYWORD</text>
+      <line x1="110" y1="68" x2="110" y2="22" stroke="#fff" stroke-width="1"/><text x="110" y="16" text-anchor="middle" fill="#fff" font-family="JetBrains Mono" font-size="9">VARIABLE</text><text x="110" y="8" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="8">(you choose this name)</text>
+      <line x1="140" y1="68" x2="140" y2="42" stroke="#f472b6" stroke-width="1"/><text x="140" y="36" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="9">KEYWORD</text>
+
+      <!-- labels pointing down -->
+      <line x1="208" y1="117" x2="208" y2="140" stroke="#60a5fa" stroke-width="1"/><text x="208" y="153" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="9">FUNCTION that</text><text x="208" y="165" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="9">generates numbers</text>
+      <line x1="262" y1="117" x2="262" y2="143" stroke="#fb923c" stroke-width="1"/><text x="262" y="155" text-anchor="middle" fill="#fb923c" font-family="JetBrains Mono" font-size="9">start, stop</text><text x="262" y="167" text-anchor="middle" fill="#fb923c" font-family="JetBrains Mono" font-size="9">(1 to 5, not 6)</text>
+      <line x1="308" y1="117" x2="308" y2="140" stroke="#fbbf24" stroke-width="1"/><text x="308" y="153" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono" font-size="9">COLON: required!</text><text x="308" y="165" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono" font-size="9">starts the block</text>
+
+      <rect x="340" y="30" width="340" height="50" rx="6" fill="#141820" stroke="#2a4a3a" stroke-width="1"/>
+      <text x="360" y="50" fill="#8891a8" font-family="DM Sans" font-size="11">The variable <tspan fill="#fff" font-family="JetBrains Mono">i</tspan> is just a name YOU pick.</text>
+      <text x="360" y="68" fill="#8891a8" font-family="DM Sans" font-size="11">You could call it <tspan fill="#fff" font-family="JetBrains Mono">num</tspan>, <tspan fill="#fff" font-family="JetBrains Mono">x</tspan>, <tspan fill="#fff" font-family="JetBrains Mono">count</tspan>, anything.</text>
+    </svg>
+  </div>
+
+  <div class="concept">
+    <h3>💡 What Happens Each Time the Loop Runs (Each "Iteration")</h3>
+    <div>
+      When you write <code>for i in range(1, 6):</code>, here's exactly what happens:<br><br>
+      <strong>Iteration 1:</strong> <code>i</code> gets the value <code>1</code> → the indented code runs with i=1<br>
+      <strong>Iteration 2:</strong> <code>i</code> gets the value <code>2</code> → the indented code runs with i=2<br>
+      <strong>Iteration 3:</strong> <code>i</code> gets the value <code>3</code> → the indented code runs with i=3<br>
+      <strong>Iteration 4:</strong> <code>i</code> gets the value <code>4</code> → the indented code runs with i=4<br>
+      <strong>Iteration 5:</strong> <code>i</code> gets the value <code>5</code> → the indented code runs with i=5<br>
+      <strong>Done!</strong> No more values → loop ends → Python continues with the code after the loop.<br><br>
+      The variable <code>i</code> is <strong>automatically updated</strong> every time the loop goes around. You don't need to change it yourself — the <code>for</code> loop does that for you.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 5.1</span><span class="task-title">Watch <code>i</code> Change Each Iteration</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">watch_i.py</span></div>
+      <div class="code-body"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    <span class="fn">print</span>(<span class="str">"i is now:"</span>, <span class="var">i</span>)
+
+<span class="fn">print</span>(<span class="str">"Loop finished!"</span>)
+
+<span class="fn">print</span>()
+
+<span class="com"># The variable name doesn't have to be "i"!</span>
+<span class="kw">for</span> <span class="var">fruit</span> <span class="kw">in</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>]:
+    <span class="fn">print</span>(<span class="str">"fruit is now:"</span>, <span class="var">fruit</span>)</div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="output">i is now: 1
+i is now: 2
+i is now: 3
+i is now: 4
+i is now: 5
+Loop finished!
+
+fruit is now: apple
+fruit is now: banana
+fruit is now: cherry</span></div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 What Can Go Inside an <code>if</code> Condition?</h3>
+    <div>
+      The <code>if</code> condition can be <strong>anything that Python can evaluate to True or False</strong>:<br><br>
+      <code>if True:</code> — always runs<br>
+      <code>if False:</code> — never runs<br>
+      <code>if x > 5:</code> — runs if the comparison is True<br>
+      <code>if name == "Pooja":</code> — runs if name equals "Pooja"<br>
+      <code>if x:</code> — runs if x is "truthy" (non-zero number, non-empty string)<br>
+      <code>if "hello":</code> — runs! (non-empty string = True)<br>
+      <code>if "":</code> — does NOT run (empty string = False)<br>
+      <code>if 0:</code> — does NOT run (zero = False)<br>
+      <code>if 42:</code> — runs! (any non-zero number = True)<br>
+      <code>if my_list:</code> — runs if the list is not empty<br><br>
+      <strong>Falsy values</strong> (treated as False): <code>False</code>, <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>None</code><br>
+      <strong>Everything else is Truthy</strong> (treated as True).
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">In <code>for num in [10, 20, 30]:</code>, which is the keyword and which is the variable?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> for=variable, in=variable, num=keyword</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> for=keyword, num=keyword, in=keyword</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> for=keyword, in=keyword, num=variable</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> They're all keywords</div>
+    </div>
+    <div class="mcq-explain"><code>for</code> and <code>in</code> are Python <strong>keywords</strong> (built into the language — you can't change them). <code>num</code> is a <strong>variable name</strong> that YOU chose. It gets a new value from the list on each iteration.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 6: COMPLETE ERROR GUIDE                              ║ -->
+<!-- ╚═════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod6">
+  <div class="section-label">Module 06</div>
+  <h2>The Complete Python Error Guide</h2>
+  <p class="section-intro">Here is every common error you'll encounter, what it means, and exactly how to fix it. Create a file for each debug exercise, run it, and fix it.</p>
+
+  <!-- 1. SyntaxError -->
+  <div class="error-card">
+    <h4>1. SyntaxError</h4>
+    <p class="error-desc">Python's grammar rule was broken — it can't even begin to understand the code.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E1 — Missing quotes</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e1.py</span></div><div class="code-body"><span class="var">msg</span> <span class="op">=</span> <span class="str">"Hello World</span>
+<span class="fn">print</span>(<span class="var">msg</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content">Missing closing quote on line 1. Fix: <code>msg = "Hello World"</code></div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E1b — Missing colon</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e1b.py</span></div><div class="code-body"><span class="kw">if</span> <span class="num">5</span> <span class="op">&gt;</span> <span class="num">3</span>
+    <span class="fn">print</span>(<span class="str">"yes"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content">Missing <code>:</code> at end of the <code>if</code> line. Fix: <code>if 5 > 3:</code></div>
+  </div>
+
+  <!-- 2. IndentationError -->
+  <div class="error-card">
+    <h4>2. IndentationError</h4>
+    <p class="error-desc">The code inside a block (if, for, etc.) isn't indented, or the indentation is inconsistent.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E2</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e2.py</span></div><div class="code-body"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+<span class="fn">print</span>(<span class="var">i</span>)
+    <span class="fn">print</span>(<span class="str">"done"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content">Line 2 has no indentation, line 3 has indentation — inconsistent. Fix: indent line 2 with 4 spaces: <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code></div>
+  </div>
+
+  <!-- 3. NameError -->
+  <div class="error-card">
+    <h4>3. NameError</h4>
+    <p class="error-desc">You used a variable name that Python doesn't recognize — it was never created, or it's misspelled.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E3</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e3.py</span></div><div class="code-body"><span class="var">user_name</span> <span class="op">=</span> <span class="str">"Pooja"</span>
+<span class="fn">print</span>(<span class="str">"Hello,"</span>, <span class="var">User_name</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content"><code>User_name</code> (capital U) doesn't exist — only <code>user_name</code> (lowercase u) does. Python is case-sensitive. Fix: <code>print("Hello,", user_name)</code></div>
+  </div>
+
+  <!-- 4. TypeError -->
+  <div class="error-card">
+    <h4>4. TypeError</h4>
+    <p class="error-desc">You tried to do an operation with incompatible types (like adding a string and a number).</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E4</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e4.py</span></div><div class="code-body"><span class="var">age</span> <span class="op">=</span> <span class="num">25</span>
+<span class="fn">print</span>(<span class="str">"I am "</span> <span class="op">+</span> <span class="var">age</span> <span class="op">+</span> <span class="str">" years old"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content">Can't <code>+</code> string and int. Fix: <code>print("I am " + str(age) + " years old")</code> or use comma: <code>print("I am", age, "years old")</code></div>
+  </div>
+
+  <!-- 5. ValueError -->
+  <div class="error-card">
+    <h4>5. ValueError</h4>
+    <p class="error-desc">The type is right but the value is wrong — like trying to convert non-numeric text to a number.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E5</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e5.py</span></div><div class="code-body"><span class="var">num</span> <span class="op">=</span> <span class="fn">int</span>(<span class="str">"hello"</span>)
+<span class="fn">print</span>(<span class="var">num</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content"><code>int("hello")</code> fails because "hello" isn't a number. <code>int()</code> only works on numeric strings like <code>int("42")</code>. Fix depends on intent — if you want 0, use a try/except or check the value first.</div>
+  </div>
+
+  <!-- 6. IndexError -->
+  <div class="error-card">
+    <h4>6. IndexError</h4>
+    <p class="error-desc">You tried to access a list position that doesn't exist.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E6</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e6.py</span></div><div class="code-body"><span class="var">items</span> <span class="op">=</span> [<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>]
+<span class="fn">print</span>(<span class="var">items</span>[<span class="num">3</span>])</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content">List has 3 items at indices 0, 1, 2. Index 3 doesn't exist. Fix: <code>items[2]</code> for last item, or <code>items[-1]</code>.</div>
+  </div>
+
+  <!-- 7. KeyError -->
+  <div class="error-card">
+    <h4>7. KeyError</h4>
+    <p class="error-desc">You tried to access a dictionary key that doesn't exist. (We haven't covered dictionaries yet, but you should know this error.)</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E7</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e7.py</span></div><div class="code-body"><span class="var">person</span> <span class="op">=</span> {<span class="str">"name"</span>: <span class="str">"Pooja"</span>, <span class="str">"age"</span>: <span class="num">20</span>}
+<span class="fn">print</span>(<span class="var">person</span>[<span class="str">"email"</span>])</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content">The key <code>"email"</code> doesn't exist in the dictionary. Only <code>"name"</code> and <code>"age"</code> exist. Fix: use an existing key or add the key first: <code>person["email"] = "pooja@mail.com"</code></div>
+  </div>
+
+  <!-- 8. AttributeError -->
+  <div class="error-card">
+    <h4>8. AttributeError</h4>
+    <p class="error-desc">You tried to use a method that doesn't exist on that type.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E8</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e8.py</span></div><div class="code-body"><span class="var">x</span> <span class="op">=</span> <span class="num">42</span>
+<span class="fn">print</span>(<span class="var">x</span>.<span class="fn">append</span>(<span class="num">5</span>))</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content"><code>.append()</code> is a list method. <code>x</code> is an integer — integers don't have <code>.append()</code>. Fix: if you want a list, use <code>x = [42]</code> then <code>x.append(5)</code>.</div>
+  </div>
+
+  <!-- 9. Logical Error -->
+  <div class="error-card">
+    <h4>9. Logical Error (no crash!)</h4>
+    <p class="error-desc">The code runs fine but gives the WRONG answer. The hardest type to find.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E9 — Expected: average of 10, 20, 30 = 20.0</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e9.py</span></div><div class="code-body"><span class="var">avg</span> <span class="op">=</span> <span class="num">10</span> <span class="op">+</span> <span class="num">20</span> <span class="op">+</span> <span class="num">30</span> <span class="op">/</span> <span class="num">3</span>
+<span class="fn">print</span>(<span class="str">"Average:"</span>, <span class="var">avg</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content">Division happens before addition (order of operations). <code>10 + 20 + (30/3)</code> = 40.0, not 20.0. Fix: <code>avg = (10 + 20 + 30) / 3</code></div>
+  </div>
+
+  <!-- 10. Input Type Error -->
+  <div class="error-card">
+    <h4>10. Input Type Error (very common!)</h4>
+    <p class="error-desc"><code>input()</code> ALWAYS returns a string. If you do math on it without converting, you get wrong results or errors.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E10 — Enter 5, expect 10, but get "55"</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e10.py</span></div><div class="code-body"><span class="var">num</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Number: "</span>)
+<span class="var">doubled</span> <span class="op">=</span> <span class="var">num</span> <span class="op">*</span> <span class="num">2</span>
+<span class="fn">print</span>(<span class="var">doubled</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content"><code>input()</code> returns <code>"5"</code> (string). <code>"5" * 2</code> = <code>"55"</code> (string repetition). Fix: <code>num = int(input("Number: "))</code></div>
+  </div>
+
+  <!-- 11. Infinite Loop -->
+  <div class="error-card">
+    <h4>11. Infinite Loop</h4>
+    <p class="error-desc">A <code>while</code> loop whose condition never becomes False. Press Ctrl+C to stop it.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E11</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e11.py</span></div><div class="code-body"><span class="var">x</span> <span class="op">=</span> <span class="num">1</span>
+<span class="kw">while</span> <span class="var">x</span> <span class="op">&lt;</span> <span class="num">10</span>:
+    <span class="fn">print</span>(<span class="var">x</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content"><code>x</code> never changes, so <code>x &lt; 10</code> is always True. Fix: add <code>x = x + 1</code> inside the loop.</div>
+  </div>
+
+  <!-- 12. Missing Parentheses -->
+  <div class="error-card">
+    <h4>12. Missing Parentheses</h4>
+    <p class="error-desc">In Python 3, <code>print</code> is a function and MUST use parentheses.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E12</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e12.py</span></div><div class="code-body"><span class="fn">print</span> <span class="str">"Hello"</span></div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content">SyntaxError. In Python 3, <code>print</code> is a function — parentheses are required. Fix: <code>print("Hello")</code></div>
+  </div>
+
+  <!-- 13. Overwriting Built-ins -->
+  <div class="error-card">
+    <h4>13. Overwriting Built-in Names</h4>
+    <p class="error-desc">Using a built-in name as a variable destroys the built-in functionality.</p>
+  </div>
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug E13</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e13.py</span></div><div class="code-body"><span class="var">list</span> <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+<span class="var">numbers</span> <span class="op">=</span> <span class="fn">list</span>(<span class="fn">range</span>(<span class="num">5</span>))
+<span class="fn">print</span>(<span class="var">numbers</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content"><code>TypeError: 'list' object is not callable</code>. Line 1 overwrote the built-in <code>list()</code> function with a variable. Now <code>list(range(5))</code> tries to "call" your variable as a function. Fix: rename the variable: <code>my_list = [1, 2, 3]</code></div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 7: PATTERN PRINTING                                  ║ -->
+<!-- ╚═════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod7">
+  <div class="section-label">Module 07</div>
+  <h2>Pattern Printing — Thinking Like a Programmer</h2>
+  <p class="section-intro">Patterns teach you to see the <strong>math hidden inside repetition</strong>. This is how programmers think: find the pattern, express it as a formula, and let a loop do the work.</p>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 7.1</span><span class="task-title">Step 1 — Print It the Hard Way First</span></div>
+    <p>Let's print this pattern. First, do it with individual print statements:</p>
+    <div class="pattern-box">*
+**
+***
+****
+*****</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">pattern_hard.py</span></div>
+      <div class="code-body"><span class="fn">print</span>(<span class="str">"*"</span>)
+<span class="fn">print</span>(<span class="str">"**"</span>)
+<span class="fn">print</span>(<span class="str">"***"</span>)
+<span class="fn">print</span>(<span class="str">"****"</span>)
+<span class="fn">print</span>(<span class="str">"*****"</span>)</div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">This works, but imagine printing 100 rows. There must be a better way. Let's find the pattern.</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 7.2</span><span class="task-title">Step 2 — Find the Pattern</span></div>
+    <p>Look at each row and count the stars:</p>
+    <div class="concept">
+      <h3>📖 The Pattern Table</h3>
+      <div>
+        Row 1 → 1 star → <code>"*" * 1</code><br>
+        Row 2 → 2 stars → <code>"*" * 2</code><br>
+        Row 3 → 3 stars → <code>"*" * 3</code><br>
+        Row 4 → 4 stars → <code>"*" * 4</code><br>
+        Row 5 → 5 stars → <code>"*" * 5</code><br><br>
+        <strong>The pattern:</strong> Row number <code>i</code> has exactly <code>i</code> stars. The formula is simply: <code>"*" * i</code><br>
+        And <code>i</code> goes from 1 to 5. That's a loop!
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 7.3</span><span class="task-title">Step 3 — Use a Loop + Formula</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">pattern_loop.py</span></div>
+      <div class="code-body"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    <span class="fn">print</span>(<span class="str">"*"</span> <span class="op">*</span> <span class="var">i</span>)</div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">Just 2 lines! And you can change <code>6</code> to <code>101</code> to print 100 rows. The loop + formula approach is infinitely scalable.</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 7.4</span><span class="task-title">Solved Example — Right-Aligned Triangle</span></div>
+    <p>Now let's do a harder pattern with spaces:</p>
+    <div class="pattern-box">    *
+   **
+  ***
+ ****
+*****</div>
+    <div class="concept">
+      <h3>📖 Find the Formula</h3>
+      <div>
+        Total width = 5. For each row <code>i</code> (1 to 5):<br>
+        Spaces = <code>5 - i</code> &nbsp;&nbsp; Stars = <code>i</code><br><br>
+        Row 1: 4 spaces, 1 star → <code>" " * 4 + "*" * 1</code><br>
+        Row 2: 3 spaces, 2 stars → <code>" " * 3 + "*" * 2</code><br>
+        Row 3: 2 spaces, 3 stars → <code>" " * 2 + "*" * 3</code><br>
+        Row 4: 1 space, 4 stars → <code>" " * 1 + "*" * 4</code><br>
+        Row 5: 0 spaces, 5 stars → <code>" " * 0 + "*" * 5</code>
+      </div>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">pattern_right.py</span></div>
+      <div class="code-body"><span class="var">n</span> <span class="op">=</span> <span class="num">5</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="var">n</span> <span class="op">+</span> <span class="num">1</span>):
+    <span class="var">spaces</span> <span class="op">=</span> <span class="str">" "</span> <span class="op">*</span> (<span class="var">n</span> <span class="op">-</span> <span class="var">i</span>)
+    <span class="var">stars</span> <span class="op">=</span> <span class="str">"*"</span> <span class="op">*</span> <span class="var">i</span>
+    <span class="fn">print</span>(<span class="var">spaces</span> <span class="op">+</span> <span class="var">stars</span>)</div>
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 7.5</span><span class="task-title">Your Turn — Print This Pyramid</span></div>
+    <div class="pattern-box">    *
+   ***
+  *****
+ *******
+*********</div>
+    <p><strong>Hints:</strong> For 5 rows, total width is 9 (2*5-1). For row <code>i</code> (1 to 5): Stars = <code>2*i - 1</code>. Spaces = <code>5 - i</code>. Use the same approach as the solved example above. Try for 3 minutes before revealing the answer!</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>n = 5</code><br><code>for i in range(1, n + 1):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;spaces = " " * (n - i)</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;stars = "*" * (2 * i - 1)</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(spaces + stars)</code></div>
+  </div>
+
+  <div class="celebrate">
+    <div class="emoji">🧠</div>
+    <h3>This Is How Programmers Think</h3>
+    <p>The process is always the same: <strong>see the pattern → find the formula → write the loop</strong>. This skill transfers to everything in programming — not just star patterns.</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- FINAL CHECKLIST -->
+<section class="lab-section" id="final">
+  <div class="section-label">Day 5 Complete</div>
+  <h2>Completion Checklist</h2>
+  <div class="checklist">
+    <h3>🎯 I Can Now…</h3>
+    <label><input type="checkbox"> Use print() with literals, variables, multiple arguments, concatenation, and empty calls</label>
+    <label><input type="checkbox"> Explain the difference between comma and + in print()</label>
+    <label><input type="checkbox"> Understand booleans (True/False) and that if conditions evaluate to booleans</label>
+    <label><input type="checkbox"> Use all arithmetic operators: + - * / // % **</label>
+    <label><input type="checkbox"> Explain the difference between = (assignment) and == (comparison)</label>
+    <label><input type="checkbox"> Know that strings use quotes, lists use [ ], sets use { }</label>
+    <label><input type="checkbox"> Explain single quotes vs double quotes for strings</label>
+    <label><input type="checkbox"> Follow variable naming rules and avoid overwriting built-ins</label>
+    <label><input type="checkbox"> Think about variables as labeled locations in RAM</label>
+    <label><input type="checkbox"> Trace code step-by-step and predict variable values</label>
+    <label><input type="checkbox"> Explain every word in <code>for i in range(1, 6):</code></label>
+    <label><input type="checkbox"> Understand that the loop variable gets a new value each iteration</label>
+    <label><input type="checkbox"> Identify and fix all 13 common Python error types</label>
+    <label><input type="checkbox"> Find patterns in output and express them as formulas in loops</label>
+  </div>
+
+  <div class="celebrate">
+    <div class="emoji">🏆</div>
+    <h3>Your Foundations Are Now Rock-Solid!</h3>
+    <p>Every concept that felt confusing should now feel clear. You understand not just <em>what</em> to type, but <em>why</em> it works. This deep understanding is what separates someone who can code from someone who just copies code. You're becoming a real programmer.</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+function toggleAnswer(btn){const c=btn.nextElementSibling;c.classList.toggle('show');btn.textContent=c.classList.contains('show')?'Hide Answer':'Reveal Answer'}
+function checkMCQ(opt){const mcq=opt.closest('.mcq');if(mcq.dataset.answered)return;mcq.dataset.answered='true';const correct=mcq.dataset.correct,chosen=opt.dataset.value;mcq.querySelectorAll('.mcq-opt').forEach(o=>{if(o.dataset.value===correct)o.classList.add('correct');else if(o===opt&&chosen!==correct)o.classList.add('wrong')});mcq.querySelector('.mcq-explain').classList.add('show')}
+</script>
+</body>
+</html>

@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Derivatives, Made Simple — A Visual Tutorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Newsreader:ital,opsz@0,6..72;1,6..72&family=Caveat:wght@500;700&family=Spline+Sans+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6EC;
+    --paper-2:#F4ECDD;
+    --ink:#211A14;
+    --ink-soft:#6b5d4e;
+    --line:#d9cdb8;
+    --curve:#E2542F;     /* the function f(x) */
+    --tangent:#1F8A78;   /* the tangent / derivative */
+    --secant:#C9A227;    /* secant line */
+    --accent:#2b5fa8;    /* extra accent */
+    --hill:#cf3a76;
+    --good:#1F8A78;
+    --shadow: 0 18px 40px -22px rgba(33,26,20,.4);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 14% -5%, #fff7e9 0%, transparent 45%),
+      radial-gradient(circle at 92% 8%, #f6ead4 0%, transparent 40%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader", Georgia, serif;
+    font-size:19px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* faint graph-paper texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background-image:
+      linear-gradient(rgba(180,160,130,.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180,160,130,.10) 1px, transparent 1px);
+    background-size:28px 28px;
+  }
+  .wrap{position:relative; z-index:1; max-width:880px; margin:0 auto; padding:0 22px 120px;}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    text-align:center; padding:70px 10px 30px;
+  }
+  .kicker{
+    font-family:"Spline Sans Mono", monospace;
+    letter-spacing:.32em; text-transform:uppercase; font-size:.7rem;
+    color:var(--ink-soft);
+  }
+  h1{
+    font-family:"Fraunces", serif; font-weight:900;
+    font-size:clamp(2.6rem,8vw,4.6rem); line-height:.98; margin:.25em 0 .15em;
+    letter-spacing:-.02em;
+  }
+  h1 .em{color:var(--curve); font-style:italic; font-weight:500;}
+  .sub{font-size:1.15rem; color:var(--ink-soft); max-width:560px; margin:0 auto;}
+  .scroll-hint{margin-top:34px; font-family:"Caveat",cursive; font-size:1.5rem; color:var(--curve);}
+  .scroll-hint span{display:inline-block; animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+  /* ---------- SECTIONS ---------- */
+  section{margin-top:78px;}
+  .step-no{
+    font-family:"Spline Sans Mono",monospace; font-size:.72rem; letter-spacing:.2em;
+    color:var(--curve); text-transform:uppercase;
+  }
+  h2{
+    font-family:"Fraunces",serif; font-weight:600; font-size:clamp(1.8rem,4.5vw,2.7rem);
+    line-height:1.05; margin:.1em 0 .5em; letter-spacing:-.01em;
+  }
+  h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.3rem; margin:1.6em 0 .3em;}
+  p{margin:.7em 0;}
+  strong{color:var(--curve); font-weight:600;}
+  .tan{color:var(--tangent); font-weight:600;}
+  .lead{font-size:1.18rem;}
+
+  /* callout cards */
+  .card{
+    background:rgba(255,255,255,.55);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px;
+    box-shadow:var(--shadow);
+    margin:22px 0;
+  }
+  .big-idea{
+    background:linear-gradient(180deg,#fff8ec,#fdeed4);
+    border:1px solid #e7d4ad;
+    border-left:6px solid var(--curve);
+  }
+  .big-idea .label{
+    font-family:"Caveat",cursive; font-size:1.5rem; color:var(--curve); line-height:1;
+  }
+  .big-idea p{font-size:1.22rem; margin:.3em 0 0;}
+
+  .takeaway{
+    font-family:"Caveat",cursive; font-size:1.55rem; color:var(--tangent);
+    line-height:1.25; margin-top:6px;
+  }
+  .takeaway::before{content:"✎  "; opacity:.7;}
+
+  /* ---------- INTERACTIVE WIDGET SHELL ---------- */
+  .widget{
+    background:#fffdf8;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+    box-shadow:var(--shadow);
+    margin:26px 0;
+  }
+  .widget canvas{display:block; width:100%; height:auto; border-radius:10px; cursor:grab;}
+  .widget canvas.dragging{cursor:grabbing;}
+  .controls{display:flex; flex-wrap:wrap; gap:16px 26px; align-items:center; margin-top:16px;}
+  .ctrl{flex:1 1 200px; min-width:180px;}
+  .ctrl label{font-size:.85rem; color:var(--ink-soft); font-family:"Spline Sans Mono",monospace; display:block; margin-bottom:4px;}
+  input[type=range]{
+    -webkit-appearance:none; width:100%; height:6px; border-radius:3px;
+    background:var(--line); outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:22px; height:22px; border-radius:50%;
+    background:var(--curve); cursor:pointer; border:3px solid #fffdf8; box-shadow:0 2px 6px rgba(0,0,0,.25);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:22px; height:22px; border-radius:50%;
+    background:var(--curve); cursor:pointer; border:3px solid #fffdf8;
+  }
+  .readouts{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
+  .pill{
+    font-family:"Spline Sans Mono",monospace; font-size:.95rem;
+    background:var(--paper-2); border:1px solid var(--line);
+    border-radius:10px; padding:8px 14px;
+  }
+  .pill b{color:var(--ink);}
+  .pill.curve{border-color:var(--curve); color:var(--curve);}
+  .pill.tan{border-color:var(--tangent); color:var(--tangent);}
+  .pill.big{font-size:1.25rem; padding:10px 18px;}
+  .hint{font-family:"Caveat",cursive; font-size:1.25rem; color:var(--ink-soft); margin-top:10px;}
+
+  .btn{
+    font-family:"Spline Sans Mono",monospace; font-size:.85rem;
+    background:var(--ink); color:var(--paper); border:none; border-radius:10px;
+    padding:9px 16px; cursor:pointer; transition:transform .1s;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.alt{background:var(--tangent);}
+  .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+
+  .machine{
+    display:grid; grid-template-columns:1fr auto 1fr auto 1fr; align-items:center;
+    gap:10px; text-align:center; margin:10px 0;
+  }
+  .machine .box{
+    background:var(--ink); color:var(--paper); border-radius:14px; padding:18px 6px;
+    font-family:"Fraunces",serif; font-weight:600;
+  }
+  .machine .val{
+    font-family:"Spline Sans Mono",monospace; font-size:1.8rem; color:var(--curve);
+  }
+  .machine .arrow{font-size:1.6rem; color:var(--ink-soft);}
+  @media(max-width:560px){
+    .machine{grid-template-columns:1fr; }
+    .machine .arrow{transform:rotate(90deg);}
+  }
+
+  table.simple{width:100%; border-collapse:collapse; font-family:"Spline Sans Mono",monospace; font-size:.92rem; margin:8px 0;}
+  table.simple th,table.simple td{border:1px solid var(--line); padding:8px 10px; text-align:center;}
+  table.simple th{background:var(--paper-2);}
+
+  .footer{text-align:center; margin-top:90px; color:var(--ink-soft); font-size:.95rem;}
+  .footer .big{font-family:"Fraunces",serif; font-size:1.6rem; color:var(--ink); font-weight:600; font-style:italic;}
+
+  .divider{height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); margin:6px 0;}
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s, transform .7s;}
+  .reveal.in{opacity:1; transform:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== BACK TO COURSE ===================== -->
+  <a href="/tutorials/math/" style="display:inline-flex;align-items:center;gap:.4em;margin-top:26px;font-family:'Spline Sans Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;">&larr;&nbsp;Derivatives, Made Simple</a>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="kicker">A Visual Guide for Beginners</div>
+    <h1>What <span class="em">is</span> a Derivative?</h1>
+    <p class="sub">No scary formulas to start. Just pictures, sliders, and one big idea:
+       <b>how fast something is changing</b>. Drag everything. Break nothing.</p>
+    <div class="scroll-hint">scroll down to begin <span>↓</span></div>
+  </header>
+
+  <!-- ===================== STEP 0: FUNCTION ===================== -->
+  <section class="reveal">
+    <div class="step-no">First, the foundation</div>
+    <h2>A function is a little machine</h2>
+    <p class="lead">Before derivatives, we need <strong>functions</strong>. A function is just a rule:
+       you put a number <b>in</b>, it gives a number <b>out</b>. Same input → always the same output.</p>
+
+    <div class="card">
+      <p style="margin-top:0">Here's the machine for the rule <b>f(x) = x²</b> ("square the input"). Slide the input and watch:</p>
+      <div class="machine">
+        <div><div class="kicker">input x</div><div class="val" id="m-in">3</div></div>
+        <div class="arrow">→</div>
+        <div class="box">f(x) = x²<br><span style="font-family:Caveat;font-weight:700;font-size:1.1rem;opacity:.85">square it</span></div>
+        <div class="arrow">→</div>
+        <div><div class="kicker">output f(x)</div><div class="val" id="m-out">9</div></div>
+      </div>
+      <div class="ctrl" style="max-width:360px;margin:6px auto 0">
+        <label>drag the input x</label>
+        <input id="m-slider" type="range" min="-4" max="4" step="0.1" value="3">
+      </div>
+    </div>
+
+    <p>Now the cool part: every input/output pair is a <b>point</b> we can draw. Collect all of them and
+       you get a <strong>graph</strong> — a picture of the function. The slider below drops the point onto the graph.</p>
+
+    <div class="widget">
+      <canvas id="cv-fn" data-w="700" data-h="380"></canvas>
+      <div class="ctrl" style="margin-top:14px">
+        <label>input x</label>
+        <input id="fn-slider" type="range" min="-4" max="4" step="0.05" value="2">
+      </div>
+      <div class="readouts">
+        <div class="pill">x = <b id="fn-x">2.0</b></div>
+        <div class="pill curve">f(x) = x² = <b id="fn-y">4.0</b></div>
+      </div>
+      <p class="hint">↑ Move the slider. The red curve is the function. The dot is "where you are" right now.</p>
+    </div>
+
+    <p class="takeaway">A function = an input → output rule. Its graph is the picture of that rule.</p>
+  </section>
+
+  <!-- ===================== STEP 1: CHANGE ===================== -->
+  <section class="reveal">
+    <div class="step-no">The whole point</div>
+    <h2>Everything we care about is changing</h2>
+    <p class="lead">Speed is how your <b>position</b> changes. Your bank balance grows or shrinks.
+       A hill gets steeper, then flatter. Temperature rises and falls.</p>
+    <p>Math has one tool whose entire job is to answer: <strong>"how fast is this changing, right now?"</strong>
+       That tool is the <strong>derivative</strong>. Keep that sentence in your head — it's the whole course.</p>
+
+    <div class="card big-idea">
+      <div class="label">the one big idea ✦</div>
+      <p>A <b>derivative</b> tells you the <b>rate of change</b> of a function at a single instant —
+         in pictures, it's the <span class="tan">steepness (slope) of the graph</span> at a point.</p>
+    </div>
+  </section>
+
+  <!-- ===================== STEP 2: SLOPE OF A LINE ===================== -->
+  <section class="reveal">
+    <div class="step-no">Build-up</div>
+    <h2>Warm-up: the slope of a straight line</h2>
+    <p class="lead">You already know slope! It's <b>"rise over run"</b> — how much you go <b>up</b> for every step you take <b>across</b>.</p>
+    <p>Steeper line = bigger slope. Drag the slider to tilt the line and watch the slope number. Going downhill? Slope is negative. Flat? Slope is zero.</p>
+
+    <div class="widget">
+      <canvas id="cv-line" data-w="700" data-h="380"></canvas>
+      <div class="ctrl" style="margin-top:14px">
+        <label>tilt the line</label>
+        <input id="line-slider" type="range" min="-2.5" max="2.5" step="0.05" value="1">
+      </div>
+      <div class="readouts">
+        <div class="pill">rise = <b id="line-rise">2.0</b></div>
+        <div class="pill">run = <b>1.0</b></div>
+        <div class="pill tan big">slope = rise / run = <b id="line-slope">2.0</b></div>
+      </div>
+      <p class="hint" id="line-word">Going uphill — positive slope.</p>
+    </div>
+    <p class="takeaway">For a straight line the slope is the same everywhere. Easy. Curves are where it gets interesting…</p>
+  </section>
+
+  <!-- ===================== STEP 3: CURVES CHANGE SLOPE ===================== -->
+  <section class="reveal">
+    <div class="step-no">The problem</div>
+    <h2>But a curve's steepness keeps changing</h2>
+    <p class="lead">Walk along a curvy hill. Sometimes you climb steeply, sometimes gently, sometimes you go down.
+       A curve doesn't have <em>one</em> slope — it has a <strong>different slope at every point</strong>.</p>
+    <p>So how do we measure steepness at a single spot on a <b>curve</b>? Here's the trick that started all of calculus…</p>
+  </section>
+
+  <!-- ===================== STEP 4: ZOOM ===================== -->
+  <section class="reveal">
+    <div class="step-no">The trick, part 1</div>
+    <h2>Zoom in close enough, and a curve looks straight</h2>
+    <p class="lead">This is the secret. Pick a point on a curve. Now zoom in… and keep zooming.
+       The bend disappears. Up close, the curve looks like a <strong>straight line</strong> — and straight lines, we can handle!</p>
+
+    <div class="widget">
+      <canvas id="cv-zoom" data-w="700" data-h="380"></canvas>
+      <div class="ctrl" style="margin-top:14px">
+        <label>zoom in toward the dot →</label>
+        <input id="zoom-slider" type="range" min="0" max="100" step="1" value="0">
+      </div>
+      <div class="readouts">
+        <div class="pill">zoom = <b id="zoom-level">1×</b></div>
+        <div class="pill tan">the straight line it becomes = the <b>tangent line</b></div>
+      </div>
+      <p class="hint">Crank the zoom all the way up. The wiggly curve flattens into a single straight line.</p>
+    </div>
+
+    <p>That straight line the curve "becomes" when you zoom in is called the <strong class="tan" style="color:var(--tangent)">tangent line</strong>.
+       And its slope is <strong>the derivative at that point.</strong> That's it. That's the definition, in a picture.</p>
+    <p class="takeaway">Derivative at a point = slope of the tangent line (the line the curve becomes when you zoom in).</p>
+  </section>
+
+  <!-- ===================== STEP 5: TANGENT THAT MOVES ===================== -->
+  <section class="reveal">
+    <div class="step-no">The big payoff</div>
+    <h2>Meet the tangent line — drag it around</h2>
+    <p class="lead">The <span class="tan">green line</span> below "kisses" the curve at the dot and matches its steepness there.
+       <strong>Drag the dot</strong> along the curve and watch the slope number change.</p>
+
+    <div class="widget">
+      <canvas id="cv-tan" data-w="700" data-h="400"></canvas>
+      <div class="ctrl" style="margin-top:14px">
+        <label>slide the point (or drag the dot on the graph)</label>
+        <input id="tan-slider" type="range" min="-3.6" max="3.6" step="0.02" value="-2.6">
+      </div>
+      <div class="readouts">
+        <div class="pill curve">point x = <b id="tan-x">-2.6</b></div>
+        <div class="pill tan big">slope of tangent = <b id="tan-slope">+1.3</b></div>
+      </div>
+      <p class="hint" id="tan-word">Climbing uphill → slope is positive.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Read the slope like a story 📖</h3>
+      <p style="margin:.3em 0"><strong style="color:var(--tangent)">Slope &gt; 0</strong> → curve is going <b>uphill</b> (function increasing).</p>
+      <p style="margin:.3em 0"><strong style="color:var(--hill)">Slope = 0</strong> → curve is <b>flat</b> — the very top of a hill or bottom of a valley.</p>
+      <p style="margin:.3em 0"><strong style="color:var(--curve)">Slope &lt; 0</strong> → curve is going <b>downhill</b> (function decreasing).</p>
+      <p style="margin:.3em 0">Bigger number (like +5) → <b>steeper</b>. Small number (like +0.2) → <b>gentle</b>.</p>
+    </div>
+  </section>
+
+  <!-- ===================== STEP 6: SECANT -> TANGENT ===================== -->
+  <section class="reveal">
+    <div class="step-no">Where the formula comes from (gently)</div>
+    <h2>How we actually compute it: shrink the gap</h2>
+    <p class="lead">To find slope you need <b>two</b> points. But a tangent touches only <b>one</b> spot! The fix:
+       take a second point nearby, draw the line between them (a <strong style="color:var(--secant)">secant line</strong>),
+       then slide that second point <b>closer and closer</b>.</p>
+    <p>As the gap (we call it <b>h</b>) shrinks toward zero, the secant line lines up perfectly with the tangent.
+       Slide <b>h</b> down and watch the secant snap onto the green tangent — and the slope settle on its final value.</p>
+
+    <div class="widget">
+      <canvas id="cv-sec" data-w="700" data-h="400"></canvas>
+      <div class="ctrl" style="margin-top:14px">
+        <label>gap between the two points: h</label>
+        <input id="sec-slider" type="range" min="0.05" max="3" step="0.01" value="3">
+      </div>
+      <div class="readouts">
+        <div class="pill">gap h = <b id="sec-h">3.00</b></div>
+        <div class="pill" style="border-color:var(--secant);color:#9c7d12">secant slope = <b id="sec-slope">…</b></div>
+        <div class="pill tan">heading toward → <b>1.00</b></div>
+      </div>
+      <p class="hint">Drag h toward zero. The orange secant becomes the green tangent. That limiting slope <b>is</b> the derivative.</p>
+    </div>
+
+    <div class="card">
+      <p style="margin:0">In symbols this idea is written:</p>
+      <p style="text-align:center;font-family:'Spline Sans Mono',monospace;font-size:1.15rem;color:var(--tangent);margin:.6em 0">
+        f '(x) = limit, as h → 0, of &nbsp;[ f(x+h) − f(x) ] / h
+      </p>
+      <p style="margin:0">Don't panic — it's just <b>rise over run</b> ( the top is the rise, <b>h</b> is the run ) with the run squeezed to almost nothing. Same slope idea you've always known.</p>
+    </div>
+  </section>
+
+  <!-- ===================== STEP 7: DERIVATIVE IS A FUNCTION ===================== -->
+  <section class="reveal">
+    <div class="step-no">The reveal</div>
+    <h2>The derivative is itself a new function</h2>
+    <p class="lead">Here's the beautiful part. At every point the curve has a slope — so the slopes <em>themselves</em>
+       form a brand-new function, written <strong class="tan" style="color:var(--tangent)">f '(x)</strong> ("f prime").</p>
+    <p>Drag the dot on the <b>top</b> graph (the function <b>f</b>). The <b>bottom</b> graph plots that slope.
+       The <span class="tan">height of the bottom dot</span> = the <b>steepness of the top curve</b>. Watch them dance together.</p>
+
+    <div class="widget">
+      <canvas id="cv-pair" data-w="700" data-h="560"></canvas>
+      <div class="ctrl" style="margin-top:14px">
+        <label>drag x</label>
+        <input id="pair-slider" type="range" min="-3.4" max="3.4" step="0.02" value="-2.4">
+      </div>
+      <div class="readouts">
+        <div class="pill curve">f(x) value = <b id="pair-f">…</b></div>
+        <div class="pill tan big">slope of f here = f '(x) = <b id="pair-d">…</b></div>
+      </div>
+      <p class="hint" id="pair-word">Notice: where the top curve is flat (a hilltop/valley), the bottom graph crosses zero!</p>
+    </div>
+    <p class="takeaway">f tells you the value. f ′ tells you how fast f is changing. Two graphs, one story.</p>
+  </section>
+
+  <!-- ===================== STEP 8: APPLICATION SPEED ===================== -->
+  <section class="reveal">
+    <div class="step-no">Why we learn it · #1</div>
+    <h2>Where it's used: speed is a derivative</h2>
+    <p class="lead">A car's <b>position</b> over time is a function. Its <strong class="tan" style="color:var(--tangent)">speed</strong> is the slope
+       of that position graph — i.e. the derivative. Steep graph = moving fast. Flat graph = stopped.</p>
+
+    <div class="widget">
+      <canvas id="cv-car" data-w="700" data-h="430"></canvas>
+      <div class="btnrow">
+        <button class="btn" id="car-play">▶ Play the drive</button>
+        <button class="btn alt" id="car-reset">↺ Reset</button>
+      </div>
+      <div class="ctrl" style="margin-top:14px">
+        <label>time</label>
+        <input id="car-slider" type="range" min="0" max="10" step="0.02" value="0">
+      </div>
+      <div class="readouts">
+        <div class="pill curve">distance travelled = <b id="car-pos">0</b> m</div>
+        <div class="pill tan big">speed (the slope!) = <b id="car-spd">0</b> m/s</div>
+      </div>
+      <p class="hint">Watch the green tangent: where the distance graph is steep, the car is fast. Where it flattens, the car slows.</p>
+    </div>
+    <p>Your speedometer is literally computing a derivative every moment. So is acceleration (the derivative of speed).</p>
+  </section>
+
+  <!-- ===================== STEP 9: APPLICATION MAX/MIN ===================== -->
+  <section class="reveal">
+    <div class="step-no">Why we learn it · #2</div>
+    <h2>Where it's used: finding the best point</h2>
+    <p class="lead">Want the <b>maximum profit</b>, the <b>highest point</b>, the <b>cheapest cost</b>? At the very top of a hill (or
+       bottom of a valley) the graph is momentarily <strong style="color:var(--hill)">flat</strong> — the slope is <b>zero</b>.</p>
+    <p>That's the superpower: to find the best outcome, find where the derivative equals 0. Slide to hunt for the peak —
+       the dot turns gold when you've found the flat spot on top.</p>
+
+    <div class="widget">
+      <canvas id="cv-max" data-w="700" data-h="400"></canvas>
+      <div class="ctrl" style="margin-top:14px">
+        <label>slide to find the top of the hill</label>
+        <input id="max-slider" type="range" min="-3.5" max="3.5" step="0.01" value="-2.8">
+      </div>
+      <div class="readouts">
+        <div class="pill curve">height = <b id="max-h">…</b></div>
+        <div class="pill tan big">slope = <b id="max-s">…</b></div>
+        <div class="pill" id="max-flag" style="border-color:var(--hill);color:var(--hill)">keep looking…</div>
+      </div>
+      <p class="hint">When the slope hits 0, you're standing on the peak. That's how businesses, engineers and scientists optimize things.</p>
+    </div>
+    <p class="takeaway">Slope = 0 marks the tops, bottoms, and turning points. Derivatives = the math of "what's the best?"</p>
+  </section>
+
+  <!-- ===================== RECAP ===================== -->
+  <section class="reveal">
+    <div class="step-no">Putting it together</div>
+    <h2>Everything in one breath</h2>
+    <div class="card">
+      <table class="simple">
+        <tr><th>You see…</th><th>It means…</th></tr>
+        <tr><td>graph going up</td><td>derivative is positive (+)</td></tr>
+        <tr><td>graph going down</td><td>derivative is negative (−)</td></tr>
+        <tr><td>graph is flat</td><td>derivative is zero — a peak/valley</td></tr>
+        <tr><td>graph is steep</td><td>derivative is large</td></tr>
+        <tr><td>graph is gentle</td><td>derivative is small</td></tr>
+      </table>
+      <p style="margin-bottom:0">And one rule you'll use constantly (the "power rule"): the derivative of <b>x²</b> is <b>2x</b>,
+         of <b>x³</b> is <b>3x²</b> — bring the power down front, drop it by one. But that's a formula for later.
+         <b>The picture is what matters: derivative = slope = rate of change.</b></p>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div class="divider" style="margin-bottom:26px"></div>
+    <p class="big">Derivative = how fast it's changing = the slope of the graph.</p>
+    <p>You now understand the single most important idea in calculus. Everything else is details. 🎓</p>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   Tiny graphing toolkit — crisp on retina, world↔screen maps
+   ========================================================= */
+function setup(canvas){
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const cssW = canvas.clientWidth || parseInt(canvas.dataset.w);
+  const aspect = canvas.dataset.h / canvas.dataset.w;
+  const cssH = cssW * aspect;
+  canvas.style.height = cssH + "px";
+  canvas.width = Math.round(cssW*dpr);
+  canvas.height = Math.round(cssH*dpr);
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx, W:cssW, H:cssH};
+}
+
+// a view maps world coords (xmin..xmax, ymin..ymax) into a pixel box
+function makeView(W,H,xmin,xmax,ymin,ymax,pad){
+  pad = pad||{l:46,r:18,t:18,b:36};
+  const px0=pad.l, px1=W-pad.r, py0=pad.t, py1=H-pad.b;
+  return {
+    xmin,xmax,ymin,ymax,px0,px1,py0,py1,
+    X:x=> px0 + (x-xmin)/(xmax-xmin)*(px1-px0),
+    Y:y=> py1 - (y-ymin)/(ymax-ymin)*(py1-py0),
+    invX:px=> xmin + (px-px0)/(px1-px0)*(xmax-xmin)
+  };
+}
+
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+function grid(ctx,v){
+  ctx.save();
+  ctx.lineWidth=1;
+  ctx.strokeStyle="rgba(180,160,130,.30)";
+  ctx.font='11px "Spline Sans Mono", monospace';
+  ctx.fillStyle=css('--ink-soft');
+  // vertical gridlines at integer x
+  for(let x=Math.ceil(v.xmin); x<=v.xmax; x++){
+    const px=v.X(x);
+    ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();
+  }
+  for(let y=Math.ceil(v.ymin); y<=v.ymax; y++){
+    const py=v.Y(y);
+    ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();
+  }
+  // axes
+  ctx.strokeStyle=css('--ink'); ctx.lineWidth=1.6;
+  if(v.ymin<=0&&v.ymax>=0){const py=v.Y(0);ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();}
+  if(v.xmin<=0&&v.xmax>=0){const px=v.X(0);ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();}
+  ctx.restore();
+}
+
+function plot(ctx,v,f,color,width){
+  ctx.save();
+  ctx.beginPath();
+  ctx.lineWidth=width||3.2; ctx.strokeStyle=color; ctx.lineJoin="round"; ctx.lineCap="round";
+  let started=false;
+  for(let px=v.px0; px<=v.px1; px+=1.5){
+    const x=v.invX(px), y=f(x);
+    if(!isFinite(y)){started=false;continue;}
+    const py=v.Y(y);
+    if(py<v.py0-200||py>v.py1+200){started=false;continue;}
+    if(!started){ctx.moveTo(px,py);started=true;} else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function dot(ctx,px,py,color,r){
+  ctx.save();
+  ctx.beginPath();ctx.arc(px,py,(r||7)+3,0,7);ctx.fillStyle="#fffdf8";ctx.fill();
+  ctx.beginPath();ctx.arc(px,py,r||7,0,7);ctx.fillStyle=color;ctx.fill();
+  ctx.restore();
+}
+
+function lineThrough(ctx,v,x0,y0,slope,color,width,dash){
+  ctx.save();
+  ctx.lineWidth=width||2.4;ctx.strokeStyle=color;ctx.lineCap="round";
+  if(dash)ctx.setLineDash(dash);
+  const yA=y0+slope*(v.xmin-x0), yB=y0+slope*(v.xmax-x0);
+  ctx.beginPath();ctx.moveTo(v.X(v.xmin),v.Y(yA));ctx.lineTo(v.X(v.xmax),v.Y(yB));ctx.stroke();
+  ctx.restore();
+}
+
+function label(ctx,px,py,text,color,size){
+  ctx.save();
+  ctx.font=`${size||14}px "Spline Sans Mono", monospace`;
+  ctx.fillStyle=color; ctx.fillText(text,px,py);
+  ctx.restore();
+}
+const fmt=(n,d=1)=>{const s=n.toFixed(d); return (n>=0?"+":"")+s;};
+
+/* =========================================================
+   STEP 0a — function machine
+   ========================================================= */
+(function(){
+  const s=document.getElementById('m-slider'),inn=document.getElementById('m-in'),out=document.getElementById('m-out');
+  function up(){const x=+s.value; inn.textContent=x.toFixed(1); out.textContent=(x*x).toFixed(1);}
+  s.addEventListener('input',up); up();
+})();
+
+/* STEP 0b — function graph with movable point */
+(function(){
+  const c=document.getElementById('cv-fn'); const s=document.getElementById('fn-slider');
+  const xo=document.getElementById('fn-x'), yo=document.getElementById('fn-y');
+  const f=x=>x*x;
+  function draw(){
+    const {ctx,W,H}=setup(c);
+    ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-4.2,4.2,-1,9);
+    grid(ctx,v);
+    plot(ctx,v,f,css('--curve'),3.4);
+    const x=+s.value,y=f(x);
+    // dashed guides
+    ctx.save();ctx.setLineDash([4,5]);ctx.strokeStyle="rgba(33,26,20,.35)";ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(v.X(x),v.Y(0));ctx.lineTo(v.X(x),v.Y(y));ctx.lineTo(v.X(v.xmin),v.Y(y));ctx.stroke();ctx.restore();
+    dot(ctx,v.X(x),v.Y(y),css('--curve'),7.5);
+    label(ctx,v.X(x)+10,v.Y(y)-10,`(${x.toFixed(1)}, ${y.toFixed(1)})`,css('--curve'),13);
+    xo.textContent=x.toFixed(1); yo.textContent=y.toFixed(1);
+  }
+  s.addEventListener('input',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   STEP 2 — slope of a line
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-line'), s=document.getElementById('line-slider');
+  const ro=document.getElementById('line-rise'), so=document.getElementById('line-slope'), w=document.getElementById('line-word');
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-4,4,-4,4);
+    grid(ctx,v);
+    const m=+s.value;
+    lineThrough(ctx,v,0,0,m,css('--curve'),3.4);
+    // rise/run triangle from x=0 to x=1
+    const x0=0,y0=0,x1=1,y1=m;
+    ctx.save();ctx.lineWidth=2.4;ctx.strokeStyle=css('--tangent');ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(v.X(x0),v.Y(y0));ctx.lineTo(v.X(x1),v.Y(y0));ctx.stroke(); // run
+    ctx.beginPath();ctx.moveTo(v.X(x1),v.Y(y0));ctx.lineTo(v.X(x1),v.Y(y1));ctx.stroke(); // rise
+    ctx.restore();
+    label(ctx,v.X(0.5)-12,v.Y(0)+ (m>=0?18:-8),"run=1",css('--tangent'),12);
+    label(ctx,v.X(1)+6,v.Y(m/2),`rise=${m.toFixed(1)}`,css('--tangent'),12);
+    dot(ctx,v.X(0),v.Y(0),css('--curve'),6);
+    dot(ctx,v.X(1),v.Y(m),css('--curve'),6);
+    ro.textContent=m.toFixed(1); so.textContent=fmt(m);
+    w.textContent = Math.abs(m)<0.06 ? "Flat line — slope is zero." : (m>0?"Going uphill — positive slope.":"Going downhill — negative slope.");
+  }
+  s.addEventListener('input',draw); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   STEP 4 — zoom: curve looks straight
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-zoom'), s=document.getElementById('zoom-slider'), lvl=document.getElementById('zoom-level');
+  const f=x=>0.45*x*x*x-1.2*x;        // wiggly cubic
+  const df=x=>1.35*x*x-1.2;
+  const cx=1.0;                       // zoom-around point
+  const cy=f(cx), m=df(cx);
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const t=+s.value/100;
+    const zoom=Math.pow(40,t);        // 1× up to 40×
+    const half=3.2/zoom;
+    const v=makeView(W,H,cx-half,cx+half, cy-half*(H/W)*2.0, cy+half*(H/W)*2.0);
+    grid(ctx,v);
+    // tangent (what it becomes), faint until zoomed
+    lineThrough(ctx,v,cx,cy,m,css('--tangent'),2.6,[7,6]);
+    plot(ctx,v,f,css('--curve'),3.4);
+    dot(ctx,v.X(cx),v.Y(cy),css('--curve'),7);
+    lvl.textContent = zoom.toFixed(zoom<10?1:0)+"×";
+  }
+  s.addEventListener('input',draw); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   STEP 5 — movable tangent (draggable dot)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-tan'), s=document.getElementById('tan-slider');
+  const xo=document.getElementById('tan-x'), so=document.getElementById('tan-slope'), w=document.getElementById('tan-word');
+  const f=x=>0.18*x*x*x-x;            // nice hill+valley
+  const df=x=>0.54*x*x-1;
+  let view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-4,4,-4,4); view=v;
+    grid(ctx,v);
+    const x=+s.value, y=f(x), m=df(x);
+    lineThrough(ctx,v,x,y,m,css('--tangent'),3,[]);
+    plot(ctx,v,f,css('--curve'),3.6);
+    dot(ctx,v.X(x),v.Y(y),css('--tangent'),8);
+    label(ctx,v.X(x)+10,v.Y(y)-12,`slope ${fmt(m)}`,css('--tangent'),13);
+    xo.textContent=x.toFixed(1); so.textContent=fmt(m);
+    if(Math.abs(m)<0.05){w.textContent="Flat! Slope ≈ 0 — top of a hill or bottom of a valley.";}
+    else if(m>0){w.textContent="Climbing uphill → slope is positive.";}
+    else{w.textContent="Sliding downhill → slope is negative.";}
+  }
+  // dragging
+  let drag=false;
+  function pos(e){const r=c.getBoundingClientRect();const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;return cx;}
+  function start(e){drag=true;c.classList.add('dragging');move(e);}
+  function move(e){if(!drag||!view)return; let x=view.invX(pos(e)); x=Math.max(-3.6,Math.min(3.6,x)); s.value=x; draw(); e.preventDefault();}
+  function end(){drag=false;c.classList.remove('dragging');}
+  c.addEventListener('mousedown',start);window.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',move,{passive:false});window.addEventListener('touchend',end);
+  s.addEventListener('input',draw); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   STEP 6 — secant -> tangent
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-sec'), s=document.getElementById('sec-slider');
+  const ho=document.getElementById('sec-h'), so=document.getElementById('sec-slope');
+  const f=x=>0.25*x*x;  const a=2;     // base point, true slope = 0.5*2 = 1
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-1,6,-0.5,6.5);
+    grid(ctx,v);
+    plot(ctx,v,f,css('--curve'),3.4);
+    const h=+s.value; const b=a+h;
+    const ya=f(a), yb=f(b);
+    const sec=(yb-ya)/h;
+    // true tangent (faint)
+    lineThrough(ctx,v,a,ya,1,css('--tangent'),2.4,[7,6]);
+    // secant
+    lineThrough(ctx,v,a,ya,sec,css('--secant'),3,[]);
+    // run/rise marks
+    ctx.save();ctx.setLineDash([4,4]);ctx.strokeStyle="rgba(33,26,20,.4)";ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(v.X(a),v.Y(ya));ctx.lineTo(v.X(b),v.Y(ya));ctx.lineTo(v.X(b),v.Y(yb));ctx.stroke();ctx.restore();
+    label(ctx,v.X((a+b)/2)-6,v.Y(ya)+16,"h",css('--ink-soft'),13);
+    dot(ctx,v.X(a),v.Y(ya),css('--curve'),7);
+    dot(ctx,v.X(b),v.Y(yb),css('--secant'),7);
+    ho.textContent=h.toFixed(2); so.textContent=fmt(sec,2);
+  }
+  s.addEventListener('input',draw); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   STEP 7 — f and f' paired
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-pair'), s=document.getElementById('pair-slider');
+  const fo=document.getElementById('pair-f'), dOut=document.getElementById('pair-d'), w=document.getElementById('pair-word');
+  const f=x=>0.18*x*x*x-x, df=x=>0.54*x*x-1;
+  let vT=null,vB=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const gap=14, topH=(H-gap)/2;
+    // top view (f)
+    const vt=makeView(W,topH,-3.8,3.8,-3.5,3.5,{l:46,r:18,t:16,b:24}); vT=vt;
+    grid(ctx,vt);
+    plot(ctx,vt,f,css('--curve'),3.4);
+    label(ctx,vt.px0+6,vt.py0+16,"f(x)  — the function",css('--curve'),13);
+    // bottom view (f') shifted down
+    const off=topH+gap;
+    const ctx2=ctx;
+    ctx2.save();ctx2.translate(0,off);
+    const vb=makeView(W,topH,-3.8,3.8,-3.5,5.5,{l:46,r:18,t:16,b:26});
+    vB={...vb, off};
+    grid(ctx2,vb);
+    plot(ctx2,vb,df,css('--tangent'),3.4);
+    label(ctx2,vb.px0+6,vb.py0+16,"f '(x)  — the slope of f",css('--tangent'),13);
+    const x=+s.value;
+    // bottom dot
+    const dv=df(x);
+    dot(ctx2,vb.X(x),vb.Y(dv),css('--tangent'),7.5);
+    ctx2.save();ctx2.setLineDash([4,4]);ctx2.strokeStyle="rgba(31,138,120,.6)";ctx2.lineWidth=1.4;
+    ctx2.beginPath();ctx2.moveTo(vb.X(x),vb.Y(0));ctx2.lineTo(vb.X(x),vb.Y(dv));ctx2.stroke();ctx2.restore();
+    ctx2.restore();
+    // top: point + tangent
+    const y=f(x);
+    lineThrough(ctx,vt,x,y,dv,css('--tangent'),2.6,[]);
+    dot(ctx,vt.X(x),vt.Y(y),css('--curve'),7.5);
+    // vertical connector linking the two x positions
+    ctx.save();ctx.setLineDash([3,5]);ctx.strokeStyle="rgba(33,26,20,.25)";ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(vt.X(x),vt.py1);ctx.lineTo(vt.X(x),off+vb.py0);ctx.stroke();ctx.restore();
+    fo.textContent=y.toFixed(2); dOut.textContent=fmt(dv,2);
+    w.textContent = Math.abs(dv)<0.06
+      ? "Top curve is flat right now → bottom graph is exactly at zero. ✓"
+      : (dv>0?"Top going up → bottom is above zero (positive).":"Top going down → bottom is below zero (negative).");
+  }
+  // drag on top half
+  let drag=false;
+  function pos(e){const r=c.getBoundingClientRect();return (e.touches?e.touches[0].clientX:e.clientX)-r.left;}
+  function start(e){drag=true;c.classList.add('dragging');move(e);}
+  function move(e){if(!drag||!vT)return;let x=vT.invX(pos(e));x=Math.max(-3.4,Math.min(3.4,x));s.value=x;draw();e.preventDefault();}
+  function end(){drag=false;c.classList.remove('dragging');}
+  c.addEventListener('mousedown',start);window.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',move,{passive:false});window.addEventListener('touchend',end);
+  s.addEventListener('input',draw); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   STEP 8 — position / speed (car)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-car'), s=document.getElementById('car-slider');
+  const po=document.getElementById('car-pos'), spo=document.getElementById('car-spd');
+  const play=document.getElementById('car-play'), reset=document.getElementById('car-reset');
+  // smooth S-curve drive: speeds up, cruises, slows to stop
+  const f=t=> 60*(1/(1+Math.exp(-(t-5)*0.9)));    // logistic distance 0..~60
+  const df=t=>{const e=Math.exp(-(t-5)*0.9);return 60*0.9*e/Math.pow(1+e,2);};
+  let anim=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const roadH=70;
+    const vh=H-roadH-10;
+    // graph area
+    const v=makeView(W,vh,0,10,-3,65,{l:48,r:18,t:16,b:28});
+    grid(ctx,v);
+    plot(ctx,v,f,css('--curve'),3.4);
+    label(ctx,v.px0+6,v.py0+16,"distance vs time",css('--curve'),13);
+    const t=+s.value, d=f(t), sp=df(t);
+    lineThrough(ctx,v,t,d,sp,css('--tangent'),2.6,[]);
+    dot(ctx,v.X(t),v.Y(d),css('--curve'),7.5);
+    // road + car
+    const ry=H-roadH+24;
+    ctx.save();
+    ctx.fillStyle="#2a241d";ctx.fillRect(0,H-roadH,W,roadH-6);
+    ctx.strokeStyle="#e7c84a";ctx.lineWidth=3;ctx.setLineDash([18,16]);
+    ctx.beginPath();ctx.moveTo(0,ry);ctx.lineTo(W,ry);ctx.stroke();
+    ctx.restore();
+    const carX=20 + (d/62)*(W-70);
+    // simple car
+    ctx.save();ctx.translate(carX,ry-8);
+    ctx.fillStyle=css('--curve');roundRect(ctx,-22,-14,44,18,6);ctx.fill();
+    ctx.fillStyle="#3a3027";roundRect(ctx,-10,-24,24,12,4);ctx.fill();
+    ctx.fillStyle="#1a1410";ctx.beginPath();ctx.arc(-12,6,6,0,7);ctx.arc(12,6,6,0,7);ctx.fill();
+    ctx.restore();
+    po.textContent=d.toFixed(0); spo.textContent=sp.toFixed(1);
+  }
+  function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+  function start(){
+    if(anim)return; let t=+s.value; if(t>=10)t=0;
+    const t0=performance.now()-t*1000*0.55;
+    function frame(now){
+      let tt=(now-t0)/1000/0.55; if(tt>=10){tt=10;s.value=tt;draw();anim=null;play.textContent="▶ Play the drive";return;}
+      s.value=tt;draw();anim=requestAnimationFrame(frame);
+    }
+    play.textContent="⏸ pause"; anim=requestAnimationFrame(frame);
+  }
+  play.addEventListener('click',()=>{if(anim){cancelAnimationFrame(anim);anim=null;play.textContent="▶ Play the drive";}else start();});
+  reset.addEventListener('click',()=>{if(anim){cancelAnimationFrame(anim);anim=null;}play.textContent="▶ Play the drive";s.value=0;draw();});
+  s.addEventListener('input',()=>{if(anim){cancelAnimationFrame(anim);anim=null;play.textContent="▶ Play the drive";}draw();});
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   STEP 9 — max/min hunt
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-max'), s=document.getElementById('max-slider');
+  const ho=document.getElementById('max-h'), so=document.getElementById('max-s'), flag=document.getElementById('max-flag');
+  // a hill: peak near x = -1 ish. Use f = -(x^2) shifted + small wave -> simple single hill:
+  const f=x=> -0.5*(x+0.6)*(x+0.6)+4;     // clean downward parabola, peak at x=-0.6, height 4
+  const df=x=> -(x+0.6);
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-3.6,3.6,-3,5);
+    grid(ctx,v);
+    plot(ctx,v,f,css('--curve'),3.6);
+    const x=+s.value,y=f(x),m=df(x);
+    const found=Math.abs(m)<0.04;
+    const col= found?'#caa53b':css('--tangent');
+    lineThrough(ctx,v,x,y,m,col,3,[]);
+    dot(ctx,v.X(x),v.Y(y),found?'#caa53b':css('--curve'),found?10:7.5);
+    if(found){
+      ctx.save();ctx.font='700 16px "Caveat", cursive';ctx.fillStyle='#a5811f';
+      ctx.fillText("★ peak! slope = 0",v.X(x)+12,v.Y(y)-14);ctx.restore();
+    }
+    ho.textContent=y.toFixed(2); so.textContent=fmt(m,2);
+    flag.textContent = found? "★ FOUND THE PEAK — slope is 0" : (m>0?"climbing… keep going →":"too far — go back ←");
+    flag.style.color = found?'#a5811f':css('--hill');
+    flag.style.borderColor = found?'#caa53b':css('--hill');
+  }
+  s.addEventListener('input',draw); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   reveal-on-scroll
+   ========================================================= */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

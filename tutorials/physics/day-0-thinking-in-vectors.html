@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vectors in Physics — A Visual Tutorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Newsreader:ital,opsz@0,6..72;1,6..72&family=Caveat:wght@500;700&family=Spline+Sans+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6EC;
+    --paper-2:#F4ECDD;
+    --ink:#211A14;
+    --ink-soft:#6b5d4e;
+    --line:#d9cdb8;
+
+    --vec:#E2542F;     /* a vector / resultant */
+    --vx:#2B5FA8;      /* x component (blue) */
+    --vy:#C0398B;      /* y component (magenta) */
+    --vel:#1F8A78;     /* velocity (teal) */
+    --acc:#D98324;     /* acceleration (amber) */
+    --force:#6A4C93;   /* force (violet) */
+    --shadow: 0 18px 40px -22px rgba(33,26,20,.4);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 14% -5%, #fff7e9 0%, transparent 45%),
+      radial-gradient(circle at 92% 8%, #f6ead4 0%, transparent 40%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader", Georgia, serif;
+    font-size:19px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  body::before{ /* faint graph-paper texture */
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background-image:
+      linear-gradient(rgba(180,160,130,.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180,160,130,.10) 1px, transparent 1px);
+    background-size:28px 28px;
+  }
+  .wrap{position:relative; z-index:1; max-width:880px; margin:0 auto; padding:0 22px 120px;}
+
+  /* HERO */
+  header.hero{text-align:center; padding:70px 10px 22px;}
+  .kicker{font-family:"Spline Sans Mono",monospace; letter-spacing:.32em; text-transform:uppercase; font-size:.7rem; color:var(--ink-soft);}
+  h1{font-family:"Fraunces",serif; font-weight:900; font-size:clamp(2.6rem,8vw,4.6rem); line-height:.98; margin:.25em 0 .15em; letter-spacing:-.02em;}
+  h1 .em{color:var(--curve,var(--vec)); font-style:italic; font-weight:500;}
+  .sub{font-size:1.15rem; color:var(--ink-soft); max-width:580px; margin:0 auto;}
+  .scroll-hint{margin-top:30px; font-family:"Caveat",cursive; font-size:1.5rem; color:var(--vec);}
+  .scroll-hint span{display:inline-block; animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+  /* SECTIONS */
+  section{margin-top:78px;}
+  .step-no{font-family:"Spline Sans Mono",monospace; font-size:.72rem; letter-spacing:.2em; color:var(--vec); text-transform:uppercase;}
+  h2{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(1.8rem,4.5vw,2.7rem); line-height:1.05; margin:.1em 0 .5em; letter-spacing:-.01em;}
+  h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.3rem; margin:1.6em 0 .3em;}
+  p{margin:.7em 0;}
+  strong{color:var(--vec); font-weight:600;}
+  .lead{font-size:1.18rem;}
+  .vx{color:var(--vx);font-weight:700} .vy{color:var(--vy);font-weight:700}
+  .vel{color:var(--vel);font-weight:700} .acc{color:var(--acc);font-weight:700}
+  .force{color:var(--force);font-weight:700} .vecw{color:var(--vec);font-weight:700}
+
+  .card{background:rgba(255,255,255,.55); border:1px solid var(--line); border-radius:16px; padding:20px 22px; box-shadow:var(--shadow); margin:22px 0;}
+  .big-idea{background:linear-gradient(180deg,#fff8ec,#fdeed4); border:1px solid #e7d4ad; border-left:6px solid var(--vec);}
+  .big-idea .label{font-family:"Caveat",cursive; font-size:1.5rem; color:var(--vec); line-height:1;}
+  .big-idea p{font-size:1.22rem; margin:.3em 0 0;}
+  .takeaway{font-family:"Caveat",cursive; font-size:1.55rem; color:var(--vel); line-height:1.25; margin-top:6px;}
+  .takeaway::before{content:"✎  "; opacity:.7;}
+
+  /* precise definition box */
+  .def{background:linear-gradient(180deg,#fefdfa,#f7f1e3); border:1px solid var(--line); border-left:5px solid var(--tangent,var(--vel)); border-radius:12px; padding:13px 18px; margin:18px 0;}
+  .def .term{font-family:"Fraunces",serif; font-weight:600; font-size:1.12rem; color:var(--ink);}
+  .def .term::before{content:"📐  "; }
+  .def p{margin:.35em 0 0; font-size:1.02rem;}
+  .def .sym{font-family:"Spline Sans Mono",monospace; background:var(--paper-2); border-radius:5px; padding:1px 6px; font-size:.9em;}
+  .note{font-size:.98rem; color:var(--ink-soft);}
+  .note b{color:var(--ink);}
+
+  ul.clean{list-style:none; padding-left:0; margin:.6em 0;}
+  ul.clean li{padding:7px 0 7px 30px; position:relative; border-bottom:1px dashed var(--line);}
+  ul.clean li::before{content:"▸"; position:absolute; left:6px; color:var(--vec);}
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:620px){.two-col{grid-template-columns:1fr;}}
+  .minicard{background:rgba(255,255,255,.5); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+  .minicard h4{margin:.1em 0 .3em; font-family:"Fraunces",serif; font-size:1.08rem;}
+  .minicard.s h4{color:var(--vx);} .minicard.v h4{color:var(--vec);}
+
+  .formula{text-align:center; font-family:"Spline Sans Mono",monospace; font-size:1.15rem; color:var(--ink); margin:.6em 0; line-height:1.9;}
+
+  /* WIDGET */
+  .widget{background:#fffdf8; border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:var(--shadow); margin:26px 0;}
+  .widget canvas{display:block; width:100%; height:auto; border-radius:10px; cursor:grab; touch-action:none;}
+  .widget canvas.dragging{cursor:grabbing;}
+  .controls{display:flex; flex-wrap:wrap; gap:16px 26px; align-items:center; margin-top:16px;}
+  .ctrl{flex:1 1 200px; min-width:180px;}
+  .ctrl label{font-size:.85rem; color:var(--ink-soft); font-family:"Spline Sans Mono",monospace; display:block; margin-bottom:4px;}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:3px; background:var(--line); outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--vec); cursor:pointer; border:3px solid #fffdf8; box-shadow:0 2px 6px rgba(0,0,0,.25);}
+  input[type=range]::-moz-range-thumb{width:22px; height:22px; border-radius:50%; background:var(--vec); cursor:pointer; border:3px solid #fffdf8;}
+  .readouts{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
+  .pill{font-family:"Spline Sans Mono",monospace; font-size:.95rem; background:var(--paper-2); border:1px solid var(--line); border-radius:10px; padding:8px 14px; color:var(--ink);}
+  .pill b{color:var(--ink);}
+  .pill.big{font-size:1.2rem; padding:10px 18px;}
+  .pill.vec{border-color:var(--vec);color:var(--vec)} .pill.vx{border-color:var(--vx);color:var(--vx)} .pill.vy{border-color:var(--vy);color:var(--vy)}
+  .pill.vel{border-color:var(--vel);color:var(--vel)} .pill.acc{border-color:var(--acc);color:var(--acc)} .pill.force{border-color:var(--force);color:var(--force)}
+  .hint{font-family:"Caveat",cursive; font-size:1.25rem; color:var(--ink-soft); margin-top:10px;}
+  .btn{font-family:"Spline Sans Mono",monospace; font-size:.85rem; background:var(--ink); color:var(--paper); border:none; border-radius:10px; padding:9px 16px; cursor:pointer; transition:transform .1s;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn.alt{background:var(--vel);}
+  .btn.ghost{background:var(--paper-2); color:var(--ink-soft); border:1px solid var(--line);}
+  .btn.on{background:var(--vec); color:#fff;}
+  .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+
+  .legend{display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:center; margin:14px 0 0;}
+  .legend .k{display:flex; align-items:center; gap:7px; font-family:"Spline Sans Mono",monospace; font-size:.74rem; color:var(--ink-soft);}
+  .legend .sw{width:24px; height:5px; border-radius:3px;}
+
+  table.simple{width:100%; border-collapse:collapse; font-family:"Spline Sans Mono",monospace; font-size:.88rem; margin:8px 0;}
+  table.simple th,table.simple td{border:1px solid var(--line); padding:8px 10px; text-align:left;}
+  table.simple th{background:var(--paper-2);}
+
+  .chain{display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; margin:14px 0; font-family:"Fraunces",serif; font-weight:600;}
+  .chain .node{padding:9px 13px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.6);}
+  .chain .n-f{color:var(--force);border-color:var(--force)} .chain .n-a{color:var(--acc);border-color:var(--acc)}
+  .chain .n-v{color:var(--vel);border-color:var(--vel)} .chain .n-p{color:var(--vec);border-color:var(--vec)}
+  .chain .ar{color:var(--ink-soft); font-size:1.1rem;}
+
+  .footer{text-align:center; margin-top:90px; color:var(--ink-soft); font-size:.95rem;}
+  .footer .big{font-family:"Fraunces",serif; font-size:1.6rem; color:var(--ink); font-weight:600; font-style:italic;}
+  .divider{height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); margin:6px 0;}
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s, transform .7s;}
+  .reveal.in{opacity:1; transform:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="kicker">A Visual Guide for Beginners</div>
+    <h1>Thinking in <span class="em">Vectors</span></h1>
+    <p class="sub">Arrows that carry a <b>size</b> and a <b>direction</b>. Once you can picture them,
+       <span class="vel">velocity</span>, <span class="acc">acceleration</span> and <span class="force">force</span>
+       all start to make sense. Drag everything. Break nothing.</p>
+    <div class="scroll-hint">scroll down to begin <span>↓</span></div>
+
+    <div class="legend">
+      <div class="k"><span class="sw" style="background:var(--vec)"></span>vector / resultant</div>
+      <div class="k"><span class="sw" style="background:var(--vx)"></span>x&nbsp;(horizontal) part</div>
+      <div class="k"><span class="sw" style="background:var(--vy)"></span>y&nbsp;(vertical) part</div>
+      <div class="k"><span class="sw" style="background:var(--vel)"></span>velocity</div>
+      <div class="k"><span class="sw" style="background:var(--acc)"></span>acceleration</div>
+      <div class="k"><span class="sw" style="background:var(--force)"></span>force</div>
+    </div>
+    <p class="hint" style="text-align:center">Keep this color code in mind — it's used everywhere below.</p>
+  </header>
+
+  <!-- ===================== 1. SCALAR vs VECTOR ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 1 · The idea</div>
+    <h2>Some numbers need a direction. Some don't.</h2>
+    <p class="lead">Suppose I tell you the temperature is <b>25°C</b>. That's the whole story — one number. But if I say
+       "there's a wind of <b>30 km/h</b>," your next question is <em>"which way?"</em> A number alone isn't enough;
+       wind has a <b>direction</b>.</p>
+    <p>That little difference splits all of physics into two families:</p>
+
+    <div class="two-col">
+      <div class="minicard s">
+        <h4>Scalars — just a size</h4>
+        <p style="margin:.2em 0">A single number (with a unit). No direction.</p>
+        <ul class="clean" style="font-size:.95rem">
+          <li>temperature — 25 °C</li>
+          <li>mass — 5 kg</li>
+          <li>time — 10 s</li>
+          <li>speed — 60 km/h</li>
+          <li>distance — 5 km</li>
+        </ul>
+      </div>
+      <div class="minicard v">
+        <h4>Vectors — size <em>and</em> direction</h4>
+        <p style="margin:.2em 0">A number <em>plus</em> a "which way."</p>
+        <ul class="clean" style="font-size:.95rem">
+          <li>displacement — 5 km <b>north-east</b></li>
+          <li>velocity — 60 km/h <b>heading north</b></li>
+          <li>acceleration — gaining speed <b>downhill</b></li>
+          <li>force — a 10 N push <b>to the right</b></li>
+          <li>weight — pull of gravity <b>straight down</b></li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Notice the pairs: <b>distance</b> vs <b>displacement</b>, <b>speed</b> vs <b>velocity</b>. The first of each is a scalar
+       (just "how much"), the second is a vector ("how much, and which way"). Walk 5 km in a circle and your <em>distance</em>
+       is 5 km but your <em>displacement</em> is zero — you ended up where you started.</p>
+
+    <div class="card big-idea">
+      <div class="label">the one big idea ✦</div>
+      <p>A <strong>vector</strong> is anything with a <b>magnitude</b> (a size) <em>and</em> a <b>direction</b>.
+         We draw it as an <strong>arrow</strong>: the length is the size, and where it points is the direction.</p>
+    </div>
+
+    <p>Let's make those two words precise, because the whole tutorial rests on them.</p>
+
+    <div class="def">
+      <div class="term">Scalar</div>
+      <p>A quantity that is fully described by a single number together with a unit — nothing else is needed.
+         "The bag has a mass of 5 kg" or "the trip took 10 s" tells you everything. Scalars can be compared, added,
+         and multiplied just like ordinary numbers: 3 kg + 2 kg = 5 kg, no questions asked.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Vector</div>
+      <p>A quantity that needs <b>two</b> pieces of information to be complete: a <b>magnitude</b> (how much) <em>and</em>
+         a <b>direction</b> (which way). "A force of 10 N" is unfinished — 10 N <em>in what direction?</em> Until you say
+         "10 N to the right," you haven't named the vector. Because of that extra direction, vectors do <em>not</em> add
+         like plain numbers (we'll see exactly how they add in Steps 3–4).</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Magnitude</div>
+      <p>The "size" or "amount" of a vector, always a non-negative number with a unit — for a velocity it's the speed,
+         for a force it's how hard the push is. We write the magnitude of a vector <span class="sym">v</span> as
+         <span class="sym">|v|</span> or just plain <span class="sym">v</span>. The direction is the other half of the
+         story and is usually given as an angle.</p>
+    </div>
+
+    <p class="note">A quick word on <b>notation</b>: in textbooks a vector is printed in <b>bold</b> (<b>v</b>) or with a tiny
+       arrow over it (v⃗), while its magnitude is written in ordinary italic (v). On this page we lean on the
+       <b>color code</b> and arrows instead of heavy symbols, but it's worth recognizing the notation when you meet it.
+       Also remember: every physical quantity carries a <b>unit</b> (metres, seconds, newtons…); a bare number without a
+       unit is meaningless in physics.</p>
+  </section>
+
+  <!-- ===================== 2. ARROW = VECTOR ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 2 · Get a feel for it</div>
+    <h2>An arrow <em>is</em> a vector</h2>
+    <p class="lead">Grab the orange dot below and drag it around. You're building a vector with your hand. A longer arrow means a
+       bigger magnitude; turning it changes the direction. That's the entire object.</p>
+
+    <div class="widget">
+      <canvas id="cv-arrow" data-w="760" data-h="430"></canvas>
+      <div class="readouts">
+        <div class="pill vec big">magnitude (length) = <b id="ar-mag">5.0</b></div>
+        <div class="pill vec">direction (angle) = <b id="ar-ang">37°</b></div>
+      </div>
+      <p class="hint">↑ Drag the orange tip. Two arrows are equal if they have the same length and point the same way — it doesn't matter where you draw them.</p>
+    </div>
+
+    <p>An important habit: a vector doesn't care <em>where</em> it sits. A 5 N push to the right is the same vector whether
+       it acts in Delhi or on the Moon. Only its <b>length</b> and <b>direction</b> define it.</p>
+
+    <div class="def">
+      <div class="term">The anatomy of an arrow</div>
+      <p>Every vector-arrow has a <b>tail</b> (where it starts) and a <b>head</b> (the pointed end). The
+         <b>length</b> from tail to head represents the magnitude — drawn to scale, so an arrow twice as long means
+         twice the magnitude. The way the arrow <b>points</b> is the direction.</p>
+    </div>
+
+    <p>We pin down the direction with an <b>angle</b>, measured from the positive x-axis (the rightward horizontal),
+       turning <b>counter-clockwise</b> for positive angles. So 0° points right, 90° points straight up, 180° points
+       left, and 270° (or −90°) points down. Magnitude + angle together name any vector in a plane.</p>
+
+    <div class="def">
+      <div class="term">Equal vectors &amp; the negative of a vector</div>
+      <p>Two vectors are <b>equal</b> when they have the same magnitude <em>and</em> the same direction — even if they're
+         drawn in different places on the page. Reverse a vector's direction (turn it 180°) while keeping its length and
+         you get its <b>negative</b>, written <span class="sym">−v</span>: same size, opposite way. "5 m/s east" and
+         "5 m/s west" are negatives of each other.</p>
+    </div>
+  </section>
+
+  <!-- ===================== 3. COMPONENTS ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 3 · The master skill</div>
+    <h2>Splitting a vector into x and y parts</h2>
+    <p class="lead">Here's the trick that makes vectors easy to actually calculate with. Instead of dealing with a slanted arrow,
+       we replace it with <b>two</b> arrows at right angles: one purely <span class="vx">horizontal (the x-part)</span> and one
+       purely <span class="vy">vertical (the y-part)</span>.</p>
+    <p>Think of giving directions in a city with a grid of streets. You could say "walk 500 m at 53° north of east" — or you
+       could just say <span class="vx">"3 blocks east"</span> and <span class="vy">"4 blocks north."</span> Same destination,
+       but the second version is way easier to follow. Breaking a vector into x and y is exactly this.</p>
+
+    <div class="widget">
+      <canvas id="cv-comp" data-w="760" data-h="460"></canvas>
+      <div class="readouts">
+        <div class="pill vec big">vector = <b id="cp-mag">5.0</b> at <b id="cp-ang">37°</b></div>
+        <div class="pill vx">x-part = V·cos θ = <b id="cp-x">4.0</b></div>
+        <div class="pill vy">y-part = V·sin θ = <b id="cp-y">3.0</b></div>
+      </div>
+      <p class="hint">↑ Drag the orange tip. Watch the blue shadow on the floor and the magenta shadow on the wall. Together they rebuild the orange arrow.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Where cos and sin come from (don't be scared)</h3>
+      <p style="margin:.3em 0">The orange arrow, its <span class="vx">x-part</span>, and its <span class="vy">y-part</span> form a right triangle.
+         The orange arrow is the hypotenuse (length V), at angle θ from the horizontal. From basic trig:</p>
+      <p class="formula"><span class="vx">x-part = V·cos θ</span> &nbsp;&nbsp; <span class="vy">y-part = V·sin θ</span></p>
+      <p style="margin:.3em 0 0">And to go backwards, from the parts to the whole, it's just Pythagoras:
+         <span class="vecw">V = √(x² + y²)</span>. That's all the math the rest of this page needs.</p>
+    </div>
+    <div class="def">
+      <div class="term">Component</div>
+      <p>A <b>component</b> of a vector is how much of it points along one chosen axis. The
+         <span class="vx">x-component</span> is the part along the horizontal axis; the <span class="vy">y-component</span>
+         is the part along the vertical axis. Each component is itself just a number (with a sign and unit) — it tells you
+         "this much of the vector goes this way."</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Resolving a vector</div>
+      <p><b>Resolving</b> means splitting a single slanted vector into its perpendicular components. For a vector of
+         magnitude <span class="sym">V</span> at angle <span class="sym">θ</span> above the horizontal:</p>
+      <p class="formula"><span class="vx">Vₓ = V·cos θ</span> &nbsp;&nbsp; <span class="vy">V_y = V·sin θ</span></p>
+      <p>Going the other way (components → whole vector) uses Pythagoras for the magnitude and the arctangent for the
+         angle: <span class="sym">V = √(Vₓ² + V_y²)</span> and <span class="sym">θ = tan⁻¹(V_y / Vₓ)</span>.</p>
+    </div>
+
+    <p class="note">Components carry a <b>sign</b>. If the vector points left, its <span class="vx">x-component is
+       negative</span>; if it points down, its <span class="vy">y-component is negative</span>. The sign <em>is</em> the
+       direction along that axis — so once you've resolved a vector, each axis becomes a simple "positive or negative
+       number line," which is exactly why components make problems easy.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0">A worked example</h3>
+      <p style="margin:.3em 0">A ball is kicked at <b>10 m/s</b> at <b>30°</b> above the ground. Resolve its velocity:</p>
+      <p style="margin:.3em 0"><span class="vx">vₓ = 10·cos 30° = 10 × 0.87 ≈ 8.7 m/s</span> (forward)</p>
+      <p style="margin:.3em 0"><span class="vy">v_y = 10·sin 30° = 10 × 0.50 = 5.0 m/s</span> (upward)</p>
+      <p style="margin:.3em 0 0">Check with Pythagoras: √(8.7² + 5.0²) = √(75.7 + 25) ≈ √100.7 ≈ 10 m/s. ✓ The two
+         components really do rebuild the original 10 m/s.</p>
+    </div>
+
+    <p class="takeaway">Any slanted vector = one horizontal arrow + one vertical arrow. This is called "resolving" the vector.</p>
+  </section>
+
+  <!-- ===================== 4. INDEPENDENCE ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 4 · The mind-bender</div>
+    <h2>The x and y parts don't talk to each other</h2>
+    <p class="lead">This is the single most useful — and most surprising — fact about vectors. The horizontal and vertical
+       directions are <strong>independent</strong>. What happens sideways has <em>zero</em> effect on what happens up-and-down,
+       and vice-versa.</p>
+
+    <p>Classic experiment: take two identical coins. <b>Drop</b> one straight off a table. At the exact same moment,
+       <b>flick</b> the other one sideways so it flies off horizontally. Which lands first?</p>
+    <p><b>They land at the same instant.</b> The flicked coin travels much farther across the room, but gravity pulls both
+       downward in exactly the same way. The sideways motion didn't make it fall any slower or faster. Press the button and watch:</p>
+
+    <div class="widget">
+      <canvas id="cv-indep" data-w="760" data-h="430"></canvas>
+      <div class="btnrow">
+        <button class="btn alt" id="indep-drop">▶ Drop &amp; Throw together</button>
+        <button class="btn ghost" id="indep-reset">↺ Reset</button>
+      </div>
+      <div class="ctrl" style="margin-top:14px">
+        <label>horizontal push given to the thrown ball</label>
+        <input id="indep-vx" type="range" min="0" max="14" step="0.2" value="8">
+      </div>
+      <div class="readouts">
+        <div class="pill vy">both balls' height (y) = <b id="indep-y">always identical</b></div>
+        <div class="pill vx">thrown ball's sideways speed = <b id="indep-vxval">8.0</b> m/s</div>
+      </div>
+      <p class="hint">The dashed magenta line connects the two balls — it stays perfectly horizontal, proving they fall together. Change the sideways push; they <em>still</em> land at the same time.</p>
+    </div>
+
+    <p>Why does this work? Gravity is a force that points <span class="vy">straight down</span> — it only changes the
+       <span class="vy">vertical part</span> of the motion. There is nothing pushing the coins sideways once they leave your
+       hand, so the <span class="vx">horizontal part</span> just coasts along unchanged. The two stories run in parallel and
+       never interfere.</p>
+
+    <div class="def">
+      <div class="term">Independence of perpendicular components</div>
+      <p>Motion (or a force) along one axis has <b>no effect</b> on motion along a perpendicular axis. The horizontal
+         "story" and the vertical "story" of an object unfold completely separately and share only one thing: the same
+         clock. A push purely sideways changes only the sideways motion; a pull purely downward changes only the
+         downward motion.</p>
+    </div>
+
+    <p>This is more than a fun fact — it's the <b>working method</b> of 2-D physics. Whenever a problem looks
+       complicated because things move diagonally, you <b>split every vector into x and y, solve two ordinary 1-D
+       problems, and then recombine</b> the answers at the end. Two easy problems instead of one hard one.</p>
+
+    <p class="note"><b>Why "same clock" matters:</b> the only link between the horizontal and vertical stories is
+       <b>time</b>. In the coin demo, both coins fall for the <em>same</em> number of seconds, so they hit the floor
+       together — but during those seconds the thrown coin also travels sideways, which the dropped coin doesn't. Same
+       vertical story, different horizontal story, one shared timer.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0">More everyday versions of the same idea</h3>
+      <ul class="clean">
+        <li>Walking straight across the deck of a moving boat — your across-deck steps are unaffected by how fast the boat moves forward.</li>
+        <li>A bullet fired horizontally and a bullet dropped from the same height hit the ground together (the famous "shoot &amp; drop" demo).</li>
+        <li>Pouring water from a moving train: it falls in a clean arc because its forward speed and its downward fall are separate.</li>
+      </ul>
+    </div>
+    <p class="takeaway">Treat x and y as two separate 1-D problems. That's why components are so powerful.</p>
+  </section>
+
+  <!-- ===================== 5. VELOCITY ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 5 · The first physical vector</div>
+    <h2>Velocity: how fast <em>and</em> which way</h2>
+    <p class="lead">Now let's attach meaning to the arrows. <span class="vel">Velocity</span> is a vector that tells you how your
+       position is changing: its length is your <b>speed</b>, and it <b>points in the direction you're moving</b>.</p>
+    <p>If something moves diagonally, it has both a sideways speed <span class="vx">vₓ</span> and an up/down speed
+       <span class="vy">v_y</span> at the same time. Set the two parts, then press <b>Run</b>. Watch the object's
+       <span class="vx">horizontal progress</span> and <span class="vy">vertical progress</span> grow into a right triangle —
+       the slanted path is just those two added together.</p>
+
+    <div class="widget">
+      <canvas id="cv-vel" data-w="760" data-h="430"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>sideways speed vₓ</label><input id="vel-x" type="range" min="-6" max="6" step="0.1" value="4"></div>
+        <div class="ctrl"><label>up/down speed v_y</label><input id="vel-y" type="range" min="-6" max="6" step="0.1" value="3"></div>
+      </div>
+      <div class="btnrow">
+        <button class="btn alt" id="vel-run">▶ Run</button>
+        <button class="btn ghost" id="vel-reset">↺ Reset</button>
+      </div>
+      <div class="readouts">
+        <div class="pill vx">vₓ = <b id="vel-xv">4.0</b></div>
+        <div class="pill vy">v_y = <b id="vel-yv">3.0</b></div>
+        <div class="pill vel big">speed = √(vₓ²+v_y²) = <b id="vel-spd">5.0</b></div>
+      </div>
+      <p class="hint">Press Run. The blue leg is how far it has gone sideways, the magenta leg how far up/down — the object rides the corner. It returns to the start when it reaches an edge.</p>
+    </div>
+    <p>So "moving in 2D" is really just "having an x-velocity and a y-velocity at the same time." The familiar
+       <b>x</b> and <b>y</b> on a graph are simply the two directions we split everything into.</p>
+
+    <div class="def">
+      <div class="term">Position &amp; displacement</div>
+      <p><b>Position</b> is where an object is, given as coordinates <span class="sym">(x, y)</span> measured from some
+         agreed origin. <b>Displacement</b> is the vector from a starting position to an ending position — a straight
+         arrow "from here to there." It's different from <b>distance</b> (a scalar): displacement cares only about start
+         and end points, not the path taken.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Velocity</div>
+      <p>A vector equal to the <b>rate of change of position</b> — how much displacement happens each second, and in
+         which direction. Its unit is metres per second <span class="sym">(m/s)</span>. Its
+         <span class="vx">x-component vₓ</span> is how fast the position's x changes; its
+         <span class="vy">y-component v_y</span> is how fast y changes.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Speed (the scalar partner)</div>
+      <p><b>Speed</b> is just the <b>magnitude</b> of velocity — the bare number on the speedometer, with no direction
+         attached: <span class="sym">speed = |v| = √(vₓ² + v_y²)</span>. A car going round a roundabout at a steady
+         50 km/h has <em>constant speed</em> but <em>changing velocity</em>, because its direction keeps changing.</p>
+    </div>
+
+    <p class="note"><b>Average vs instantaneous:</b> average velocity is total displacement ÷ total time over a whole
+       trip; instantaneous velocity is the velocity at one exact moment (what the arrow shows at any instant in the
+       animation). When we say "velocity" without qualification in this tutorial, we mean the instantaneous kind.</p>
+  </section>
+
+  <!-- ===================== 6. ACCELERATION vs VELOCITY ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 6 · The big confusion, cleared</div>
+    <h2>Acceleration is not the same as velocity</h2>
+    <p class="lead">Velocity tells you how <b>position</b> changes. <span class="acc">Acceleration</span> tells you how
+       <b>velocity</b> changes. It's a "change of a change." And here's the part most students miss:
+       <strong>any</strong> change in velocity is an acceleration — getting faster, getting slower, <em>or turning.</em></p>
+
+    <p>Watch the three cases below. The <span class="vel">teal arrow</span> is velocity (where you're going); the
+       <span class="acc">amber arrow</span> is acceleration (how the velocity is changing right now).</p>
+
+    <div class="widget">
+      <canvas id="cv-acc" data-w="760" data-h="430"></canvas>
+      <div class="btnrow">
+        <button class="btn on" id="acc-speed">Speeding up</button>
+        <button class="btn ghost" id="acc-slow">Slowing down</button>
+        <button class="btn ghost" id="acc-circle">Turning (circle)</button>
+      </div>
+      <div class="readouts">
+        <div class="pill" id="acc-desc">Acceleration points the <b>same way</b> as velocity → you gain speed.</div>
+      </div>
+      <p class="hint" id="acc-hint">Same direction as velocity = speed up.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Read the amber arrow like this</h3>
+      <p style="margin:.3em 0"><span class="acc">a along v</span> → speeding up.</p>
+      <p style="margin:.3em 0"><span class="acc">a opposite v</span> → slowing down (braking).</p>
+      <p style="margin:.3em 0"><span class="acc">a sideways to v</span> → turning. In a steady circle the speed never changes,
+         yet the object is <em>always</em> accelerating, because its <b>direction</b> keeps changing. The amber arrow points
+         to the center — that's "centripetal" acceleration, and it's why you feel pushed outward on a merry-go-round.</p>
+    </div>
+    <p class="takeaway">Velocity = where you head. Acceleration = how that heading is being changed.</p>
+
+    <div class="def">
+      <div class="term">Acceleration</div>
+      <p>A vector equal to the <b>rate of change of velocity</b> — how much the velocity vector changes each second, and
+         in which direction. Its unit is metres per second per second <span class="sym">(m/s²)</span>. Crucially, it
+         responds to <em>any</em> change in the velocity vector, whether that's a change in length (speed) or a change in
+         where it points (direction).</p>
+    </div>
+
+    <p>Because velocity is a vector, there are exactly <b>three</b> ways it can change — and each one is an acceleration:</p>
+    <ul class="clean">
+      <li><b>Speed increases</b> (arrow gets longer) — acceleration points <em>along</em> the velocity.</li>
+      <li><b>Speed decreases</b> (arrow gets shorter) — acceleration points <em>opposite</em> the velocity. This is what
+          everyday language calls "deceleration," but in physics it's simply acceleration in the backward direction.</li>
+      <li><b>Direction changes</b> (arrow turns) — acceleration points <em>sideways</em> to the velocity, even if the
+          speed never changes at all.</li>
+    </ul>
+
+    <div class="def">
+      <div class="term">Centripetal acceleration</div>
+      <p>The special case of pure turning. When an object moves in a circle at constant speed, its acceleration points
+         straight toward the <b>centre</b> of the circle (the word "centripetal" means "centre-seeking"). The speed is
+         constant, yet the object is accelerating every instant because its direction is always changing.</p>
+    </div>
+  </section>
+
+  <!-- ===================== 7. FORCE ORDER ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 7 · What causes what</div>
+    <h2>Force, acceleration, velocity — which comes first?</h2>
+    <p class="lead">Students often think "if it's moving, something must be pushing it." Not true. The real chain of cause and
+       effect goes like this:</p>
+
+    <div class="chain">
+      <span class="node n-f">FORCE</span><span class="ar">→ causes →</span>
+      <span class="node n-a">ACCELERATION</span><span class="ar">→ changes →</span>
+      <span class="node n-v">VELOCITY</span><span class="ar">→ changes →</span>
+      <span class="node n-p">POSITION</span>
+    </div>
+
+    <p>A <span class="force">force</span> is a push or a pull. When there's a <em>net</em> force on an object, it produces an
+       <span class="acc">acceleration</span> in the same direction, following Newton's famous rule:</p>
+    <p class="formula"><span class="force">F</span> = m · <span class="acc">a</span> &nbsp;&nbsp;⟺&nbsp;&nbsp; <span class="acc">a</span> = <span class="force">F</span> / m</p>
+    <p>The acceleration then gradually changes the <span class="vel">velocity</span>, and the velocity moves the
+       <span class="vecw">position</span>. So force comes <b>first</b> in the causal chain — but notice it doesn't directly
+       set the velocity. That's why a moving object with <em>no</em> force keeps gliding at constant velocity forever
+       (Newton's first law): nothing is there to change it.</p>
+
+    <div class="def">
+      <div class="term">Force</div>
+      <p>A <b>push or a pull</b> on an object — an interaction that, if unopposed, changes the object's motion. Force is
+         a vector (it has a direction), and its unit is the <b>newton</b> <span class="sym">(N)</span>. Examples: gravity
+         pulling down, a hand pushing a door, friction dragging backward, a magnet attracting iron.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Net force</div>
+      <p>Real objects often feel several forces at once. The <b>net force</b> is the single vector you get by adding all
+         of them together (tip-to-tail, as vectors). Only the <em>net</em> force matters for motion: if the forces cancel
+         to zero, the object behaves as if no force acts at all.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Mass (and inertia)</div>
+      <p><b>Mass</b> is a scalar, measured in kilograms <span class="sym">(kg)</span>, that measures how much an object
+         <b>resists</b> being accelerated — its <b>inertia</b>. The same force gives a small mass a big acceleration and a
+         large mass a small one, because <span class="sym">a = F/m</span>.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Newton's first two laws</div>
+      <p><b>First law (inertia):</b> with zero net force, an object keeps doing what it was doing — at rest stays at rest,
+         and moving keeps moving at constant velocity in a straight line. Motion needs no force to <em>continue</em>, only
+         to <em>change</em>.</p>
+      <p><b>Second law:</b> net force equals mass times acceleration, <span class="sym">F = m·a</span>. The acceleration
+         points in the same direction as the net force, and is bigger for bigger forces and smaller for bigger masses.</p>
+    </div>
+
+    <p class="note"><b>The key subtlety:</b> force sets the <em>acceleration</em>, not the velocity. So a force can point
+       in a completely different direction from the motion — and when it does, it gradually <b>bends</b> the velocity
+       rather than instantly redirecting it. That's exactly what scenario ② below shows.</p>
+
+    <p>Let's watch the chain happen. Pick a situation and press <b>Run</b>. The <span class="force">force</span> (violet)
+       stays constant; keep your eye on the <span class="vel">velocity</span> (teal) — every moment, the force nudges it a
+       little, and the faint teal arrows left behind show how the velocity is changing over time.</p>
+
+    <div class="widget">
+      <canvas id="cv-force" data-w="760" data-h="450"></canvas>
+      <div class="btnrow">
+        <button class="btn on" id="force-rest">① Start from rest</button>
+        <button class="btn ghost" id="force-move">② Bend a moving object</button>
+        <button class="btn alt" id="force-run">▶ Run</button>
+        <button class="btn ghost" id="force-reset">↺ Reset</button>
+      </div>
+      <div class="readouts">
+        <div class="pill force">force F = <b id="force-mag">5.5</b></div>
+        <div class="pill acc">acceleration a = F/m = <b id="force-acc">5.5</b></div>
+        <div class="pill vel">speed = <b id="force-spd">0.0</b></div>
+      </div>
+      <p class="hint" id="force-hint">Scenario ①: the object starts still. The push makes it speed up straight along the force — velocity grows from zero.</p>
+    </div>
+  </section>
+
+  <!-- ===================== 8. GRAVITY ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 8 · Example from gravitation</div>
+    <h2>Gravity in action: the projectile</h2>
+    <p class="lead">Near Earth, gravity pulls every object with the same downward <span class="acc">acceleration</span>,
+       about <b>g = 9.8 m/s²</b>. (Weight is just the force version: <span class="force">F = m·g</span> downward.) Because
+       this force is purely vertical, it only touches the <span class="vy">y-part</span> of the motion — exactly the
+       independence idea from Step 4.</p>
+
+    <p>Launch a ball below. Watch the truth of it: the <span class="vx">horizontal speed stays constant</span> the whole
+       flight (no sideways force), while the <span class="vy">vertical speed</span> steadily shrinks, stops at the top,
+       then grows downward. Add those two parts at every instant and you get the smooth curved path — a parabola.</p>
+
+    <div class="widget">
+      <canvas id="cv-proj" data-w="760" data-h="450"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>launch speed (m/s)</label><input id="proj-spd" type="range" min="8" max="28" step="0.5" value="20"></div>
+        <div class="ctrl"><label>launch angle (°)</label><input id="proj-ang" type="range" min="15" max="80" step="1" value="55"></div>
+      </div>
+      <div class="btnrow">
+        <button class="btn alt" id="proj-launch">▶ Launch</button>
+      </div>
+      <div class="readouts">
+        <div class="pill vx">vₓ (sideways) = <b id="proj-vx">11.5</b> — constant!</div>
+        <div class="pill vy">v_y (up/down) = <b id="proj-vy">16.4</b> — keeps changing</div>
+        <div class="pill acc">a = g = 9.8 m/s² down</div>
+      </div>
+      <p class="hint">See it? Blue never changes length; magenta shrinks, flips, and grows. Gravity touches only the vertical.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Acceleration due to gravity (g)</div>
+      <p>Near Earth's surface every freely-falling object speeds up downward at the same rate,
+         <span class="sym">g ≈ 9.8 m/s²</span>, regardless of its mass (ignoring air resistance). A heavy stone and a
+         light pebble dropped together land together — a direct consequence of <span class="sym">a = F/m</span>, since a
+         heavier object feels a proportionally bigger gravitational pull.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Mass vs weight</div>
+      <p><b>Mass</b> (kg) is how much matter is in an object — the same everywhere in the universe. <b>Weight</b> is the
+         <em>force</em> of gravity on that mass, <span class="sym">W = m·g</span>, measured in newtons and pointing
+         downward. On the Moon your mass is unchanged but your weight is about one-sixth, because the Moon's g is smaller.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Projectile motion &amp; the parabola</div>
+      <p>A <b>projectile</b> is any object moving under gravity alone after launch. Its motion is the sum of two simple
+         pieces: <span class="vx">constant-velocity horizontal motion</span> (no sideways force) and
+         <span class="vy">constant-acceleration vertical motion</span> (gravity). Combine a steady horizontal advance with
+         an evenly-changing vertical position and the resulting curve is a <b>parabola</b> — the smooth arch you see in a
+         thrown ball, a water fountain, or a basketball shot.</p>
+    </div>
+  </section>
+
+  <!-- ===================== 9. ELECTRON IN A FIELD ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 9 · Example from electric charge</div>
+    <h2>Motion of an electron in a uniform field</h2>
+    <p class="lead">This is the classic textbook setup. An <b>electron</b> is fired horizontally into the gap between two
+       parallel charged plates. Between the plates there is a uniform electric field <b>E</b> (drawn as the faint vertical
+       lines) pointing from the <b>+</b> plate to the <b>−</b> plate. The field pushes the charge with a constant
+       <span class="force">force F = qE</span> — so, exactly like gravity on a thrown ball, the path is a <b>parabola</b>.</p>
+
+    <p>Because that force is purely vertical, the <span class="vx">horizontal speed vₓ never changes</span>; only the
+       <span class="vy">vertical speed v_y</span> grows. Launch it below, and flip between an <b>electron (−)</b> and a
+       <b>positive charge (+)</b> to see the deflection reverse.</p>
+
+    <div class="widget">
+      <canvas id="cv-efield" data-w="760" data-h="450"></canvas>
+      <div class="btnrow">
+        <button class="btn alt" id="ef-launch">▶ Launch</button>
+        <button class="btn on" id="ef-neg">Electron (−)</button>
+        <button class="btn ghost" id="ef-pos">Positive charge (+)</button>
+      </div>
+      <div class="readouts">
+        <div class="pill vx">vₓ = <b id="ef-vx">14.0</b> — constant</div>
+        <div class="pill vy">v_y = <b id="ef-vy">0.0</b> — built up by the field</div>
+        <div class="pill vel big">exit angle θ = <b id="ef-angle">0°</b></div>
+      </div>
+      <p class="hint" id="ef-note">Same picture as the projectile — a constant force gives a parabola. Watch v_y grow while vₓ stays fixed.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Electric charge</div>
+      <p>A basic property of matter that comes in two kinds, <b>positive</b> and <b>negative</b>, measured in coulombs
+         <span class="sym">(C)</span>. An electron carries a tiny negative charge. Charges of the same sign repel; opposite
+         signs attract.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Electric field (E)</div>
+      <p>A region of space where a charge feels a force. The <b>electric field</b> is a vector defined as the force per
+         unit positive charge, with unit newtons per coulomb <span class="sym">(N/C)</span>. A <b>uniform</b> field has
+         the same strength and direction everywhere — like the field in the gap between two parallel charged plates — which
+         is why it produces a <em>constant</em> force, just like gravity.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Force on a charge: F = qE</div>
+      <p>A charge <span class="sym">q</span> sitting in a field <span class="sym">E</span> feels a force
+         <span class="force">F = qE</span>. For a <b>positive</b> charge the force points <em>along</em> the field; for a
+         <b>negative</b> charge (like the electron) it points <em>opposite</em> the field. Either way the force is constant,
+         giving a constant acceleration <span class="sym">a = qE/m</span> and therefore a parabolic path — identical maths
+         to a projectile under gravity.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">The exit angle — the textbook derivation</h3>
+      <p style="margin:.3em 0">It's nothing more than "resolve into x and y, and the two are independent." Say the plates have
+         length <b>L</b> and the charge enters with horizontal speed <span class="vx">vₓ</span>.</p>
+      <ul class="clean">
+        <li>No horizontal force, so <span class="vx">vₓ stays constant</span>. The time spent between the plates is
+            therefore just <span class="vx">t = L / vₓ</span>.</li>
+        <li>The field gives a constant vertical acceleration <span class="acc">a = qE / m</span>. Starting from
+            <span class="vy">v_y = 0</span>, after time t the charge has gained
+            <span class="vy">v_y = a·t = (qE/m)(L / vₓ)</span>.</li>
+        <li>The angle it leaves at is set by combining those two components:</li>
+      </ul>
+      <p class="formula">tan θ = <span class="vy">v_y</span> / <span class="vx">vₓ</span> = qEL / (m·vₓ²)</p>
+      <p style="margin:.3em 0 0">A heavier charge (bigger m) or a faster entry (bigger vₓ) bends less; a stronger field or
+         longer plates bends it more. Flipping the sign of the charge flips the direction of <span class="vy">v_y</span>,
+         so the beam deflects the opposite way.</p>
+    </div>
+
+    <div class="card big-idea">
+      <div class="label">why this matters ✦</div>
+      <p>You just used <em>one</em> set of ideas — vectors, components, and F = m·a — to describe a thrown ball <b>and</b>
+         an electron. The arrows don't care whether the push comes from gravity or an electric field; the math is identical.</p>
+    </div>
+  </section>
+
+  <!-- ===================== RECAP ===================== -->
+  <section class="reveal">
+    <div class="step-no">Putting it together</div>
+    <h2>Everything on one page</h2>
+    <div class="card">
+      <table class="simple">
+        <tr><th>Quantity</th><th>What it is</th><th>Vector?</th></tr>
+        <tr><td>position (x, y)</td><td>where the object is</td><td>yes</td></tr>
+        <tr><td>velocity</td><td>how fast position changes + direction</td><td>yes</td></tr>
+        <tr><td>acceleration</td><td>how velocity changes (faster/slower/turning)</td><td>yes</td></tr>
+        <tr><td>force</td><td>the push/pull that causes acceleration</td><td>yes</td></tr>
+        <tr><td>speed, mass, time</td><td>just sizes, no direction</td><td>no (scalars)</td></tr>
+      </table>
+      <p style="margin:.8em 0 0">Three habits to carry away:</p>
+      <ul class="clean">
+        <li><strong>Resolve everything into x and y.</strong> A 2-D problem is just two 1-D problems side by side.</li>
+        <li><strong>x and y are independent.</strong> A force in one direction changes only that direction's motion.</li>
+        <li><strong>Force → acceleration → velocity → position.</strong> Force changes motion; it isn't needed to keep motion going.</li>
+      </ul>
+    </div>
+
+    <h3>Glossary — every term in one place</h3>
+    <div class="card">
+      <table class="simple">
+        <tr><th>Term</th><th>Meaning</th><th>Vector?</th><th>Unit</th></tr>
+        <tr><td>Scalar</td><td>quantity with size only</td><td>no</td><td>varies</td></tr>
+        <tr><td>Vector</td><td>quantity with size <em>and</em> direction</td><td>yes</td><td>varies</td></tr>
+        <tr><td>Magnitude</td><td>the "size" of a vector, |v|</td><td>no</td><td>varies</td></tr>
+        <tr><td>Direction</td><td>which way a vector points (an angle)</td><td>—</td><td>degrees</td></tr>
+        <tr><td>Component</td><td>part of a vector along one axis (Vₓ, V_y)</td><td>no (signed)</td><td>varies</td></tr>
+        <tr><td>Resolving</td><td>splitting a vector into perpendicular parts</td><td>—</td><td>—</td></tr>
+        <tr><td>Resultant</td><td>the single vector that several parts add up to</td><td>yes</td><td>varies</td></tr>
+        <tr><td>Position</td><td>where an object is, (x, y)</td><td>yes</td><td>m</td></tr>
+        <tr><td>Distance</td><td>length of the path travelled</td><td>no</td><td>m</td></tr>
+        <tr><td>Displacement</td><td>straight vector from start to end</td><td>yes</td><td>m</td></tr>
+        <tr><td>Speed</td><td>magnitude of velocity</td><td>no</td><td>m/s</td></tr>
+        <tr><td>Velocity</td><td>rate of change of position</td><td>yes</td><td>m/s</td></tr>
+        <tr><td>Acceleration</td><td>rate of change of velocity</td><td>yes</td><td>m/s²</td></tr>
+        <tr><td>Centripetal accel.</td><td>acceleration toward the centre in circular motion</td><td>yes</td><td>m/s²</td></tr>
+        <tr><td>Force</td><td>a push or pull; cause of acceleration</td><td>yes</td><td>N</td></tr>
+        <tr><td>Net force</td><td>vector sum of all forces on an object</td><td>yes</td><td>N</td></tr>
+        <tr><td>Mass</td><td>amount of matter; resistance to acceleration</td><td>no</td><td>kg</td></tr>
+        <tr><td>Weight</td><td>force of gravity on a mass, m·g</td><td>yes</td><td>N</td></tr>
+        <tr><td>g</td><td>acceleration due to gravity (≈9.8)</td><td>yes</td><td>m/s²</td></tr>
+        <tr><td>Projectile</td><td>object moving under gravity alone</td><td>—</td><td>—</td></tr>
+        <tr><td>Parabola</td><td>the curved path of a projectile</td><td>—</td><td>—</td></tr>
+        <tr><td>Electric charge</td><td>property causing electric force (q)</td><td>no</td><td>C</td></tr>
+        <tr><td>Electric field</td><td>force per unit positive charge (E)</td><td>yes</td><td>N/C</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div class="divider" style="margin-bottom:26px"></div>
+    <p class="big">A vector is an arrow: a size and a direction.</p>
+    <p>Master that, split everything into x and y, and mechanics, gravity, and electricity all start to look like the same problem.</p>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   Shared canvas + vector toolkit (warm paper theme)
+   ========================================================= */
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function setup(c){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const cssW=c.clientWidth||+c.dataset.w;
+  const cssH=cssW*(c.dataset.h/c.dataset.w);
+  if(c._cw!==cssW){ c.style.height=cssH+"px"; c.width=Math.round(cssW*dpr); c.height=Math.round(cssH*dpr); c._cw=cssW; }
+  const ctx=c.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,W:cssW,H:cssH};
+}
+function makeView(W,H,xmin,xmax,ymin,ymax,pad){
+  pad=pad||{l:42,r:18,t:18,b:34};
+  const px0=pad.l,px1=W-pad.r,py0=pad.t,py1=H-pad.b;
+  return {xmin,xmax,ymin,ymax,px0,px1,py0,py1,
+    X:x=>px0+(x-xmin)/(xmax-xmin)*(px1-px0),
+    Y:y=>py1-(y-ymin)/(ymax-ymin)*(py1-py0),
+    invX:px=>xmin+(px-px0)/(px1-px0)*(xmax-xmin),
+    invY:py=>ymin+(py1-py)/(py1-py0)*(ymax-ymin)};
+}
+function grid(ctx,v,step){
+  step=step||1;
+  ctx.save(); ctx.lineWidth=1; ctx.strokeStyle="rgba(180,160,130,.30)";
+  for(let x=Math.ceil(v.xmin/step)*step; x<=v.xmax+1e-9; x+=step){const px=v.X(x);ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();}
+  for(let y=Math.ceil(v.ymin/step)*step; y<=v.ymax+1e-9; y+=step){const py=v.Y(y);ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();}
+  ctx.strokeStyle="rgba(33,26,20,.50)"; ctx.lineWidth=1.5;
+  if(v.ymin<=0&&v.ymax>=0){const py=v.Y(0);ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();}
+  if(v.xmin<=0&&v.xmax>=0){const px=v.X(0);ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();}
+  ctx.restore();
+}
+/* pixel-space arrow with arrowhead (crisp, no glow) */
+function parrow(ctx,x0,y0,x1,y1,color,w){
+  const dx=x1-x0,dy=y1-y0,len=Math.hypot(dx,dy); if(len<2)return;
+  const a=Math.atan2(dy,dx), head=Math.max(8,Math.min(15,len*0.32)), wing=0.42;
+  ctx.save();
+  ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=w||3; ctx.lineCap="round"; ctx.lineJoin="round";
+  const bx=x1-Math.cos(a)*head*0.85, by=y1-Math.sin(a)*head*0.85;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(bx,by);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x1,y1);
+  ctx.lineTo(x1-Math.cos(a-wing)*head,y1-Math.sin(a-wing)*head);
+  ctx.lineTo(x1-Math.cos(a+wing)*head,y1-Math.sin(a+wing)*head);
+  ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+function warrow(ctx,v,x0,y0,x1,y1,color,w){parrow(ctx,v.X(x0),v.Y(y0),v.X(x1),v.Y(y1),color,w);}
+function pdot(ctx,px,py,color,r){
+  ctx.save();
+  ctx.beginPath();ctx.arc(px,py,(r||7)+3,0,7);ctx.fillStyle="#fffdf8";ctx.fill();
+  ctx.beginPath();ctx.arc(px,py,r||7,0,7);ctx.fillStyle=color;ctx.fill();
+  ctx.restore();
+}
+function plabel(ctx,px,py,text,color,size){
+  ctx.save();ctx.font=`${size||13}px "Spline Sans Mono", monospace`;ctx.fillStyle=color;ctx.fillText(text,px,py);ctx.restore();
+}
+function dashed(ctx,x0,y0,x1,y1,color,w){
+  ctx.save();ctx.setLineDash([5,5]);ctx.strokeStyle=color;ctx.lineWidth=w||1.4;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();ctx.restore();
+}
+const fmt=(n,d=1)=>(n>=0?"+":"")+n.toFixed(d);
+
+/* ----- global animation registry (ticks only visible canvases) ----- */
+const animators=[];
+function registerAnim(canvas,tick){const a={canvas,tick,active:false};animators.push(a);animObs.observe(canvas);return a;}
+const animObs=new IntersectionObserver(es=>es.forEach(e=>{const a=animators.find(x=>x.canvas===e.target);if(a)a.active=e.isIntersecting;}),{threshold:0.04});
+let _last=performance.now();
+function loop(now){const dt=Math.min((now-_last)/1000,0.04);_last=now;for(const a of animators){if(a.active)a.tick(dt);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+
+/* drag helper: returns world coords of pointer */
+function dragWorld(canvas,getView,onMove){
+  let on=false;
+  function pt(e){const r=canvas.getBoundingClientRect();const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;const v=getView();return {x:v.invX(cx),y:v.invY(cy)};}
+  function start(e){on=true;canvas.classList.add('dragging');onMove(pt(e));e.preventDefault();}
+  function move(e){if(!on)return;onMove(pt(e));e.preventDefault();}
+  function end(){on=false;canvas.classList.remove('dragging');}
+  canvas.addEventListener('mousedown',start);window.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false});canvas.addEventListener('touchmove',move,{passive:false});window.addEventListener('touchend',end);
+}
+
+/* =========================================================
+   2. draggable arrow (concept)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-arrow');
+  const mo=document.getElementById('ar-mag'), ao=document.getElementById('ar-ang');
+  let tip={x:4,y:3}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-7,7,-4,4); view=v; grid(ctx,v);
+    warrow(ctx,v,0,0,tip.x,tip.y,css('--vec'),4);
+    pdot(ctx,v.X(0),v.Y(0),css('--ink'),5);
+    pdot(ctx,v.X(tip.x),v.Y(tip.y),css('--vec'),8);
+    const mag=Math.hypot(tip.x,tip.y); let ang=Math.atan2(tip.y,tip.x)*180/Math.PI;
+    plabel(ctx,v.X(tip.x)+10,v.Y(tip.y)-8,`${mag.toFixed(1)} @ ${ang.toFixed(0)}°`,css('--vec'),13);
+    mo.textContent=mag.toFixed(1); ao.textContent=ang.toFixed(0)+"°";
+  }
+  dragWorld(c,()=>view,p=>{tip.x=Math.max(-6.6,Math.min(6.6,p.x));tip.y=Math.max(-3.7,Math.min(3.7,p.y));draw();});
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   3. components / resolution
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-comp');
+  const mo=document.getElementById('cp-mag'),ao=document.getElementById('cp-ang'),xo=document.getElementById('cp-x'),yo=document.getElementById('cp-y');
+  let tip={x:4,y:3}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-7,7,-4.5,4.5); view=v; grid(ctx,v);
+    dashed(ctx,v.X(tip.x),v.Y(tip.y),v.X(tip.x),v.Y(0),css('--vy'),1.6);
+    dashed(ctx,v.X(tip.x),v.Y(tip.y),v.X(0),v.Y(tip.y),css('--vx'),1.6);
+    warrow(ctx,v,0,0,tip.x,0,css('--vx'),4.5);
+    warrow(ctx,v,0,0,0,tip.y,css('--vy'),4.5);
+    warrow(ctx,v,0,0,tip.x,tip.y,css('--vec'),4);
+    pdot(ctx,v.X(0),v.Y(0),css('--ink'),5);
+    pdot(ctx,v.X(tip.x),v.Y(tip.y),css('--vec'),8);
+    plabel(ctx,v.X(tip.x/2),v.Y(0)+ (tip.y>=0?20:-10),`x=${tip.x.toFixed(1)}`,css('--vx'),13);
+    plabel(ctx,v.X(0)+ (tip.x>=0?10:-46),v.Y(tip.y/2),`y=${tip.y.toFixed(1)}`,css('--vy'),13);
+    const mag=Math.hypot(tip.x,tip.y), ang=Math.atan2(tip.y,tip.x)*180/Math.PI;
+    mo.textContent=mag.toFixed(1); ao.textContent=ang.toFixed(0)+"°"; xo.textContent=tip.x.toFixed(1); yo.textContent=tip.y.toFixed(1);
+  }
+  dragWorld(c,()=>view,p=>{tip.x=Math.max(-6.6,Math.min(6.6,p.x));tip.y=Math.max(-4.2,Math.min(4.2,p.y));draw();});
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   4. independence: drop vs throw
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-indep');
+  const sx=document.getElementById('indep-vx'), vxlabel=document.getElementById('indep-vxval'), ylabel=document.getElementById('indep-y');
+  const dropBtn=document.getElementById('indep-drop'), resetBtn=document.getElementById('indep-reset');
+  const g=9.8, H0=14, X0=2;
+  let t=0, running=false;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,0,30,-1,16); grid(ctx,v,5);
+    ctx.save();ctx.strokeStyle="rgba(33,26,20,.5)";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(v.X(0),v.Y(0));ctx.lineTo(v.X(30),v.Y(0));ctx.stroke();ctx.restore();
+    const vx=+sx.value;
+    const y=Math.max(0,H0-0.5*g*t*t);
+    const xThrown=Math.min(29,X0+vx*t);
+    const dropped={x:X0,y:y}, thrown={x:xThrown,y:y};
+    dashed(ctx,v.X(dropped.x),v.Y(dropped.y),v.X(thrown.x),v.Y(thrown.y),css('--vy'),1.8);
+    const vy=g*t;
+    if(running||t>0){
+      warrow(ctx,v,dropped.x,dropped.y,dropped.x,dropped.y-Math.min(6,vy*0.4),css('--vy'),3);
+      warrow(ctx,v,thrown.x,thrown.y,thrown.x,thrown.y-Math.min(6,vy*0.4),css('--vy'),3);
+      warrow(ctx,v,thrown.x,thrown.y,thrown.x+vx*0.25,thrown.y,css('--vx'),3);
+    }
+    pdot(ctx,v.X(dropped.x),v.Y(dropped.y),css('--ink'),8);
+    pdot(ctx,v.X(thrown.x),v.Y(thrown.y),css('--vec'),8);
+    plabel(ctx,v.X(dropped.x)-6,v.Y(H0)-14,"dropped",css('--ink-soft'),12);
+    plabel(ctx,v.X(X0+0.4),v.Y(H0)-30,"thrown →",css('--vec'),12);
+    vxlabel.textContent=vx.toFixed(1);
+    ylabel.textContent = (Math.abs(dropped.y-thrown.y)<0.001)?"always identical":"—";
+  }
+  registerAnim(c,dt=>{ if(running){ t+=dt; if(H0-0.5*g*t*t<=0){t=Math.sqrt(2*H0/g);running=false;} } draw(); });
+  dropBtn.addEventListener('click',()=>{t=0;running=true;});
+  resetBtn.addEventListener('click',()=>{t=0;running=false;draw();});
+  sx.addEventListener('input',()=>{if(!running)draw();});
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   5. velocity = components building a 2-D path
+      Run -> object rides the corner of a growing right triangle.
+      Returns to start when the velocity tip reaches an edge.
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-vel');
+  const sx=document.getElementById('vel-x'), sy=document.getElementById('vel-y');
+  const xo=document.getElementById('vel-xv'),yo=document.getElementById('vel-yv'),so=document.getElementById('vel-spd');
+  const runBtn=document.getElementById('vel-run'), resetBtn=document.getElementById('vel-reset');
+  const XMIN=-6.7,XMAX=6.7,YMIN=-4.2,YMAX=4.2, SC=0.55, SLOW=0.5;
+  const Sx=-5.6, Sy=-3.4;                 // fixed start point (lower-left)
+  let px=Sx, py=Sy, running=false;
+  function curr(){ return {vx:+sx.value, vy:+sy.value}; }
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-7,7,-4.5,4.5); grid(ctx,v);
+    const {vx,vy}=curr();
+    // start marker
+    pdot(ctx,v.X(Sx),v.Y(Sy),"rgba(33,26,20,.35)",4);
+    plabel(ctx,v.X(Sx)-6,v.Y(Sy)+20,"start",css('--ink-soft'),11);
+    const dx=px-Sx, dy=py-Sy;
+    // displacement legs: horizontal (blue) then vertical (magenta) -> right triangle
+    if(Math.abs(dx)>0.02||Math.abs(dy)>0.02){
+      warrow(ctx,v,Sx,Sy,px,Sy,css('--vx'),3);          // how far sideways
+      warrow(ctx,v,px,Sy,px,py,css('--vy'),3);          // how far up/down
+      dashed(ctx,v.X(Sx),v.Y(Sy),v.X(px),v.Y(py),"rgba(31,138,120,.55)",2); // the diagonal path
+    }
+    // live velocity arrow at the object (shows direction of travel)
+    warrow(ctx,v,px,py,px+vx*SC,py+vy*SC,css('--vel'),4);
+    // the object
+    ctx.save();ctx.translate(v.X(px),v.Y(py));const a=Math.atan2(-vy,vx);ctx.rotate(a);
+    ctx.fillStyle=css('--ink');ctx.beginPath();ctx.moveTo(11,0);ctx.lineTo(-8,7);ctx.lineTo(-8,-7);ctx.closePath();ctx.fill();
+    ctx.restore();
+    xo.textContent=fmt(vx); yo.textContent=fmt(vy); so.textContent=Math.hypot(vx,vy).toFixed(1);
+  }
+  function backToStart(){ px=Sx; py=Sy; running=false; }
+  registerAnim(c,dt=>{
+    if(running){
+      const {vx,vy}=curr();
+      const nx=px+vx*dt*SLOW, ny=py+vy*dt*SLOW;
+      // stop & return to start once the velocity arrow tip would leave the box
+      if(nx+vx*SC>XMAX||nx+vx*SC<XMIN||ny+vy*SC>YMAX||ny+vy*SC<YMIN){ backToStart(); }
+      else { px=nx; py=ny; }
+    }
+    draw();
+  });
+  runBtn.onclick=()=>{ px=Sx; py=Sy; running=true; };
+  resetBtn.onclick=()=>{ backToStart(); draw(); };
+  sx.addEventListener('input',()=>{ if(!running) draw(); });
+  sy.addEventListener('input',()=>{ if(!running) draw(); });
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   6. acceleration vs velocity (3 modes)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-acc');
+  const desc=document.getElementById('acc-desc'), hint=document.getElementById('acc-hint');
+  const bSpeed=document.getElementById('acc-speed'),bSlow=document.getElementById('acc-slow'),bCircle=document.getElementById('acc-circle');
+  const XMAX=7;
+  let mode='speed';
+  let x=-5, vx=2;
+  let ang=0, stopped=false;
+  function setMode(m){
+    mode=m; stopped=false; [bSpeed,bSlow,bCircle].forEach(b=>{b.classList.remove('on');b.classList.add('ghost');});
+    const onb = m==='speed'?bSpeed : m==='slow'?bSlow : bCircle;
+    onb.classList.add('on'); onb.classList.remove('ghost');
+    if(m==='speed'){x=-5;vx=1.5;desc.innerHTML='Acceleration points the <b>same way</b> as velocity → you gain speed.';hint.textContent='Same direction as velocity = speed up.';}
+    if(m==='slow'){x=-5;vx=6;desc.innerHTML='Acceleration points <b>opposite</b> the velocity → you slow down.';hint.textContent='Opposite to velocity = braking.';}
+    if(m==='circle'){ang=0;desc.innerHTML='Speed is <b>constant</b>, yet it\u2019s always accelerating — direction keeps changing.';hint.textContent='Acceleration points to the center the whole time.';}
+  }
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-7,7,-4.5,4.5); grid(ctx,v);
+    if(mode==='circle'){
+      const R=3, cx=0, cy=0;
+      const ox=cx+R*Math.cos(ang), oy=cy+R*Math.sin(ang);
+      ctx.save();ctx.strokeStyle="rgba(33,26,20,.18)";ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(v.X(cx),v.Y(cy),v.X(R)-v.X(0),0,7);ctx.stroke();ctx.restore();
+      const tx=-Math.sin(ang), ty=Math.cos(ang);
+      warrow(ctx,v,ox,oy,ox+tx*2.4,oy+ty*2.4,css('--vel'),4);
+      warrow(ctx,v,ox,oy,ox+(cx-ox)*0.5,oy+(cy-oy)*0.5,css('--acc'),4);
+      pdot(ctx,v.X(ox),v.Y(oy),css('--ink'),7);
+      pdot(ctx,v.X(cx),v.Y(cy),"rgba(33,26,20,.35)",3);
+    } else {
+      const y=0;
+      warrow(ctx,v,x,y,x+vx*0.55,y,css('--vel'),4);
+      const aDir = (mode==='speed')? 1 : -1;
+      warrow(ctx,v,x,y-1.1,x+aDir*2.2,y-1.1,css('--acc'),4);
+      plabel(ctx,v.X(x)-6,v.Y(y)-18,"velocity",css('--vel'),12);
+      plabel(ctx,v.X(x)-6,v.Y(y-1.1)+22,"acceleration",css('--acc'),12);
+      pdot(ctx,v.X(x),v.Y(y),css('--ink'),8);
+    }
+  }
+  registerAnim(c,dt=>{
+    if(mode==='circle'){ ang+=1.1*dt; }              // closed loop: never reaches a border
+    else if(!stopped){
+      if(mode==='speed'){ vx+=2.2*dt; x+=vx*dt; }
+      else { vx=Math.max(0,vx-2.0*dt); x+=vx*dt; }    // braking
+      // rightmost arrow tip: velocity tip = x+vx*0.55; accel tip (speed mode only) = x+2.2
+      const rightTip = (mode==='speed') ? Math.max(x+vx*0.55, x+2.2) : (x+vx*0.55);
+      if(rightTip>=XMAX){ x -= (rightTip-XMAX); stopped=true; }  // a tip touched the wall -> stop there
+      if(mode==='slow' && vx<=0.001) stopped=true;     // braked to a halt before reaching the wall
+    }
+    draw();
+  });
+  bSpeed.onclick=()=>setMode('speed'); bSlow.onclick=()=>setMode('slow'); bCircle.onclick=()=>setMode('circle');
+  setMode('speed'); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   7. force -> acceleration -> velocity -> position
+      Two staged scenarios. Faint teal "ghost" arrows show
+      how the velocity vector changes over time.
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-force');
+  const magO=document.getElementById('force-mag'), accO=document.getElementById('force-acc'), spdO=document.getElementById('force-spd');
+  const bRest=document.getElementById('force-rest'), bMove=document.getElementById('force-move');
+  const runBtn=document.getElementById('force-run'), resetBtn=document.getElementById('force-reset');
+  const hint=document.getElementById('force-hint');
+  const XMIN=-6.7,XMAX=6.7,YMIN=-4.2,YMAX=4.2, SC=0.5, SLOW=0.5;
+  const m=1;
+  let scenario='rest', running=false, baseHint='';
+  let pos={x:0,y:0}, vel={x:0,y:0}, force={x:0,y:0};
+  let start={x:0,y:0}, vel0={x:0,y:0};
+  let trail=[], ghosts=[], sinceStamp=0;
+  function setScenario(s){
+    scenario=s;
+    bRest.classList.toggle('on',s==='rest'); bRest.classList.toggle('ghost',s!=='rest');
+    bMove.classList.toggle('on',s==='move'); bMove.classList.toggle('ghost',s!=='move');
+    if(s==='rest'){ start={x:-5,y:0}; vel0={x:0,y:0}; force={x:5.5,y:0};
+      baseHint='Scenario ①: the object starts still. The push makes it speed up straight along the force — the velocity (teal) grows from zero.'; }
+    else { start={x:-5.5,y:3.2}; vel0={x:6,y:0}; force={x:0,y:-5};
+      baseHint='Scenario ②: the object is already moving right. The downward push bends its velocity — the path curves, even though the push is sideways to the motion.'; }
+    reset();
+  }
+  function reset(){ pos={x:start.x,y:start.y}; vel={x:vel0.x,y:vel0.y}; running=false; trail=[{x:pos.x,y:pos.y}]; ghosts=[]; sinceStamp=0; hint.innerHTML=baseHint; draw(); }
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,-7,7,-4.5,4.5); grid(ctx,v);
+    // the path so far (position)
+    ctx.save();ctx.strokeStyle="rgba(33,26,20,.30)";ctx.lineWidth=2;ctx.setLineDash([2,5]);ctx.beginPath();
+    trail.forEach((p,i)=>{i?ctx.lineTo(v.X(p.x),v.Y(p.y)):ctx.moveTo(v.X(p.x),v.Y(p.y));});ctx.stroke();ctx.restore();
+    // ghost velocity arrows left behind -> see velocity change over time
+    ghosts.forEach(g=>{ warrow(ctx,v,g.x,g.y,g.x+g.vx*SC,g.y+g.vy*SC,"rgba(31,138,120,.30)",2.5); });
+    // constant force = acceleration (same direction, a=F/m)
+    warrow(ctx,v,pos.x,pos.y,pos.x+force.x*SC,pos.y+force.y*SC,css('--force'),4);
+    // live velocity
+    warrow(ctx,v,pos.x,pos.y,pos.x+vel.x*SC,pos.y+vel.y*SC,css('--vel'),4);
+    // object (points along velocity, or along force when at rest)
+    const dir = (Math.hypot(vel.x,vel.y)>0.05) ? vel : force;
+    const ang=Math.atan2(-dir.y,dir.x);
+    ctx.save();ctx.translate(v.X(pos.x),v.Y(pos.y));ctx.rotate(ang);
+    ctx.fillStyle=css('--ink');ctx.beginPath();ctx.moveTo(11,0);ctx.lineTo(-8,7);ctx.lineTo(-8,-7);ctx.closePath();ctx.fill();ctx.restore();
+    plabel(ctx,v.X(pos.x+force.x*SC)+4,v.Y(pos.y+force.y*SC),"F → a",css('--force'),12);
+    if(Math.hypot(vel.x,vel.y)>0.3) plabel(ctx,v.X(pos.x+vel.x*SC)+4,v.Y(pos.y+vel.y*SC)+12,"v",css('--vel'),12);
+    const Fmag=Math.hypot(force.x,force.y);
+    magO.textContent=Fmag.toFixed(1); accO.textContent=(Fmag/m).toFixed(1); spdO.textContent=Math.hypot(vel.x,vel.y).toFixed(1);
+  }
+  registerAnim(c,dt=>{
+    if(running){
+      vel.x+=(force.x/m)*dt*SLOW; vel.y+=(force.y/m)*dt*SLOW;
+      const nx=pos.x+vel.x*dt*SLOW, ny=pos.y+vel.y*dt*SLOW;
+      if(nx<XMIN||nx>XMAX||ny<YMIN||ny>YMAX){ running=false; hint.innerHTML=baseHint+' <b>Reached the edge — press Run to replay.</b>'; }
+      else {
+        pos.x=nx; pos.y=ny; trail.push({x:nx,y:ny}); if(trail.length>700)trail.shift();
+        sinceStamp+=dt;
+        if(sinceStamp>=0.5){ sinceStamp=0; ghosts.push({x:pos.x,y:pos.y,vx:vel.x,vy:vel.y}); if(ghosts.length>40)ghosts.shift(); }
+      }
+    }
+    draw();
+  });
+  bRest.onclick=()=>setScenario('rest'); bMove.onclick=()=>setScenario('move');
+  runBtn.onclick=()=>{ reset(); running=true; };
+  resetBtn.onclick=()=>reset();
+  setScenario('rest'); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   8. projectile (gravity)  — stops on landing
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-proj');
+  const ss=document.getElementById('proj-spd'), sa=document.getElementById('proj-ang'), launch=document.getElementById('proj-launch');
+  const vxo=document.getElementById('proj-vx'),vyo=document.getElementById('proj-vy');
+  const g=9.8; let t=0, running=false, trail=[];
+  function params(){const sp=+ss.value, ang=+sa.value*Math.PI/180; return {vx:sp*Math.cos(ang), vy0:sp*Math.sin(ang)};}
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,0,52,-2,30); grid(ctx,v,10);
+    ctx.save();ctx.strokeStyle="rgba(33,26,20,.5)";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(v.X(0),v.Y(0));ctx.lineTo(v.X(52),v.Y(0));ctx.stroke();ctx.restore();
+    const {vx,vy0}=params();
+    const x=vx*t, y=Math.max(0, vy0*t-0.5*g*t*t), vy=vy0-g*t;
+    ctx.save();ctx.strokeStyle="rgba(226,84,47,.45)";ctx.lineWidth=2;ctx.setLineDash([2,5]);ctx.beginPath();
+    trail.forEach((p,i)=>{i?ctx.lineTo(v.X(p.x),v.Y(p.y)):ctx.moveTo(v.X(p.x),v.Y(p.y));});ctx.stroke();ctx.restore();
+    if(running||t>0){
+      warrow(ctx,v,x,y,x+vx*0.6,y,css('--vx'),3);
+      warrow(ctx,v,x,y,x,y+vy*0.6,css('--vy'),3);
+      warrow(ctx,v,x,y,x+vx*0.6,y+vy*0.6,css('--vel'),3.5);
+      warrow(ctx,v,x,y,x,y-3,css('--acc'),2.6);
+    }
+    pdot(ctx,v.X(x),v.Y(y),css('--ink'),8);
+    vxo.textContent=vx.toFixed(1); vyo.textContent=vy.toFixed(1);
+  }
+  registerAnim(c,dt=>{
+    if(running){ t+=dt*1.1; const {vx,vy0}=params(); const y=vy0*t-0.5*g*t*t;
+      trail.push({x:vx*t,y:Math.max(0,y)}); if(trail.length>400)trail.shift();
+      if(y<=0&&t>0.1){running=false;} }
+    draw();
+  });
+  launch.onclick=()=>{t=0;trail=[];running=true;};
+  ss.addEventListener('input',()=>{if(!running){t=0;trail=[];draw();}});
+  sa.addEventListener('input',()=>{if(!running){t=0;trail=[];draw();}});
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   9. electron in a uniform field (parallel plates)
+      vx constant, vy grows, exit angle = arctan(vy/vx)
+      + / - charge supported; stops at the right edge
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-efield');
+  const launch=document.getElementById('ef-launch'), bPos=document.getElementById('ef-pos'), bNeg=document.getElementById('ef-neg');
+  const vxO=document.getElementById('ef-vx'), vyO=document.getElementById('ef-vy'), angO=document.getElementById('ef-angle'), note=document.getElementById('ef-note');
+  // world: x 0..52, y 0..32 ; plates from xL..xR, gap yBot..yTop
+  const xL=12, xR=40, yTop=24, yBot=8, yMid=16;
+  const v0=14, A=2.6;            // entry speed and field acceleration magnitude
+  let sign=-1;                   // -1 = electron, +1 = positive
+  let x=2, y=yMid, vx=v0, vy=0, running=false, trail=[], hitPlate=false;
+  function reset(){x=2;y=yMid;vx=v0;vy=0;running=false;trail=[];hitPlate=false;}
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,0,52,0,32,{l:30,r:18,t:14,b:24}); grid(ctx,v,8);
+    // plates
+    const plateThick=8;
+    ctx.save();
+    ctx.fillStyle="rgba(33,26,20,.78)";
+    ctx.fillRect(v.X(xL),v.Y(yTop)-plateThick,v.X(xR)-v.X(xL),plateThick);   // top plate
+    ctx.fillRect(v.X(xL),v.Y(yBot),v.X(xR)-v.X(xL),plateThick);              // bottom plate
+    ctx.restore();
+    plabel(ctx,v.X(xL)+6,v.Y(yTop)-12,"+  +  +  +  +",css('--vec'),13);
+    plabel(ctx,v.X(xL)+6,v.Y(yBot)+plateThick+15,"−  −  −  −  −",css('--vx'),13);
+    // field lines (faint, pointing down from + to -)
+    for(let fx=xL+3; fx<xR; fx+=5){ parrow(ctx,v.X(fx),v.Y(yTop)-plateThick-1,v.X(fx),v.Y(yBot)+plateThick+1,"rgba(33,26,20,.16)",1.5); }
+    plabel(ctx,v.X(xL),v.Y(yTop)+2,"E",css('--ink-soft'),13);
+    // trail
+    ctx.save();ctx.strokeStyle=(sign<0?"rgba(43,95,168,.5)":"rgba(226,84,47,.5)");ctx.lineWidth=2.4;ctx.beginPath();
+    trail.forEach((p,i)=>{i?ctx.lineTo(v.X(p.x),v.Y(p.y)):ctx.moveTo(v.X(p.x),v.Y(p.y));});ctx.stroke();ctx.restore();
+    // exit-angle reference line once past the plates
+    if(x>xR){ dashed(ctx,v.X(x),v.Y(y),v.X(x)+60,v.Y(y),"rgba(33,26,20,.3)",1.4); }
+    // component + resultant arrows at the charge
+    if(running||trail.length>1){
+      warrow(ctx,v,x,y,x+vx*0.32,y,css('--vx'),3);
+      warrow(ctx,v,x,y,x,y+vy*0.32,css('--vy'),3);
+      warrow(ctx,v,x,y,x+vx*0.32,y+vy*0.32,css('--vel'),3.5);
+    }
+    // the charge
+    const col = sign<0? css('--vx') : css('--vec');
+    pdot(ctx,v.X(x),v.Y(y),col,9);
+    ctx.save();ctx.fillStyle="#fffdf8";ctx.font='bold 13px "Spline Sans Mono"';ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.fillText(sign<0?"\u2212":"+",v.X(x),v.Y(y));ctx.restore();
+    // readouts
+    vxO.textContent=vx.toFixed(1);
+    vyO.textContent=Math.abs(vy).toFixed(1);
+    const angDeg=Math.atan2(Math.abs(vy),vx)*180/Math.PI;
+    angO.textContent=angDeg.toFixed(1)+"°"+(vy>0?" up":vy<0?" down":"");
+  }
+  registerAnim(c,dt=>{
+    if(running){
+      const step=dt*1.0;
+      const inField = (x>=xL && x<=xR);
+      // electron(-): force is up (+y); positive(+): force is down (-y)
+      const ay = inField ? (sign<0 ? +A : -A) : 0;
+      vy += ay*step;
+      x  += vx*step;
+      y  += vy*step;
+      trail.push({x,y}); if(trail.length>600)trail.shift();
+      // hit a plate?
+      if(inField && (y>=yTop-0.2 || y<=yBot+0.2)){ y=Math.max(yBot+0.2,Math.min(yTop-0.2,y)); running=false; hitPlate=true; }
+      // reached right edge -> stop and stay
+      if(x>=50){ x=50; running=false; }
+    }
+    draw();
+    note.textContent = hitPlate
+      ? "It struck a plate — lower the deflection by imagining a faster entry or weaker field."
+      : (x>xR && !running ? "Outside the plates there is no force, so it now travels in a straight line at the exit angle."
+                          : "Same picture as the projectile — a constant force gives a parabola. Watch v_y grow while vₓ stays fixed.");
+  });
+  function setSign(s){ sign=s; bNeg.classList.toggle('on',s<0); bNeg.classList.toggle('ghost',s>=0);
+    bPos.classList.toggle('on',s>0); bPos.classList.toggle('ghost',s<=0); reset(); draw(); }
+  launch.onclick=()=>{ reset(); running=true; };
+  bNeg.onclick=()=>setSign(-1); bPos.onclick=()=>setSign(1);
+  setSign(-1); window.addEventListener('resize',draw); draw();
+})();
+
+/* reveal on scroll */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interference &amp; Diffraction — A Visual Tutorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Newsreader:ital,opsz@0,6..72;1,6..72&family=Caveat:wght@500;700&family=Spline+Sans+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6EC;
+    --paper-2:#F4ECDD;
+    --ink:#211A14;
+    --ink-soft:#6b5d4e;
+    --line:#d9cdb8;
+
+    --w1:#2B5FA8;     /* wave A / source 1 (blue) */
+    --w2:#C0398B;     /* wave B / source 2 (magenta) */
+    --sum:#E2542F;    /* resultant wave (coral) */
+    --con:#1F8A78;    /* constructive / bright (teal) */
+    --des:#6A4C93;    /* destructive / dark (violet) */
+    --shadow: 0 18px 40px -22px rgba(33,26,20,.4);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 14% -5%, #fff7e9 0%, transparent 45%),
+      radial-gradient(circle at 92% 8%, #f6ead4 0%, transparent 40%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader", Georgia, serif;
+    font-size:19px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background-image:
+      linear-gradient(rgba(180,160,130,.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180,160,130,.10) 1px, transparent 1px);
+    background-size:28px 28px;
+  }
+  .wrap{position:relative; z-index:1; max-width:880px; margin:0 auto; padding:0 22px 120px;}
+
+  header.hero{text-align:center; padding:70px 10px 22px;}
+  .kicker{font-family:"Spline Sans Mono",monospace; letter-spacing:.32em; text-transform:uppercase; font-size:.7rem; color:var(--ink-soft);}
+  h1{font-family:"Fraunces",serif; font-weight:900; font-size:clamp(2.5rem,8vw,4.6rem); line-height:.98; margin:.25em 0 .15em; letter-spacing:-.02em;}
+  h1 .em{color:var(--sum); font-style:italic; font-weight:500;}
+  .sub{font-size:1.15rem; color:var(--ink-soft); max-width:600px; margin:0 auto;}
+  .scroll-hint{margin-top:30px; font-family:"Caveat",cursive; font-size:1.5rem; color:var(--sum);}
+  .scroll-hint span{display:inline-block; animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+  section{margin-top:78px;}
+  .step-no{font-family:"Spline Sans Mono",monospace; font-size:.72rem; letter-spacing:.2em; color:var(--sum); text-transform:uppercase;}
+  h2{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(1.8rem,4.5vw,2.7rem); line-height:1.05; margin:.1em 0 .5em; letter-spacing:-.01em;}
+  h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.3rem; margin:1.6em 0 .3em;}
+  p{margin:.7em 0;}
+  strong{color:var(--sum); font-weight:600;}
+  .lead{font-size:1.18rem;}
+  .w1{color:var(--w1);font-weight:700} .w2{color:var(--w2);font-weight:700}
+  .sumw{color:var(--sum);font-weight:700} .con{color:var(--con);font-weight:700} .des{color:var(--des);font-weight:700}
+
+  .card{background:rgba(255,255,255,.55); border:1px solid var(--line); border-radius:16px; padding:20px 22px; box-shadow:var(--shadow); margin:22px 0;}
+  .big-idea{background:linear-gradient(180deg,#fff8ec,#fdeed4); border:1px solid #e7d4ad; border-left:6px solid var(--sum);}
+  .big-idea .label{font-family:"Caveat",cursive; font-size:1.5rem; color:var(--sum); line-height:1;}
+  .big-idea p{font-size:1.22rem; margin:.3em 0 0;}
+  .takeaway{font-family:"Caveat",cursive; font-size:1.55rem; color:var(--con); line-height:1.25; margin-top:6px;}
+  .takeaway::before{content:"✎  "; opacity:.7;}
+
+  .def{background:linear-gradient(180deg,#fefdfa,#f7f1e3); border:1px solid var(--line); border-left:5px solid var(--con); border-radius:12px; padding:13px 18px; margin:18px 0;}
+  .def .term{font-family:"Fraunces",serif; font-weight:600; font-size:1.12rem; color:var(--ink);}
+  .def .term::before{content:"🌊  ";}
+  .def p{margin:.35em 0 0; font-size:1.02rem;}
+  .def .sym{font-family:"Spline Sans Mono",monospace; background:var(--paper-2); border-radius:5px; padding:1px 6px; font-size:.9em;}
+  .note{font-size:.98rem; color:var(--ink-soft);}
+  .note b{color:var(--ink);}
+
+  ul.clean{list-style:none; padding-left:0; margin:.6em 0;}
+  ul.clean li{padding:7px 0 7px 30px; position:relative; border-bottom:1px dashed var(--line);}
+  ul.clean li::before{content:"▸"; position:absolute; left:6px; color:var(--sum);}
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:620px){.two-col{grid-template-columns:1fr;}}
+  .minicard{background:rgba(255,255,255,.5); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+  .minicard h4{margin:.1em 0 .3em; font-family:"Fraunces",serif; font-size:1.05rem;}
+  .minicard.con h4{color:var(--con);} .minicard.des h4{color:var(--des);}
+
+  .formula{text-align:center; font-family:"Spline Sans Mono",monospace; font-size:1.15rem; color:var(--ink); margin:.6em 0; line-height:1.9;}
+
+  .widget{background:#fffdf8; border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:var(--shadow); margin:26px 0;}
+  .widget canvas{display:block; width:100%; height:auto; border-radius:10px;}
+  .controls{display:flex; flex-wrap:wrap; gap:16px 26px; align-items:center; margin-top:16px;}
+  .ctrl{flex:1 1 200px; min-width:180px;}
+  .ctrl label{font-size:.82rem; color:var(--ink-soft); font-family:"Spline Sans Mono",monospace; display:block; margin-bottom:4px;}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:3px; background:var(--line); outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--sum); cursor:pointer; border:3px solid #fffdf8; box-shadow:0 2px 6px rgba(0,0,0,.25);}
+  input[type=range]::-moz-range-thumb{width:22px; height:22px; border-radius:50%; background:var(--sum); cursor:pointer; border:3px solid #fffdf8;}
+  .readouts{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
+  .pill{font-family:"Spline Sans Mono",monospace; font-size:.95rem; background:var(--paper-2); border:1px solid var(--line); border-radius:10px; padding:8px 14px; color:var(--ink);}
+  .pill b{color:var(--ink);}
+  .pill.big{font-size:1.2rem; padding:10px 18px;}
+  .pill.w1{border-color:var(--w1);color:var(--w1)} .pill.w2{border-color:var(--w2);color:var(--w2)} .pill.sum{border-color:var(--sum);color:var(--sum)}
+  .pill.con{border-color:var(--con);color:var(--con)} .pill.des{border-color:var(--des);color:var(--des)}
+  .hint{font-family:"Caveat",cursive; font-size:1.25rem; color:var(--ink-soft); margin-top:10px;}
+  .btn{font-family:"Spline Sans Mono",monospace; font-size:.85rem; background:var(--ink); color:var(--paper); border:none; border-radius:10px; padding:9px 16px; cursor:pointer; transition:transform .1s;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn.alt{background:var(--con);}
+  .btn.ghost{background:var(--paper-2); color:var(--ink-soft); border:1px solid var(--line);}
+  .btn.on{background:var(--sum); color:#fff;}
+  .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+
+  table.simple{width:100%; border-collapse:collapse; font-family:"Spline Sans Mono",monospace; font-size:.86rem; margin:8px 0;}
+  table.simple th,table.simple td{border:1px solid var(--line); padding:8px 10px; text-align:left;}
+  table.simple th{background:var(--paper-2);}
+
+  .footer{text-align:center; margin-top:90px; color:var(--ink-soft); font-size:.95rem;}
+  .footer .big{font-family:"Fraunces",serif; font-size:1.6rem; color:var(--ink); font-weight:600; font-style:italic;}
+  .divider{height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); margin:6px 0;}
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s, transform .7s;}
+  .reveal.in{opacity:1; transform:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="kicker">Waves · Built to be Seen, Not Just Read</div>
+    <h1>Interference &amp; <span class="em">Diffraction</span></h1>
+    <p class="sub">When two waves meet they can <b>add up</b> into something bigger or <b>cancel</b> into nothing.
+       That single idea explains soap-bubble colors, the shimmer on a CD, and the most famous experiment in physics.
+       Everything here moves — play with it.</p>
+    <div class="scroll-hint">let's start with one wave <span>↓</span></div>
+  </header>
+
+  <!-- ===================== 1. WHAT IS A WAVE ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 1 · The foundation</div>
+    <h2>First, what exactly is a wave?</h2>
+    <p class="lead">A <strong>wave</strong> is a travelling disturbance that carries <b>energy</b> from one place to
+       another <em>without</em> carrying the stuff it travels through along with it. Drop a pebble in a pond: the ripple
+       races outward, but the water itself just bobs up and down in place — only the <em>pattern</em> moves.</p>
+    <p>Drag the sliders below to shape a wave, and watch it travel. Every wave, whether it's water, sound, or light, is
+       described by the same handful of numbers.</p>
+
+    <div class="widget">
+      <canvas id="cv-wave" data-w="760" data-h="380"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>amplitude (height)</label><input id="w-amp" type="range" min="0.2" max="1.2" step="0.05" value="0.9"></div>
+        <div class="ctrl"><label>wavelength (crest-to-crest)</label><input id="w-len" type="range" min="1.2" max="5" step="0.1" value="2.6"></div>
+        <div class="ctrl"><label>frequency (waves per second)</label><input id="w-frq" type="range" min="0.3" max="2.2" step="0.1" value="1"></div>
+      </div>
+      <div class="readouts">
+        <div class="pill sum">amplitude A = <b id="w-ampv">0.90</b></div>
+        <div class="pill w1">wavelength λ = <b id="w-lenv">2.6</b></div>
+        <div class="pill w2">frequency f = <b id="w-frqv">1.0</b> Hz</div>
+        <div class="pill con big">wave speed v = f λ = <b id="w-spd">2.6</b></div>
+      </div>
+      <p class="hint">↑ Bigger amplitude = taller wave. Shorter wavelength = crests packed closer. Higher frequency = wiggles faster (and travels faster, since v = f λ).</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Amplitude</div>
+      <p>The maximum distance the wave pushes away from the rest position — the height of a <b>crest</b> (the top) or the
+         depth of a <b>trough</b> (the bottom). Bigger amplitude means more energy: a tall water wave or a loud sound.</p>
+    </div>
+    <div class="def">
+      <div class="term">Wavelength <span class="sym">(λ)</span></div>
+      <p>The length of one complete wave — the distance from one crest to the next (or any point to the matching point one
+         cycle later). Measured in metres. For visible light it's astonishingly small, a few hundred-thousandths of a
+         millimetre, and the wavelength is what your eye reads as <b>colour</b>.</p>
+    </div>
+    <div class="def">
+      <div class="term">Frequency <span class="sym">(f)</span> &amp; period <span class="sym">(T)</span></div>
+      <p><b>Frequency</b> is how many complete waves pass a point each second, measured in hertz <span class="sym">(Hz)</span>.
+         <b>Period</b> is the time for one complete wave, <span class="sym">T = 1/f</span>. A high-frequency wave wiggles
+         rapidly; a low-frequency one lazily.</p>
+    </div>
+    <div class="def">
+      <div class="term">Wave speed <span class="sym">(v)</span></div>
+      <p>How fast a crest travels. It ties the other quantities together: <span class="sym">v = f λ</span>. In a given
+         material the speed is usually fixed, so squeezing the wavelength shorter forces the frequency higher, and vice-versa.</p>
+    </div>
+    <p class="note">Waves come in two flavours. In a <b>transverse</b> wave the wiggle is sideways to the direction of
+       travel (light, and the wave drawn above). In a <b>longitudinal</b> wave the wiggle is back-and-forth along the
+       travel direction (sound). The ideas in this tutorial work for both.</p>
+  </section>
+
+  <!-- ===================== 2. SUPERPOSITION ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 2 · The key rule</div>
+    <h2>When two waves overlap, they simply add</h2>
+    <p class="lead">Here is the one rule that makes everything else work. If two waves pass through the same point at the
+       same time, the <strong>total displacement is just the sum</strong> of what each wave would do on its own. This is
+       called the <b>principle of superposition</b>.</p>
+    <p>Below, the <span class="w1">blue wave</span> and the <span class="w2">magenta wave</span> overlap, and the
+       <span class="sumw">coral wave</span> is their sum. Slide the phase to shift one wave relative to the other and
+       watch the sum swell up or collapse to nothing.</p>
+
+    <div class="widget">
+      <canvas id="cv-super" data-w="760" data-h="380"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>phase shift between the two waves</label><input id="s-phase" type="range" min="0" max="360" step="1" value="0"></div>
+      </div>
+      <div class="btnrow">
+        <button class="btn on" id="s-in">In phase (0°)</button>
+        <button class="btn ghost" id="s-quarter">Quarter (90°)</button>
+        <button class="btn ghost" id="s-out">Opposite (180°)</button>
+      </div>
+      <div class="readouts">
+        <div class="pill">phase difference = <b id="s-phv">0°</b></div>
+        <div class="pill sum big" id="s-result">result: fully constructive — the sum is twice as tall</div>
+      </div>
+      <p class="hint">At 0° the crests line up and reinforce (big coral wave). At 180° every crest meets a trough and they erase each other (flat line).</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Phase &amp; phase difference</div>
+      <p><b>Phase</b> says where a wave is in its cycle right now — at a crest, at a trough, or somewhere between. Two
+         waves are <b>in phase</b> when their crests line up, and <b>out of phase</b> when one's crest meets the other's
+         trough. <b>Phase difference</b> measures this mismatch as an angle: 0° (or 360°) is perfectly in phase, 180° is
+         perfectly opposite.</p>
+    </div>
+    <div class="two-col">
+      <div class="minicard con">
+        <h4>Constructive</h4>
+        <p style="margin:.2em 0">Crests meet crests (in phase). The waves reinforce; the combined amplitude is <b>large</b>.</p>
+      </div>
+      <div class="minicard des">
+        <h4>Destructive</h4>
+        <p style="margin:.2em 0">A crest meets a trough (out of phase). The waves cancel; the combined amplitude is <b>small or zero</b>.</p>
+      </div>
+    </div>
+    <p class="note"><b>Energy isn't destroyed</b> when waves cancel — it just gets redistributed. Where two waves cancel,
+       extra energy shows up somewhere else where they reinforce. That bookkeeping is exactly what produces the patterns
+       of bright and dark you'll see next.</p>
+    <p class="takeaway">Two overlapping waves add point-by-point. Line up the crests → big. Crest-on-trough → gone.</p>
+  </section>
+
+  <!-- ===================== 3. INTERFERENCE (TWO SOURCES) ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 3 · Two sources, one pattern</div>
+    <h2>Interference: a map of "add up" and "cancel"</h2>
+    <p class="lead">Now let two sources make waves at once — like two fingers tapping a pond in rhythm. Their ripples
+       overlap everywhere, and superposition decides the result at each point. The fixed pattern of reinforcing and
+       cancelling that appears is called an <strong>interference pattern</strong>.</p>
+    <p>This is a ripple tank seen from above. The bright, strongly-rippling bands are where the two waves
+       <span class="con">add up (constructive)</span>; the calm grey bands between them are where they
+       <span class="des">cancel (destructive)</span>. Change the spacing and wavelength and watch the bands fan out.</p>
+
+    <div class="widget">
+      <canvas id="cv-ripple" data-w="760" data-h="430"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>distance between the two sources</label><input id="r-sep" type="range" min="1.5" max="6" step="0.1" value="3.5"></div>
+        <div class="ctrl"><label>wavelength λ</label><input id="r-len" type="range" min="0.8" max="2.2" step="0.05" value="1.3"></div>
+      </div>
+      <div class="readouts">
+        <div class="pill con">bright bands = constructive (waves in step)</div>
+        <div class="pill des">calm bands = destructive (waves opposed)</div>
+      </div>
+      <p class="hint">Closer wavelength or wider spacing → more bands, packed tighter. The two white dots are the sources.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Interference</div>
+      <p>The result of two or more waves overlapping: their displacements add by superposition, producing a fixed pattern
+         of high-amplitude and low-amplitude regions. <b>Constructive interference</b> is where they reinforce;
+         <b>destructive interference</b> is where they cancel.</p>
+    </div>
+    <div class="def">
+      <div class="term">Coherence</div>
+      <p>For a <em>steady, sharp</em> pattern, the two sources must keep a <b>constant phase relationship</b> — they must
+         be <b>coherent</b>. If their phases drift randomly the bright and dark bands wash out. This is why interference
+         experiments use a single light source split into two, rather than two separate bulbs.</p>
+    </div>
+    <div class="def">
+      <div class="term">Path difference &amp; the bright/dark rule</div>
+      <p>Pick any point in the pattern. The two waves had to travel slightly different distances to reach it; that gap is
+         the <b>path difference</b> <span class="sym">Δ</span>. Whether the point is bright or dark depends only on how Δ
+         compares to the wavelength:</p>
+      <p class="formula"><span class="con">Δ = 0, λ, 2λ, 3λ … → constructive (bright)</span><br>
+         <span class="des">Δ = ½λ, 1½λ, 2½λ … → destructive (dark)</span></p>
+      <p>In words: if one wave is a <b>whole number of wavelengths</b> behind the other, they arrive in step and reinforce.
+         If it's behind by a <b>half-wavelength</b> (or any odd number of halves), they arrive opposed and cancel.</p>
+    </div>
+    <p class="takeaway">Bright = path difference is a whole number of wavelengths. Dark = a half-wavelength off.</p>
+  </section>
+
+  <!-- ===================== 4. DOUBLE SLIT ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 4 · The famous experiment</div>
+    <h2>Young's double-slit experiment</h2>
+    <p class="lead">In 1801 Thomas Young shone light through <b>two narrow slits</b> and caught it on a screen. If light
+       were simply tiny bullets you'd expect two bright lines. Instead he saw a whole row of evenly-spaced bright and dark
+       <strong>fringes</strong> — the unmistakable signature of interference. This is the experiment that proved light
+       behaves as a wave.</p>
+    <p>The two slits act as two coherent sources (Step 3). Light spreads from each, the two paths to any point on the
+       screen differ slightly, and the path-difference rule paints bright and dark bands. Change the setup and watch the
+       fringes respond.</p>
+
+    <div class="widget">
+      <canvas id="cv-double" data-w="760" data-h="430"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>slit separation d</label><input id="d-sep" type="range" min="0.6" max="2.4" step="0.05" value="1.2"></div>
+        <div class="ctrl"><label>wavelength λ (colour)</label><input id="d-len" type="range" min="400" max="700" step="5" value="540"></div>
+        <div class="ctrl"><label>slit-to-screen distance L</label><input id="d-dist" type="range" min="1" max="3" step="0.05" value="2"></div>
+      </div>
+      <div class="readouts">
+        <div class="pill sum big">fringe spacing w = λL / d = <b id="d-fringe">—</b></div>
+        <div class="pill w1">λ = <b id="d-lenv">540</b> nm</div>
+      </div>
+      <p class="hint">Wider slit spacing d → fringes squeeze together. Longer wavelength (toward red) → fringes spread apart. Bigger distance L → fringes spread apart.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Fringe &amp; fringe spacing</div>
+      <p>Each bright band on the screen is a <b>fringe</b>; the dark gaps are dark fringes. The centre-to-centre distance
+         between neighbouring bright fringes is the <b>fringe spacing</b> <span class="sym">w</span>. For two slits a
+         distance <span class="sym">d</span> apart, light of wavelength <span class="sym">λ</span>, and a screen a distance
+         <span class="sym">L</span> away:</p>
+      <p class="formula">w = λL / d</p>
+      <p>Bright fringes sit where the path difference is a whole number of wavelengths,
+         <span class="sym">d sinθ = mλ</span> (m = 0, 1, 2…); dark fringes where it's a half-integer.</p>
+    </div>
+    <p class="note"><b>Why this is such a big deal:</b> tiny bullets could never make alternating dark bands — two streams
+       of bullets just pile up in two spots. Only waves, which can <em>cancel</em>, can leave a spot dark by adding more
+       light to it. The fringes are proof that light interferes, and they let us <em>measure</em> the wavelength of light
+       with a ruler: rearrange to <span class="sym">λ = w·d / L</span>.</p>
+    <p class="takeaway">Two slits → a row of fringes. Spacing w = λL/d. Bigger d, tighter fringes.</p>
+  </section>
+
+  <!-- ===================== 5. DIFFRACTION ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 5 · Waves bend</div>
+    <h2>Diffraction: waves spread around edges</h2>
+    <p class="lead"><strong>Diffraction</strong> is the spreading of a wave as it passes through an opening or around an
+       obstacle. A wave doesn't march in a perfectly straight beam — at an edge it bends and fans out into the "shadow."
+       The narrower the gap compared with the wavelength, the more dramatically the wave spreads.</p>
+    <p>Watch straight wavefronts arrive at a slit. After squeezing through, they bow outward into circular ripples, as if
+       the slit itself were a new source. Make the slit narrow and the spreading becomes huge.</p>
+
+    <div class="widget">
+      <canvas id="cv-diff" data-w="760" data-h="380"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>slit width a</label><input id="f-width" type="range" min="0.5" max="4" step="0.1" value="1.4"></div>
+      </div>
+      <p class="hint">Wide slit → the wave barely bends, passing almost straight through. Narrow slit → it fans out in big arcs. Spreading gets large when the slit is comparable to the wavelength.</p>
+    </div>
+
+    <p>Send that spread onto a screen and it isn't a clean blob — it's a bright central band flanked by dimmer bands,
+       separated by dark gaps. This is the <b>single-slit diffraction pattern</b>.</p>
+
+    <div class="widget">
+      <canvas id="cv-single" data-w="760" data-h="400"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>slit width a</label><input id="g-width" type="range" min="0.6" max="3.2" step="0.05" value="1.4"></div>
+        <div class="ctrl"><label>wavelength λ (colour)</label><input id="g-len" type="range" min="400" max="700" step="5" value="540"></div>
+      </div>
+      <div class="readouts">
+        <div class="pill sum">central band is brightest and twice as wide as the rest</div>
+      </div>
+      <p class="hint">Narrow the slit and the whole pattern widens. The first dark fringe sits where a·sinθ = λ.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Diffraction</div>
+      <p>The bending and spreading of waves at an opening or edge. It happens for all waves; it becomes obvious when the
+         opening is roughly the size of the wavelength or smaller. It's why you can hear someone around a corner (sound's
+         wavelength is large) but can't see them (light's wavelength is tiny).</p>
+    </div>
+    <div class="def">
+      <div class="term">Single-slit minima</div>
+      <p>The dark bands of a single slit of width <span class="sym">a</span> fall where
+         <span class="sym">a·sinθ = mλ</span> for m = 1, 2, 3… (note: this is the condition for <em>dark</em>, the
+         opposite of the double-slit bright condition). The central bright band, between the first dark fringe on each
+         side, is twice as wide as the others — and it holds most of the light's energy.</p>
+    </div>
+    <p class="note">Diffraction and interference are really the same physics. Diffraction is what you get when you add up
+       the waves from <em>every point</em> across a single opening (a continuous version of Step 3), while the double-slit
+       fringes come from two openings. Real experiments show both at once: double-slit fringes sitting inside a broad
+       single-slit envelope.</p>
+    <p class="takeaway">Narrow the gap, widen the spread. Diffraction is interference from one opening.</p>
+  </section>
+
+  <!-- ===================== 6. REAL WORLD ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 6 · Out in the wild</div>
+    <h2>Where you've already seen this</h2>
+    <p class="lead">These aren't lab curiosities — interference and diffraction are painting the world around you all the
+       time. Once you know the signature (rainbow colours from things that have no pigment, or patterns of light and
+       dark), you start spotting it everywhere.</p>
+
+    <ul class="clean">
+      <li><b>The shimmer on a CD or DVD.</b> The disc's surface is packed with microscopic tracks that act like thousands
+         of slits — a <b>diffraction grating</b>. White light hits them and each colour diffracts at its own angle, fanning
+         sunlight into a rainbow.</li>
+      <li><b>Soap bubbles and oil films.</b> Light reflects off both the top and bottom of a paper-thin film. The two
+         reflections interfere, and which colour reinforces depends on the film's thickness — so swirling, shifting
+         rainbows appear (<b>thin-film interference</b>). No dye involved.</li>
+      <li><b>Peacock feathers and butterfly wings.</b> Their dazzling blues and greens are <b>structural colour</b> —
+         microscopic ridges that interfere with light. Crush the structure and the colour vanishes, because there was
+         never any pigment.</li>
+      <li><b>Hearing around corners.</b> Sound has a wavelength of roughly a metre, comparable to doorways, so it
+         diffracts generously and reaches you even when the speaker is out of sight. Light's wavelength is far too small
+         to bend like that, so shadows stay sharp.</li>
+      <li><b>Why telescopes have a resolution limit.</b> Light diffracts as it enters any aperture, blurring each star into
+         a tiny disc. To see finer detail you need a bigger lens or mirror — diffraction sets the ultimate limit on every
+         camera, eye, and telescope.</li>
+      <li><b>Noise-cancelling headphones.</b> They listen to incoming sound and play its exact opposite (a wave 180° out
+         of phase). The two interfere destructively and the noise cancels — Step 2, used on purpose.</li>
+    </ul>
+
+    <div class="card big-idea">
+      <div class="label">the big picture ✦</div>
+      <p>Whenever you see colour with no pigment, or a pattern of bright and dark with no obvious cause, suspect waves
+         adding and cancelling. The same superposition rule runs through all of it — from a ripple in a pond to the colour
+         of a hummingbird's throat.</p>
+    </div>
+  </section>
+
+  <!-- ===================== RECAP ===================== -->
+  <section class="reveal">
+    <div class="step-no">Putting it together</div>
+    <h2>Everything on one page</h2>
+    <div class="card">
+      <p style="margin-top:0">The whole chain of ideas, in order:</p>
+      <ul class="clean">
+        <li><strong>A wave</strong> carries energy and is described by amplitude, wavelength λ, frequency f, with v = fλ.</li>
+        <li><strong>Superposition:</strong> overlapping waves add point-by-point.</li>
+        <li><strong>Interference:</strong> in phase → constructive (bright); opposite → destructive (dark).</li>
+        <li><strong>Path-difference rule:</strong> bright when Δ = mλ, dark when Δ = (m+½)λ.</li>
+        <li><strong>Double slit:</strong> fringes spaced w = λL/d — proof light is a wave, and a way to measure λ.</li>
+        <li><strong>Diffraction:</strong> waves spread through gaps; the narrower the gap, the wider the spread.</li>
+      </ul>
+    </div>
+
+    <h3>Glossary — every term in one place</h3>
+    <div class="card">
+      <table class="simple">
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td>Wave</td><td>a travelling disturbance that carries energy, not matter</td></tr>
+        <tr><td>Amplitude</td><td>maximum displacement from rest (height of a crest)</td></tr>
+        <tr><td>Crest / trough</td><td>the highest / lowest point of a wave</td></tr>
+        <tr><td>Wavelength (λ)</td><td>length of one full wave, crest to crest</td></tr>
+        <tr><td>Frequency (f)</td><td>waves passing a point per second, in hertz</td></tr>
+        <tr><td>Period (T)</td><td>time for one full wave, T = 1/f</td></tr>
+        <tr><td>Wave speed (v)</td><td>speed of a crest, v = f λ</td></tr>
+        <tr><td>Wavefront</td><td>a line joining points of a wave that are in phase (e.g. a crest)</td></tr>
+        <tr><td>Phase</td><td>where a wave is in its cycle, as an angle</td></tr>
+        <tr><td>In / out of phase</td><td>crests aligned (0°) / crest meets trough (180°)</td></tr>
+        <tr><td>Superposition</td><td>overlapping waves add their displacements</td></tr>
+        <tr><td>Interference</td><td>the fixed pattern from overlapping coherent waves</td></tr>
+        <tr><td>Constructive</td><td>waves reinforce → large amplitude (bright)</td></tr>
+        <tr><td>Destructive</td><td>waves cancel → small amplitude (dark)</td></tr>
+        <tr><td>Coherent</td><td>keeping a constant phase relationship</td></tr>
+        <tr><td>Path difference (Δ)</td><td>extra distance one wave travels vs the other</td></tr>
+        <tr><td>Fringe</td><td>a bright (or dark) band in an interference pattern</td></tr>
+        <tr><td>Fringe spacing (w)</td><td>gap between bright fringes, w = λL/d</td></tr>
+        <tr><td>Diffraction</td><td>spreading of a wave through a gap or around an edge</td></tr>
+        <tr><td>Diffraction grating</td><td>many slits that split light into its colours</td></tr>
+        <tr><td>Monochromatic</td><td>light of a single wavelength (one colour)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div class="divider" style="margin-bottom:26px"></div>
+    <p class="big">Waves add. Sometimes that means more, sometimes nothing.</p>
+    <p>From that one rule come fringes, rainbows without pigment, and the proof that light is a wave. 🌈</p>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   Shared toolkit (warm paper theme)
+   ========================================================= */
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function setup(c){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const cssW=c.clientWidth||+c.dataset.w;
+  const cssH=cssW*(c.dataset.h/c.dataset.w);
+  if(c._cw!==cssW){ c.style.height=cssH+"px"; c.width=Math.round(cssW*dpr); c.height=Math.round(cssH*dpr); c._cw=cssW; }
+  const ctx=c.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,W:cssW,H:cssH,dpr};
+}
+function makeView(W,H,xmin,xmax,ymin,ymax,pad){
+  pad=pad||{l:40,r:18,t:18,b:30};
+  const px0=pad.l,px1=W-pad.r,py0=pad.t,py1=H-pad.b;
+  return {xmin,xmax,ymin,ymax,px0,px1,py0,py1,
+    X:x=>px0+(x-xmin)/(xmax-xmin)*(px1-px0),
+    Y:y=>py1-(y-ymin)/(ymax-ymin)*(py1-py0),
+    invX:px=>xmin+(px-px0)/(px1-px0)*(xmax-xmin),
+    invY:py=>ymin+(py1-py)/(py1-py0)*(ymax-ymin)};
+}
+function axisX(ctx,v,y0){
+  ctx.save();ctx.strokeStyle="rgba(33,26,20,.30)";ctx.lineWidth=1.4;
+  ctx.beginPath();ctx.moveTo(v.px0,v.Y(y0));ctx.lineTo(v.px1,v.Y(y0));ctx.stroke();ctx.restore();
+}
+function plabel(ctx,px,py,text,color,size,align){
+  ctx.save();ctx.font=`${size||13}px "Spline Sans Mono", monospace`;ctx.fillStyle=color;ctx.textAlign=align||"left";ctx.fillText(text,px,py);ctx.restore();
+}
+function dashed(ctx,x0,y0,x1,y1,color,w){
+  ctx.save();ctx.setLineDash([5,5]);ctx.strokeStyle=color;ctx.lineWidth=w||1.4;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();ctx.restore();
+}
+function plotWave(ctx,v,fn,color,width,step){
+  step=step||2;
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width||3;ctx.lineJoin="round";ctx.lineCap="round";ctx.beginPath();
+  let first=true;
+  for(let px=v.px0;px<=v.px1;px+=step){ const x=v.invX(px), y=fn(x); const py=v.Y(y);
+    if(first){ctx.moveTo(px,py);first=false;} else ctx.lineTo(px,py); }
+  ctx.stroke();ctx.restore();
+}
+/* approximate visible-wavelength (nm) -> [r,g,b] */
+function wlRGB(wl){
+  let R=0,G=0,B=0;
+  if(wl<440){R=-(wl-440)/(440-380);G=0;B=1;}
+  else if(wl<490){R=0;G=(wl-440)/(490-440);B=1;}
+  else if(wl<510){R=0;G=1;B=-(wl-510)/(510-490);}
+  else if(wl<580){R=(wl-510)/(580-510);G=1;B=0;}
+  else if(wl<645){R=1;G=-(wl-645)/(645-580);B=0;}
+  else {R=1;G=0;B=0;}
+  let f=1;
+  if(wl<420)f=0.3+0.7*(wl-380)/(420-380);
+  else if(wl>645)f=0.3+0.7*(700-wl)/(700-645);
+  f=Math.max(0.3,Math.min(1,f));
+  return [Math.round(255*R*f),Math.round(255*G*f),Math.round(255*B*f)];
+}
+
+/* animation registry — tick only visible canvases */
+const animators=[];
+function registerAnim(canvas,tick){const a={canvas,tick,active:false};animators.push(a);animObs.observe(canvas);return a;}
+const animObs=new IntersectionObserver(es=>es.forEach(e=>{const a=animators.find(x=>x.canvas===e.target);if(a)a.active=e.isIntersecting;}),{threshold:0.03});
+let _last=performance.now();
+function loop(now){const dt=Math.min((now-_last)/1000,0.05);_last=now;for(const a of animators){if(a.active)a.tick(dt);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+
+/* =========================================================
+   1. Travelling wave (anatomy)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-wave');
+  const sa=document.getElementById('w-amp'), sl=document.getElementById('w-len'), sf=document.getElementById('w-frq');
+  const oa=document.getElementById('w-ampv'),ol=document.getElementById('w-lenv'),of=document.getElementById('w-frqv'),os=document.getElementById('w-spd');
+  let t=0;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,0,10,-1.5,1.5);
+    axisX(ctx,v,0);
+    const A=+sa.value, lam=+sl.value, f=+sf.value, k=2*Math.PI/lam, w=2*Math.PI*f;
+    plotWave(ctx,v,x=>A*Math.sin(k*x - w*t), css('--sum'),3.5);
+    // mark a crest and the wavelength span at the current time
+    // find x of a crest near left: k x - w t = pi/2  => x = (pi/2 + w t)/k
+    let xc=(Math.PI/2 + w*t)/k; while(xc<0.6)xc+=lam; while(xc>10-lam-0.3)xc-=lam;
+    const xc2=xc+lam;
+    if(xc>0.5 && xc2<9.6){
+      // wavelength double-arrow between two crests
+      const yArrow=1.28;
+      ctx.save();ctx.strokeStyle=css('--w1');ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(v.X(xc),v.Y(yArrow));ctx.lineTo(v.X(xc2),v.Y(yArrow));ctx.stroke();
+      ctx.restore();
+      dashed(ctx,v.X(xc),v.Y(A),v.X(xc),v.Y(yArrow),"rgba(43,95,168,.5)",1.3);
+      dashed(ctx,v.X(xc2),v.Y(A),v.X(xc2),v.Y(yArrow),"rgba(43,95,168,.5)",1.3);
+      plabel(ctx,(v.X(xc)+v.X(xc2))/2,v.Y(yArrow)-6,"λ",css('--w1'),13,"center");
+      // amplitude arrow
+      ctx.save();ctx.strokeStyle=css('--sum');ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(v.X(xc),v.Y(0));ctx.lineTo(v.X(xc),v.Y(A));ctx.stroke();ctx.restore();
+      plabel(ctx,v.X(xc)+6,v.Y(A/2),"A",css('--sum'),13);
+      // crest dot
+      ctx.save();ctx.fillStyle=css('--sum');ctx.beginPath();ctx.arc(v.X(xc),v.Y(A),4,0,7);ctx.fill();ctx.restore();
+    }
+    plabel(ctx,v.px0+4,v.Y(0)-8,"rest position",css('--ink-soft'),11);
+    oa.textContent=A.toFixed(2); ol.textContent=lam.toFixed(1); of.textContent=f.toFixed(1); os.textContent=(f*lam).toFixed(1);
+  }
+  registerAnim(c,dt=>{ t+=dt; draw(); });
+  [sa,sl,sf].forEach(s=>s.addEventListener('input',draw));
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   2. Superposition (two waves + sum)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-super');
+  const sp=document.getElementById('s-phase');
+  const phv=document.getElementById('s-phv'), res=document.getElementById('s-result');
+  const bIn=document.getElementById('s-in'),bQ=document.getElementById('s-quarter'),bOut=document.getElementById('s-out');
+  let t=0;
+  const A=0.7, lam=2.8, f=0.8, k=2*Math.PI/lam, w=2*Math.PI*f;
+  function setPhase(p){ sp.value=p; updateBtns(); draw(); }
+  function updateBtns(){ const p=+sp.value;
+    [bIn,bQ,bOut].forEach(b=>{b.classList.remove('on');b.classList.add('ghost');});
+    if(p===0){bIn.classList.add('on');bIn.classList.remove('ghost');}
+    else if(p===90){bQ.classList.add('on');bQ.classList.remove('ghost');}
+    else if(p===180){bOut.classList.add('on');bOut.classList.remove('ghost');}
+  }
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=makeView(W,H,0,10,-2.1,2.1);
+    axisX(ctx,v,0);
+    const ph=(+sp.value)*Math.PI/180;
+    const w1=x=>A*Math.sin(k*x - w*t);
+    const w2=x=>A*Math.sin(k*x - w*t + ph);
+    plotWave(ctx,v,w1,css('--w1'),2.4);
+    plotWave(ctx,v,w2,css('--w2'),2.4);
+    plotWave(ctx,v,x=>w1(x)+w2(x),css('--sum'),4);
+    phv.textContent=(+sp.value)+"°";
+    const amp=2*A*Math.abs(Math.cos(ph/2));
+    let msg;
+    if(amp>1.3*A) msg="result: constructive — the sum is big";
+    else if(amp<0.4*A) msg="result: destructive — the waves nearly cancel";
+    else msg="result: partial — somewhere in between";
+    res.textContent=msg;
+  }
+  registerAnim(c,dt=>{ t+=dt; draw(); });
+  sp.addEventListener('input',()=>{updateBtns();draw();});
+  bIn.onclick=()=>setPhase(0); bQ.onclick=()=>setPhase(90); bOut.onclick=()=>setPhase(180);
+  updateBtns(); window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   3. Two-source ripple interference (pixel buffer)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-ripple');
+  const sSep=document.getElementById('r-sep'), sLen=document.getElementById('r-len');
+  const BW=240, BH=Math.round(240*430/760);   // buffer resolution
+  const off=document.createElement('canvas'); off.width=BW; off.height=BH;
+  const octx=off.getContext('2d'); const img=octx.createImageData(BW,BH);
+  // world: 0..20 wide, mapped to buffer; sources near left-centre
+  const Wm=20, Hm=Wm*BH/BW;
+  let ph1=new Float32Array(BW*BH), ph2=new Float32Array(BW*BH);
+  let k=0, t=0;
+  function rebuild(){
+    const sep=+sSep.value, lam=+sLen.value; k=2*Math.PI/lam;
+    const sx=4, s1y=Hm/2-sep/2, s2y=Hm/2+sep/2;
+    for(let j=0;j<BH;j++){
+      const wy=j/BH*Hm;
+      for(let i=0;i<BW;i++){
+        const wx=i/BW*Wm;
+        const r1=Math.hypot(wx-sx,wy-s1y), r2=Math.hypot(wx-sx,wy-s2y);
+        const idx=j*BW+i;
+        ph1[idx]=k*r1; ph2[idx]=k*r2;
+      }
+    }
+  }
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const omega=k*2.6; // wave speed 2.6
+    const data=img.data;
+    for(let idx=0,p=0; idx<BW*BH; idx++, p+=4){
+      const a=Math.cos(ph1[idx]-omega*t)+Math.cos(ph2[idx]-omega*t); // -2..2
+      let b=(a+2)/4;            // 0..1 brightness (displacement)
+      // water palette: deep blue -> pale cyan
+      data[p]  =Math.round(11 +b*(150-11));
+      data[p+1]=Math.round(42 +b*(225-42));
+      data[p+2]=Math.round(74 +b*(255-74));
+      data[p+3]=255;
+    }
+    octx.putImageData(img,0,0);
+    ctx.imageSmoothingEnabled=true;
+    ctx.drawImage(off,0,0,BW,BH,0,0,W,H);
+    // source dots
+    const sep=+sSep.value;
+    const sx=4/Wm*W, s1=(Hm/2-sep/2)/Hm*H, s2=(Hm/2+sep/2)/Hm*H;
+    [s1,s2].forEach(sy=>{ ctx.save();ctx.fillStyle="#fff";ctx.strokeStyle="rgba(0,0,0,.4)";ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(sx,sy,6,0,7);ctx.fill();ctx.stroke();ctx.restore(); });
+    plabel(ctx,sx+12,s1-8,"source 1",'#eaf4ff',12);
+    plabel(ctx,sx+12,s2+18,"source 2",'#eaf4ff',12);
+    // labels for a bright and a calm band on the right edge
+    plabel(ctx,W-10,22,"bright = constructive",'#dffaf0',12,"right");
+    plabel(ctx,W-10,40,"calm = destructive",'#e9e2f5',12,"right");
+  }
+  registerAnim(c,dt=>{ t+=dt; draw(); });
+  [sSep,sLen].forEach(s=>s.addEventListener('input',()=>{rebuild();}));
+  window.addEventListener('resize',draw);
+  rebuild(); draw();
+})();
+
+/* =========================================================
+   4. Young's double slit — intensity curve + colour strip
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-double');
+  const sD=document.getElementById('d-sep'), sL=document.getElementById('d-len'), sDist=document.getElementById('d-dist');
+  const fo=document.getElementById('d-fringe'), lo=document.getElementById('d-lenv');
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const d=+sD.value, lamNm=+sL.value, L=+sDist.value;   // d in mm, λ in nm, L in m
+    const d_m=d*1e-3, lam_m=lamNm*1e-9;
+    const rgb=wlRGB(lamNm);
+    const SMAX=6;                          // screen half-width shown, in mm
+    const curveTop=18, curveBot=H*0.5, stripTop=H*0.5+16, stripBot=H-58;
+    // intensity vs screen position s (mm)
+    function I(s){ const sinT=(s*1e-3)/L; const phi=Math.PI*d_m*sinT/lam_m; return Math.cos(phi)*Math.cos(phi); }
+    // intensity curve
+    ctx.save();ctx.strokeStyle=css('--ink');ctx.globalAlpha=.85;ctx.lineWidth=2.4;ctx.beginPath();
+    for(let px=0;px<=W;px+=2){ const s=(px/W*2-1)*SMAX; const y=curveBot-(curveBot-curveTop)*I(s);
+      if(px===0)ctx.moveTo(px,y);else ctx.lineTo(px,y); }
+    ctx.stroke();ctx.restore();
+    plabel(ctx,8,curveTop+4,"intensity on the screen",css('--ink-soft'),12);
+    // colour strip (what the eye sees) on black
+    for(let px=0;px<W;px++){ const s=(px/W*2-1)*SMAX; const b=I(s);
+      ctx.fillStyle=`rgb(${Math.round(rgb[0]*b)},${Math.round(rgb[1]*b)},${Math.round(rgb[2]*b)})`;
+      ctx.fillRect(px,stripTop,1,stripBot-stripTop); }
+    ctx.save();ctx.strokeStyle="rgba(33,26,20,.25)";ctx.strokeRect(0.5,stripTop,W-1,stripBot-stripTop);ctx.restore();
+    plabel(ctx,8,stripTop+16,"the fringes you'd see",'rgba(255,255,255,.85)',12);
+    // fringe spacing  w = λL/d  (in mm)
+    const w=lam_m*L/d_m*1e3;
+    const xc=W/2, x1=W/2 + w/SMAX*(W/2);
+    if(x1<W-4){ ctx.save();ctx.strokeStyle=css('--sum');ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(xc,stripBot+10);ctx.lineTo(x1,stripBot+10);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(xc,stripBot+6);ctx.lineTo(xc,stripBot+14);ctx.moveTo(x1,stripBot+6);ctx.lineTo(x1,stripBot+14);ctx.stroke();
+      ctx.restore(); plabel(ctx,(xc+x1)/2,stripBot+28,"w",css('--sum'),13,"center"); }
+    fo.textContent=w.toFixed(2)+" mm"; lo.textContent=lamNm;
+  }
+  [sD,sL,sDist].forEach(s=>s.addEventListener('input',draw));
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   5a. Diffraction — wavefronts spreading through a slit
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-diff');
+  const sw=document.getElementById('f-width');
+  let t=0; const lam=1.0, speed=2.2;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const a=+sw.value;
+    const wallX=W*0.42, midY=H/2;
+    const gapPx=a/6*H;                      // slit width in pixels (a in world units, scale)
+    // incoming straight wavefronts (vertical lines moving right)
+    ctx.save();ctx.strokeStyle="rgba(43,95,168,.55)";ctx.lineWidth=2;
+    const spacingPx=lam/6*H;                // wavefront spacing
+    const off=(t*speed/6*H)%spacingPx;
+    for(let x=off-spacingPx; x<wallX; x+=spacingPx){ if(x<6)continue;
+      ctx.beginPath();ctx.moveTo(x,18);ctx.lineTo(x,H-18);ctx.stroke(); }
+    ctx.restore();
+    plabel(ctx,10,14,"straight waves come in →",css('--w1'),12);
+    // the wall with a gap
+    ctx.save();ctx.fillStyle="rgba(33,26,20,.85)";
+    ctx.fillRect(wallX-5,18,10,(midY-gapPx/2)-18);
+    ctx.fillRect(wallX-5,midY+gapPx/2,10,(H-18)-(midY+gapPx/2));
+    ctx.restore();
+    plabel(ctx,wallX-2,H-4,"slit width a",css('--ink-soft'),11,"center");
+    // outgoing circular wavefronts from the slit (semicircles to the right)
+    ctx.save();ctx.strokeStyle="rgba(226,84,47,.6)";ctx.lineWidth=2;
+    // narrower slit -> arcs span a wider angle (more spreading)
+    const maxAng=Math.min(Math.PI*0.49, lam/a*1.5);   // spread angle grows as a shrinks
+    for(let r=off; r<W-wallX+40; r+=spacingPx){ if(r<4)continue;
+      ctx.beginPath();ctx.arc(wallX,midY,r,-maxAng,maxAng);ctx.stroke(); }
+    ctx.restore();
+    plabel(ctx,wallX+14,28,"→ spreads out",css('--sum'),12);
+  }
+  registerAnim(c,dt=>{ t+=dt; draw(); });
+  sw.addEventListener('input',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   5b. Single-slit diffraction pattern (sinc^2)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-single');
+  const sw=document.getElementById('g-width'), sl=document.getElementById('g-len');
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const a=+sw.value, lamNm=+sl.value;        // a in units of 0.1 mm, λ in nm
+    const a_m=a*1e-4, lam_m=lamNm*1e-9;
+    const rgb=wlRGB(lamNm);
+    const SMAX=0.02;                            // sinθ range shown
+    const curveTop=18, curveBot=H*0.55, stripTop=H*0.55+16, stripBot=H-44;
+    function I(sinT){ const alpha=Math.PI*a_m*sinT/lam_m; if(Math.abs(alpha)<1e-6)return 1; const s=Math.sin(alpha)/alpha; return s*s; }
+    // curve
+    ctx.save();ctx.strokeStyle=css('--ink');ctx.globalAlpha=.85;ctx.lineWidth=2.4;ctx.beginPath();
+    for(let px=0;px<=W;px+=2){ const sinT=(px/W*2-1)*SMAX; const y=curveBot-(curveBot-curveTop)*I(sinT);
+      if(px===0)ctx.moveTo(px,y);else ctx.lineTo(px,y); }
+    ctx.stroke();ctx.restore();
+    plabel(ctx,8,curveTop+4,"intensity (note the wide central peak)",css('--ink-soft'),12);
+    // colour strip
+    for(let px=0;px<W;px++){ const sinT=(px/W*2-1)*SMAX; const b=Math.min(1,I(sinT));
+      ctx.fillStyle=`rgb(${Math.round(rgb[0]*b)},${Math.round(rgb[1]*b)},${Math.round(rgb[2]*b)})`;
+      ctx.fillRect(px,stripTop,1,stripBot-stripTop); }
+    ctx.save();ctx.strokeStyle="rgba(33,26,20,.25)";ctx.strokeRect(0.5,stripTop,W-1,stripBot-stripTop);ctx.restore();
+    plabel(ctx,8,stripTop+16,"the band you'd see",'rgba(255,255,255,.85)',12);
+    // first-minimum markers: a sinθ = λ  => sinθ = λ/a
+    const sm=lam_m/a_m;
+    if(sm<SMAX){ [ -1,1 ].forEach(sgn=>{ const px=W/2 + sgn*sm/SMAX*(W/2);
+      dashed(ctx,px,curveTop,px,stripBot,"rgba(106,76,147,.6)",1.4); });
+      plabel(ctx,W/2 + sm/SMAX*(W/2)+4,curveBot-4,"1st dark: a·sinθ=λ",css('--des'),11);
+    }
+  }
+  [sw,sl].forEach(s=>s.addEventListener('input',draw));
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* reveal on scroll */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

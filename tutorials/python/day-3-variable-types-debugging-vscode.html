@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 3 — Python Basics: Variables, Types &amp; Debugging</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #181b24;
+  --surface2: #1e222e;
+  --border: #2a2f3e;
+  --text: #e0e4ef;
+  --text-muted: #8891a8;
+  --accent: #6ee7b7;
+  --accent-dim: #2d6a52;
+  --warn: #fbbf24;
+  --blue: #60a5fa;
+  --pink: #f472b6;
+  --orange: #fb923c;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --terminal-bg: #0a0c10;
+  --terminal-green: #4ade80;
+  --terminal-prompt: #6ee7b7;
+  --lab-bg: #141820;
+  --lab-border: #2a4a3a;
+  --check: #22c55e;
+  --correct: #22c55e;
+  --wrong: #ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;min-height:100vh}
+.page-wrapper{max-width:880px;margin:0 auto;padding:2rem 1.5rem 6rem}
+
+.hero{text-align:center;padding:4rem 1rem 3rem}
+.hero-tag{display:inline-block;background:linear-gradient(135deg,#1a3a2a,#1a3a4a);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;padding:.35rem 1rem;border-radius:99px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{font-family:'Source Serif 4',serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:1rem}
+.hero h1 span{color:var(--accent)}
+.hero-sub{color:var(--text-muted);font-size:1.1rem;max-width:580px;margin:0 auto;line-height:1.7}
+
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:2.5rem 0 3rem}
+.toc h2{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.2rem}
+.toc-list{list-style:none}
+.toc-list li{padding:.5rem 0;border-bottom:1px solid var(--border)}
+.toc-list li:last-child{border-bottom:none}
+.toc-list a{color:var(--text);text-decoration:none;font-size:.95rem;display:flex;align-items:center;gap:.75rem;transition:color .2s}
+.toc-list a:hover{color:var(--accent)}
+.toc-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-muted);min-width:2rem}
+
+.lab-section{margin-bottom:4rem;scroll-margin-top:2rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem}
+.lab-section h2{font-family:'Source Serif 4',serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:.5rem}
+.section-intro{color:var(--text-muted);margin-bottom:1.5rem;font-size:1rem}
+
+.concept{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}
+.concept h3{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.concept p,.concept div{font-size:.95rem;line-height:1.8}
+
+.analogy{background:linear-gradient(135deg,#1a1525,#1e1830);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}
+.analogy-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+
+.warning{background:linear-gradient(135deg,#1f1a10,#221e14);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}
+.warning-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--warn);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+
+.success{background:linear-gradient(135deg,#101f15,#142218);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}
+.success-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+
+.lab-task{background:var(--lab-bg);border:1px solid var(--lab-border);border-radius:12px;padding:1.75rem;margin:1.5rem 0;position:relative}
+.lab-task::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:12px 12px 0 0}
+.task-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.task-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;background:var(--accent-dim);color:var(--accent);padding:.25rem .75rem;border-radius:99px;letter-spacing:.05em}
+.task-title{font-weight:600;font-size:1.05rem;color:#fff}
+.task-steps{margin-top:.75rem}
+.task-steps ol{padding-left:1.5rem;counter-reset:step-counter;list-style:none}
+.task-steps ol li{counter-increment:step-counter;position:relative;padding:.4rem 0 .4rem .5rem;font-size:.95rem}
+.task-steps ol li::before{content:counter(step-counter);position:absolute;left:-1.5rem;top:.45rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;color:var(--accent);background:var(--accent-dim);width:1.2rem;height:1.2rem;display:flex;align-items:center;justify-content:center;border-radius:50%}
+
+.terminal{background:var(--terminal-bg);border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}
+.terminal-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem}
+.terminal-dot{width:10px;height:10px;border-radius:50%}
+.terminal-dot.r{background:#f87171}.terminal-dot.y{background:#fbbf24}.terminal-dot.g{background:#4ade80}
+.terminal-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted);margin-left:.5rem}
+.terminal-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.terminal-body .prompt{color:var(--terminal-prompt)}
+.terminal-body .cmd{color:#fff}
+.terminal-body .output{color:var(--text-muted)}
+.terminal-body .comment{color:#555b70;font-style:italic}
+.terminal-body .err{color:var(--red)}
+.terminal-body .highlight{color:var(--warn)}
+.terminal-body .path-hl{color:var(--blue)}
+.terminal-body .file-hl{color:var(--pink)}
+
+.code-block{background:#0d1015;border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}
+.code-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.code-lang{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--warn);letter-spacing:.05em}
+.code-filename{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}
+.code-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.code-body .kw{color:var(--pink)}
+.code-body .fn{color:var(--blue)}
+.code-body .str{color:var(--accent)}
+.code-body .com{color:#555b70;font-style:italic}
+.code-body .num{color:var(--orange)}
+.code-body .var{color:#e0e4ef}
+.code-body .op{color:var(--warn)}
+.code-body .ln{color:#3a3f50;user-select:none}
+
+.mcq{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.mcq-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.mcq p.mcq-q{font-size:.95rem;color:#fff;margin-bottom:1rem;font-weight:500}
+.mcq-options{display:flex;flex-direction:column;gap:.5rem}
+.mcq-opt{display:flex;align-items:center;gap:.75rem;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.65rem 1rem;cursor:pointer;transition:all .2s;font-size:.9rem;font-family:'JetBrains Mono',monospace}
+.mcq-opt:hover{border-color:var(--blue)}
+.mcq-opt.correct{border-color:var(--correct);background:#0f2018;color:var(--correct)}
+.mcq-opt.wrong{border-color:var(--wrong);background:#200f0f;color:var(--wrong);opacity:.7}
+.mcq-opt .letter{min-width:1.5rem;height:1.5rem;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--text-muted);transition:all .2s}
+.mcq-opt.correct .letter{border-color:var(--correct);color:var(--correct);background:#0a1a0f}
+.mcq-opt.wrong .letter{border-color:var(--wrong);color:var(--wrong)}
+.mcq-explain{display:none;margin-top:1rem;padding:1rem;background:#0f1510;border-radius:8px;border:1px dashed #2a4a2a;font-size:.88rem;color:var(--accent);line-height:1.7}
+.mcq-explain.show{display:block}
+
+.question{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;margin:1.25rem 0}
+.question-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.answer-toggle{margin-top:.75rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.35rem .9rem;border-radius:6px;cursor:pointer;transition:all .2s}
+.answer-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.answer-content{display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);color:var(--accent);font-size:.92rem}
+.answer-content.show{display:block}
+
+/* FILL-IN exercise */
+.fill-in{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.fill-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--pink);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.fill-blank{display:inline-block;border-bottom:2px dashed var(--pink);min-width:100px;color:var(--pink);font-family:'JetBrains Mono',monospace;padding:0 .25rem;cursor:help}
+
+/* DEBUG exercise */
+.debug-box{background:linear-gradient(135deg,#1f1015,#221418);border:1px solid #4a2a2a;border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.debug-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+
+.checklist{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin:1.5rem 0}
+.checklist h3{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--check);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}
+.checklist label{display:flex;align-items:flex-start;gap:.75rem;padding:.5rem 0;cursor:pointer;font-size:.95rem;transition:opacity .2s}
+.checklist input[type="checkbox"]{appearance:none;width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:3px;cursor:pointer;position:relative;transition:all .2s}
+.checklist input[type="checkbox"]:checked{background:var(--check);border-color:var(--check)}
+.checklist input[type="checkbox"]:checked::after{content:'✓';position:absolute;color:#000;font-size:12px;font-weight:700;top:50%;left:50%;transform:translate(-50%,-50%)}
+.checklist label:has(input:checked){opacity:.5;text-decoration:line-through}
+
+.celebrate{background:linear-gradient(135deg,#1a2520,#152030);border:2px solid var(--accent);border-radius:14px;padding:2rem;margin:2rem 0;text-align:center}
+.celebrate .emoji{font-size:2.5rem;margin-bottom:.75rem}
+.celebrate h3{font-family:'Source Serif 4',serif;font-size:1.4rem;color:#fff;margin-bottom:.5rem}
+.celebrate p{color:var(--text-muted);font-size:.95rem;max-width:500px;margin:0 auto}
+
+code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.15rem .45rem;border-radius:4px;font-size:.88em;color:var(--pink)}
+.separator{border:none;border-top:1px solid var(--border);margin:3rem 0}
+strong{color:#fff}
+
+/* traceback styling */
+.traceback{background:#1a0a0a;border:1px solid #3a1a1a;border-radius:10px;padding:1rem 1.25rem;margin:1rem 0;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.traceback .tb-header{color:var(--red);font-weight:600}
+.traceback .tb-file{color:var(--blue)}
+.traceback .tb-line{color:var(--warn)}
+.traceback .tb-code{color:var(--text-muted)}
+.traceback .tb-error{color:var(--red);font-weight:700}
+.traceback .tb-arrow{color:var(--red)}
+
+@media(max-width:600px){
+  .hero h1{font-size:2rem}
+  .page-wrapper{padding:1rem}
+  .lab-task,.concept,.analogy,.warning,.mcq,.fill-in,.debug-box{padding:1.25rem}
+}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ════════════════ HERO ════════════════ -->
+<div class="hero">
+  <div class="hero-tag">Python Course — Day 3</div>
+  <h1>Variables, Types &amp; <span>Debugging</span></h1>
+  <p class="hero-sub">Today you'll set up your coding workspace in VS Code, learn how Python stores and uses data, and — most importantly — learn how to read errors and fix your code when things go wrong.</p>
+</div>
+
+<!-- ════════════════ TOC ════════════════ -->
+<div class="toc">
+  <h2>Lab Modules</h2>
+  <ul class="toc-list">
+    <li><a href="#mod1"><span class="toc-num">01</span> Meet Visual Studio Code — Your New Code Editor</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Setting Up Your Workspace — Files, Folders &amp; Terminal</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Running Python Inside VS Code</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Variables &amp; Data Types — Storing Information</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> Reading Errors — The Art of Debugging</a></li>
+    <li><a href="#mod6"><span class="toc-num">06</span> Understanding Data Types Deeply</a></li>
+    <li><a href="#mod7"><span class="toc-num">07</span> Methods — Actions You Can Perform on Data</a></li>
+    <li><a href="#mod8"><span class="toc-num">08</span> Practice Exercises — Build Your Confidence</a></li>
+  </ul>
+</div>
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 1: VISUAL STUDIO CODE                                 ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod1">
+  <div class="section-label">Module 01</div>
+  <h2>Meet Visual Studio Code</h2>
+  <p class="section-intro">Last time we wrote code in Notepad. That works, but it's like writing an essay with a crayon — possible, but there are better tools. Today we'll use <strong>Visual Studio Code</strong> (VS Code), the tool most professional programmers use.</p>
+
+  <div class="concept">
+    <h3>💡 What Is VS Code?</h3>
+    <p>VS Code is a <strong>code editor</strong> — like Notepad, but built specifically for programmers. It looks like Notepad (you type text, you save files), but it has special features that make coding much easier. The biggest one is <strong>syntax highlighting</strong> — it colors different parts of your code so you can read it more easily. Keywords in one color, text in another, numbers in a third. This coloring is <strong>purely for your eyes</strong> — the computer doesn't care about colors, but it makes a huge difference for humans reading the code.</p>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Notepad is like a plain notebook — you can write anything, but there's no help. VS Code is like a <strong>smart notebook</strong> that highlights important words, tells you when you misspell something, and has colored tabs to organize your pages. The writing is the same — but the experience is much better.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Extensions — Adding Superpowers</h3>
+    <p>One of the best things about VS Code is <strong>extensions</strong>. An extension is like an <strong>app for your phone</strong>. Your phone can make calls by default, but you install apps to add more features (camera filters, games, maps). Similarly, VS Code can edit text by default, but you install extensions to add more features — like special support for Python, or for other programming languages. By itself, VS Code doesn't have special support for any particular programming language. You add that support by installing the right extension.</p>
+  </div>
+
+  <!-- TASK 1.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.1</span>
+      <span class="task-title">Open VS Code</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Press the <strong>Windows key</strong>, type <code>Visual Studio Code</code> (or just <code>code</code>), and click on it.</li>
+        <li>VS Code will open. You'll see a <strong>Welcome tab</strong>. Take a moment to look around — don't click anything yet, just observe.</li>
+        <li>Notice the <strong>left sidebar</strong> — it has icons for files, search, source control, and more.</li>
+        <li>Notice the <strong>top menu bar</strong> — File, Edit, View, etc. — similar to other apps you've used.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 1.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.2</span>
+      <span class="task-title">Explore the Interface</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Look at the <strong>left sidebar</strong>. The very first icon at the top looks like two overlapping documents — this is the <strong>Explorer</strong> panel. Click it. This is where you'll see your files and folders.</li>
+        <li>The icon that looks like a magnifying glass is <strong>Search</strong> — you can search across all your files.</li>
+        <li>Now look at the <strong>bottom bar</strong> (the blue or colored bar at the very bottom of the window). It shows useful information — we'll use this later.</li>
+        <li>Click <strong>File → New File</strong> (or press <strong>Ctrl + N</strong>). A blank tab appears — just like a new document in Notepad. Type <code>Hello from VS Code!</code> in it. You can close this without saving (click the X on the tab, click "Don't Save").</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 1.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.3</span>
+      <span class="task-title">Install the Python Extension</span>
+    </div>
+    <p>Let's add Python support to VS Code by installing an extension.</p>
+    <div class="task-steps">
+      <ol>
+        <li>Look at the left sidebar. Click the icon that looks like <strong>4 small squares</strong> (one square is slightly detached) — this is the <strong>Extensions</strong> panel.</li>
+        <li>In the search box at the top, type <code>Python</code>.</li>
+        <li>The very first result should be <strong>"Python"</strong> by <strong>Microsoft</strong>. It will have millions of downloads. Click the blue <strong>Install</strong> button next to it.</li>
+        <li>Wait a few seconds. Once installed, the button will change to "Uninstall" (which means it's now installed). That's it!</li>
+      </ol>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">You just installed an extension! This adds Python-specific features: syntax highlighting (coloring Python code), error detection, and more. The Python extension doesn't change what your code does — it just makes it easier for <strong>you</strong> to read and write Python.</p>
+  </div>
+
+  <!-- TASK 1.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.4</span>
+      <span class="task-title">See Syntax Highlighting in Action</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Press <strong>Ctrl + N</strong> to create a new file.</li>
+        <li>Now click on <strong>"Select a language"</strong> shown in the editor area (or click "Plain Text" in the bottom-right corner of the VS Code window). Type <code>Python</code> and select it. This tells VS Code to treat this file as Python.</li>
+        <li>Now type this code:</li>
+      </ol>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">test</span></div>
+      <div class="code-body"><span class="var">name</span> <span class="op">=</span> <span class="str">"Pooja"</span>
+<span class="var">age</span> <span class="op">=</span> <span class="num">20</span>
+<span class="fn">print</span>(<span class="str">"Hello,"</span>, <span class="var">name</span>, <span class="str">"you are"</span>, <span class="var">age</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol start="4">
+        <li>Look at the colors! <code>"Pooja"</code> and <code>"Hello,"</code> are in one color (they're text strings). <code>20</code> is in a different color (it's a number). <code>print</code> is in yet another color (it's a built-in function). This is <strong>syntax highlighting</strong>.</li>
+        <li>You can close this file without saving — it was just for testing.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does syntax highlighting do?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> Makes the code run faster</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Fixes errors automatically</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Colors different parts of code so humans can read it more easily</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Translates Python to English</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> Syntax highlighting is purely visual — it colors keywords, strings, numbers, etc. in different colors so <em>you</em> can read the code more easily. Python itself doesn't care about colors at all.</div>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What is a VS Code extension?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> A file type like .py or .txt</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> An add-on that gives VS Code extra features, like phone apps</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> A programming language</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> A keyboard shortcut</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> Extensions add extra features to VS Code, just like installing apps adds features to your phone. The Python extension adds Python-specific features like syntax highlighting and error detection.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 2: WORKSPACE SETUP                                    ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod2">
+  <div class="section-label">Module 02</div>
+  <h2>Setting Up Your Workspace</h2>
+  <p class="section-intro">Let's create our Day 3 project folder in VS Code and learn to manage files, folders, and the integrated terminal — all from one window.</p>
+
+  <!-- TASK 2.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.1</span>
+      <span class="task-title">Open Your Course Folder in VS Code</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>In VS Code, click <strong>File → Open Folder...</strong></li>
+        <li>Navigate to <code>H:\Pooja</code> and click <strong>Select Folder</strong>.</li>
+        <li>VS Code may ask "Do you trust the authors?" — click <strong>Yes, I trust the authors</strong>.</li>
+        <li>Now look at the <strong>Explorer panel</strong> (left sidebar, first icon). You should see the <code>Pooja</code> folder and inside it, the <code>day2</code> folder with all the files you made last time.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 2.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.2</span>
+      <span class="task-title">Create the Day3 Folder and Files</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>In the Explorer panel, hover your mouse over <strong>POOJA</strong> (the folder name at the top). You'll see four small icons appear. The one that looks like a <strong>folder with a plus sign</strong> creates a new folder. Click it.</li>
+        <li>Type <code>day3</code> and press Enter. You just created a new folder!</li>
+        <li>Now click on the <code>day3</code> folder to select it. Then click the icon that looks like a <strong>file with a plus sign</strong> (next to the folder icon).</li>
+        <li>Type <code>test.py</code> and press Enter. A new empty file opens in the editor. The <code>.py</code> extension tells VS Code this is a Python file, so syntax highlighting will work automatically.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 2.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.3</span>
+      <span class="task-title">Rename and Delete — Managing Files</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Create another file inside <code>day3</code>: click the new-file icon, name it <code>delete_me.py</code>.</li>
+        <li>To <strong>rename</strong> it: right-click on <code>delete_me.py</code> in the Explorer → click <strong>Rename</strong> → change the name to <code>temporary.py</code> → press Enter.</li>
+        <li>To <strong>delete</strong> it: right-click on <code>temporary.py</code> → click <strong>Delete</strong> → confirm. The file is gone.</li>
+        <li>You can also create folders this way: right-click on <code>day3</code> → New Folder → name it <code>practice</code>. Then right-click on <code>practice</code> → Delete to remove it.</li>
+      </ol>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">Everything you do in VS Code's Explorer panel is real — the files and folders exist on your H: drive. You can verify by opening File Explorer and navigating to <code>H:\Pooja\day3</code>.</p>
+  </div>
+
+  <!-- TASK 2.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.4</span>
+      <span class="task-title">Open the Integrated Terminal</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Press <strong>Ctrl + `</strong> (the backtick key — it's usually above the Tab key, below Esc). A terminal panel will appear at the bottom of VS Code.</li>
+        <li>Alternatively, click <strong>View → Terminal</strong> from the top menu.</li>
+      </ol>
+    </div>
+    <div class="concept">
+      <h3>💡 This Is the Same Terminal!</h3>
+      <p>This terminal is <strong>exactly the same</strong> as the PowerShell window you opened separately in Day 2. All the commands work the same way — <code>pwd</code>, <code>ls</code>, <code>cd</code>, <code>python</code>, etc. The only difference is that it's <strong>built into VS Code</strong>, so you don't have to switch between two separate windows. You write code in the top half and run it in the bottom half. Very convenient!</p>
+    </div>
+    <div class="task-steps">
+      <ol start="3">
+        <li>Try a command in the terminal: type <code>pwd</code> and press Enter. It should show <code>H:\Pooja</code> (or wherever your folder is).</li>
+        <li>Navigate into your day3 folder: <code>cd day3</code></li>
+        <li>Type <code>ls</code> to see your files. You should see <code>test.py</code>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 2.5 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.5</span>
+      <span class="task-title">Different Shell Types</span>
+    </div>
+    <p>Look at the top-right area of the terminal panel. You'll see a dropdown or text that says <strong>"powershell"</strong> (or similar). Click the small <strong>dropdown arrow (˅)</strong> next to it.</p>
+    <div class="task-steps">
+      <ol>
+        <li>You'll see options like: <strong>PowerShell</strong>, <strong>Command Prompt</strong>, <strong>Git Bash</strong> (if installed). These are different <strong>shells</strong> — different "languages" for talking to your computer.</li>
+        <li>Select <strong>Command Prompt</strong>. A new terminal tab opens. Type <code>dir</code> and press Enter. It shows files — just like <code>ls</code> in PowerShell.</li>
+        <li>Switch back to <strong>PowerShell</strong> by clicking its tab, or open a new one with the dropdown.</li>
+      </ol>
+    </div>
+    <div class="concept">
+      <h3>💡 Different Shells, Same Idea</h3>
+      <p>There are different types of terminals (shells): <strong>PowerShell</strong> and <strong>Command Prompt</strong> on Windows, <strong>Bash</strong> and <strong>Zsh</strong> on Mac/Linux. They all do the same job (let you type commands), but the commands are slightly different. For example, to list files: <code>ls</code> (PowerShell/Mac/Linux), <code>dir</code> (Command Prompt). Once you learn one, learning others is easy — the concepts are identical, only the command names change. <strong>We'll use PowerShell for this course.</strong></p>
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What is the VS Code integrated terminal?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> A completely different terminal that only works inside VS Code</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> A place where VS Code shows error messages only</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> A feature that automatically runs your Python code</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> The same system terminal (PowerShell), but built into VS Code for convenience</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> The integrated terminal is identical to opening PowerShell separately. It uses the same shell, same commands, same PATH. The only advantage is convenience — you can see your code and terminal in one window.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 3: RUNNING PYTHON IN VS CODE                          ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod3">
+  <div class="section-label">Module 03</div>
+  <h2>Running Python Inside VS Code</h2>
+  <p class="section-intro">Let's make sure everything works end-to-end: write Python code in VS Code, run it in the terminal, see the output — all in one window.</p>
+
+  <!-- TASK 3.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.1</span>
+      <span class="task-title">Write and Run Your First File in VS Code</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Click on <code>test.py</code> in the Explorer panel (the file you created in Module 2). It opens in the editor.</li>
+        <li>Type this code:</li>
+      </ol>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">test.py</span></div>
+      <div class="code-body"><span class="fn">print</span>(<span class="str">"Hello from VS Code!"</span>)
+<span class="fn">print</span>(<span class="str">"Python is working perfectly."</span>)
+<span class="fn">print</span>(<span class="num">10</span> <span class="op">+</span> <span class="num">20</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol start="3">
+        <li>Save the file: press <strong>Ctrl + S</strong>. (Notice the dot on the tab disappears — that dot means "unsaved changes".)</li>
+        <li>Click on the terminal panel at the bottom. Make sure you're in the <code>day3</code> folder. If not, type <code>cd H:\Pooja\day3</code>.</li>
+        <li>Run it: type <code>python test.py</code> and press Enter.</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day3&gt;</span> <span class="cmd">python test.py</span>
+<span class="output">Hello from VS Code!
+Python is working perfectly.
+30</span></div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">This is now your workflow: <strong>write code in the editor (top) → save → run in the terminal (bottom) → see output</strong>. This is how professional programmers work every day.</p>
+  </div>
+
+  <div class="warning">
+    <div class="warning-label">⚠️ Always Save Before Running!</div>
+    <p>When you run <code>python test.py</code>, Python reads the file from disk. If you changed code in the editor but didn't press <strong>Ctrl + S</strong>, Python will run the <strong>old saved version</strong>, not what you see on screen. Always save first! Look for the <strong>dot (●) on the tab</strong> — if it's there, you have unsaved changes.</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 4: VARIABLES & DATA TYPES                              ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod4">
+  <div class="section-label">Module 04</div>
+  <h2>Variables &amp; Data Types</h2>
+  <p class="section-intro">This is the foundation of everything in programming. A <strong>variable</strong> is how your program remembers things.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Imagine you have <strong>labeled boxes</strong> on a shelf. One box is labeled <code>age</code> and inside it you put a slip of paper that says <code>20</code>. Another box is labeled <code>name</code> and inside it is <code>"Pooja"</code>. You can look inside any box to see what's there, change what's inside, or use the contents to do something. That's exactly what a variable is — a <strong>named box that stores a value</strong>.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Creating a Variable (Assignment)</h3>
+    <p>To create a variable, you write: <code>name = "Pooja"</code>. This is called <strong>assignment</strong>. The <code>=</code> sign does NOT mean "equals" like in math. It means: <strong>"take the value on the right side and store it in the box named on the left side."</strong> Think of <code>=</code> as an arrow pointing left: <code>name ← "Pooja"</code>.</p>
+  </div>
+
+  <!-- TASK 4.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.1</span>
+      <span class="task-title">Create Your First Variables</span>
+    </div>
+    <p>Create a new file: in the Explorer, right-click <code>day3</code> → New File → name it <code>variables.py</code>. Type this code:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">variables.py</span></div>
+      <div class="code-body"><span class="com"># Creating variables — storing values in named boxes</span>
+<span class="var">name</span> <span class="op">=</span> <span class="str">"Pooja"</span>
+<span class="var">age</span> <span class="op">=</span> <span class="num">20</span>
+<span class="var">height</span> <span class="op">=</span> <span class="num">5.4</span>
+
+<span class="com"># Printing the values stored inside each variable</span>
+<span class="fn">print</span>(<span class="var">name</span>)
+<span class="fn">print</span>(<span class="var">age</span>)
+<span class="fn">print</span>(<span class="var">height</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type the code above (don't copy-paste — typing helps you learn). Save with Ctrl + S.</li>
+        <li>Run it in the terminal: <code>python variables.py</code></li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day3&gt;</span> <span class="cmd">python variables.py</span>
+<span class="output">Pooja
+20
+5.4</span></div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">Notice: <code>print(name)</code> doesn't print the word "name" — it prints what's <strong>inside</strong> the variable <code>name</code>, which is <code>"Pooja"</code>. The variable is the box, <code>print</code> opens the box and shows the contents.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 The Three Basic Data Types</h3>
+    <div>
+      <strong style="color:var(--orange)">int</strong> (integer) — Whole numbers with no decimal point: <code>10</code>, <code>-3</code>, <code>0</code>, <code>2026</code><br>
+      <strong style="color:var(--orange)">float</strong> (floating-point) — Numbers with a decimal point: <code>5.4</code>, <code>3.14</code>, <code>-0.5</code>, <code>100.0</code><br>
+      <strong style="color:var(--orange)">str</strong> (string) — Text, always wrapped in quotes: <code>"Hello"</code>, <code>"Pooja"</code>, <code>"123"</code> (yes, <code>"123"</code> in quotes is text, NOT a number!)
+    </div>
+  </div>
+
+  <!-- TASK 4.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.2</span>
+      <span class="task-title">Updating Variables</span>
+    </div>
+    <p>Create <code>update.py</code> and type this:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">update.py</span></div>
+      <div class="code-body"><span class="com"># A variable can be changed (updated) at any time</span>
+<span class="var">score</span> <span class="op">=</span> <span class="num">0</span>
+<span class="fn">print</span>(<span class="str">"Starting score:"</span>, <span class="var">score</span>)
+
+<span class="var">score</span> <span class="op">=</span> <span class="num">10</span>
+<span class="fn">print</span>(<span class="str">"After level 1:"</span>, <span class="var">score</span>)
+
+<span class="var">score</span> <span class="op">=</span> <span class="num">25</span>
+<span class="fn">print</span>(<span class="str">"After level 2:"</span>, <span class="var">score</span>)
+
+<span class="var">score</span> <span class="op">=</span> <span class="var">score</span> <span class="op">+</span> <span class="num">5</span>
+<span class="fn">print</span>(<span class="str">"Bonus points! :"</span>, <span class="var">score</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type it, save, and run: <code>python update.py</code></li>
+        <li>Look at the last line carefully: <code>score = score + 5</code>. This means: "take the current value of score (25), add 5 to it, and store the result (30) back into score." The right side is calculated first, then stored into the left side.</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="output">Starting score: 0
+After level 1: 10
+After level 2: 25
+Bonus points! : 30</span></div>
+    </div>
+  </div>
+
+  <!-- TASK 4.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.3</span>
+      <span class="task-title">Computing with Variables &amp; Operators</span>
+    </div>
+    <p>Create <code>operators.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">operators.py</span></div>
+      <div class="code-body"><span class="var">a</span> <span class="op">=</span> <span class="num">15</span>
+<span class="var">b</span> <span class="op">=</span> <span class="num">4</span>
+
+<span class="fn">print</span>(<span class="str">"a + b ="</span>, <span class="var">a</span> <span class="op">+</span> <span class="var">b</span>)   <span class="com"># Addition</span>
+<span class="fn">print</span>(<span class="str">"a - b ="</span>, <span class="var">a</span> <span class="op">-</span> <span class="var">b</span>)   <span class="com"># Subtraction</span>
+<span class="fn">print</span>(<span class="str">"a * b ="</span>, <span class="var">a</span> <span class="op">*</span> <span class="var">b</span>)   <span class="com"># Multiplication</span>
+<span class="fn">print</span>(<span class="str">"a / b ="</span>, <span class="var">a</span> <span class="op">/</span> <span class="var">b</span>)   <span class="com"># Division (always gives a float)</span>
+
+<span class="com"># Store the result in a new variable</span>
+<span class="var">total</span> <span class="op">=</span> <span class="var">a</span> <span class="op">+</span> <span class="var">b</span>
+<span class="fn">print</span>(<span class="str">"total ="</span>, <span class="var">total</span>)</div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="output">a + b = 19
+a - b = 11
+a * b = 60
+a / b = 3.75
+total = 19</span></div>
+    </div>
+  </div>
+
+  <!-- TASK 4.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.4</span>
+      <span class="task-title">Assigning One Variable to Another</span>
+    </div>
+    <p>Create <code>copy_var.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">copy_var.py</span></div>
+      <div class="code-body"><span class="var">original</span> <span class="op">=</span> <span class="num">100</span>
+<span class="var">copy</span> <span class="op">=</span> <span class="var">original</span>     <span class="com"># copy gets the VALUE that is inside original (100)</span>
+
+<span class="fn">print</span>(<span class="str">"original:"</span>, <span class="var">original</span>)
+<span class="fn">print</span>(<span class="str">"copy    :"</span>, <span class="var">copy</span>)
+
+<span class="com"># Now change original</span>
+<span class="var">original</span> <span class="op">=</span> <span class="num">999</span>
+
+<span class="fn">print</span>(<span class="str">"--- after changing original ---"</span>)
+<span class="fn">print</span>(<span class="str">"original:"</span>, <span class="var">original</span>)
+<span class="fn">print</span>(<span class="str">"copy    :"</span>, <span class="var">copy</span>)     <span class="com"># copy still has 100!</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type, save, run. What is <code>copy</code> after we change <code>original</code>?</li>
+        <li><strong>Key insight:</strong> <code>copy = original</code> copies the <em>value</em> at that moment. After that, they're independent. Changing <code>original</code> later doesn't change <code>copy</code>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 4.5 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.5</span>
+      <span class="task-title">String Concatenation — Joining Text</span>
+    </div>
+    <p>Create <code>strings.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">strings.py</span></div>
+      <div class="code-body"><span class="var">first_name</span> <span class="op">=</span> <span class="str">"Pooja"</span>
+<span class="var">last_name</span> <span class="op">=</span> <span class="str">"Sharma"</span>
+
+<span class="com"># The + operator JOINS strings together (concatenation)</span>
+<span class="var">full_name</span> <span class="op">=</span> <span class="var">first_name</span> <span class="op">+</span> <span class="str">" "</span> <span class="op">+</span> <span class="var">last_name</span>
+<span class="fn">print</span>(<span class="var">full_name</span>)
+
+<span class="com"># The * operator REPEATS a string</span>
+<span class="var">line</span> <span class="op">=</span> <span class="str">"=-"</span> <span class="op">*</span> <span class="num">20</span>
+<span class="fn">print</span>(<span class="var">line</span>)
+
+<span class="var">greeting</span> <span class="op">=</span> <span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">full_name</span> <span class="op">+</span> <span class="str">"!"</span>
+<span class="fn">print</span>(<span class="var">greeting</span>)</div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="output">Pooja Sharma
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Hello, Pooja Sharma!</span></div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);"><strong>Important:</strong> the <code>+</code> operator does different things depending on the data type. With numbers, it adds. With strings, it <strong>joins</strong> (concatenates). <code>5 + 3</code> gives <code>8</code>. <code>"5" + "3"</code> gives <code>"53"</code>.</p>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>x = x + 3</code> mean?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> x is equal to x plus 3 (a math equation)</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Take current value of x, add 3, store the result back into x</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Create a new variable called x + 3</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> This is an error in Python</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> The right side (<code>x + 3</code>) is calculated first using x's current value. Then the result is stored back into x. If x was 10, after this line x becomes 13.</div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz — Predict the Output</div>
+    <p class="mcq-q">What does <code>print("5" + "3")</code> output?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 8</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> "8"</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> 53</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> <code>"5"</code> and <code>"3"</code> are strings (they have quotes), not numbers. The <code>+</code> operator joins strings together: <code>"5" + "3"</code> → <code>"53"</code>.</div>
+  </div>
+
+  <!-- TASK 4.6 FILL-IN -->
+  <div class="fill-in">
+    <div class="fill-label">✏️ Complete the Code</div>
+    <p>Fill in the blanks so this code prints <code>My age is 20</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">fill in</span></div>
+      <div class="code-body"><span class="var">age</span> <span class="op">=</span> <span class="fill-blank" title="What value?">???</span>
+<span class="fn">print</span>(<span class="str">"My age is"</span>, <span class="fill-blank" title="Which variable?">???</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">Line 1: <code>age = 20</code> — Store the number 20 in the variable <code>age</code>.<br>Line 2: <code>print("My age is", age)</code> — Print the text followed by the value inside <code>age</code>.</div>
+  </div>
+
+  <div class="fill-in">
+    <div class="fill-label">✏️ Complete the Code</div>
+    <p>Fill in the blanks so that <code>result</code> contains <code>15</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">fill in</span></div>
+      <div class="code-body"><span class="var">x</span> <span class="op">=</span> <span class="num">10</span>
+<span class="var">y</span> <span class="op">=</span> <span class="num">5</span>
+<span class="var">result</span> <span class="op">=</span> <span class="fill-blank" title="What goes here?">???</span>
+<span class="fn">print</span>(<span class="var">result</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>result = x + y</code> — Python calculates <code>10 + 5</code> and stores <code>15</code> into <code>result</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 5: DEBUGGING                                          ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod5">
+  <div class="section-label">Module 05</div>
+  <h2>Reading Errors — The Art of Debugging</h2>
+  <p class="section-intro">This is the <strong>most important skill</strong> you'll learn today. Errors happen to every programmer — beginners and experts with 20 years of experience. The difference is knowing how to <strong>read the error message</strong> and find the problem. Python actually tells you exactly what went wrong and <em>on which line</em> — you just need to know where to look.</p>
+
+  <div class="concept">
+    <h3>💡 What Is Debugging?</h3>
+    <p><strong>Debugging</strong> means finding and fixing errors (called "bugs") in your code. The word comes from the early days of computing when an actual moth got stuck inside a computer and caused problems. Every single programmer in the world writes code with bugs. It's not a sign of being bad — it's a normal part of writing code. What matters is learning to fix them.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 How to Read a Python Error (Traceback)</h3>
+    <p>When Python finds an error, it shows you a message called a <strong>traceback</strong>. It has 3 key pieces of information:<br><br>
+    1. <strong>Which file</strong> — the name of the file with the problem<br>
+    2. <strong>Which line number</strong> — the exact line where Python got confused<br>
+    3. <strong>What kind of error</strong> — what went wrong (the last line of the traceback)</p>
+  </div>
+
+  <!-- TASK 5.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.1</span>
+      <span class="task-title">Create a Bug on Purpose — NameError</span>
+    </div>
+    <p>Create <code>bug1.py</code> with this <strong>intentionally broken</strong> code:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">bug1.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">message</span> <span class="op">=</span> <span class="str">"Hello World"</span>
+<span class="ln"> 2 </span><span class="fn">print</span>(<span class="var">mesage</span>)</div>
+    </div>
+    <p>Save and run: <code>python bug1.py</code></p>
+    <div class="traceback"><span class="tb-header">Traceback (most recent call last):</span>
+  <span class="tb-file">File "H:\Pooja\day3\bug1.py"</span>, <span class="tb-line">line 2</span>, in &lt;module&gt;
+    <span class="tb-code">print(mesage)</span>
+          <span class="tb-arrow">^^^^^^^</span>
+<span class="tb-error">NameError: name 'mesage' is not defined. Did you mean: 'message'?</span></div>
+    <div class="concept">
+      <h3>📖 How to Read This Traceback</h3>
+      <div>
+        <strong>Step 1 — Find the file:</strong> <code>File "H:\Pooja\day3\bug1.py"</code> — it's in bug1.py<br>
+        <strong>Step 2 — Find the line number:</strong> <code>line 2</code> — the problem is on line 2<br>
+        <strong>Step 3 — Read the actual line:</strong> <code>print(mesage)</code> — this is what Python tried to run<br>
+        <strong>Step 4 — Read the error type:</strong> <code>NameError: name 'mesage' is not defined</code> — Python doesn't know any variable called <code>mesage</code><br>
+        <strong>Step 5 — Python even suggests:</strong> <code>Did you mean: 'message'?</code> — we misspelled "message"!
+      </div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Look at VS Code — click on line 2. See the typo? <code>mesage</code> instead of <code>message</code> (missing an 's').</li>
+        <li><strong>Fix it:</strong> change <code>mesage</code> to <code>message</code> on line 2. Save and run again. It works!</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 5.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.2</span>
+      <span class="task-title">SyntaxError — Missing Quotes</span>
+    </div>
+    <p>Create <code>bug2.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">bug2.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">city</span> <span class="op">=</span> <span class="str">"Mumbai"</span>
+<span class="ln"> 2 </span><span class="var">country</span> <span class="op">=</span> <span class="str">"India</span>
+<span class="ln"> 3 </span><span class="fn">print</span>(<span class="var">city</span>, <span class="var">country</span>)</div>
+    </div>
+    <div class="traceback"><span class="tb-header">  File "H:\Pooja\day3\bug2.py"</span>, <span class="tb-line">line 2</span>
+    <span class="tb-code">country = "India</span>
+                     <span class="tb-arrow">^</span>
+<span class="tb-error">SyntaxError: EOL while scanning string literal</span></div>
+    <div class="task-steps">
+      <ol>
+        <li>Read the traceback: <strong>Line 2</strong>, <strong>SyntaxError</strong> — "EOL while scanning string literal" means Python was reading a string (text in quotes) but reached the End Of Line (EOL) without finding the closing quote.</li>
+        <li><strong>Fix:</strong> Add the missing closing quote on line 2: <code>country = "India"</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 5.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.3</span>
+      <span class="task-title">TypeError — Mixing Types</span>
+    </div>
+    <p>Create <code>bug3.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">bug3.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">age</span> <span class="op">=</span> <span class="num">20</span>
+<span class="ln"> 2 </span><span class="var">message</span> <span class="op">=</span> <span class="str">"I am "</span> <span class="op">+</span> <span class="var">age</span> <span class="op">+</span> <span class="str">" years old"</span>
+<span class="ln"> 3 </span><span class="fn">print</span>(<span class="var">message</span>)</div>
+    </div>
+    <div class="traceback"><span class="tb-header">Traceback (most recent call last):</span>
+  <span class="tb-file">File "H:\Pooja\day3\bug3.py"</span>, <span class="tb-line">line 2</span>, in &lt;module&gt;
+    <span class="tb-code">message = "I am " + age + " years old"</span>
+              <span class="tb-arrow">~~~~~~~~^~~~~</span>
+<span class="tb-error">TypeError: can only concatenate str (not "int") to str</span></div>
+    <div class="task-steps">
+      <ol>
+        <li><strong>Line 2</strong>, <strong>TypeError</strong> — Python can't join a string (<code>"I am "</code>) and an integer (<code>age</code> which is <code>20</code>) with <code>+</code>. You can only <code>+</code> strings with other strings.</li>
+        <li><strong>Fix:</strong> Convert the number to a string: <code>message = "I am " + str(age) + " years old"</code>. The <code>str()</code> function converts a number into text.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 5.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.4</span>
+      <span class="task-title">Find the Bug from the Traceback</span>
+    </div>
+    <p>Create <code>bug4.py</code> with this code. There's a bug. <strong>Don't try to spot the bug by reading the code</strong> — run it first and use the traceback to find it.</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">bug4.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">price</span> <span class="op">=</span> <span class="num">50</span>
+<span class="ln"> 2 </span><span class="var">quantity</span> <span class="op">=</span> <span class="num">3</span>
+<span class="ln"> 3 </span><span class="var">total</span> <span class="op">=</span> <span class="var">price</span> <span class="op">*</span> <span class="var">quantity</span>
+<span class="ln"> 4 </span><span class="fn">print</span>(<span class="str">"Total cost:"</span> <span class="var">total</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Save and run it. Read the error message.</li>
+        <li>What line is the error on? What type of error is it?</li>
+        <li>Fix it, save, and run again.</li>
+      </ol>
+    </div>
+    <div class="question">
+      <div class="question-label">🤔 What was the bug?</div>
+      <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+      <div class="answer-content"><strong>Line 4</strong> has a <strong>SyntaxError</strong> — there's a missing comma between <code>"Total cost:"</code> and <code>total</code> inside <code>print()</code>. The fix: <code>print("Total cost:", total)</code>.</div>
+    </div>
+  </div>
+
+  <div class="success">
+    <div class="success-label">🌟 Debugging Strategy</div>
+    <p>Every time you get an error:<br>
+    <strong>1.</strong> DON'T PANIC — errors are normal.<br>
+    <strong>2.</strong> Read the <strong>last line</strong> of the traceback — it tells you the type of error.<br>
+    <strong>3.</strong> Find the <strong>line number</strong> — go to that line in VS Code.<br>
+    <strong>4.</strong> Look carefully at that line — the problem is there (or very close by).<br>
+    <strong>5.</strong> Fix, save, run again.</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 6: DATA TYPES DEEPER                                  ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod6">
+  <div class="section-label">Module 06</div>
+  <h2>Understanding Data Types Deeply</h2>
+  <p class="section-intro">Python automatically figures out the type of data — you don't have to tell it. But understanding types is crucial because <strong>certain operations only work with certain types</strong>.</p>
+
+  <div class="concept">
+    <h3>💡 Python Infers the Type Automatically</h3>
+    <p>In some languages, you have to say "this is a number" or "this is text" explicitly. In Python, you just write the value and Python figures it out:
+    <code>x = 10</code> → Python sees a whole number → type is <strong>int</strong>.
+    <code>y = 3.14</code> → Python sees a decimal → type is <strong>float</strong>.
+    <code>z = "hello"</code> → Python sees quotes → type is <strong>str</strong>.
+    You can always check the type using <code>type()</code>.</p>
+  </div>
+
+  <!-- TASK 6.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.1</span>
+      <span class="task-title">Checking Data Types with type()</span>
+    </div>
+    <p>Create <code>types.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">types.py</span></div>
+      <div class="code-body"><span class="var">a</span> <span class="op">=</span> <span class="num">42</span>
+<span class="var">b</span> <span class="op">=</span> <span class="num">3.14</span>
+<span class="var">c</span> <span class="op">=</span> <span class="str">"Hello"</span>
+<span class="var">d</span> <span class="op">=</span> <span class="str">"100"</span>
+
+<span class="fn">print</span>(<span class="var">a</span>, <span class="str">"→ type:"</span>, <span class="fn">type</span>(<span class="var">a</span>))
+<span class="fn">print</span>(<span class="var">b</span>, <span class="str">"→ type:"</span>, <span class="fn">type</span>(<span class="var">b</span>))
+<span class="fn">print</span>(<span class="var">c</span>, <span class="str">"→ type:"</span>, <span class="fn">type</span>(<span class="var">c</span>))
+<span class="fn">print</span>(<span class="var">d</span>, <span class="str">"→ type:"</span>, <span class="fn">type</span>(<span class="var">d</span>))</div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="output">42 → type: &lt;class 'int'&gt;
+3.14 → type: &lt;class 'float'&gt;
+Hello → type: &lt;class 'str'&gt;
+100 → type: &lt;class 'str'&gt;</span></div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">Look at <code>d</code>: the value <code>"100"</code> is a <strong>string</strong> (text), not a number — because it has quotes around it. <code>100</code> (no quotes) would be an int. Quotes make all the difference!</p>
+  </div>
+
+  <!-- TASK 6.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.2</span>
+      <span class="task-title">Operations That Don't Mix</span>
+    </div>
+    <p>Create <code>type_mix.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">type_mix.py</span></div>
+      <div class="code-body"><span class="com"># These work:</span>
+<span class="fn">print</span>(<span class="num">10</span> <span class="op">+</span> <span class="num">5</span>)         <span class="com"># int + int → addition → 15</span>
+<span class="fn">print</span>(<span class="num">10</span> <span class="op">+</span> <span class="num">2.5</span>)       <span class="com"># int + float → addition → 12.5</span>
+<span class="fn">print</span>(<span class="str">"Hi"</span> <span class="op">+</span> <span class="str">" there"</span>) <span class="com"># str + str → concatenation → "Hi there"</span>
+<span class="fn">print</span>(<span class="str">"Ha"</span> <span class="op">*</span> <span class="num">3</span>)       <span class="com"># str * int → repetition → "HaHaHa"</span>
+
+<span class="com"># This does NOT work:</span>
+<span class="com"># print("age: " + 20)     # str + int → TypeError!</span>
+<span class="com"># print("hello" - "h")    # str - str → TypeError! (subtraction makes no sense for text)</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Run the code as-is. Notice the working operations.</li>
+        <li>Now <strong>uncomment</strong> the line <code># print("age: " + 20)</code> (remove the <code>#</code> at the start). Save and run. Read the error.</li>
+        <li>Comment it back (add <code>#</code>) and uncomment the other line to see that error too.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Converting Between Types</h3>
+    <p>You can convert values between types:<br>
+    <code>str(42)</code> → converts the number 42 to the text <code>"42"</code><br>
+    <code>int("42")</code> → converts the text "42" to the number <code>42</code><br>
+    <code>float("3.14")</code> → converts the text "3.14" to the number <code>3.14</code><br>
+    <code>int(3.9)</code> → converts float to int (drops the decimal) → <code>3</code><br><br>
+    Remember from Day 2: <code>input()</code> always gives a <strong>string</strong>. To do math with user input, you must convert it: <code>int(input("Enter a number: "))</code></p>
+  </div>
+
+  <div class="mcq" data-correct="A">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What is the type of <code>"3.14"</code> (with quotes)?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> str (string)</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> float</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> int</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> number</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> Anything inside quotes is a string, even if it looks like a number. <code>"3.14"</code> is text. <code>3.14</code> (no quotes) is a float.</div>
+  </div>
+
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>int(7.9)</code> return?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 8</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 7.9</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Error</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> 7</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> <code>int()</code> drops everything after the decimal point — it does NOT round. <code>int(7.9)</code> gives <code>7</code>, not <code>8</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 7: METHODS                                            ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod7">
+  <div class="section-label">Module 07</div>
+  <h2>Methods — Actions on Data</h2>
+  <p class="section-intro">Values in Python aren't just passive data — they come with built-in <strong>actions</strong> you can perform on them. These actions are called <strong>methods</strong>.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Think of a phone. A phone is an <em>object</em>. It can do things: <strong>make a call</strong>, <strong>send a text</strong>, <strong>take a photo</strong>. Those are its <strong>methods</strong> — actions the phone can perform. Similarly, a Python string can do things: <strong>make all letters uppercase</strong>, <strong>replace a word</strong>, <strong>count how many times a letter appears</strong>. You call a method using a dot: <code>phone.take_photo()</code> → <code>"hello".upper()</code>.</p>
+  </div>
+
+  <!-- TASK 7.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 7.1</span>
+      <span class="task-title">String Methods</span>
+    </div>
+    <p>Create <code>methods.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">methods.py</span></div>
+      <div class="code-body"><span class="var">text</span> <span class="op">=</span> <span class="str">"  Hello, Python World!  "</span>
+
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">upper</span>())          <span class="com"># ALL CAPS</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">lower</span>())          <span class="com"># all lowercase</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">strip</span>())          <span class="com"># remove spaces from both ends</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">replace</span>(<span class="str">"Python"</span>, <span class="str">"Awesome"</span>))  <span class="com"># swap words</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">count</span>(<span class="str">"l"</span>))      <span class="com"># how many times "l" appears</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">startswith</span>(<span class="str">"  H"</span>)) <span class="com"># does it start with "  H"?</span>
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="var">text</span>))             <span class="com"># length (total characters)</span></div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="output">  HELLO, PYTHON WORLD!  
+  hello, python world!  
+Hello, Python World!
+  Hello, Awesome World!  
+2
+True
+24</span></div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">The pattern is always: <code>variable.method()</code>. The dot (<code>.</code>) connects the variable to the action. Some methods need extra information inside the parentheses (like <code>.replace("old", "new")</code>), some don't (like <code>.upper()</code>).</p>
+  </div>
+
+  <!-- TASK 7.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 7.2</span>
+      <span class="task-title">Number Methods &amp; Built-in Functions</span>
+    </div>
+    <p>Create <code>num_methods.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">num_methods.py</span></div>
+      <div class="code-body"><span class="var">x</span> <span class="op">=</span> <span class="op">-</span><span class="num">15</span>
+<span class="var">y</span> <span class="op">=</span> <span class="num">3.789</span>
+
+<span class="fn">print</span>(<span class="fn">abs</span>(<span class="var">x</span>))          <span class="com"># absolute value → 15</span>
+<span class="fn">print</span>(<span class="fn">round</span>(<span class="var">y</span>))        <span class="com"># round to nearest whole number → 4</span>
+<span class="fn">print</span>(<span class="fn">round</span>(<span class="var">y</span>, <span class="num">1</span>))     <span class="com"># round to 1 decimal place → 3.8</span>
+<span class="fn">print</span>(<span class="fn">max</span>(<span class="num">10</span>, <span class="num">25</span>, <span class="num">7</span>))  <span class="com"># largest value → 25</span>
+<span class="fn">print</span>(<span class="fn">min</span>(<span class="num">10</span>, <span class="num">25</span>, <span class="num">7</span>))  <span class="com"># smallest value → 7</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type, save, run. Compare each output with the comment.</li>
+        <li>Note: <code>abs()</code>, <code>round()</code>, <code>max()</code>, <code>min()</code> are <strong>built-in functions</strong> (not methods). You write <code>abs(x)</code> not <code>x.abs()</code>. The difference isn't important now — just know they exist.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>"hello world".replace("world", "python")</code> return?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> "hello world"</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> "world python"</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> "hello python"</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> <code>.replace("world", "python")</code> finds "world" in the string and swaps it with "python", giving <code>"hello python"</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 8: PRACTICE EXERCISES                                 ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod8">
+  <div class="section-label">Module 08</div>
+  <h2>Practice Exercises</h2>
+  <p class="section-intro">Time to put everything together. There are three types of exercises: <strong style="color:var(--pink)">Fill-in</strong> (complete the missing part), <strong style="color:var(--red)">Debug</strong> (find and fix the error), and <strong style="color:var(--accent)">Write</strong> (write from scratch). Create a new file for each exercise.</p>
+
+  <!-- ──────── FILL-IN EXERCISES ──────── -->
+  <h3 style="color:var(--pink);font-family:'JetBrains Mono',monospace;font-size:.9rem;margin:2rem 0 1rem;text-transform:uppercase;letter-spacing:.08em">✏️ Fill-in Exercises</h3>
+
+  <div class="fill-in">
+    <div class="fill-label">✏️ Exercise F1 — Swap the Greeting</div>
+    <p>Complete the code so it prints <code>Hi, Pooja!</code></p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_f1.py</span></div>
+      <div class="code-body"><span class="var">name</span> <span class="op">=</span> <span class="str">"Pooja"</span>
+<span class="var">greeting</span> <span class="op">=</span> <span class="str">"Hi, "</span> <span class="op">+</span> <span class="fill-blank">???</span> <span class="op">+</span> <span class="str">"!"</span>
+<span class="fn">print</span>(<span class="var">greeting</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>name</code> — The blank should be the variable <code>name</code> which holds <code>"Pooja"</code>. Concatenation joins them: <code>"Hi, " + "Pooja" + "!"</code> → <code>"Hi, Pooja!"</code></div>
+  </div>
+
+  <div class="fill-in">
+    <div class="fill-label">✏️ Exercise F2 — Calculate Area</div>
+    <p>Complete the code so it prints the area of a rectangle (width × height):</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_f2.py</span></div>
+      <div class="code-body"><span class="var">width</span> <span class="op">=</span> <span class="num">12</span>
+<span class="var">height</span> <span class="op">=</span> <span class="num">5</span>
+<span class="var">area</span> <span class="op">=</span> <span class="fill-blank">???</span>
+<span class="fn">print</span>(<span class="str">"Area:"</span>, <span class="var">area</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>area = width * height</code> — This calculates <code>12 * 5</code> and stores <code>60</code> in <code>area</code>.</div>
+  </div>
+
+  <div class="fill-in">
+    <div class="fill-label">✏️ Exercise F3 — Convert and Add</div>
+    <p>The variable <code>user_input</code> is a <strong>string</strong>. Complete the code to convert it to a number and add 10:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_f3.py</span></div>
+      <div class="code-body"><span class="var">user_input</span> <span class="op">=</span> <span class="str">"25"</span>
+<span class="var">number</span> <span class="op">=</span> <span class="fill-blank">???</span>(<span class="var">user_input</span>)
+<span class="var">result</span> <span class="op">=</span> <span class="var">number</span> <span class="op">+</span> <span class="num">10</span>
+<span class="fn">print</span>(<span class="var">result</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>int</code> — <code>int(user_input)</code> converts the string <code>"25"</code> to the integer <code>25</code>. Then <code>25 + 10 = 35</code>.</div>
+  </div>
+
+  <div class="fill-in">
+    <div class="fill-label">✏️ Exercise F4 — Make Uppercase</div>
+    <p>Complete the code so it prints <code>PYTHON IS FUN</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_f4.py</span></div>
+      <div class="code-body"><span class="var">text</span> <span class="op">=</span> <span class="str">"python is fun"</span>
+<span class="var">loud</span> <span class="op">=</span> <span class="var">text</span>.<span class="fill-blank">???</span>()
+<span class="fn">print</span>(<span class="var">loud</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>upper</code> — <code>text.upper()</code> converts all characters to uppercase.</div>
+  </div>
+
+  <!-- ──────── DEBUG EXERCISES ──────── -->
+  <h3 style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:.9rem;margin:2.5rem 0 1rem;text-transform:uppercase;letter-spacing:.08em">🐛 Debug Exercises</h3>
+  <p style="color:var(--text-muted);font-size:.92rem;margin-bottom:1.5rem;">For each exercise: <strong>create the file, run it, read the traceback, find the line, fix the bug</strong>. Only then check the answer.</p>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D1 — NameError</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d1.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">username</span> <span class="op">=</span> <span class="str">"Pooja"</span>
+<span class="ln"> 2 </span><span class="var">greeting</span> <span class="op">=</span> <span class="str">"Welcome, "</span> <span class="op">+</span> <span class="var">Username</span>
+<span class="ln"> 3 </span><span class="fn">print</span>(<span class="var">greeting</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Line 2 — NameError.</strong> Python is case-sensitive! <code>Username</code> (capital U) is NOT the same as <code>username</code> (lowercase u). Fix: change <code>Username</code> to <code>username</code> on line 2.</div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D2 — SyntaxError</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d2.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">price</span> <span class="op">=</span> <span class="num">49.99</span>
+<span class="ln"> 2 </span><span class="var">tax</span> <span class="op">=</span> <span class="num">5.0</span>
+<span class="ln"> 3 </span><span class="var">total</span> <span class="op">=</span> <span class="var">price</span> <span class="op">+</span> <span class="var">tax</span>
+<span class="ln"> 4 </span><span class="fn">print</span>(<span class="str">"Total: "</span> <span class="op">+</span> <span class="var">total</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Line 4 — TypeError.</strong> <code>"Total: "</code> is a string and <code>total</code> is a float. You can't <code>+</code> them. Fix: <code>print("Total: " + str(total))</code> or simpler: <code>print("Total:", total)</code>.</div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D3 — SyntaxError</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d3.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">name</span> <span class="op">=</span> <span class="str">"Alice"</span>
+<span class="ln"> 2 </span><span class="var">age</span> <span class="op">=</span> <span class="num">30</span>
+<span class="ln"> 3 </span><span class="fn">print</span>(<span class="str">"Name:"</span>, <span class="var">name</span>
+<span class="ln"> 4 </span><span class="fn">print</span>(<span class="str">"Age:"</span>, <span class="var">age</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Line 3 — SyntaxError.</strong> Missing closing parenthesis <code>)</code> at the end of line 3. Fix: <code>print("Name:", name)</code>. Python sees line 4 and gets confused because line 3 wasn't finished.</div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D4 — TypeError</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d4.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">num1</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Enter a number: "</span>)
+<span class="ln"> 2 </span><span class="var">num2</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Enter another: "</span>)
+<span class="ln"> 3 </span><span class="var">total</span> <span class="op">=</span> <span class="var">num1</span> <span class="op">+</span> <span class="var">num2</span>
+<span class="ln"> 4 </span><span class="fn">print</span>(<span class="str">"Sum:"</span>, <span class="var">total</span>)</div>
+    </div>
+    <p style="font-size:.9rem;color:var(--text-muted);margin-top:.5rem;">Hint: Enter 10 and 20. Does it show 30 or something else?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Not a crash, but a logical bug!</strong> It prints <code>1020</code> instead of <code>30</code>. <code>input()</code> returns strings, so <code>"10" + "20"</code> = <code>"1020"</code> (concatenation, not addition). Fix: <code>num1 = int(input("Enter a number: "))</code> and same for <code>num2</code>.</div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D5 — Multiple Bugs</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d5.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">product</span> <span class="op">=</span> <span class="str">"Laptop"</span>
+<span class="ln"> 2 </span><span class="var">price</span> <span class="op">=</span> <span class="str">"75000"</span>
+<span class="ln"> 3 </span><span class="var">discount</span> <span class="op">=</span> <span class="num">5000</span>
+<span class="ln"> 4 </span><span class="var">final_price</span> <span class="op">=</span> <span class="var">price</span> <span class="op">-</span> <span class="var">discount</span>
+<span class="ln"> 5 </span><span class="fn">print</span>(<span class="var">Product</span>, <span class="str">"costs"</span>, <span class="var">final_price</span>)</div>
+    </div>
+    <p style="font-size:.9rem;color:var(--text-muted);margin-top:.5rem;">Hint: There are <strong>two</strong> bugs. Fix the first, run again, then fix the second.</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Bug 1 — Line 4, TypeError:</strong> <code>price</code> is a string <code>"75000"</code> (it has quotes!). You can't subtract a number from a string. Fix: change line 2 to <code>price = 75000</code> (remove quotes).<br><strong>Bug 2 — Line 5, NameError:</strong> <code>Product</code> (capital P) should be <code>product</code> (lowercase p). Python is case-sensitive.</div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D6 — Tricky String Bug</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d6.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">sentence</span> <span class="op">=</span> <span class="str">"She said "hello" to me"</span>
+<span class="ln"> 2 </span><span class="fn">print</span>(<span class="var">sentence</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Line 1 — SyntaxError.</strong> The quotes inside the string confuse Python — it thinks the string ends at <code>"She said "</code>. Fix: use single quotes outside: <code>sentence = 'She said "hello" to me'</code>, or escape the inner quotes: <code>sentence = "She said \"hello\" to me"</code>.</div>
+  </div>
+
+  <!-- ──────── WRITE EXERCISES ──────── -->
+  <h3 style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.9rem;margin:2.5rem 0 1rem;text-transform:uppercase;letter-spacing:.08em">🚀 Write-from-Scratch Exercises</h3>
+
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">WRITE W1</span>
+      <span class="task-title">Temperature Converter</span>
+    </div>
+    <p>Write a program in <code>ex_w1.py</code> that:</p>
+    <div class="task-steps">
+      <ol>
+        <li>Creates a variable <code>celsius</code> with the value <code>37</code></li>
+        <li>Calculates the Fahrenheit equivalent using the formula: <code>fahrenheit = (celsius * 9/5) + 32</code></li>
+        <li>Prints: <code>37 °C = 98.6 °F</code></li>
+      </ol>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>celsius = 37</code><br><code>fahrenheit = (celsius * 9/5) + 32</code><br><code>print(celsius, "°C =", fahrenheit, "°F")</code></div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">WRITE W2</span>
+      <span class="task-title">Personal Info Card</span>
+    </div>
+    <p>Write a program in <code>ex_w2.py</code> that:</p>
+    <div class="task-steps">
+      <ol>
+        <li>Stores your name, age, and city in three separate variables</li>
+        <li>Creates a <code>bio</code> variable that concatenates them into one sentence like <code>"My name is Pooja, I am 20 years old, from Mumbai."</code> (Hint: you'll need <code>str()</code> for the age)</li>
+        <li>Prints <code>bio</code> in uppercase using a string method</li>
+      </ol>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>name = "Pooja"</code><br><code>age = 20</code><br><code>city = "Mumbai"</code><br><code>bio = "My name is " + name + ", I am " + str(age) + " years old, from " + city + "."</code><br><code>print(bio.upper())</code></div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">WRITE W3</span>
+      <span class="task-title">Word Counter</span>
+    </div>
+    <p>Write a program in <code>ex_w3.py</code> that:</p>
+    <div class="task-steps">
+      <ol>
+        <li>Creates a variable <code>sentence</code> with the value <code>"I am learning Python and it is exciting"</code></li>
+        <li>Prints how many characters are in the sentence (use <code>len()</code>)</li>
+        <li>Prints how many times the letter <code>"i"</code> appears (use <code>.count()</code>)</li>
+        <li>Prints the sentence with all <code>"Python"</code> replaced by <code>"programming"</code></li>
+      </ol>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>sentence = "I am learning Python and it is exciting"</code><br><code>print("Length:", len(sentence))</code><br><code>print("Count of 'i':", sentence.count("i"))</code><br><code>print(sentence.replace("Python", "programming"))</code></div>
+  </div>
+
+  <!-- ──────── MORE DEBUG ──────── -->
+  <h3 style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:.9rem;margin:2.5rem 0 1rem;text-transform:uppercase;letter-spacing:.08em">🐛 More Debug Challenges</h3>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D7 — Method Error</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d7.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">text</span> <span class="op">=</span> <span class="str">"hello world"</span>
+<span class="ln"> 2 </span><span class="fn">print</span>(<span class="var">text</span>.<span class="fn">Upper</span>())</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Line 2 — AttributeError.</strong> Python is case-sensitive — the method is <code>.upper()</code> (all lowercase), not <code>.Upper()</code>. Fix: <code>print(text.upper())</code>.</div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D8 — Wrong Type for Method</div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d8.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">score</span> <span class="op">=</span> <span class="num">95</span>
+<span class="ln"> 2 </span><span class="fn">print</span>(<span class="var">score</span>.<span class="fn">upper</span>())</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Line 2 — AttributeError.</strong> <code>.upper()</code> is a string method — it only works on strings, not on integers. <code>score</code> is <code>95</code> (an int). It doesn't make sense to "uppercase" a number. Fix depends on intent: if you want to print the number, just use <code>print(score)</code>. If you want it as text, <code>print(str(score))</code>.</div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D9 — The Silent Bug</div>
+    <p style="font-size:.9rem;color:var(--text-muted);">This code runs without errors but gives the <strong>wrong answer</strong>. Expected output: <code>Average: 20.0</code></p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d9.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">a</span> <span class="op">=</span> <span class="num">10</span>
+<span class="ln"> 2 </span><span class="var">b</span> <span class="op">=</span> <span class="num">20</span>
+<span class="ln"> 3 </span><span class="var">c</span> <span class="op">=</span> <span class="num">30</span>
+<span class="ln"> 4 </span><span class="var">average</span> <span class="op">=</span> <span class="var">a</span> <span class="op">+</span> <span class="var">b</span> <span class="op">+</span> <span class="var">c</span> <span class="op">/</span> <span class="num">3</span>
+<span class="ln"> 5 </span><span class="fn">print</span>(<span class="str">"Average:"</span>, <span class="var">average</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Line 4 — Logic Error (wrong output: 40.0 instead of 20.0).</strong> Python follows math order of operations: division happens before addition. So <code>a + b + c / 3</code> means <code>10 + 20 + (30/3)</code> = <code>10 + 20 + 10</code> = <code>40.0</code>. Fix: add parentheses: <code>average = (a + b + c) / 3</code>.</div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Exercise D10 — Variable Update Bug</div>
+    <p style="font-size:.9rem;color:var(--text-muted);">Expected output: <code>Final balance: 1200</code></p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_d10.py</span></div>
+      <div class="code-body"><span class="ln"> 1 </span><span class="var">balance</span> <span class="op">=</span> <span class="num">1000</span>
+<span class="ln"> 2 </span><span class="var">deposit</span> <span class="op">=</span> <span class="num">500</span>
+<span class="ln"> 3 </span><span class="var">withdrawal</span> <span class="op">=</span> <span class="num">300</span>
+<span class="ln"> 4 </span><span class="var">balance</span> <span class="op">=</span> <span class="var">balance</span> <span class="op">+</span> <span class="var">deposit</span>
+<span class="ln"> 5 </span><span class="var">balance</span> <span class="op">=</span> <span class="var">balance</span> <span class="op">+</span> <span class="var">withdrawal</span>
+<span class="ln"> 6 </span><span class="fn">print</span>(<span class="str">"Final balance:"</span>, <span class="var">balance</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Line 5 — Logic Error.</strong> It says <code>balance + withdrawal</code> but a withdrawal should <strong>subtract</strong>. Fix: change line 5 to <code>balance = balance - withdrawal</code>. Then: 1000 + 500 - 300 = 1200.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  FINAL CHECKLIST                                              ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="final">
+  <div class="section-label">Day 3 Complete</div>
+  <h2>Completion Checklist</h2>
+
+  <div class="checklist">
+    <h3>🎯 I Can Now…</h3>
+    <label><input type="checkbox"> Use VS Code to create, rename, and delete files and folders</label>
+    <label><input type="checkbox"> Install extensions in VS Code (Python extension)</label>
+    <label><input type="checkbox"> Explain what syntax highlighting is and why it helps</label>
+    <label><input type="checkbox"> Use the integrated terminal in VS Code</label>
+    <label><input type="checkbox"> Explain the difference between different shells (PowerShell, Command Prompt)</label>
+    <label><input type="checkbox"> Create a variable and assign a value to it</label>
+    <label><input type="checkbox"> Update the value of a variable</label>
+    <label><input type="checkbox"> Explain the difference between int, float, and str</label>
+    <label><input type="checkbox"> Use operators: + - * / on numbers</label>
+    <label><input type="checkbox"> Concatenate strings with +</label>
+    <label><input type="checkbox"> Read a Python traceback to find the file, line number, and error type</label>
+    <label><input type="checkbox"> Fix NameError, SyntaxError, and TypeError bugs</label>
+    <label><input type="checkbox"> Check the type of a variable using type()</label>
+    <label><input type="checkbox"> Convert between types using str(), int(), float()</label>
+    <label><input type="checkbox"> Use string methods like .upper(), .lower(), .strip(), .replace(), .count()</label>
+    <label><input type="checkbox"> Use built-in functions like len(), abs(), round(), max(), min()</label>
+  </div>
+
+  <div class="celebrate">
+    <div class="emoji">🏆</div>
+    <h3>Incredible Progress!</h3>
+    <p>You set up a professional coding workspace, learned how Python stores data, and — most importantly — you learned how to read errors and debug code. That last skill alone puts you ahead of most beginners. Next time, we'll learn about <strong>conditions</strong> (if/elif/else), <strong>loops</strong>, and start building more complex programs.</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+function toggleAnswer(btn){
+  const c=btn.nextElementSibling;
+  c.classList.toggle('show');
+  btn.textContent=c.classList.contains('show')?'Hide Answer':'Reveal Answer';
+}
+function checkMCQ(opt){
+  const mcq=opt.closest('.mcq');
+  if(mcq.dataset.answered)return;
+  mcq.dataset.answered='true';
+  const correct=mcq.dataset.correct;
+  const chosen=opt.dataset.value;
+  mcq.querySelectorAll('.mcq-opt').forEach(o=>{
+    if(o.dataset.value===correct)o.classList.add('correct');
+    else if(o===opt&&chosen!==correct)o.classList.add('wrong');
+  });
+  mcq.querySelector('.mcq-explain').classList.add('show');
+}
+</script>
+</body>
+</html>
