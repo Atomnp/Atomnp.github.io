@@ -59,7 +59,7 @@
       if (!meta) { fail('Post not found.'); throw 'stop'; }
 
       // fill header + document metadata
-      document.title = meta.title + ' — Aayush Neupane';
+      document.title = meta.title + ' · Aayush Neupane';
       var idx = posts.indexOf(meta);
       document.getElementById('post-cat').textContent = meta.category;
       document.getElementById('post-title').textContent = meta.title;
