@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 6 — Dictionaries, Functions &amp; Your First Game</title>
+<title>Day 6, Dictionaries, Functions &amp; Your First Game</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0f1117;--surface:#181b24;--surface2:#1e222e;--border:#2a2f3e;--text:#e0e4ef;--text-muted:#8891a8;--accent:#6ee7b7;--accent-dim:#2d6a52;--warn:#fbbf24;--blue:#60a5fa;--pink:#f472b6;--orange:#fb923c;--red:#f87171;--purple:#a78bfa;--terminal-bg:#0a0c10;--terminal-green:#4ade80;--terminal-prompt:#6ee7b7;--lab-bg:#141820;--lab-border:#2a4a3a;--check:#22c55e;--correct:#22c55e;--wrong:#ef4444}
@@ -37,7 +37,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <div class="page-wrapper">
 
 <div class="hero">
-  <div class="hero-tag">Python Course — Day 6</div>
+  <div class="hero-tag">Python Course, Day 6</div>
   <h1>Dictionaries, Functions &amp; <span>Your First Game</span></h1>
   <p class="hero-sub">Today you'll learn the most important data structure and the most important code organization tool. Then you'll use everything you've learned to build a real, playable word-guessing game.</p>
 </div>
@@ -45,10 +45,10 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <div class="toc">
   <h2>Lab Modules</h2>
   <ul class="toc-list">
-    <li><a href="#mod1"><span class="toc-num">01</span> The Big Picture — Everything We Know So Far</a></li>
-    <li><a href="#mod2"><span class="toc-num">02</span> Dictionaries — The Most Powerful Data Type</a></li>
-    <li><a href="#mod3"><span class="toc-num">03</span> Other Data Types — Tuples &amp; None</a></li>
-    <li><a href="#mod4"><span class="toc-num">04</span> Functions — Reusable Blocks of Code</a></li>
+    <li><a href="#mod1"><span class="toc-num">01</span> The Big Picture, Everything We Know So Far</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Dictionaries, The Most Powerful Data Type</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Other Data Types, Tuples &amp; None</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Functions, Reusable Blocks of Code</a></li>
     <li><a href="#mod5"><span class="toc-num">05</span> Build a Word Guessing Game</a></li>
   </ul>
 </div>
@@ -62,7 +62,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <section class="lab-section" id="mod1">
   <div class="section-label">Module 01</div>
   <h2>The Big Picture</h2>
-  <p class="section-intro">Before learning new things, let's see everything we've built so far — like a map of your knowledge.</p>
+  <p class="section-intro">Before learning new things, let's see everything we've built so far, like a map of your knowledge.</p>
 
   <div class="diagram">
     <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg">
@@ -99,11 +99,11 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
       <rect x="380" y="50" width="310" height="280" rx="14" fill="#141820" stroke="#6ee7b7" stroke-width="2" stroke-dasharray="6"/>
       <text x="535" y="75" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="11" font-weight="700">TODAY WE ADD</text>
       <rect x="400" y="95" width="270" height="45" rx="8" fill="#1a2520" stroke="#6ee7b7" stroke-width="1.5"/>
-      <text x="535" y="122" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="12" font-weight="600">dict — Dictionaries</text>
+      <text x="535" y="122" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="12" font-weight="600">dict, Dictionaries</text>
       <rect x="400" y="160" width="270" height="45" rx="8" fill="#1a2520" stroke="#60a5fa" stroke-width="1.5"/>
       <text x="535" y="187" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="12" font-weight="600">tuple, None</text>
       <rect x="400" y="225" width="270" height="45" rx="8" fill="#1a2520" stroke="#f472b6" stroke-width="1.5"/>
-      <text x="535" y="252" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="12" font-weight="600">def — Functions</text>
+      <text x="535" y="252" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="12" font-weight="600">def, Functions</text>
       <rect x="400" y="290" width="270" height="30" rx="8" fill="#2a1a3a" stroke="#a78bfa" stroke-width="1.5"/>
       <text x="535" y="310" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="11" font-weight="600">Word Guessing Game!</text>
     </svg>
@@ -139,19 +139,19 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <!-- ═══════════════════ MODULE 2: DICTIONARIES ═══════════════════ -->
 <section class="lab-section" id="mod2">
   <div class="section-label">Module 02</div>
-  <h2>Dictionaries — The Most Powerful Data Type</h2>
+  <h2>Dictionaries, The Most Powerful Data Type</h2>
   <p class="section-intro">A list stores items by <strong>position number</strong> (index 0, 1, 2...). A dictionary stores items by <strong>name</strong> (a key you choose). This is incredibly useful.</p>
 
   <div class="analogy">
     <div class="analogy-label">🏠 Real-World Analogy</div>
-    <p>Think of an actual <strong>dictionary book</strong>. You look up a <strong>word</strong> (the key) and find its <strong>definition</strong> (the value). You don't look up "word number 4,372" — you look up the actual word "python" and find what it means.<br><br>
-    Or think of a <strong>contact list</strong> on your phone. You don't search by "contact #47" — you search by <strong>name</strong> ("Mom") and find the <strong>phone number</strong>. The name is the key, the phone number is the value.</p>
+    <p>Think of an actual <strong>dictionary book</strong>. You look up a <strong>word</strong> (the key) and find its <strong>definition</strong> (the value). You don't look up "word number 4,372", you look up the actual word "python" and find what it means.<br><br>
+    Or think of a <strong>contact list</strong> on your phone. You don't search by "contact #47", you search by <strong>name</strong> ("Mom") and find the <strong>phone number</strong>. The name is the key, the phone number is the value.</p>
   </div>
 
   <div class="concept">
     <h3>💡 Why Not Just Use a List?</h3>
     <div>
-      You <em>could</em> store contact info in lists: <code>names = ["Mom", "Dad"]</code> and <code>phones = ["555-1234", "555-5678"]</code>. But this is fragile — you have to keep both lists perfectly aligned. If you delete a name from one list but forget the other, everything breaks.<br><br>
+      You <em>could</em> store contact info in lists: <code>names = ["Mom", "Dad"]</code> and <code>phones = ["555-1234", "555-5678"]</code>. But this is fragile, you have to keep both lists perfectly aligned. If you delete a name from one list but forget the other, everything breaks.<br><br>
       With a dictionary, each piece of data is <strong>connected</strong>: <code>contacts = {"Mom": "555-1234", "Dad": "555-5678"}</code>. The name and number are linked. You can add, delete, or look up by name directly. This is faster, safer, and easier to understand. Many real-world problems naturally fit this "look up by name" pattern.
     </div>
   </div>
@@ -194,7 +194,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
   </div>
 
   <div class="concept">
-    <h3>💡 Values Can Be ANY Type — Including Lists and Other Dicts!</h3>
+    <h3>💡 Values Can Be ANY Type, Including Lists and Other Dicts!</h3>
     <div>This is what makes dictionaries so powerful. A value can be an int, str, bool, list, or even another dictionary.</div>
   </div>
 
@@ -237,25 +237,25 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <!-- ═══════════════════ MODULE 3: OTHER TYPES ═══════════════════ -->
 <section class="lab-section" id="mod3">
   <div class="section-label">Module 03</div>
-  <h2>Other Data Types — Tuples &amp; None</h2>
+  <h2>Other Data Types, Tuples &amp; None</h2>
   <p class="section-intro">Two more types you'll encounter that we haven't explicitly covered yet.</p>
 
   <div class="concept">
-    <h3>💡 Tuple — A List That Cannot Be Changed</h3>
+    <h3>💡 Tuple, A List That Cannot Be Changed</h3>
     <div>
       A <strong>tuple</strong> is exactly like a list, except you <strong>cannot modify it</strong> after creation. No adding, removing, or changing items. Created with <strong>parentheses <code>( )</code></strong>:<br><br>
       <code>colors = ("red", "green", "blue")</code><br>
-      <code>print(colors[0])</code> → <code>"red"</code> — indexing works!<br>
+      <code>print(colors[0])</code> → <code>"red"</code>, indexing works!<br>
       <code>colors[0] = "yellow"</code> → <strong>TypeError!</strong> Can't modify.<br><br>
-      Use tuples when you have data that should <strong>never change</strong> — like days of the week, coordinates, or RGB color values.
+      Use tuples when you have data that should <strong>never change</strong>, like days of the week, coordinates, or RGB color values.
     </div>
   </div>
 
   <div class="concept">
-    <h3>💡 None — The "Nothing" Value</h3>
+    <h3>💡 None, The "Nothing" Value</h3>
     <div>
       <code>None</code> is a special value that means <strong>"no value" or "nothing here"</strong>. It's its own type (<code>NoneType</code>).<br><br>
-      <code>result = None</code> — "result doesn't have a value yet"<br>
+      <code>result = None</code>, "result doesn't have a value yet"<br>
       <code>print(type(None))</code> → <code>&lt;class 'NoneType'&gt;</code><br><br>
       You'll see <code>None</code> often with functions that don't return anything. For now, just know it exists and means "empty/nothing."
     </div>
@@ -296,12 +296,12 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <!-- ═══════════════════ MODULE 4: FUNCTIONS ═══════════════════ -->
 <section class="lab-section" id="mod4">
   <div class="section-label">Module 04</div>
-  <h2>Functions — Reusable Blocks of Code</h2>
-  <p class="section-intro">A function is a <strong>named, reusable block of code</strong> that takes some input, does something, and optionally gives back a result. You've been using functions since Day 1 — <code>print()</code>, <code>input()</code>, <code>len()</code>, <code>type()</code> are all functions. Now you'll learn to create your own.</p>
+  <h2>Functions, Reusable Blocks of Code</h2>
+  <p class="section-intro">A function is a <strong>named, reusable block of code</strong> that takes some input, does something, and optionally gives back a result. You've been using functions since Day 1, <code>print()</code>, <code>input()</code>, <code>len()</code>, <code>type()</code> are all functions. Now you'll learn to create your own.</p>
 
   <div class="analogy">
     <div class="analogy-label">🏠 Real-World Analogy</div>
-    <p>A function is like a <strong>kitchen appliance</strong>. A blender takes <strong>input</strong> (fruits), does some <strong>processing</strong> (blending), and gives you <strong>output</strong> (smoothie). You don't need to know how the motor works — you just put stuff in and get stuff out. You can use the same blender many times with different fruits. Similarly, you write a function once and use it many times with different inputs.</p>
+    <p>A function is like a <strong>kitchen appliance</strong>. A blender takes <strong>input</strong> (fruits), does some <strong>processing</strong> (blending), and gives you <strong>output</strong> (smoothie). You don't need to know how the motor works, you just put stuff in and get stuff out. You can use the same blender many times with different fruits. Similarly, you write a function once and use it many times with different inputs.</p>
   </div>
 
   <div class="concept">
@@ -325,7 +325,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 
 <span class="com"># CALLING the function (using the recipe)</span>
 <span class="fn">greet</span>()
-<span class="fn">greet</span>()   <span class="com"># call it again — reusable!</span></div>
+<span class="fn">greet</span>()   <span class="com"># call it again, reusable!</span></div>
     </div>
     <div class="terminal">
       <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
@@ -334,18 +334,18 @@ Welcome to Python.
 Hello!
 Welcome to Python.</span></div>
     </div>
-    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);"><code>def</code> means "define a new function." The indented lines are the function's body — they only run when you <strong>call</strong> the function with <code>greet()</code>. Defining a function does NOT run it.</p>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);"><code>def</code> means "define a new function." The indented lines are the function's body, they only run when you <strong>call</strong> the function with <code>greet()</code>. Defining a function does NOT run it.</p>
   </div>
 
   <div class="lab-task">
     <div class="task-header"><span class="task-badge">TASK 4.2</span><span class="task-title">Functions with Arguments (Inputs)</span></div>
     <div class="code-block">
       <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_args.py</span></div>
-      <div class="code-body"><span class="com"># 'name' is a PARAMETER — a placeholder for the input</span>
+      <div class="code-body"><span class="com"># 'name' is a PARAMETER, a placeholder for the input</span>
 <span class="kw">def</span> <span class="fn">greet</span>(<span class="var">name</span>):
     <span class="fn">print</span>(<span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>)
 
-<span class="com"># "Pooja" and "Alice" are ARGUMENTS — actual values you pass in</span>
+<span class="com"># "Pooja" and "Alice" are ARGUMENTS, actual values you pass in</span>
 <span class="fn">greet</span>(<span class="str">"Pooja"</span>)    <span class="com"># name becomes "Pooja" inside the function</span>
 <span class="fn">greet</span>(<span class="str">"Alice"</span>)    <span class="com"># name becomes "Alice" inside the function</span>
 
@@ -359,7 +359,7 @@ Welcome to Python.</span></div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 4.3</span><span class="task-title">Return Values — Getting Output from a Function</span></div>
+    <div class="task-header"><span class="task-badge">TASK 4.3</span><span class="task-title">Return Values, Getting Output from a Function</span></div>
     <div class="code-block">
       <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_return.py</span></div>
       <div class="code-body"><span class="com"># This function RETURNS a value instead of printing it</span>
@@ -383,18 +383,18 @@ Welcome to Python.</span></div>
     <span class="fn">print</span>(<span class="str">"Hi!"</span>)
 
 <span class="var">x</span> <span class="op">=</span> <span class="fn">say_hi</span>()
-<span class="fn">print</span>(<span class="var">x</span>)    <span class="com"># None — say_hi doesn't return anything</span></div>
+<span class="fn">print</span>(<span class="var">x</span>)    <span class="com"># None, say_hi doesn't return anything</span></div>
     </div>
   </div>
 
   <div class="concept">
-    <h3>💡 Scope — What's Accessible Where</h3>
+    <h3>💡 Scope, What's Accessible Where</h3>
     <div>
       Variables created <strong>inside</strong> a function only exist inside that function. They cannot be seen or used outside. This is called <strong>scope</strong>.<br><br>
       <code>def my_func():</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;secret = 42</code> — this variable only exists inside <code>my_func</code><br><br>
-      <code>print(secret)</code> — <strong>NameError!</strong> <code>secret</code> doesn't exist here.<br><br>
-      Variables created outside functions (at the top level) are accessible everywhere. But variables inside a function are <strong>private</strong> to that function. This prevents accidental conflicts — two functions can both have a variable called <code>x</code> without interfering with each other.
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;secret = 42</code>, this variable only exists inside <code>my_func</code><br><br>
+      <code>print(secret)</code>, <strong>NameError!</strong> <code>secret</code> doesn't exist here.<br><br>
+      Variables created outside functions (at the top level) are accessible everywhere. But variables inside a function are <strong>private</strong> to that function. This prevents accidental conflicts, two functions can both have a variable called <code>x</code> without interfering with each other.
     </div>
   </div>
 
@@ -402,7 +402,7 @@ Welcome to Python.</span></div>
     <div class="task-header"><span class="task-badge">TASK 4.4</span><span class="task-title">Default Parameter Values</span></div>
     <div class="code-block">
       <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_default.py</span></div>
-      <div class="code-body"><span class="com"># 'greeting' has a default value — it's optional when calling</span>
+      <div class="code-body"><span class="com"># 'greeting' has a default value, it's optional when calling</span>
 <span class="kw">def</span> <span class="fn">welcome</span>(<span class="var">name</span>, <span class="var">greeting</span><span class="op">=</span><span class="str">"Hello"</span>):
     <span class="fn">print</span>(<span class="var">greeting</span> <span class="op">+</span> <span class="str">", "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>)
 
@@ -416,7 +416,7 @@ Welcome to Python.</span></div>
     <div class="task-header"><span class="task-badge">TASK 4.5</span><span class="task-title">Functions You Already Know Are Functions!</span></div>
     <div class="code-block">
       <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_builtins.py</span></div>
-      <div class="code-body"><span class="com"># All of these are FUNCTIONS — they take input and give output:</span>
+      <div class="code-body"><span class="com"># All of these are FUNCTIONS, they take input and give output:</span>
 <span class="fn">print</span>(<span class="str">"hi"</span>)           <span class="com"># takes arguments, prints them. Returns None.</span>
 <span class="var">n</span> <span class="op">=</span> <span class="fn">len</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>])     <span class="com"># takes a list, returns its length (3)</span>
 <span class="var">t</span> <span class="op">=</span> <span class="fn">type</span>(<span class="num">42</span>)          <span class="com"># takes a value, returns its type</span>
@@ -456,7 +456,7 @@ Welcome to Python.</span></div>
   </div>
 
   <div class="fill-in">
-    <div class="fill-label">✏️ Exercise — Write a Function</div>
+    <div class="fill-label">✏️ Exercise, Write a Function</div>
     <p>Complete this function that takes a list of numbers and returns the sum:</p>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">exercise</span></div><div class="code-body"><span class="kw">def</span> <span class="fn">total</span>(<span class="var">numbers</span>):
     <span class="var">result</span> <span class="op">=</span> <span class="num">0</span>
@@ -466,7 +466,7 @@ Welcome to Python.</span></div>
 
 <span class="fn">print</span>(<span class="fn">total</span>([<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>]))</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
-    <div class="answer-content"><code>return</code> — The blank is the <code>return</code> keyword. Without it, the function prints nothing meaningful and returns <code>None</code>.</div>
+    <div class="answer-content"><code>return</code>, The blank is the <code>return</code> keyword. Without it, the function prints nothing meaningful and returns <code>None</code>.</div>
   </div>
 </section>
 
@@ -476,18 +476,18 @@ Welcome to Python.</span></div>
 <section class="lab-section" id="mod5">
   <div class="section-label">Module 05</div>
   <h2>Build a Word Guessing Game!</h2>
-  <p class="section-intro">Time to use <strong>everything</strong> you've learned: variables, strings, lists, dictionaries, loops, conditionals, and functions — all in one program. We'll build it step by step. Create a single file called <code>word_game.py</code> and add each step to it.</p>
+  <p class="section-intro">Time to use <strong>everything</strong> you've learned: variables, strings, lists, dictionaries, loops, conditionals, and functions, all in one program. We'll build it step by step. Create a single file called <code>word_game.py</code> and add each step to it.</p>
 
   <div class="warning">
     <div class="warning-label">📌 How This Works</div>
-    <p>For each step below, <strong>add the code to the BOTTOM of <code>word_game.py</code></strong> (unless told otherwise). Don't create new files — everything goes in the same file, building up piece by piece. After each step, save and run to test what you have so far.</p>
+    <p>For each step below, <strong>add the code to the BOTTOM of <code>word_game.py</code></strong> (unless told otherwise). Don't create new files, everything goes in the same file, building up piece by piece. After each step, save and run to test what you have so far.</p>
   </div>
 
   <!-- STEP 1 -->
   <div class="game-step">
-    <div class="game-step-num">STEP 1 — Import and Word List</div>
+    <div class="game-step-num">STEP 1, Import and Word List</div>
     <p>Open <code>word_game.py</code> and type this at the very top. This sets up the word list and the tool for picking random things.</p>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 1 (top of file)</span></div><div class="code-body"><span class="kw">import</span> random
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py, Step 1 (top of file)</span></div><div class="code-body"><span class="kw">import</span> random
 
 <span class="com"># --- WORD LIST ---</span>
 <span class="var">words</span> <span class="op">=</span> [<span class="str">"python"</span>, <span class="str">"rocket"</span>, <span class="str">"galaxy"</span>, <span class="str">"jungle"</span>, <span class="str">"puzzle"</span>,
@@ -497,9 +497,9 @@ Welcome to Python.</span></div>
 
   <!-- STEP 2 -->
   <div class="game-step">
-    <div class="game-step-num">STEP 2 — Helper Function: Pick a Random Word</div>
+    <div class="game-step-num">STEP 2, Helper Function: Pick a Random Word</div>
     <p>Add this <strong>directly below Step 1</strong>:</p>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 2 (below Step 1)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Pick a random word ---</span>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py, Step 2 (below Step 1)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Pick a random word ---</span>
 <span class="kw">def</span> <span class="fn">pick_word</span>():
     <span class="var">word</span> <span class="op">=</span> random.<span class="fn">choice</span>(<span class="var">words</span>)
     <span class="kw">return</span> <span class="var">word</span></div></div>
@@ -508,9 +508,9 @@ Welcome to Python.</span></div>
 
   <!-- STEP 3 -->
   <div class="game-step">
-    <div class="game-step-num">STEP 3 — Function: Create the Hint (Show Some Letters)</div>
+    <div class="game-step-num">STEP 3, Function: Create the Hint (Show Some Letters)</div>
     <p>Add this <strong>below Step 2</strong>. This function takes the secret word and reveals a few random letters, hiding the rest with <code>_</code>.</p>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 3 (below Step 2)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Create hint with some letters revealed ---</span>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py, Step 3 (below Step 2)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Create hint with some letters revealed ---</span>
 <span class="kw">def</span> <span class="fn">create_hint</span>(<span class="var">word</span>, <span class="var">num_revealed</span><span class="op">=</span><span class="num">2</span>):
     <span class="var">hint</span> <span class="op">=</span> [<span class="str">"_"</span>] <span class="op">*</span> <span class="fn">len</span>(<span class="var">word</span>)    <span class="com"># start with all blanks: ["_", "_", "_", ...]</span>
     <span class="var">positions</span> <span class="op">=</span> <span class="fn">list</span>(<span class="fn">range</span>(<span class="fn">len</span>(<span class="var">word</span>)))   <span class="com"># [0, 1, 2, 3, ...]</span>
@@ -519,14 +519,14 @@ Welcome to Python.</span></div>
         <span class="var">pos</span> <span class="op">=</span> <span class="var">positions</span>[<span class="var">i</span>]
         <span class="var">hint</span>[<span class="var">pos</span>] <span class="op">=</span> <span class="var">word</span>[<span class="var">pos</span>]      <span class="com"># reveal the letter at this position</span>
     <span class="kw">return</span> <span class="str">" "</span>.<span class="fn">join</span>(<span class="var">hint</span>)            <span class="com"># join list into string: "p _ t _ o _"</span></div></div>
-    <p style="font-size:.92rem;color:var(--text-muted);margin-top:.5rem;">For a word like "python", this might create <code>p _ _ h _ _</code> — two letters revealed, rest hidden.</p>
+    <p style="font-size:.92rem;color:var(--text-muted);margin-top:.5rem;">For a word like "python", this might create <code>p _ _ h _ _</code>, two letters revealed, rest hidden.</p>
   </div>
 
   <!-- STEP 4 -->
   <div class="game-step">
-    <div class="game-step-num">STEP 4 — Function: Display the Scoreboard</div>
+    <div class="game-step-num">STEP 4, Function: Display the Scoreboard</div>
     <p>Add this <strong>below Step 3</strong>:</p>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 4 (below Step 3)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Show the score ---</span>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py, Step 4 (below Step 3)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Show the score ---</span>
 <span class="kw">def</span> <span class="fn">show_score</span>(<span class="var">stats</span>):
     <span class="fn">print</span>(<span class="str">"--- Score ---"</span>)
     <span class="fn">print</span>(<span class="str">"Correct:"</span>, <span class="var">stats</span>[<span class="str">"correct"</span>])
@@ -538,9 +538,9 @@ Welcome to Python.</span></div>
 
   <!-- STEP 5 -->
   <div class="game-step">
-    <div class="game-step-num">STEP 5 — The Main Game Loop</div>
-    <p>This is the biggest step — the actual game! Add this <strong>below Step 4</strong>. Read the comments carefully — they explain every line.</p>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 5 (below Step 4)</span></div><div class="code-body"><span class="com"># === MAIN GAME ===</span>
+    <div class="game-step-num">STEP 5, The Main Game Loop</div>
+    <p>This is the biggest step, the actual game! Add this <strong>below Step 4</strong>. Read the comments carefully, they explain every line.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py, Step 5 (below Step 4)</span></div><div class="code-body"><span class="com"># === MAIN GAME ===</span>
 <span class="fn">print</span>(<span class="str">"==============================="</span>)
 <span class="fn">print</span>(<span class="str">"   WORD GUESSING GAME"</span>)
 <span class="fn">print</span>(<span class="str">"==============================="</span>)
@@ -548,7 +548,7 @@ Welcome to Python.</span></div>
 <span class="fn">print</span>(<span class="str">"Type 'quit' to stop playing."</span>)
 <span class="fn">print</span>()
 
-<span class="com"># Stats dictionary — tracks the player's performance</span>
+<span class="com"># Stats dictionary, tracks the player's performance</span>
 <span class="var">stats</span> <span class="op">=</span> {
     <span class="str">"correct"</span>: <span class="num">0</span>,
     <span class="str">"wrong"</span>: <span class="num">0</span>,
@@ -588,7 +588,7 @@ Welcome to Python.</span></div>
             <span class="var">remaining</span> <span class="op">=</span> <span class="var">max_wrong_per_word</span> <span class="op">-</span> <span class="var">attempts</span>
             <span class="fn">print</span>(<span class="str">"Wrong!"</span>, <span class="var">remaining</span>, <span class="str">"tries left."</span>)
 
-    <span class="com"># After inner loop — did they fail?</span>
+    <span class="com"># After inner loop, did they fail?</span>
     <span class="kw">if</span> <span class="kw">not</span> <span class="var">solved</span> <span class="kw">and</span> <span class="var">playing</span>:
         <span class="fn">print</span>(<span class="str">"Out of tries! The word was:"</span>, <span class="var">secret</span>)
         <span class="var">stats</span>[<span class="str">"wrong"</span>] <span class="op">=</span> <span class="var">stats</span>[<span class="str">"wrong"</span>] <span class="op">+</span> <span class="num">1</span>
@@ -609,7 +609,7 @@ Welcome to Python.</span></div>
 
   <!-- STEP 6 -->
   <div class="game-step">
-    <div class="game-step-num">STEP 6 — Save and Play!</div>
+    <div class="game-step-num">STEP 6, Save and Play!</div>
     <p>Save the file (<strong>Ctrl + S</strong>) and run it:</p>
     <div class="terminal">
       <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Playing the game</span></div>
@@ -642,22 +642,22 @@ Your guess: </span><span class="cmd">puzzle</span>
   <div class="concept">
     <h3>📖 What Concepts Did This Game Use?</h3>
     <div>
-      <strong>Variables</strong> — <code>secret</code>, <code>attempts</code>, <code>playing</code>, <code>solved</code><br>
-      <strong>Strings</strong> — <code>.lower()</code>, <code>.strip()</code>, <code>.join()</code>, <code>+</code> concatenation<br>
-      <strong>Lists</strong> — <code>words</code> list, <code>hint</code> list, indexing, <code>range()</code><br>
-      <strong>Dictionary</strong> — <code>stats</code> dict storing score, accessing with <code>["key"]</code><br>
-      <strong>Booleans</strong> — <code>playing</code>, <code>solved</code>, <code>True</code>/<code>False</code><br>
-      <strong>Conditionals</strong> — <code>if/elif/else</code> for checking guess, checking quit<br>
-      <strong>Loops</strong> — <code>while</code> for main game loop and inner guess loop<br>
-      <strong>Functions</strong> — <code>pick_word()</code>, <code>create_hint()</code>, <code>show_score()</code><br>
-      <strong>Import</strong> — <code>import random</code>, <code>random.choice()</code>, <code>random.shuffle()</code>
+      <strong>Variables</strong>, <code>secret</code>, <code>attempts</code>, <code>playing</code>, <code>solved</code><br>
+      <strong>Strings</strong>, <code>.lower()</code>, <code>.strip()</code>, <code>.join()</code>, <code>+</code> concatenation<br>
+      <strong>Lists</strong>, <code>words</code> list, <code>hint</code> list, indexing, <code>range()</code><br>
+      <strong>Dictionary</strong>, <code>stats</code> dict storing score, accessing with <code>["key"]</code><br>
+      <strong>Booleans</strong>, <code>playing</code>, <code>solved</code>, <code>True</code>/<code>False</code><br>
+      <strong>Conditionals</strong>, <code>if/elif/else</code> for checking guess, checking quit<br>
+      <strong>Loops</strong>, <code>while</code> for main game loop and inner guess loop<br>
+      <strong>Functions</strong>, <code>pick_word()</code>, <code>create_hint()</code>, <code>show_score()</code><br>
+      <strong>Import</strong>, <code>import random</code>, <code>random.choice()</code>, <code>random.shuffle()</code>
     </div>
   </div>
 
   <div class="celebrate">
     <div class="emoji">🎮</div>
     <h3>You Built a Real Game!</h3>
-    <p>This isn't a tutorial exercise — it's a real, playable game with scoring, streaks, and replayability. You built it using every concept from this course. You're a programmer now.</p>
+    <p>This isn't a tutorial exercise, it's a real, playable game with scoring, streaks, and replayability. You built it using every concept from this course. You're a programmer now.</p>
   </div>
 </section>
 
@@ -680,7 +680,7 @@ Your guess: </span><span class="cmd">puzzle</span>
     <label><input type="checkbox"> Use return to send values back from a function</label>
     <label><input type="checkbox"> Use the return value in a variable or directly in an expression</label>
     <label><input type="checkbox"> Understand that functions without return give back None</label>
-    <label><input type="checkbox"> Explain function scope — variables inside functions are local</label>
+    <label><input type="checkbox"> Explain function scope, variables inside functions are local</label>
     <label><input type="checkbox"> Use default parameter values</label>
     <label><input type="checkbox"> Build a complete multi-function program (the word game!)</label>
   </div>
