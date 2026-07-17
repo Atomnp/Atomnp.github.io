@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 0 — Before You Write Code</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #181b24;
+  --surface2: #1e222e;
+  --border: #2a2f3e;
+  --text: #e0e4ef;
+  --text-muted: #8891a8;
+  --accent: #6ee7b7;
+  --accent-dim: #2d6a52;
+  --warn: #fbbf24;
+  --blue: #60a5fa;
+  --pink: #f472b6;
+  --orange: #fb923c;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --terminal-bg: #0a0c10;
+  --terminal-green: #4ade80;
+  --terminal-prompt: #6ee7b7;
+  --lab-bg: #141820;
+  --lab-border: #2a4a3a;
+  --check: #22c55e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.page-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 6rem;
+}
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 4rem 1rem 3rem;
+  position: relative;
+}
+.hero-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent-dim), #1a3a4a);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 1rem;
+  border-radius: 99px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-family: 'Source Serif 4', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.hero h1 span { color: var(--accent); }
+.hero-sub {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── TABLE OF CONTENTS ── */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2.5rem 0 3rem;
+}
+.toc h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.2rem;
+}
+.toc-list { list-style: none; }
+.toc-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.toc-list li:last-child { border-bottom: none; }
+.toc-list a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: color 0.2s;
+}
+.toc-list a:hover { color: var(--accent); }
+.toc-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-width: 2rem;
+}
+
+/* ── SECTIONS ── */
+.lab-section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 2rem;
+}
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+}
+.lab-section h2 {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.section-intro {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+/* ── CONCEPT BOX ── */
+.concept {
+  background: var(--surface);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 10px 10px 0;
+  padding: 1.5rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.concept h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+.concept p { font-size: 0.95rem; line-height: 1.8; }
+
+/* ── ANALOGY BOX ── */
+.analogy {
+  background: linear-gradient(135deg, #1a1525, #1e1830);
+  border-left: 3px solid var(--purple);
+  border-radius: 0 10px 10px 0;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.analogy-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+/* ── WARNING BOX ── */
+.warning {
+  background: linear-gradient(135deg, #1f1a10, #221e14);
+  border-left: 3px solid var(--warn);
+  border-radius: 0 10px 10px 0;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.warning-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--warn);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+/* ── LAB TASK ── */
+.lab-task {
+  background: var(--lab-bg);
+  border: 1px solid var(--lab-border);
+  border-radius: 12px;
+  padding: 1.75rem;
+  margin: 1.5rem 0;
+  position: relative;
+}
+.lab-task::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--blue));
+  border-radius: 12px 12px 0 0;
+}
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.task-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  letter-spacing: 0.05em;
+}
+.task-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #fff;
+}
+.task-steps { margin-top: 0.75rem; }
+.task-steps ol {
+  padding-left: 1.5rem;
+  counter-reset: step-counter;
+  list-style: none;
+}
+.task-steps ol li {
+  counter-increment: step-counter;
+  position: relative;
+  padding: 0.4rem 0 0.4rem 0.5rem;
+  font-size: 0.95rem;
+}
+.task-steps ol li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: -1.5rem;
+  top: 0.45rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-dim);
+  width: 1.2rem;
+  height: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* ── TERMINAL BLOCK ── */
+.terminal {
+  background: var(--terminal-bg);
+  border: 1px solid #1e2230;
+  border-radius: 10px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+.terminal-bar {
+  background: #161922;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.terminal-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+.terminal-dot.r { background: #f87171; }
+.terminal-dot.y { background: #fbbf24; }
+.terminal-dot.g { background: #4ade80; }
+.terminal-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-left: 0.5rem;
+}
+.terminal-body {
+  padding: 1rem 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.9;
+  overflow-x: auto;
+}
+.terminal-body .prompt { color: var(--terminal-prompt); }
+.terminal-body .cmd { color: #fff; }
+.terminal-body .output { color: var(--text-muted); }
+.terminal-body .comment { color: #555b70; font-style: italic; }
+.terminal-body .highlight { color: var(--warn); }
+.terminal-body .path-hl { color: var(--blue); }
+.terminal-body .file-hl { color: var(--pink); }
+.terminal-body .flag-hl { color: var(--orange); }
+
+/* ── EXPECTED OUTPUT ── */
+.expected {
+  background: #0f1510;
+  border: 1px dashed #2a4a2a;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--terminal-green);
+}
+.expected-label {
+  font-size: 0.7rem;
+  color: #4a7a4a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+/* ── QUESTION BOX ── */
+.question {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.25rem 0;
+}
+.question-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--orange);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.question p {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.answer-toggle {
+  margin-top: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.answer-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.answer-content {
+  display: none;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 0.92rem;
+}
+.answer-content.show { display: block; }
+
+/* ── DIAGRAM ── */
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  text-align: center;
+  overflow-x: auto;
+}
+.diagram svg { max-width: 100%; height: auto; }
+
+/* ── MISC ── */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--surface2);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.88em;
+  color: var(--pink);
+}
+
+.separator {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0;
+}
+
+strong { color: #fff; }
+
+.key-point {
+  display: inline-block;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── CHECKLIST ── */
+.checklist {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.75rem;
+  margin: 1.5rem 0;
+}
+.checklist h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--check);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+.checklist label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: opacity 0.2s;
+}
+.checklist input[type="checkbox"] {
+  appearance: none;
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 3px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+.checklist input[type="checkbox"]:checked {
+  background: var(--check);
+  border-color: var(--check);
+}
+.checklist input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.checklist label:has(input:checked) {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* ── TABLE ── */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.info-table th {
+  background: var(--surface2);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border);
+}
+.info-table td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.info-table tr:last-child td { border-bottom: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 2rem; }
+  .page-wrapper { padding: 1rem; }
+  .lab-task, .concept, .analogy, .warning { padding: 1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<!-- ════════════════ HERO ════════════════ -->
+<div class="hero">
+  <div class="hero-tag">Python Course — Day 0</div>
+  <h1>Before You Write <span>Code</span></h1>
+  <p class="hero-sub">A hands-on lab to understand how your computer actually works — files, memory, the terminal, and paths. No prior knowledge needed. Every concept is learned by doing.</p>
+</div>
+
+<!-- ════════════════ TOC ════════════════ -->
+<div class="toc">
+  <h2>Lab Modules</h2>
+  <ul class="toc-list">
+    <li><a href="#mod1"><span class="toc-num">01</span> What Are Files? Your Computer's Notebook Pages</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Hard Disk vs. RAM — Storage vs. Working Memory</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Executable vs. Non-Executable Files</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> File Extensions — What's After the Dot?</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> The Terminal — That Black Window</a></li>
+    <li><a href="#mod6"><span class="toc-num">06</span> Terminal Commands — Talking to Your Computer</a></li>
+    <li><a href="#mod7"><span class="toc-num">07</span> Paths — Every File Has an Address</a></li>
+    <li><a href="#mod8"><span class="toc-num">08</span> Downloading &amp; Installing Software</a></li>
+    <li><a href="#mod9"><span class="toc-num">09</span> What Happens When You Run a Command?</a></li>
+  </ul>
+</div>
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 1: WHAT ARE FILES                                 ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod1">
+  <div class="section-label">Module 01</div>
+  <h2>What Are Files?</h2>
+  <p class="section-intro">Everything on your computer — every photo, every song, every document — is stored as a <strong>file</strong>. Let's understand what that means.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Think of your computer as a <strong>huge filing cabinet</strong>. Each drawer is a <strong>folder</strong>. Inside each drawer, there are pieces of paper — those are <strong>files</strong>. Some papers have text on them (documents), some have pictures (images), some have music notes (audio files). The paper itself is always the same material — what's written on it is what makes it different.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 What Is a File?</h3>
+    <p>A <strong>file</strong> is a named collection of data stored on your computer. That data could be anything: text you typed, a photo you took, a song you downloaded, or instructions that tell your computer to do something. Every file has two important things: a <strong>name</strong> (so you can find it) and <strong>contents</strong> (the actual data inside).</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 What Is a Folder?</h3>
+    <p>A <strong>folder</strong> (also called a <strong>directory</strong>) is a container that holds files — and even other folders. Folders exist only to keep things organized. Think of a folder on your desk: it doesn't contain information itself, it just groups related papers together. Your computer uses folders the same way: a "Photos" folder holds image files, a "Documents" folder holds text files, and so on.</p>
+  </div>
+
+  <!-- TASK 1.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.1</span>
+      <span class="task-title">See Files on Your Own Computer</span>
+    </div>
+    <p>Let's find and look at actual files on your computer right now.</p>
+    <div class="task-steps">
+      <ol>
+        <li><strong>On Windows:</strong> Double-click the yellow folder icon called "File Explorer" on your taskbar (the bar at the bottom of your screen). <strong>On Mac:</strong> Click the blue-and-white smiley face icon called "Finder" on your dock (the bar at the bottom).</li>
+        <li>You should now see a window showing folders like "Desktop", "Documents", "Downloads", "Pictures", etc. These are folders that came pre-created on your computer.</li>
+        <li>Click on the <strong>"Documents"</strong> folder. Inside, you'll see files (and maybe more folders). Notice that each file has a <strong>name</strong> and a small <strong>icon</strong> that represents what kind of file it is.</li>
+        <li>Now click on the <strong>"Downloads"</strong> folder. Anything you've ever downloaded from the internet lands here.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 1.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.2</span>
+      <span class="task-title">Create Your First File</span>
+    </div>
+    <p>Let's make a brand-new file from scratch.</p>
+    <div class="task-steps">
+      <ol>
+        <li>Open a program called <strong>Notepad</strong> (on Windows: press the Windows key, type "Notepad", click it) or <strong>TextEdit</strong> (on Mac: press Cmd+Space, type "TextEdit", click it).</li>
+        <li>A blank white area will appear. This is where you type. Type this sentence exactly: <code>Hello, I am learning about computers!</code></li>
+        <li>Now <strong>save</strong> this file. Press <strong>Ctrl + S</strong> (on Mac: <strong>Cmd + S</strong>). A "Save" dialog box will appear.</li>
+        <li>In the "File name" field, type: <code>my-first-file.txt</code></li>
+        <li>For the location, choose your <strong>Desktop</strong> (so you can easily see it later). Click "Save".</li>
+        <li>Now minimize or close Notepad. Look at your Desktop. You should see a new file icon called <strong>my-first-file.txt</strong>. You just created a file!</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 1.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.3</span>
+      <span class="task-title">Create Your First Folder and Move a File</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>On your Desktop, <strong>right-click</strong> on an empty area (not on an icon). A menu will appear.</li>
+        <li>Click <strong>"New" → "Folder"</strong> (on Mac: right-click → "New Folder").</li>
+        <li>A new folder will appear. It's asking you to type a name. Type: <code>python-course</code> and press Enter.</li>
+        <li>Now <strong>drag</strong> the file <code>my-first-file.txt</code> from the Desktop into the <code>python-course</code> folder. (Click and hold the file, move your mouse over the folder, and release.)</li>
+        <li>Double-click the <code>python-course</code> folder. You should see <code>my-first-file.txt</code> inside it. You just organized a file into a folder!</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>What's the difference between a file and a folder?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">A <strong>file</strong> holds actual data — text, images, music, code, etc. A <strong>folder</strong> does not hold data itself — it's just a container that organizes files (and other folders). Think of files as the papers and folders as the drawers.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 2: HARD DISK VS RAM                               ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod2">
+  <div class="section-label">Module 02</div>
+  <h2>Hard Disk vs. RAM</h2>
+  <p class="section-intro">Your computer has two different types of memory, and understanding the difference explains a LOT about how computers work.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Imagine you're doing homework.<br><br>
+    Your <strong>bookshelf</strong> is like your <strong>hard disk</strong> — it stores all your books permanently. Even when you leave the room, the books stay there. It holds a lot, but you can't read directly from the shelf — you have to first pull a book out.<br><br>
+    Your <strong>desk</strong> is like your <strong>RAM</strong> — it's the space where you place the books you're currently reading. Your desk is small (you can only fit a few books at a time), but it's fast to grab anything on it. When you leave the room (turn off the computer), everything on the desk gets put away — the desk becomes empty.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Hard Disk (Storage)</h3>
+    <p>The <strong>hard disk</strong> (also called SSD or hard drive) is where your computer stores everything <strong>permanently</strong>. All your files, all your apps, your operating system (Windows or macOS) — everything lives here. Even when you turn off your computer, everything on the hard disk stays safe. Hard disks are large (256 GB to several TB) but relatively slow to read from.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 RAM (Working Memory)</h3>
+    <p><strong>RAM</strong> stands for Random Access Memory. It's your computer's <strong>short-term, fast memory</strong>. When you open a file or a program, your computer copies it from the hard disk into RAM so it can work with it quickly. RAM is small (typically 4–32 GB) but <strong>very fast</strong>. The catch: RAM is <strong>temporary</strong>. When you shut down your computer, everything in RAM disappears.</p>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+      <!-- Hard Disk -->
+      <rect x="30" y="30" width="200" height="160" rx="12" fill="#1a2030" stroke="#2a4a6a" stroke-width="2"/>
+      <text x="130" y="70" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="13" font-weight="600">HARD DISK</text>
+      <text x="130" y="100" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="12">Permanent storage</text>
+      <text x="130" y="122" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="12">256 GB – 2 TB</text>
+      <text x="130" y="144" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="12">Slower</text>
+      <text x="130" y="170" text-anchor="middle" fill="#4a6a8a" font-family="DM Sans" font-size="11">Survives shutdown ✓</text>
+      <!-- Arrow -->
+      <path d="M240 110 L320 110" stroke="#6ee7b7" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+      <path d="M320 110 L240 110" stroke="#6ee7b7" stroke-width="2" fill="none" marker-end="url(#arrow)" transform="translate(0, 15)"/>
+      <text x="280" y="102" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="9">OPEN</text>
+      <text x="280" y="140" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="9">SAVE</text>
+      <defs><marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><polygon points="0 0, 10 3.5, 0 7" fill="#6ee7b7"/></marker></defs>
+      <!-- RAM -->
+      <rect x="330" y="30" width="200" height="160" rx="12" fill="#1a2520" stroke="#2a6a4a" stroke-width="2"/>
+      <text x="430" y="70" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="13" font-weight="600">RAM</text>
+      <text x="430" y="100" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="12">Temporary workspace</text>
+      <text x="430" y="122" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="12">4 GB – 32 GB</text>
+      <text x="430" y="144" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="12">Very fast</text>
+      <text x="430" y="170" text-anchor="middle" fill="#4a8a6a" font-family="DM Sans" font-size="11">Erased on shutdown ✗</text>
+    </svg>
+  </div>
+
+  <!-- TASK 2.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.1</span>
+      <span class="task-title">See How Much Hard Disk Space You Have</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li><strong>On Windows:</strong> Open File Explorer (yellow folder icon). In the left panel, click "This PC". You'll see your drives (usually "C:") with a bar showing how much space is used and how much is free. <strong>On Mac:</strong> Click the Apple logo (top-left corner) → "About This Mac" → "More Info" → "Storage".</li>
+        <li>Write down: How much total space does your hard disk have? How much is used? How much is free?</li>
+        <li>This is where <strong>every single file</strong> on your computer lives — all your photos, apps, videos, everything.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 2.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.2</span>
+      <span class="task-title">See How Much RAM You Have</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li><strong>On Windows:</strong> Right-click the Start button → click "System". Look for "Installed RAM". <strong>On Mac:</strong> Click the Apple logo → "About This Mac". Look for "Memory".</li>
+        <li>Write down: How much RAM does your computer have?</li>
+        <li>Notice the difference: your hard disk probably has <strong>hundreds</strong> of GB. Your RAM probably has <strong>8 or 16</strong> GB. RAM is much smaller — it's only for things you're working on <em>right now</em>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 2.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.3</span>
+      <span class="task-title">Watch RAM in Action</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li><strong>On Windows:</strong> Press <strong>Ctrl + Shift + Esc</strong> to open Task Manager. Click the "Performance" tab, then click "Memory". <strong>On Mac:</strong> Open "Activity Monitor" (press Cmd+Space, type "Activity Monitor", press Enter). Click the "Memory" tab.</li>
+        <li>Look at the graph. This shows how much RAM is currently being used. It might say something like "5.2 GB / 16 GB".</li>
+        <li>Now, <strong>open a web browser</strong> (like Chrome or Edge). Open 5 new tabs and load a different website in each one. Watch the RAM usage go <strong>up</strong>.</li>
+        <li>Close all those tabs. Watch the RAM usage go <strong>down</strong>.</li>
+        <li>This is the key insight: RAM is used by programs <strong>while they're running</strong>. Close a program, and it frees up RAM.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>You're writing a document in Notepad and haven't pressed "Save" yet. Then the power goes out. Is your work lost? Why?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Yes, your work is lost.</strong> Before you press Save, your work only exists in RAM (the fast temporary memory). RAM needs electricity to keep its data. When the power goes out, RAM is erased. Pressing "Save" copies the data from RAM to the hard disk, where it survives power loss.</div>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>Your computer has 500 GB of files but only 8 GB of RAM. How does it manage?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">It doesn't need to load all 500 GB at once! The computer only loads the files and programs <strong>you're currently using</strong> into RAM. If you're running a browser and Notepad, maybe only 3 GB of your 500 GB is in RAM right now. The rest stays on the hard disk, waiting until you need it.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 3: EXECUTABLE VS NON-EXECUTABLE                   ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod3">
+  <div class="section-label">Module 03</div>
+  <h2>Executable vs. Non-Executable Files</h2>
+  <p class="section-intro">Not all files are created equal. Some files are data you look at. Others are <strong>instructions</strong> your computer can actually run.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Think of a <strong>recipe card</strong> vs. a <strong>photograph of food</strong>.<br><br>
+    The photograph is just something you look at — it doesn't <em>do</em> anything. That's a <strong>non-executable file</strong> (like a .txt, .jpg, or .pdf). It's just data.<br><br>
+    The recipe card has <strong>instructions</strong> that someone can follow to cook a meal. That's an <strong>executable file</strong> — it tells your computer to <em>do something</em>. When you double-click Chrome or Notepad, you're running an executable file.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Non-Executable Files (Data)</h3>
+    <p>These files just <strong>contain data</strong>. They need another program to open and display them. A <code>.txt</code> file needs Notepad to open it. A <code>.jpg</code> image needs a photo viewer. A <code>.mp3</code> song needs a music player. By themselves, these files don't <em>do</em> anything — they just sit there holding information.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Executable Files (Programs)</h3>
+    <p>These files contain <strong>instructions</strong> that your computer's processor can follow. When you "run" them, your computer reads the instructions and performs actions — opens a window, plays a sound, connects to the internet, etc. On Windows, these typically end in <code>.exe</code>. On Mac, they're usually inside <code>.app</code> bundles. Every app on your computer — Chrome, Spotify, Notepad — is an executable file.</p>
+  </div>
+
+  <!-- TASK 3.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.1</span>
+      <span class="task-title">Find an Executable File</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li><strong>On Windows:</strong> Open File Explorer. Navigate to <code>C:\Windows</code>. Scroll down and find a file called <code>notepad.exe</code>. See the <code>.exe</code> at the end? That means it's an executable — a program your computer can run.</li>
+        <li><strong>On Mac:</strong> Open Finder. Click "Applications" in the sidebar. Every item here (like "Safari.app", "Calculator.app") is an executable application.</li>
+        <li>Now go to your Documents or Downloads folder. Look at the files there. You'll see <code>.pdf</code>, <code>.docx</code>, <code>.jpg</code> files — these are NOT executables. They're data files.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 3.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.2</span>
+      <span class="task-title">Observe the Difference in Behavior</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Go to your Desktop and double-click the <code>python-course</code> folder, then double-click <code>my-first-file.txt</code> (from Module 1). Notice: the file didn't <em>do</em> anything on its own — Notepad (an executable) had to open and display it.</li>
+        <li>Now let's see what happens when you run an executable. Press the Windows key (or Cmd+Space on Mac) and type <code>Calculator</code>. Click it. A calculator appears! That calculator is an executable — it contains instructions that tell your computer to draw buttons, do math, etc.</li>
+        <li><strong>Key insight:</strong> The <code>.txt</code> file needed a program to open it. The Calculator <em>is</em> a program — it runs on its own.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="warning">
+    <div class="warning-label">⚠️ Safety Note</div>
+    <p>Because executable files can tell your computer to do <em>anything</em>, they can be dangerous if they come from unknown sources. A <code>.txt</code> file can't harm your computer — it's just text. But a mysterious <code>.exe</code> file from an unknown email? That could be a virus. <strong>Rule of thumb:</strong> Never run executable files from sources you don't trust.</p>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>Someone sends you a file called <code>vacation-photo.jpg.exe</code>. Should you open it?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>No!</strong> This file ends in <code>.exe</code>, which means it's an executable program, NOT a photo. The ".jpg" in the middle is just part of the name to trick you into thinking it's an image. This is a common trick used by malware. The file extension that matters is always the <strong>last</strong> one.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 4: FILE EXTENSIONS                                ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod4">
+  <div class="section-label">Module 04</div>
+  <h2>File Extensions — What's After the Dot?</h2>
+  <p class="section-intro">Every file name has two parts: the name and the <strong>extension</strong>. The extension tells your computer (and you) what kind of file it is.</p>
+
+  <div class="concept">
+    <h3>💡 What Is a File Extension?</h3>
+    <p>A file extension is the part after the <strong>last dot</strong> in a file name. In <code>report.pdf</code>, the extension is <code>.pdf</code>. In <code>photo.jpg</code>, the extension is <code>.jpg</code>. The extension is like a label on a food container — it tells you what's inside. It also tells your computer which program should open the file.</p>
+  </div>
+
+  <table class="info-table">
+    <thead>
+      <tr>
+        <th>Extension</th>
+        <th>What It Is</th>
+        <th>Opened By</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>.txt</code></td><td>Plain text (no formatting)</td><td>Notepad, TextEdit</td></tr>
+      <tr><td><code>.pdf</code></td><td>Formatted document (read-only look)</td><td>Adobe Reader, browser</td></tr>
+      <tr><td><code>.docx</code></td><td>Microsoft Word document</td><td>Microsoft Word, Google Docs</td></tr>
+      <tr><td><code>.jpg / .png</code></td><td>Image / photo</td><td>Photo viewer, browser</td></tr>
+      <tr><td><code>.mp3</code></td><td>Audio / music</td><td>Music player, browser</td></tr>
+      <tr><td><code>.mp4</code></td><td>Video</td><td>Video player, browser</td></tr>
+      <tr><td><code>.html</code></td><td>Web page</td><td>Web browser</td></tr>
+      <tr><td><code>.py</code></td><td>Python code</td><td>Python interpreter</td></tr>
+      <tr><td><code>.exe</code></td><td>Windows program (executable)</td><td>Windows itself</td></tr>
+      <tr><td><code>.zip</code></td><td>Compressed archive (multiple files packed into one)</td><td>File Explorer, WinZip</td></tr>
+      <tr><td><code>.csv</code></td><td>Data in rows and columns (comma-separated)</td><td>Excel, Notepad</td></tr>
+    </tbody>
+  </table>
+
+  <!-- TASK 4.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.1</span>
+      <span class="task-title">Make File Extensions Visible</span>
+    </div>
+    <p>By default, your computer might be <strong>hiding</strong> file extensions from you. Let's fix that — you always want to see them.</p>
+    <div class="task-steps">
+      <ol>
+        <li><strong>On Windows 11:</strong> Open File Explorer → Click "View" in the top menu → Click "Show" → Check "File name extensions". <strong>On Windows 10:</strong> Open File Explorer → Click "View" tab → Check "File name extensions".</li>
+        <li><strong>On Mac:</strong> Open Finder → Click "Finder" in the top menu bar → "Settings" (or "Preferences") → "Advanced" tab → Check "Show all filename extensions".</li>
+        <li>Now browse your Downloads folder. You should see the full names like <code>document.pdf</code> or <code>image.png</code> instead of just "document" or "image".</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 4.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.2</span>
+      <span class="task-title">See What Happens When You Change an Extension</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Go to your Desktop. Right-click your <code>python-course</code> folder and open it.</li>
+        <li>Make a <strong>copy</strong> of <code>my-first-file.txt</code>: right-click it → Copy → right-click in empty space → Paste. You'll get a file called something like <code>my-first-file - Copy.txt</code>.</li>
+        <li>Right-click the copy → click "Rename". Change its name to <code>my-first-file-copy.jpg</code> (change .txt to .jpg). If asked "are you sure?", click Yes.</li>
+        <li>Now try to double-click <code>my-first-file-copy.jpg</code>. Your computer will try to open it as an image — but it will <strong>fail</strong> or show garbled nonsense. Why? Because the file's <em>actual content</em> is still plain text, not image data. Changing the extension doesn't change the content.</li>
+        <li><strong>Rename it back</strong> to <code>.txt</code> to fix it.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Do Extensions Really Matter?</h3>
+    <p>Extensions matter for <strong>two reasons</strong>: they tell your computer which program to use when you double-click a file, and they help <strong>you</strong> quickly understand what a file contains. But they don't change the actual data inside. Renaming <code>photo.jpg</code> to <code>photo.txt</code> doesn't turn the image into text — it just confuses your computer about how to open it. The extension is a label, not a converter.</p>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>You download a file called <code>notes</code> with no extension. Can you still open it?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Yes, but it's harder.</strong> Your computer won't know which program to use automatically. You'd have to right-click → "Open with" and choose a program yourself (try Notepad first). If it shows readable text, it was probably a text file. If it shows gibberish, try other programs. The data is still in the file — the extension is just a hint for your computer.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 5: THE TERMINAL                                   ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod5">
+  <div class="section-label">Module 05</div>
+  <h2>The Terminal — That Black Window</h2>
+  <p class="section-intro">You've been using your computer by clicking icons and buttons. That's called a <strong>graphical interface</strong>. But there's another way to talk to your computer: by <strong>typing text commands</strong>.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Imagine you're at a restaurant. You can either:<br><br>
+    <strong>A)</strong> Point at pictures on the menu (that's like using the graphical interface — clicking icons), or<br>
+    <strong>B)</strong> Tell the waiter exactly what you want by speaking (that's like using the terminal — typing commands).<br><br>
+    Both get you food. But <em>speaking</em> lets you be much more specific: "I want the pasta, but with half the garlic, extra cheese, and gluten-free noodles." The terminal gives you that kind of precise control over your computer.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 What Is the Terminal?</h3>
+    <p>The <strong>terminal</strong> (also called <strong>command line</strong>, <strong>command prompt</strong>, or <strong>shell</strong>) is a text-based way to control your computer. Instead of clicking buttons, you type commands and press Enter. The computer reads your command, does what you asked, and prints the result as text. It looks like a black (or dark) window with text — that's it. No icons, no buttons. Just you and the computer, communicating through text.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Why Do Programmers Use It?</h3>
+    <p>As a programmer, you'll use the terminal <strong>every day</strong>. Here's why: it's faster for many tasks (no need to navigate through 5 menus), it's more powerful (you can do things that aren't available through clicking), and most programming tools are designed to be used from the terminal. Python itself is run from the terminal.</p>
+  </div>
+
+  <!-- TASK 5.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.1</span>
+      <span class="task-title">Open the Terminal for the First Time</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>
+          <strong>On Windows:</strong> Press the <strong>Windows key</strong>, type <code>cmd</code>, and click "Command Prompt". A black window with white text will appear.<br>
+          <em>(Alternative: type <code>powershell</code> instead — it does the same thing but with more features. For now, either works.)</em>
+        </li>
+        <li><strong>On Mac:</strong> Press <strong>Cmd + Space</strong>, type <code>Terminal</code>, press Enter. A window will appear with a text prompt.</li>
+        <li>You should see something like this:</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Terminal / Command Prompt</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># On Windows you'll see something like:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">_</span><br><br>
+        <span class="comment"># On Mac you'll see something like:</span><br>
+        <span class="prompt">yourname@MacBook ~ %</span> <span class="cmd">_</span>
+      </div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">That blinking cursor is the terminal waiting for you to type a command. The text before the cursor is called the <strong>prompt</strong> — it tells you where you are on your computer (more on that in Module 7).</p>
+  </div>
+
+  <!-- TASK 5.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.2</span>
+      <span class="task-title">Type Your First Command</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>In the terminal, type the following and press <strong>Enter</strong>:</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Your first command</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">echo Hello World</span><br>
+        <span class="output">Hello World</span><br><br>
+        <span class="comment"># Mac:</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">echo Hello World</span><br>
+        <span class="output">Hello World</span>
+      </div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">The command <code>echo</code> simply tells the computer: "repeat back what I typed." It's the simplest command there is. You just gave your computer an instruction, and it followed it!</p>
+  </div>
+
+  <!-- TASK 5.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.3</span>
+      <span class="task-title">Try a Command That Fails</span>
+    </div>
+    <p>Let's see what happens when you type something the computer doesn't understand.</p>
+    <div class="task-steps">
+      <ol>
+        <li>Type <code>blahblah</code> and press Enter.</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">An error</span>
+      </div>
+      <div class="terminal-body">
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">blahblah</span><br>
+        <span class="output" style="color: var(--red);">'blahblah' is not recognized as an internal or external command,<br>operable program or batch file.</span>
+      </div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);"><strong>This is important:</strong> The terminal doesn't crash. It just tells you it didn't understand. Error messages are your friend — they tell you what went wrong. You'll see many of these as a programmer, and that's completely normal.</p>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>What are two different names for "the terminal"?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">It's also called the <strong>command line</strong>, <strong>command prompt</strong> (Windows), <strong>shell</strong>, or <strong>console</strong>. They all refer to the same idea: a text-based way to give instructions to your computer.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 6: TERMINAL COMMANDS                              ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod6">
+  <div class="section-label">Module 06</div>
+  <h2>Terminal Commands — Talking to Your Computer</h2>
+  <p class="section-intro">Now that the terminal is open, let's learn some actual commands. We'll start with commands that <strong>show you information</strong> — they don't change anything, they just let you look around.</p>
+
+  <div class="concept">
+    <h3>💡 Anatomy of a Command</h3>
+    <p>Most commands look like this: <code>command-name options target</code>. For example: <code>dir /w C:\Users</code>. Here, <code>dir</code> is the command (list directory contents), <code>/w</code> is an option (show in wide format), and <code>C:\Users</code> is the target (which folder to list). Not every command needs options or a target — some work by themselves.</p>
+  </div>
+
+  <!-- TASK 6.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.1</span>
+      <span class="task-title">Find Out Where You Are</span>
+    </div>
+    <p>When you open the terminal, you're always "standing inside" a specific folder. Let's find out which one.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Print current location</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows: "cd" by itself shows current directory</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">cd</span><br>
+        <span class="output">C:\Users\YourName</span><br><br>
+        <span class="comment"># Mac: "pwd" means "Print Working Directory"</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">pwd</span><br>
+        <span class="output">/Users/YourName</span>
+      </div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">This tells you your <strong>current directory</strong> — the folder the terminal is currently "inside." Every command you run will happen in the context of this folder.</p>
+  </div>
+
+  <!-- TASK 6.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.2</span>
+      <span class="task-title">List the Files in the Current Folder</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Listing files</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">dir</span><br>
+        <span class="output"> Volume in drive C is Windows</span><br>
+        <span class="output"> Directory of C:\Users\YourName</span><br><br>
+        <span class="output">03/30/2026  09:15 AM    &lt;DIR&gt;          Desktop</span><br>
+        <span class="output">03/30/2026  09:15 AM    &lt;DIR&gt;          Documents</span><br>
+        <span class="output">03/28/2026  02:30 PM    &lt;DIR&gt;          Downloads</span><br>
+        <span class="output">03/25/2026  10:00 AM             1,024 notes.txt</span><br><br>
+        <span class="comment"># Mac:</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">ls</span><br>
+        <span class="output">Desktop    Documents    Downloads    notes.txt</span>
+      </div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type <code>dir</code> (Windows) or <code>ls</code> (Mac) and press Enter.</li>
+        <li>You'll see a list of files and folders. Items marked with <code>&lt;DIR&gt;</code> (Windows) are folders. Everything else is a file.</li>
+        <li>Compare this to what you see when you open the same folder in File Explorer / Finder. It's the same content — just shown as text instead of icons.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 6.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.3</span>
+      <span class="task-title">Check Today's Date and Time</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Date and time commands</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">date /t</span><br>
+        <span class="output">Mon 03/30/2026</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">time /t</span><br>
+        <span class="output">10:45 AM</span><br><br>
+        <span class="comment"># Mac:</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">date</span><br>
+        <span class="output">Mon Mar 30 10:45:00 CDT 2026</span>
+      </div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">These commands ask your computer for information. They don't change anything — they're read-only.</p>
+  </div>
+
+  <!-- TASK 6.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.4</span>
+      <span class="task-title">See Your Computer's Name and User</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">System info commands</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows — your username:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">whoami</span><br>
+        <span class="output">desktop-abc123\yourname</span><br><br>
+        <span class="comment"># Windows — your computer's name:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">hostname</span><br>
+        <span class="output">DESKTOP-ABC123</span><br><br>
+        <span class="comment"># Mac — same commands work:</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">whoami</span><br>
+        <span class="output">yourname</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">hostname</span><br>
+        <span class="output">YourNames-MacBook.local</span>
+      </div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Try both <code>whoami</code> and <code>hostname</code>. Write down what they output for you.</li>
+        <li><code>whoami</code> tells you which user account is logged in. <code>hostname</code> tells you the name of your physical computer.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 6.5 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.5</span>
+      <span class="task-title">Clear the Screen</span>
+    </div>
+    <p>Your terminal is getting cluttered with all the commands you've typed. Let's clean it up.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Clean slate</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">cls</span><br><br>
+        <span class="comment"># Mac:</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">clear</span>
+      </div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">The screen is now blank again. Don't worry — nothing was deleted. The previous commands still happened, you just cleared the display. Think of it like erasing a whiteboard — the lessons still happened.</p>
+  </div>
+
+  <div class="checklist">
+    <h3>✅ Commands Learned So Far</h3>
+    <label><input type="checkbox"> <code>echo</code> — repeat text back</label>
+    <label><input type="checkbox"> <code>cd</code> / <code>pwd</code> — show current folder</label>
+    <label><input type="checkbox"> <code>dir</code> / <code>ls</code> — list files and folders</label>
+    <label><input type="checkbox"> <code>date</code> / <code>time</code> — show date and time</label>
+    <label><input type="checkbox"> <code>whoami</code> — show current user</label>
+    <label><input type="checkbox"> <code>hostname</code> — show computer name</label>
+    <label><input type="checkbox"> <code>cls</code> / <code>clear</code> — clear the screen</label>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 7: PATHS                                          ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod7">
+  <div class="section-label">Module 07</div>
+  <h2>Paths — Every File Has an Address</h2>
+  <p class="section-intro">Just like every house has a street address, every file and folder on your computer has an address called a <strong>path</strong>. This is one of the most important concepts in programming.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Think of a mailing address: <strong>123 Oak Street, Apartment 4B, Springfield</strong>.<br><br>
+    On a computer, a path works the same way: <code>C:\Users\Sarah\Documents\homework.txt</code> means: "On drive C, go into the Users folder, then into Sarah's folder, then into Documents, and there you'll find homework.txt."<br><br>
+    Each <code>\</code> (Windows) or <code>/</code> (Mac) is like saying "go inside the next folder."</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Folder Path vs. File Path</h3>
+    <p>A <strong>folder path</strong> points to a folder (a container): <code>C:\Users\Sarah\Documents</code>. A <strong>file path</strong> points to a specific file inside a folder: <code>C:\Users\Sarah\Documents\homework.txt</code>. The difference? A file path ends with a file name (which has an extension like <code>.txt</code>). A folder path doesn't.</p>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg">
+      <!-- Tree structure -->
+      <text x="340" y="30" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="13" font-weight="600">C:\ (root)</text>
+      <line x1="340" y1="38" x2="200" y2="75" stroke="#2a4a6a" stroke-width="1.5"/>
+      <line x1="340" y1="38" x2="480" y2="75" stroke="#2a4a6a" stroke-width="1.5"/>
+
+      <rect x="130" y="75" width="140" height="30" rx="6" fill="#1a2030" stroke="#2a4a6a" stroke-width="1.5"/>
+      <text x="200" y="95" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="11">Users</text>
+
+      <rect x="410" y="75" width="140" height="30" rx="6" fill="#1a2030" stroke="#2a4a6a" stroke-width="1.5"/>
+      <text x="480" y="95" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="11">Windows</text>
+
+      <line x1="200" y1="105" x2="120" y2="142" stroke="#2a4a6a" stroke-width="1.5"/>
+      <line x1="200" y1="105" x2="280" y2="142" stroke="#2a4a6a" stroke-width="1.5"/>
+
+      <rect x="50" y="142" width="140" height="30" rx="6" fill="#1a2030" stroke="#2a6a4a" stroke-width="1.5"/>
+      <text x="120" y="162" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="11">Sarah</text>
+
+      <rect x="210" y="142" width="140" height="30" rx="6" fill="#1a2030" stroke="#2a4a6a" stroke-width="1.5"/>
+      <text x="280" y="162" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="11">Alex</text>
+
+      <line x1="120" y1="172" x2="60" y2="210" stroke="#2a6a4a" stroke-width="1.5"/>
+      <line x1="120" y1="172" x2="180" y2="210" stroke="#2a6a4a" stroke-width="1.5"/>
+
+      <rect x="0" y="210" width="120" height="28" rx="6" fill="#1a2520" stroke="#2a6a4a" stroke-width="1.5"/>
+      <text x="60" y="228" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="10">Desktop</text>
+
+      <rect x="130" y="210" width="120" height="28" rx="6" fill="#1a2520" stroke="#2a6a4a" stroke-width="1.5"/>
+      <text x="190" y="228" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="10">Documents</text>
+
+      <line x1="190" y1="238" x2="150" y2="272" stroke="#2a6a4a" stroke-width="1.5"/>
+      <line x1="190" y1="238" x2="250" y2="272" stroke="#2a6a4a" stroke-width="1.5"/>
+
+      <rect x="95" y="272" width="120" height="26" rx="6" fill="#2a1520" stroke="#6a2a4a" stroke-width="1.5"/>
+      <text x="155" y="290" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="10">homework.txt</text>
+
+      <rect x="225" y="272" width="120" height="26" rx="6" fill="#2a1520" stroke="#6a2a4a" stroke-width="1.5"/>
+      <text x="285" y="290" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="10">notes.pdf</text>
+
+      <!-- Path callout -->
+      <rect x="370" y="250" width="300" height="50" rx="8" fill="#141820" stroke="#6ee7b7" stroke-width="1" stroke-dasharray="4"/>
+      <text x="520" y="270" text-anchor="middle" fill="#8891a8" font-family="JetBrains Mono" font-size="9">PATH TO homework.txt:</text>
+      <text x="520" y="288" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="10">C:\Users\Sarah\Documents\homework.txt</text>
+    </svg>
+  </div>
+
+  <!-- TASK 7.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 7.1</span>
+      <span class="task-title">Find the Path of Your File</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Open File Explorer (Windows) or Finder (Mac).</li>
+        <li>Navigate to your Desktop, then open the <code>python-course</code> folder you created earlier.</li>
+        <li><strong>On Windows:</strong> Click the address bar at the top of the File Explorer window. It will change from showing breadcrumbs to showing the full path, like <code>C:\Users\YourName\Desktop\python-course</code>.</li>
+        <li><strong>On Mac:</strong> Right-click the folder name at the top of the Finder window, or press Cmd+Option+P to show the full path bar at the bottom.</li>
+        <li>Write down the full path. This is the <strong>address</strong> of your python-course folder.</li>
+        <li>Now think about the file inside it. The path to your file would be that folder path plus the file name: <code>C:\Users\YourName\Desktop\python-course\my-first-file.txt</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 7.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 7.2</span>
+      <span class="task-title">Navigate Folders in the Terminal</span>
+    </div>
+    <p>The command <code>cd</code> (which stands for "change directory") lets you move into a different folder in the terminal.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Navigating with cd</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Step 1: Check where you are right now</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">cd</span><br>
+        <span class="output">C:\Users\YourName</span><br><br>
+
+        <span class="comment"># Step 2: Move into the Desktop folder</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">cd Desktop</span><br>
+        <span class="prompt">C:\Users\YourName\<span class="path-hl">Desktop</span>&gt;</span><br><br>
+
+        <span class="comment"># Step 3: Move into python-course folder</span><br>
+        <span class="prompt">C:\Users\YourName\Desktop&gt;</span> <span class="cmd">cd python-course</span><br>
+        <span class="prompt">C:\Users\YourName\Desktop\<span class="path-hl">python-course</span>&gt;</span><br><br>
+
+        <span class="comment"># Step 4: List what's inside</span><br>
+        <span class="prompt">C:\Users\YourName\Desktop\python-course&gt;</span> <span class="cmd">dir</span><br>
+        <span class="output">03/30/2026  09:00 AM                35 my-first-file.txt</span><br><br>
+
+        <span class="comment"># Step 5: Go back UP one folder</span><br>
+        <span class="prompt">C:\Users\YourName\Desktop\python-course&gt;</span> <span class="cmd">cd ..</span><br>
+        <span class="prompt">C:\Users\YourName\<span class="path-hl">Desktop</span>&gt;</span><br><br>
+
+        <span class="comment"># "cd .." means "go to the parent folder" — one level up</span>
+      </div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Follow the steps above in your terminal. Make sure to observe how the <strong>prompt changes</strong> as you move into different folders — it always shows your current location.</li>
+        <li>Try <code>cd ..</code> a few more times to go up further. You can go all the way up to <code>C:\</code> (Windows) or <code>/</code> (Mac) — that's the very top, called the <strong>root</strong>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 7.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 7.3</span>
+      <span class="task-title">Read a File from the Terminal</span>
+    </div>
+    <p>Let's read the contents of <code>my-first-file.txt</code> without opening Notepad — using just the terminal.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Reading a file</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># First, navigate to the folder</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">cd Desktop\python-course</span><br><br>
+        <span class="comment"># Windows — display file contents:</span><br>
+        <span class="prompt">...\python-course&gt;</span> <span class="cmd">type my-first-file.txt</span><br>
+        <span class="output">Hello, I am learning about computers!</span><br><br>
+        <span class="comment"># Mac — display file contents:</span><br>
+        <span class="prompt">python-course %</span> <span class="cmd">cat my-first-file.txt</span><br>
+        <span class="output">Hello, I am learning about computers!</span>
+      </div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">You just read a file <strong>entirely from the terminal</strong> — no Notepad, no clicking. The command <code>type</code> (Windows) or <code>cat</code> (Mac) prints a file's contents right into the terminal.</p>
+  </div>
+
+  <!-- TASK 7.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 7.4</span>
+      <span class="task-title">Use a Full Path Instead of Navigating</span>
+    </div>
+    <p>You don't always have to <code>cd</code> into a folder first. You can give the <strong>full path</strong> directly.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Using full paths</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows — read file using its full path (from anywhere):</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">type C:\Users\YourName\Desktop\python-course\my-first-file.txt</span><br>
+        <span class="output">Hello, I am learning about computers!</span><br><br>
+        <span class="comment"># Mac — same idea:</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">cat /Users/YourName/Desktop/python-course/my-first-file.txt</span><br>
+        <span class="output">Hello, I am learning about computers!</span>
+      </div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">This is an <strong>absolute path</strong> — the complete address starting from the root. It works no matter where you currently are in the terminal.</p>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>What does <code>cd ..</code> do?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>cd ..</code> moves you <strong>one folder up</strong> (to the parent directory). The <code>..</code> is a special shortcut that always means "the folder above me." If you're in <code>C:\Users\Sarah\Desktop</code>, running <code>cd ..</code> takes you to <code>C:\Users\Sarah</code>.</div>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>What's the difference between <code>C:\Users\Sarah\Documents</code> and <code>C:\Users\Sarah\Documents\report.pdf</code>?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">The first is a <strong>folder path</strong> — it points to the Documents folder itself. The second is a <strong>file path</strong> — it points to a specific file (<code>report.pdf</code>) that lives inside that folder. A file path always ends with a file name (including its extension).</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 8: DOWNLOADING & INSTALLING                       ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod8">
+  <div class="section-label">Module 08</div>
+  <h2>Downloading &amp; Installing Software</h2>
+  <p class="section-intro">You'll need to install Python (and other tools) to start programming. But what does "downloading" and "installing" actually mean?</p>
+
+  <div class="concept">
+    <h3>💡 Downloading = Copying a File from the Internet to Your Hard Disk</h3>
+    <p>When you "download" something, your computer connects to another computer somewhere on the internet and copies a file from that computer to your hard disk (usually into the <code>Downloads</code> folder). That's it. The file now exists on your computer, but it's not set up to use yet — it's just sitting in your Downloads folder.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Installing = Setting Up the Software So Your Computer Can Use It</h3>
+    <p><strong>Installing</strong> means running the downloaded file (which is usually an installer/setup program) to put the software in the right place and configure it. Installation typically does several things: copies program files to a proper location (like <code>C:\Program Files</code>), creates shortcuts (Start menu, Desktop), and registers the program with your system so the terminal and other programs can find it. Think of it like this: downloading is buying furniture online, installing is assembling it and putting it in the right room.</p>
+  </div>
+
+  <!-- TASK 8.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 8.1</span>
+      <span class="task-title">Examine Your Downloads Folder</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Open File Explorer / Finder and go to your <strong>Downloads</strong> folder.</li>
+        <li>Look at the files there. You'll probably see a mix of things: <code>.pdf</code> files, <code>.jpg</code> images, maybe <code>.exe</code> or <code>.dmg</code> files.</li>
+        <li>The <code>.exe</code> (Windows) or <code>.dmg</code> (Mac) files are <strong>installers</strong> — programs that were downloaded but maybe not yet installed (or already installed and the installer is leftover).</li>
+        <li>Notice: just because a file is in your Downloads folder doesn't mean the software is installed. The file is just sitting there on your hard disk.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 8.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 8.2</span>
+      <span class="task-title">See What's Installed on Your Computer</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li><strong>On Windows:</strong> Press Windows key → type "Add or remove programs" → click it. You'll see a list of every program that has been properly installed on your computer.</li>
+        <li><strong>On Mac:</strong> Open Finder → click "Applications" in the sidebar. This shows all installed applications.</li>
+        <li>Scroll through the list. Every item here was once downloaded as a file, then <em>installed</em> through a setup process. Each one now lives in a specific folder on your hard disk and is registered with your operating system.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 8.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 8.3</span>
+      <span class="task-title">Find Where a Program Is Actually Installed</span>
+    </div>
+    <p>Let's find the actual location on your hard disk where a program lives after installation.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Finding installed programs</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows — find where a program is:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">where notepad</span><br>
+        <span class="output">C:\Windows\System32\notepad.exe</span><br><br>
+        <span class="comment"># Mac — find where a program is:</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">which open</span><br>
+        <span class="output">/usr/bin/open</span>
+      </div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Open your terminal and type <code>where notepad</code> (Windows) or <code>which python3</code> (Mac) and press Enter.</li>
+        <li>The result is the <strong>full path</strong> to where that program's executable file lives on your hard disk. This is where it was placed during installation.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 What Is PATH? (The System PATH Variable)</h3>
+    <p>When you install a program and the installer asks "Add to PATH?", it means: <strong>register this program's location so the terminal can find it by name</strong>. Without being on the PATH, you'd have to type the full location every time (like <code>C:\Python312\python.exe</code>). With it on the PATH, you can just type <code>python</code>. When we install Python later, we'll make sure to check "Add to PATH" — this is critical.</p>
+  </div>
+
+  <div class="warning">
+    <div class="warning-label">⚠️ Important for Python Installation Later</div>
+    <p>When you install Python in a future class, the installer will show a checkbox that says <strong>"Add Python to PATH"</strong> (or similar). <strong>Always check this box.</strong> If you don't, typing <code>python</code> in the terminal won't work — the terminal won't know where to find it.</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 9: WHAT HAPPENS WHEN YOU RUN A COMMAND            ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod9">
+  <div class="section-label">Module 09</div>
+  <h2>What Happens When You Run a Command?</h2>
+  <p class="section-intro">You've been typing commands and seeing results. But what's actually happening inside your computer between pressing Enter and seeing the output?</p>
+
+  <div class="concept">
+    <h3>💡 The Step-by-Step Process</h3>
+    <p>When you type a command (like <code>echo Hello</code>) and press Enter, here's exactly what happens:</p>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg">
+      <!-- Step 1 -->
+      <rect x="30" y="20" width="640" height="55" rx="10" fill="#1a2030" stroke="#60a5fa" stroke-width="1.5"/>
+      <text x="55" y="42" fill="#60a5fa" font-family="JetBrains Mono" font-size="11" font-weight="600">STEP 1</text>
+      <text x="130" y="42" fill="#e0e4ef" font-family="DM Sans" font-size="12">You type the command and press Enter.</text>
+      <text x="130" y="62" fill="#8891a8" font-family="DM Sans" font-size="11">The terminal reads the text you typed and sends it to the shell (the program reading your commands).</text>
+      <!-- Arrow -->
+      <path d="M350 75 L350 95" stroke="#3a4a5a" stroke-width="1.5" fill="none" marker-end="url(#arrow2)"/>
+
+      <!-- Step 2 -->
+      <rect x="30" y="100" width="640" height="55" rx="10" fill="#1a2030" stroke="#6ee7b7" stroke-width="1.5"/>
+      <text x="55" y="122" fill="#6ee7b7" font-family="JetBrains Mono" font-size="11" font-weight="600">STEP 2</text>
+      <text x="130" y="122" fill="#e0e4ef" font-family="DM Sans" font-size="12">The shell breaks your command into parts.</text>
+      <text x="130" y="142" fill="#8891a8" font-family="DM Sans" font-size="11">"echo Hello" → command name: "echo", argument: "Hello"</text>
+      <path d="M350 155 L350 175" stroke="#3a4a5a" stroke-width="1.5" fill="none" marker-end="url(#arrow2)"/>
+
+      <!-- Step 3 -->
+      <rect x="30" y="180" width="640" height="55" rx="10" fill="#1a2030" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="55" y="202" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" font-weight="600">STEP 3</text>
+      <text x="130" y="202" fill="#e0e4ef" font-family="DM Sans" font-size="12">The shell searches for the program on disk.</text>
+      <text x="130" y="222" fill="#8891a8" font-family="DM Sans" font-size="11">It checks the PATH locations until it finds an executable called "echo". If not found → error.</text>
+      <path d="M350 235 L350 255" stroke="#3a4a5a" stroke-width="1.5" fill="none" marker-end="url(#arrow2)"/>
+
+      <!-- Step 4 -->
+      <rect x="30" y="260" width="640" height="55" rx="10" fill="#1a2030" stroke="#f472b6" stroke-width="1.5"/>
+      <text x="55" y="282" fill="#f472b6" font-family="JetBrains Mono" font-size="11" font-weight="600">STEP 4</text>
+      <text x="130" y="282" fill="#e0e4ef" font-family="DM Sans" font-size="12">The program is loaded from hard disk into RAM.</text>
+      <text x="130" y="302" fill="#8891a8" font-family="DM Sans" font-size="11">The executable file's instructions are copied into RAM so the CPU can run them quickly.</text>
+      <path d="M350 315 L350 335" stroke="#3a4a5a" stroke-width="1.5" fill="none" marker-end="url(#arrow2)"/>
+
+      <!-- Step 5 -->
+      <rect x="30" y="340" width="640" height="55" rx="10" fill="#1a2030" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="55" y="362" fill="#a78bfa" font-family="JetBrains Mono" font-size="11" font-weight="600">STEP 5</text>
+      <text x="130" y="362" fill="#e0e4ef" font-family="DM Sans" font-size="12">The CPU executes the instructions, output is printed.</text>
+      <text x="130" y="382" fill="#8891a8" font-family="DM Sans" font-size="11">The echo program runs, prints "Hello" to the terminal. Program exits. Prompt returns.</text>
+
+      <defs><marker id="arrow2" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><polygon points="0 0, 10 3.5, 0 7" fill="#3a4a5a"/></marker></defs>
+    </svg>
+  </div>
+
+  <!-- TASK 9.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 9.1</span>
+      <span class="task-title">See the Search-and-Find Process Yourself</span>
+    </div>
+    <p>Let's prove that Step 3 really happens — that the terminal has to <em>find</em> the program first.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">Finding programs</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows — where does the terminal find "notepad"?</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">where notepad</span><br>
+        <span class="output">C:\Windows\System32\notepad.exe</span><br><br>
+
+        <span class="comment"># Now try a command that DOESN'T exist:</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">where pizzamaker</span><br>
+        <span class="output" style="color:var(--red);">INFO: Could not find files for the given pattern(s).</span><br><br>
+
+        <span class="comment"># Mac version:</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">which ls</span><br>
+        <span class="output">/bin/ls</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">which pizzamaker</span><br>
+        <span class="output" style="color:var(--red);">pizzamaker not found</span>
+      </div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Try <code>where notepad</code> (Windows) or <code>which ls</code> (Mac). The result shows you where on the hard disk that program lives.</li>
+        <li>Now try <code>where pizzamaker</code> or <code>which pizzamaker</code>. It says "not found" — because no program with that name exists on your computer. This is the exact same thing that happens when you mistype a command.</li>
+        <li>Try <code>where python</code> (Windows) or <code>which python3</code> (Mac). If Python is installed AND on your PATH, you'll see its location. If not, you'll see "not found" — which means either Python isn't installed or it wasn't added to the PATH.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 9.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 9.2</span>
+      <span class="task-title">Watch a Program Use RAM</span>
+    </div>
+    <p>Let's see Step 4 in action — a program being loaded into RAM.</p>
+    <div class="task-steps">
+      <ol>
+        <li>Open Task Manager (Windows: Ctrl+Shift+Esc) or Activity Monitor (Mac: Cmd+Space → "Activity Monitor").</li>
+        <li>Look at the current memory usage.</li>
+        <li>Now open a program — try opening Notepad from the terminal by typing <code>notepad</code> (Windows) or <code>open -a TextEdit</code> (Mac) and pressing Enter.</li>
+        <li>Look at Task Manager / Activity Monitor again. You'll see "Notepad" or "TextEdit" listed as a running process, using a small amount of RAM (maybe 5–15 MB).</li>
+        <li>Close Notepad. Watch it disappear from the process list. Its RAM is freed up.</li>
+        <li><strong>This is the cycle:</strong> Hard disk → RAM (when opened) → Back to just hard disk (when closed).</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 9.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 9.3</span>
+      <span class="task-title">Run a Command That Takes Longer</span>
+    </div>
+    <p>All our commands so far have been instant. Let's try one that takes a visible amount of time, so you can see your computer actually working.</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span class="terminal-title">A slow command</span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># Windows — ping a website (sends 4 test messages):</span><br>
+        <span class="prompt">C:\Users\YourName&gt;</span> <span class="cmd">ping google.com</span><br>
+        <span class="output">Pinging google.com [142.250.80.46] with 32 bytes of data:</span><br>
+        <span class="output">Reply from 142.250.80.46: bytes=32 time=12ms</span><br>
+        <span class="output">Reply from 142.250.80.46: bytes=32 time=11ms</span><br>
+        <span class="output">Reply from 142.250.80.46: bytes=32 time=13ms</span><br>
+        <span class="output">Reply from 142.250.80.46: bytes=32 time=11ms</span><br><br>
+        <span class="comment"># Mac — same command (press Ctrl+C after a few lines to stop it):</span><br>
+        <span class="prompt">~ %</span> <span class="cmd">ping -c 4 google.com</span>
+      </div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type <code>ping google.com</code> and press Enter. Watch the results come in one line at a time — each line is your computer sending a message to Google's server and measuring how fast the reply comes back.</li>
+        <li>On Mac, if the ping doesn't stop by itself, press <strong>Ctrl + C</strong> to stop it manually. <code>Ctrl + C</code> is a universal "stop this command" shortcut in the terminal.</li>
+        <li>Notice: while the command is running, you can't type anything else. The terminal is <strong>busy</strong>. Once it finishes, the prompt comes back and you can type again.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>You type <code>python</code> in the terminal and get "not recognized" / "command not found". Based on what you learned, what went wrong?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">The terminal searched through all the locations in the PATH and couldn't find an executable called "python". This means either: (a) Python is not installed on your computer, or (b) Python is installed, but its folder wasn't added to the PATH during installation. In case (b), the Python program exists on your hard disk, but the terminal doesn't know where to look for it.</div>
+  </div>
+
+  <div class="question">
+    <div class="question-label">🤔 Check Your Understanding</div>
+    <p>When you run a command, which types of memory are involved, and in what order?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">First, the program file is found on the <strong>hard disk</strong> (permanent storage). Then, it's loaded into <strong>RAM</strong> (fast working memory) so the CPU can execute it. When the program finishes, its data is cleared from RAM. Any files it saved go back to the hard disk. So the flow is: Hard Disk → RAM → CPU executes → result shown on screen.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔════════════════════════════════════════════════════════════╗ -->
+<!-- ║  FINAL CHECKLIST                                          ║ -->
+<!-- ╚════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="final">
+  <div class="section-label">Lab Complete</div>
+  <h2>Day 0 Completion Checklist</h2>
+  <p class="section-intro">Check off each item you feel confident about. If any feel shaky, go back and redo that module's tasks.</p>
+
+  <div class="checklist">
+    <h3>🎯 I Can Now…</h3>
+    <label><input type="checkbox"> Explain the difference between a file and a folder</label>
+    <label><input type="checkbox"> Create files and folders on my computer</label>
+    <label><input type="checkbox"> Explain what hard disk and RAM are, and how they differ</label>
+    <label><input type="checkbox"> Check my hard disk space and RAM amount</label>
+    <label><input type="checkbox"> Explain the difference between executable and non-executable files</label>
+    <label><input type="checkbox"> Identify file extensions and know what the common ones mean</label>
+    <label><input type="checkbox"> Make file extensions visible on my computer</label>
+    <label><input type="checkbox"> Open the terminal and type commands</label>
+    <label><input type="checkbox"> Use basic commands: echo, dir/ls, cd, whoami, hostname, cls/clear</label>
+    <label><input type="checkbox"> Understand what a path is (folder path vs. file path)</label>
+    <label><input type="checkbox"> Navigate folders in the terminal using cd</label>
+    <label><input type="checkbox"> Read a file's contents from the terminal</label>
+    <label><input type="checkbox"> Explain what "downloading" vs "installing" means</label>
+    <label><input type="checkbox"> Understand why "Add to PATH" matters during installation</label>
+    <label><input type="checkbox"> Explain the 5 steps that happen when I run a command</label>
+  </div>
+
+  <div class="concept" style="border-left-color: var(--accent); margin-top:2rem;">
+    <h3 style="color: var(--accent);">🚀 What's Next?</h3>
+    <p>In <strong>Day 1</strong>, we'll install Python on your computer, write your first Python program, and run it from the terminal. Everything you learned today — files, paths, the terminal, executables, the PATH — will all come together. You're more prepared than you think.</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+function toggleAnswer(btn) {
+  const content = btn.nextElementSibling;
+  content.classList.toggle('show');
+  btn.textContent = content.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+}
+</script>
+
+</body>
+</html>

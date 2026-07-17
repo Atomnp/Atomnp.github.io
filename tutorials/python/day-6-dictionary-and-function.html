@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 6 — Dictionaries, Functions &amp; Your First Game</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181b24;--surface2:#1e222e;--border:#2a2f3e;--text:#e0e4ef;--text-muted:#8891a8;--accent:#6ee7b7;--accent-dim:#2d6a52;--warn:#fbbf24;--blue:#60a5fa;--pink:#f472b6;--orange:#fb923c;--red:#f87171;--purple:#a78bfa;--terminal-bg:#0a0c10;--terminal-green:#4ade80;--terminal-prompt:#6ee7b7;--lab-bg:#141820;--lab-border:#2a4a3a;--check:#22c55e;--correct:#22c55e;--wrong:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;min-height:100vh}.page-wrapper{max-width:880px;margin:0 auto;padding:2rem 1.5rem 6rem}
+.hero{text-align:center;padding:4rem 1rem 3rem}.hero-tag{display:inline-block;background:linear-gradient(135deg,#1a3a2a,#1a3a4a);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;padding:.35rem 1rem;border-radius:99px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem}.hero h1{font-family:'Source Serif 4',serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:1rem}.hero h1 span{color:var(--accent)}.hero-sub{color:var(--text-muted);font-size:1.1rem;max-width:600px;margin:0 auto;line-height:1.7}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:2.5rem 0 3rem}.toc h2{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.2rem}.toc-list{list-style:none}.toc-list li{padding:.5rem 0;border-bottom:1px solid var(--border)}.toc-list li:last-child{border-bottom:none}.toc-list a{color:var(--text);text-decoration:none;font-size:.95rem;display:flex;align-items:center;gap:.75rem;transition:color .2s}.toc-list a:hover{color:var(--accent)}.toc-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-muted);min-width:2rem}
+.lab-section{margin-bottom:4rem;scroll-margin-top:2rem}.section-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem}.lab-section h2{font-family:'Source Serif 4',serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:.5rem}.section-intro{color:var(--text-muted);margin-bottom:1.5rem;font-size:1rem}
+.concept{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.concept h3{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}.concept p,.concept div{font-size:.95rem;line-height:1.8}
+.analogy{background:linear-gradient(135deg,#1a1525,#1e1830);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.analogy-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.warning{background:linear-gradient(135deg,#1f1a10,#221e14);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.warning-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--warn);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.success{background:linear-gradient(135deg,#101f15,#142218);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.success-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.lab-task{background:var(--lab-bg);border:1px solid var(--lab-border);border-radius:12px;padding:1.75rem;margin:1.5rem 0;position:relative}.lab-task::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:12px 12px 0 0}.task-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}.task-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;background:var(--accent-dim);color:var(--accent);padding:.25rem .75rem;border-radius:99px;letter-spacing:.05em}.task-badge.game{background:#2a1a3a;color:var(--purple)}.task-title{font-weight:600;font-size:1.05rem;color:#fff}
+.task-steps{margin-top:.75rem}.task-steps ol{padding-left:1.5rem;counter-reset:step-counter;list-style:none}.task-steps ol li{counter-increment:step-counter;position:relative;padding:.4rem 0 .4rem .5rem;font-size:.95rem}.task-steps ol li::before{content:counter(step-counter);position:absolute;left:-1.5rem;top:.45rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;color:var(--accent);background:var(--accent-dim);width:1.2rem;height:1.2rem;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.terminal{background:var(--terminal-bg);border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}.terminal-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem}.terminal-dot{width:10px;height:10px;border-radius:50%}.terminal-dot.r{background:#f87171}.terminal-dot.y{background:#fbbf24}.terminal-dot.g{background:#4ade80}.terminal-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted);margin-left:.5rem}.terminal-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.terminal-body .prompt{color:var(--terminal-prompt)}.terminal-body .cmd{color:#fff}.terminal-body .output{color:var(--text-muted)}.terminal-body .err{color:var(--red)}
+.code-block{background:#0d1015;border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}.code-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between}.code-lang{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--warn);letter-spacing:.05em}.code-filename{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}.code-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.code-body .kw{color:var(--pink)}.code-body .fn{color:var(--blue)}.code-body .str{color:var(--accent)}.code-body .com{color:#555b70;font-style:italic}.code-body .num{color:var(--orange)}.code-body .var{color:#e0e4ef}.code-body .op{color:var(--warn)}.code-body .ln{color:#3a3f50;user-select:none}
+.mcq{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.mcq-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}.mcq p.mcq-q{font-size:.95rem;color:#fff;margin-bottom:1rem;font-weight:500}.mcq-options{display:flex;flex-direction:column;gap:.5rem}.mcq-opt{display:flex;align-items:center;gap:.75rem;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.65rem 1rem;cursor:pointer;transition:all .2s;font-size:.9rem;font-family:'JetBrains Mono',monospace}.mcq-opt:hover{border-color:var(--blue)}.mcq-opt.correct{border-color:var(--correct);background:#0f2018;color:var(--correct)}.mcq-opt.wrong{border-color:var(--wrong);background:#200f0f;color:var(--wrong);opacity:.7}.mcq-opt .letter{min-width:1.5rem;height:1.5rem;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--text-muted)}.mcq-opt.correct .letter{border-color:var(--correct);color:var(--correct);background:#0a1a0f}.mcq-opt.wrong .letter{border-color:var(--wrong);color:var(--wrong)}.mcq-explain{display:none;margin-top:1rem;padding:1rem;background:#0f1510;border-radius:8px;border:1px dashed #2a4a2a;font-size:.88rem;color:var(--accent);line-height:1.7}.mcq-explain.show{display:block}
+.answer-toggle{margin-top:.75rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.35rem .9rem;border-radius:6px;cursor:pointer;transition:all .2s}.answer-toggle:hover{border-color:var(--accent);color:var(--accent)}.answer-content{display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);color:var(--accent);font-size:.92rem;line-height:1.7}.answer-content.show{display:block}
+.fill-in{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.fill-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--pink);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}.fill-blank{display:inline-block;border-bottom:2px dashed var(--pink);min-width:80px;color:var(--pink);font-family:'JetBrains Mono',monospace;padding:0 .25rem;cursor:help}
+.debug-box{background:linear-gradient(135deg,#1f1015,#221418);border:1px solid #4a2a2a;border-radius:12px;padding:1.5rem;margin:1.5rem 0}.debug-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.diagram{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1.5rem 0;text-align:center;overflow-x:auto}
+.checklist{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin:1.5rem 0}.checklist h3{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--check);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}.checklist label{display:flex;align-items:flex-start;gap:.75rem;padding:.5rem 0;cursor:pointer;font-size:.95rem}.checklist input[type="checkbox"]{appearance:none;width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:3px;cursor:pointer;position:relative}.checklist input[type="checkbox"]:checked{background:var(--check);border-color:var(--check)}.checklist input[type="checkbox"]:checked::after{content:'✓';position:absolute;color:#000;font-size:12px;font-weight:700;top:50%;left:50%;transform:translate(-50%,-50%)}
+.celebrate{background:linear-gradient(135deg,#1a2520,#152030);border:2px solid var(--accent);border-radius:14px;padding:2rem;margin:2rem 0;text-align:center}.celebrate .emoji{font-size:2.5rem;margin-bottom:.75rem}.celebrate h3{font-family:'Source Serif 4',serif;font-size:1.4rem;color:#fff;margin-bottom:.5rem}.celebrate p{color:var(--text-muted);font-size:.95rem;max-width:500px;margin:0 auto}
+/* game step */
+.game-step{background:linear-gradient(135deg,#151a28,#1a1530);border:1px solid #3a2a5a;border-radius:12px;padding:1.75rem;margin:1.5rem 0;position:relative}.game-step::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:12px 12px 0 0}
+.game-step-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;background:#2a1a3a;color:var(--purple);padding:.25rem .75rem;border-radius:99px;letter-spacing:.05em;display:inline-block;margin-bottom:.75rem}
+code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.15rem .45rem;border-radius:4px;font-size:.88em;color:var(--pink)}.separator{border:none;border-top:1px solid var(--border);margin:3rem 0}strong{color:#fff}
+@media(max-width:600px){.hero h1{font-size:2rem}.page-wrapper{padding:1rem}}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<div class="hero">
+  <div class="hero-tag">Python Course — Day 6</div>
+  <h1>Dictionaries, Functions &amp; <span>Your First Game</span></h1>
+  <p class="hero-sub">Today you'll learn the most important data structure and the most important code organization tool. Then you'll use everything you've learned to build a real, playable word-guessing game.</p>
+</div>
+
+<div class="toc">
+  <h2>Lab Modules</h2>
+  <ul class="toc-list">
+    <li><a href="#mod1"><span class="toc-num">01</span> The Big Picture — Everything We Know So Far</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Dictionaries — The Most Powerful Data Type</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Other Data Types — Tuples &amp; None</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Functions — Reusable Blocks of Code</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> Build a Word Guessing Game</a></li>
+  </ul>
+</div>
+
+<div class="warning">
+  <div class="warning-label">📌 Setup</div>
+  <p>Open VS Code → <code>H:\Pooja</code> → create folder <code>day6</code> → open terminal → <code>cd H:\Pooja\day6</code></p>
+</div>
+
+<!-- ═══════════════════ MODULE 1: RECAP ═══════════════════ -->
+<section class="lab-section" id="mod1">
+  <div class="section-label">Module 01</div>
+  <h2>The Big Picture</h2>
+  <p class="section-intro">Before learning new things, let's see everything we've built so far — like a map of your knowledge.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg">
+      <text x="360" y="25" text-anchor="middle" fill="#fff" font-family="Source Serif 4" font-size="16" font-weight="700">Your Python Knowledge Map</text>
+      <!-- Input -->
+      <rect x="20" y="50" width="130" height="55" rx="10" fill="#1a2030" stroke="#60a5fa" stroke-width="1.5"/>
+      <text x="85" y="75" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="11" font-weight="600">INPUT</text>
+      <text x="85" y="93" text-anchor="middle" fill="#8891a8" font-family="JetBrains Mono" font-size="9">input()</text>
+      <!-- Output -->
+      <rect x="170" y="50" width="130" height="55" rx="10" fill="#1a2030" stroke="#6ee7b7" stroke-width="1.5"/>
+      <text x="235" y="75" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="11" font-weight="600">OUTPUT</text>
+      <text x="235" y="93" text-anchor="middle" fill="#8891a8" font-family="JetBrains Mono" font-size="9">print()</text>
+      <!-- Data Types -->
+      <rect x="20" y="125" width="280" height="55" rx="10" fill="#1a2030" stroke="#fb923c" stroke-width="1.5"/>
+      <text x="160" y="148" text-anchor="middle" fill="#fb923c" font-family="JetBrains Mono" font-size="11" font-weight="600">DATA TYPES</text>
+      <text x="160" y="168" text-anchor="middle" fill="#8891a8" font-family="JetBrains Mono" font-size="9">int  float  str  bool  list  set</text>
+      <!-- Variables -->
+      <rect x="20" y="200" width="130" height="55" rx="10" fill="#1a2030" stroke="#f472b6" stroke-width="1.5"/>
+      <text x="85" y="223" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="11" font-weight="600">VARIABLES</text>
+      <text x="85" y="243" text-anchor="middle" fill="#8891a8" font-family="JetBrains Mono" font-size="9">name = value</text>
+      <!-- Operators -->
+      <rect x="170" y="200" width="130" height="55" rx="10" fill="#1a2030" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="235" y="223" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" font-weight="600">OPERATORS</text>
+      <text x="235" y="243" text-anchor="middle" fill="#8891a8" font-family="JetBrains Mono" font-size="9">+ - * / == > <</text>
+      <!-- Conditionals -->
+      <rect x="20" y="275" width="130" height="55" rx="10" fill="#1a2030" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="85" y="298" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="11" font-weight="600">CONDITIONALS</text>
+      <text x="85" y="318" text-anchor="middle" fill="#8891a8" font-family="JetBrains Mono" font-size="9">if / elif / else</text>
+      <!-- Loops -->
+      <rect x="170" y="275" width="130" height="55" rx="10" fill="#1a2030" stroke="#f87171" stroke-width="1.5"/>
+      <text x="235" y="298" text-anchor="middle" fill="#f87171" font-family="JetBrains Mono" font-size="11" font-weight="600">LOOPS</text>
+      <text x="235" y="318" text-anchor="middle" fill="#8891a8" font-family="JetBrains Mono" font-size="9">for / while</text>
+      <!-- TODAY -->
+      <rect x="380" y="50" width="310" height="280" rx="14" fill="#141820" stroke="#6ee7b7" stroke-width="2" stroke-dasharray="6"/>
+      <text x="535" y="75" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="11" font-weight="700">TODAY WE ADD</text>
+      <rect x="400" y="95" width="270" height="45" rx="8" fill="#1a2520" stroke="#6ee7b7" stroke-width="1.5"/>
+      <text x="535" y="122" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="12" font-weight="600">dict — Dictionaries</text>
+      <rect x="400" y="160" width="270" height="45" rx="8" fill="#1a2520" stroke="#60a5fa" stroke-width="1.5"/>
+      <text x="535" y="187" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="12" font-weight="600">tuple, None</text>
+      <rect x="400" y="225" width="270" height="45" rx="8" fill="#1a2520" stroke="#f472b6" stroke-width="1.5"/>
+      <text x="535" y="252" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="12" font-weight="600">def — Functions</text>
+      <rect x="400" y="290" width="270" height="30" rx="8" fill="#2a1a3a" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="535" y="310" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="11" font-weight="600">Word Guessing Game!</text>
+    </svg>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Recap Quiz</div>
+    <p class="mcq-q">Which of these is used to MAKE A DECISION in code?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> for loop</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> print()</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> if / elif / else</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> input()</div>
+    </div>
+    <div class="mcq-explain">Conditionals (<code>if/elif/else</code>) make decisions. Loops repeat. <code>print</code> shows output. <code>input</code> gets user input.</div>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Recap Quiz</div>
+    <p class="mcq-q">What is a list in Python?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> A single value stored in a variable</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> An ordered collection of multiple values in square brackets [ ]</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> A way to repeat code</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> A type of loop</div>
+    </div>
+    <div class="mcq-explain">A list stores multiple values in order, created with <code>[ ]</code>. You access items by index like <code>my_list[0]</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 2: DICTIONARIES ═══════════════════ -->
+<section class="lab-section" id="mod2">
+  <div class="section-label">Module 02</div>
+  <h2>Dictionaries — The Most Powerful Data Type</h2>
+  <p class="section-intro">A list stores items by <strong>position number</strong> (index 0, 1, 2...). A dictionary stores items by <strong>name</strong> (a key you choose). This is incredibly useful.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Think of an actual <strong>dictionary book</strong>. You look up a <strong>word</strong> (the key) and find its <strong>definition</strong> (the value). You don't look up "word number 4,372" — you look up the actual word "python" and find what it means.<br><br>
+    Or think of a <strong>contact list</strong> on your phone. You don't search by "contact #47" — you search by <strong>name</strong> ("Mom") and find the <strong>phone number</strong>. The name is the key, the phone number is the value.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Why Not Just Use a List?</h3>
+    <div>
+      You <em>could</em> store contact info in lists: <code>names = ["Mom", "Dad"]</code> and <code>phones = ["555-1234", "555-5678"]</code>. But this is fragile — you have to keep both lists perfectly aligned. If you delete a name from one list but forget the other, everything breaks.<br><br>
+      With a dictionary, each piece of data is <strong>connected</strong>: <code>contacts = {"Mom": "555-1234", "Dad": "555-5678"}</code>. The name and number are linked. You can add, delete, or look up by name directly. This is faster, safer, and easier to understand. Many real-world problems naturally fit this "look up by name" pattern.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 2.1</span><span class="task-title">Creating and Using a Dictionary</span></div>
+    <p>Create <code>dict_basics.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">dict_basics.py</span></div>
+      <div class="code-body"><span class="com"># A dictionary uses curly braces { } with key: value pairs</span>
+<span class="var">student</span> <span class="op">=</span> {
+    <span class="str">"name"</span>: <span class="str">"Pooja"</span>,
+    <span class="str">"age"</span>: <span class="num">20</span>,
+    <span class="str">"city"</span>: <span class="str">"Mumbai"</span>,
+    <span class="str">"is_enrolled"</span>: <span class="kw">True</span>
+}
+
+<span class="com"># Access a value by its KEY (not by index number!)</span>
+<span class="fn">print</span>(<span class="var">student</span>[<span class="str">"name"</span>])        <span class="com"># Pooja</span>
+<span class="fn">print</span>(<span class="var">student</span>[<span class="str">"age"</span>])         <span class="com"># 20</span>
+
+<span class="com"># Add a new key-value pair</span>
+<span class="var">student</span>[<span class="str">"grade"</span>] <span class="op">=</span> <span class="str">"A"</span>
+<span class="fn">print</span>(<span class="var">student</span>)
+
+<span class="com"># Change an existing value</span>
+<span class="var">student</span>[<span class="str">"age"</span>] <span class="op">=</span> <span class="num">21</span>
+
+<span class="com"># Check if a key exists</span>
+<span class="fn">print</span>(<span class="str">"name"</span> <span class="kw">in</span> <span class="var">student</span>)      <span class="com"># True</span>
+<span class="fn">print</span>(<span class="str">"email"</span> <span class="kw">in</span> <span class="var">student</span>)     <span class="com"># False</span>
+
+<span class="com"># How many key-value pairs?</span>
+<span class="fn">print</span>(<span class="str">"Total keys:"</span>, <span class="fn">len</span>(<span class="var">student</span>))
+
+<span class="com"># Loop through a dictionary</span>
+<span class="kw">for</span> <span class="var">key</span> <span class="kw">in</span> <span class="var">student</span>:
+    <span class="fn">print</span>(<span class="var">key</span>, <span class="str">"→"</span>, <span class="var">student</span>[<span class="var">key</span>])</div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Values Can Be ANY Type — Including Lists and Other Dicts!</h3>
+    <div>This is what makes dictionaries so powerful. A value can be an int, str, bool, list, or even another dictionary.</div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 2.2</span><span class="task-title">Dictionary with List Values</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">dict_nested.py</span></div>
+      <div class="code-body"><span class="var">classroom</span> <span class="op">=</span> {
+    <span class="str">"teacher"</span>: <span class="str">"Ms. Sharma"</span>,
+    <span class="str">"subject"</span>: <span class="str">"Python"</span>,
+    <span class="str">"students"</span>: [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Charlie"</span>],
+    <span class="str">"room_number"</span>: <span class="num">204</span>
+}
+
+<span class="fn">print</span>(<span class="str">"Teacher:"</span>, <span class="var">classroom</span>[<span class="str">"teacher"</span>])
+<span class="fn">print</span>(<span class="str">"Students:"</span>, <span class="var">classroom</span>[<span class="str">"students"</span>])
+<span class="fn">print</span>(<span class="str">"First student:"</span>, <span class="var">classroom</span>[<span class="str">"students"</span>][<span class="num">0</span>])
+
+<span class="com"># Add a new student to the list inside the dict</span>
+<span class="var">classroom</span>[<span class="str">"students"</span>].<span class="fn">append</span>(<span class="str">"Diana"</span>)
+<span class="fn">print</span>(<span class="str">"Updated:"</span>, <span class="var">classroom</span>[<span class="str">"students"</span>])</div>
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q"><code>d = {"a": 1, "b": 2, "c": 3}</code><br>What is <code>d["b"]</code>?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> "b"</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 1</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> 3</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> 2</div>
+    </div>
+    <div class="mcq-explain">The key <code>"b"</code> maps to the value <code>2</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 3: OTHER TYPES ═══════════════════ -->
+<section class="lab-section" id="mod3">
+  <div class="section-label">Module 03</div>
+  <h2>Other Data Types — Tuples &amp; None</h2>
+  <p class="section-intro">Two more types you'll encounter that we haven't explicitly covered yet.</p>
+
+  <div class="concept">
+    <h3>💡 Tuple — A List That Cannot Be Changed</h3>
+    <div>
+      A <strong>tuple</strong> is exactly like a list, except you <strong>cannot modify it</strong> after creation. No adding, removing, or changing items. Created with <strong>parentheses <code>( )</code></strong>:<br><br>
+      <code>colors = ("red", "green", "blue")</code><br>
+      <code>print(colors[0])</code> → <code>"red"</code> — indexing works!<br>
+      <code>colors[0] = "yellow"</code> → <strong>TypeError!</strong> Can't modify.<br><br>
+      Use tuples when you have data that should <strong>never change</strong> — like days of the week, coordinates, or RGB color values.
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 None — The "Nothing" Value</h3>
+    <div>
+      <code>None</code> is a special value that means <strong>"no value" or "nothing here"</strong>. It's its own type (<code>NoneType</code>).<br><br>
+      <code>result = None</code> — "result doesn't have a value yet"<br>
+      <code>print(type(None))</code> → <code>&lt;class 'NoneType'&gt;</code><br><br>
+      You'll see <code>None</code> often with functions that don't return anything. For now, just know it exists and means "empty/nothing."
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.1</span><span class="task-title">Try Tuples and None</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">other_types.py</span></div>
+      <div class="code-body"><span class="com"># TUPLE</span>
+<span class="var">days</span> <span class="op">=</span> (<span class="str">"Mon"</span>, <span class="str">"Tue"</span>, <span class="str">"Wed"</span>, <span class="str">"Thu"</span>, <span class="str">"Fri"</span>)
+<span class="fn">print</span>(<span class="var">days</span>[<span class="num">0</span>])          <span class="com"># Mon</span>
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="var">days</span>))        <span class="com"># 5</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="var">days</span>))       <span class="com"># &lt;class 'tuple'&gt;</span>
+<span class="com"># days[0] = "Sunday"   # Uncomment to see TypeError!</span>
+
+<span class="com"># NONE</span>
+<span class="var">answer</span> <span class="op">=</span> <span class="kw">None</span>
+<span class="fn">print</span>(<span class="var">answer</span>)           <span class="com"># None</span>
+<span class="fn">print</span>(<span class="var">answer</span> <span class="op">==</span> <span class="kw">None</span>)  <span class="com"># True (but prefer: answer is None)</span>
+
+<span class="com"># Complete type summary:</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="num">42</span>))         <span class="com"># int</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="num">3.14</span>))       <span class="com"># float</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="str">"hi"</span>))        <span class="com"># str</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="kw">True</span>))        <span class="com"># bool</span>
+<span class="fn">print</span>(<span class="fn">type</span>([<span class="num">1</span>,<span class="num">2</span>]))      <span class="com"># list</span>
+<span class="fn">print</span>(<span class="fn">type</span>((<span class="num">1</span>,<span class="num">2</span>)))      <span class="com"># tuple</span>
+<span class="fn">print</span>(<span class="fn">type</span>({<span class="num">1</span>,<span class="num">2</span>}))      <span class="com"># set</span>
+<span class="fn">print</span>(<span class="fn">type</span>({<span class="str">"a"</span>:<span class="num">1</span>}))    <span class="com"># dict</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="kw">None</span>))        <span class="com"># NoneType</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 4: FUNCTIONS ═══════════════════ -->
+<section class="lab-section" id="mod4">
+  <div class="section-label">Module 04</div>
+  <h2>Functions — Reusable Blocks of Code</h2>
+  <p class="section-intro">A function is a <strong>named, reusable block of code</strong> that takes some input, does something, and optionally gives back a result. You've been using functions since Day 1 — <code>print()</code>, <code>input()</code>, <code>len()</code>, <code>type()</code> are all functions. Now you'll learn to create your own.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>A function is like a <strong>kitchen appliance</strong>. A blender takes <strong>input</strong> (fruits), does some <strong>processing</strong> (blending), and gives you <strong>output</strong> (smoothie). You don't need to know how the motor works — you just put stuff in and get stuff out. You can use the same blender many times with different fruits. Similarly, you write a function once and use it many times with different inputs.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Why Use Functions?</h3>
+    <div>
+      <strong>1. Avoid repeating code.</strong> If you calculate tax in 10 places, write a <code>calculate_tax()</code> function once and call it 10 times. If the formula changes, you fix it in one place.<br><br>
+      <strong>2. Give names to chunks of code.</strong> <code>calculate_tax(price)</code> is easier to understand than 5 lines of math. Functions make code readable.<br><br>
+      <strong>3. Break big problems into small pieces.</strong> Instead of 200 lines in a row, you have small named functions that each do one thing well.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.1</span><span class="task-title">Your First Function</span></div>
+    <p>Create <code>func_basics.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_basics.py</span></div>
+      <div class="code-body"><span class="com"># DEFINING a function (creating the recipe)</span>
+<span class="kw">def</span> <span class="fn">greet</span>():
+    <span class="fn">print</span>(<span class="str">"Hello!"</span>)
+    <span class="fn">print</span>(<span class="str">"Welcome to Python."</span>)
+
+<span class="com"># CALLING the function (using the recipe)</span>
+<span class="fn">greet</span>()
+<span class="fn">greet</span>()   <span class="com"># call it again — reusable!</span></div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="output">Hello!
+Welcome to Python.
+Hello!
+Welcome to Python.</span></div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);"><code>def</code> means "define a new function." The indented lines are the function's body — they only run when you <strong>call</strong> the function with <code>greet()</code>. Defining a function does NOT run it.</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.2</span><span class="task-title">Functions with Arguments (Inputs)</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_args.py</span></div>
+      <div class="code-body"><span class="com"># 'name' is a PARAMETER — a placeholder for the input</span>
+<span class="kw">def</span> <span class="fn">greet</span>(<span class="var">name</span>):
+    <span class="fn">print</span>(<span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>)
+
+<span class="com"># "Pooja" and "Alice" are ARGUMENTS — actual values you pass in</span>
+<span class="fn">greet</span>(<span class="str">"Pooja"</span>)    <span class="com"># name becomes "Pooja" inside the function</span>
+<span class="fn">greet</span>(<span class="str">"Alice"</span>)    <span class="com"># name becomes "Alice" inside the function</span>
+
+<span class="com"># Multiple parameters</span>
+<span class="kw">def</span> <span class="fn">add</span>(<span class="var">a</span>, <span class="var">b</span>):
+    <span class="fn">print</span>(<span class="var">a</span> <span class="op">+</span> <span class="var">b</span>)
+
+<span class="fn">add</span>(<span class="num">3</span>, <span class="num">5</span>)     <span class="com"># 8</span>
+<span class="fn">add</span>(<span class="num">10</span>, <span class="num">20</span>)   <span class="com"># 30</span></div>
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.3</span><span class="task-title">Return Values — Getting Output from a Function</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_return.py</span></div>
+      <div class="code-body"><span class="com"># This function RETURNS a value instead of printing it</span>
+<span class="kw">def</span> <span class="fn">add</span>(<span class="var">a</span>, <span class="var">b</span>):
+    <span class="var">result</span> <span class="op">=</span> <span class="var">a</span> <span class="op">+</span> <span class="var">b</span>
+    <span class="kw">return</span> <span class="var">result</span>    <span class="com"># sends the value BACK to whoever called this function</span>
+
+<span class="com"># Store the return value in a variable</span>
+<span class="var">total</span> <span class="op">=</span> <span class="fn">add</span>(<span class="num">10</span>, <span class="num">5</span>)
+<span class="fn">print</span>(<span class="str">"Total:"</span>, <span class="var">total</span>)   <span class="com"># Total: 15</span>
+
+<span class="com"># Use the return value DIRECTLY in an expression</span>
+<span class="fn">print</span>(<span class="str">"Double:"</span>, <span class="fn">add</span>(<span class="num">10</span>, <span class="num">5</span>) <span class="op">*</span> <span class="num">2</span>)  <span class="com"># Double: 30</span>
+
+<span class="com"># Use it inside an if condition</span>
+<span class="kw">if</span> <span class="fn">add</span>(<span class="num">3</span>, <span class="num">4</span>) <span class="op">&gt;</span> <span class="num">5</span>:
+    <span class="fn">print</span>(<span class="str">"Sum is greater than 5"</span>)
+
+<span class="com"># A function without return gives back None</span>
+<span class="kw">def</span> <span class="fn">say_hi</span>():
+    <span class="fn">print</span>(<span class="str">"Hi!"</span>)
+
+<span class="var">x</span> <span class="op">=</span> <span class="fn">say_hi</span>()
+<span class="fn">print</span>(<span class="var">x</span>)    <span class="com"># None — say_hi doesn't return anything</span></div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Scope — What's Accessible Where</h3>
+    <div>
+      Variables created <strong>inside</strong> a function only exist inside that function. They cannot be seen or used outside. This is called <strong>scope</strong>.<br><br>
+      <code>def my_func():</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;secret = 42</code> — this variable only exists inside <code>my_func</code><br><br>
+      <code>print(secret)</code> — <strong>NameError!</strong> <code>secret</code> doesn't exist here.<br><br>
+      Variables created outside functions (at the top level) are accessible everywhere. But variables inside a function are <strong>private</strong> to that function. This prevents accidental conflicts — two functions can both have a variable called <code>x</code> without interfering with each other.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.4</span><span class="task-title">Default Parameter Values</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_default.py</span></div>
+      <div class="code-body"><span class="com"># 'greeting' has a default value — it's optional when calling</span>
+<span class="kw">def</span> <span class="fn">welcome</span>(<span class="var">name</span>, <span class="var">greeting</span><span class="op">=</span><span class="str">"Hello"</span>):
+    <span class="fn">print</span>(<span class="var">greeting</span> <span class="op">+</span> <span class="str">", "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>)
+
+<span class="fn">welcome</span>(<span class="str">"Pooja"</span>)                 <span class="com"># Hello, Pooja!</span>
+<span class="fn">welcome</span>(<span class="str">"Pooja"</span>, <span class="str">"Good morning"</span>) <span class="com"># Good morning, Pooja!</span>
+<span class="fn">welcome</span>(<span class="str">"Alice"</span>, <span class="str">"Hi"</span>)          <span class="com"># Hi, Alice!</span></div>
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.5</span><span class="task-title">Functions You Already Know Are Functions!</span></div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_builtins.py</span></div>
+      <div class="code-body"><span class="com"># All of these are FUNCTIONS — they take input and give output:</span>
+<span class="fn">print</span>(<span class="str">"hi"</span>)           <span class="com"># takes arguments, prints them. Returns None.</span>
+<span class="var">n</span> <span class="op">=</span> <span class="fn">len</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>])     <span class="com"># takes a list, returns its length (3)</span>
+<span class="var">t</span> <span class="op">=</span> <span class="fn">type</span>(<span class="num">42</span>)          <span class="com"># takes a value, returns its type</span>
+<span class="var">x</span> <span class="op">=</span> <span class="fn">int</span>(<span class="str">"25"</span>)         <span class="com"># takes a string, returns an int</span>
+<span class="var">s</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"? "</span>)       <span class="com"># takes a prompt, returns what user typed</span>
+<span class="var">m</span> <span class="op">=</span> <span class="fn">max</span>(<span class="num">5</span>, <span class="num">9</span>, <span class="num">2</span>)      <span class="com"># takes numbers, returns the biggest</span>
+
+<span class="com"># print() with multiple arguments and separator:</span>
+<span class="fn">print</span>(<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>, sep<span class="op">=</span><span class="str">"-"</span>)  <span class="com"># a-b-c (sep changes the separator)</span>
+<span class="fn">print</span>(<span class="str">"no newline"</span>, end<span class="op">=</span><span class="str">""</span>)      <span class="com"># doesn't add a newline at the end</span>
+<span class="fn">print</span>(<span class="str">" ← same line"</span>)</div>
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What is the output?<br><code>def double(x):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;return x * 2</code><br><br><code>result = double(7)</code><br><code>print(result + 1)</code></p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 14</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 15</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> 8</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain"><code>double(7)</code> returns <code>14</code>. That's stored in <code>result</code>. Then <code>14 + 1 = 15</code>.</div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q"><code>def mystery(a, b):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(a + b)</code><br><br><code>x = mystery(3, 4)</code><br><code>print(x)</code><br><br>What does the last print show?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 7</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 34</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> None</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain"><code>mystery</code> <em>prints</em> 7 (you'll see it on screen), but it doesn't have a <code>return</code> statement. So it returns <code>None</code>. <code>x</code> is <code>None</code>.</div>
+  </div>
+
+  <div class="fill-in">
+    <div class="fill-label">✏️ Exercise — Write a Function</div>
+    <p>Complete this function that takes a list of numbers and returns the sum:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">exercise</span></div><div class="code-body"><span class="kw">def</span> <span class="fn">total</span>(<span class="var">numbers</span>):
+    <span class="var">result</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">for</span> <span class="var">n</span> <span class="kw">in</span> <span class="var">numbers</span>:
+        <span class="var">result</span> <span class="op">=</span> <span class="var">result</span> <span class="op">+</span> <span class="var">n</span>
+    <span class="fill-blank">???</span> <span class="var">result</span>
+
+<span class="fn">print</span>(<span class="fn">total</span>([<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>]))</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>return</code> — The blank is the <code>return</code> keyword. Without it, the function prints nothing meaningful and returns <code>None</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 5: WORD GUESSING GAME ═══════════════════ -->
+<section class="lab-section" id="mod5">
+  <div class="section-label">Module 05</div>
+  <h2>Build a Word Guessing Game!</h2>
+  <p class="section-intro">Time to use <strong>everything</strong> you've learned: variables, strings, lists, dictionaries, loops, conditionals, and functions — all in one program. We'll build it step by step. Create a single file called <code>word_game.py</code> and add each step to it.</p>
+
+  <div class="warning">
+    <div class="warning-label">📌 How This Works</div>
+    <p>For each step below, <strong>add the code to the BOTTOM of <code>word_game.py</code></strong> (unless told otherwise). Don't create new files — everything goes in the same file, building up piece by piece. After each step, save and run to test what you have so far.</p>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="game-step">
+    <div class="game-step-num">STEP 1 — Import and Word List</div>
+    <p>Open <code>word_game.py</code> and type this at the very top. This sets up the word list and the tool for picking random things.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 1 (top of file)</span></div><div class="code-body"><span class="kw">import</span> random
+
+<span class="com"># --- WORD LIST ---</span>
+<span class="var">words</span> <span class="op">=</span> [<span class="str">"python"</span>, <span class="str">"rocket"</span>, <span class="str">"galaxy"</span>, <span class="str">"jungle"</span>, <span class="str">"puzzle"</span>,
+         <span class="str">"breeze"</span>, <span class="str">"wizard"</span>, <span class="str">"frozen"</span>, <span class="str">"castle"</span>, <span class="str">"beyond"</span>]</div></div>
+    <p style="font-size:.92rem;color:var(--text-muted);margin-top:.5rem;"><code>import random</code> loads Python's built-in random module. <code>words</code> is a list of 10 words the game will pick from.</p>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="game-step">
+    <div class="game-step-num">STEP 2 — Helper Function: Pick a Random Word</div>
+    <p>Add this <strong>directly below Step 1</strong>:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 2 (below Step 1)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Pick a random word ---</span>
+<span class="kw">def</span> <span class="fn">pick_word</span>():
+    <span class="var">word</span> <span class="op">=</span> random.<span class="fn">choice</span>(<span class="var">words</span>)
+    <span class="kw">return</span> <span class="var">word</span></div></div>
+    <p style="font-size:.92rem;color:var(--text-muted);margin-top:.5rem;"><code>random.choice(words)</code> picks one random word from the list. The function returns it.</p>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="game-step">
+    <div class="game-step-num">STEP 3 — Function: Create the Hint (Show Some Letters)</div>
+    <p>Add this <strong>below Step 2</strong>. This function takes the secret word and reveals a few random letters, hiding the rest with <code>_</code>.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 3 (below Step 2)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Create hint with some letters revealed ---</span>
+<span class="kw">def</span> <span class="fn">create_hint</span>(<span class="var">word</span>, <span class="var">num_revealed</span><span class="op">=</span><span class="num">2</span>):
+    <span class="var">hint</span> <span class="op">=</span> [<span class="str">"_"</span>] <span class="op">*</span> <span class="fn">len</span>(<span class="var">word</span>)    <span class="com"># start with all blanks: ["_", "_", "_", ...]</span>
+    <span class="var">positions</span> <span class="op">=</span> <span class="fn">list</span>(<span class="fn">range</span>(<span class="fn">len</span>(<span class="var">word</span>)))   <span class="com"># [0, 1, 2, 3, ...]</span>
+    random.<span class="fn">shuffle</span>(<span class="var">positions</span>)                <span class="com"># randomize the order</span>
+    <span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">num_revealed</span>):
+        <span class="var">pos</span> <span class="op">=</span> <span class="var">positions</span>[<span class="var">i</span>]
+        <span class="var">hint</span>[<span class="var">pos</span>] <span class="op">=</span> <span class="var">word</span>[<span class="var">pos</span>]      <span class="com"># reveal the letter at this position</span>
+    <span class="kw">return</span> <span class="str">" "</span>.<span class="fn">join</span>(<span class="var">hint</span>)            <span class="com"># join list into string: "p _ t _ o _"</span></div></div>
+    <p style="font-size:.92rem;color:var(--text-muted);margin-top:.5rem;">For a word like "python", this might create <code>p _ _ h _ _</code> — two letters revealed, rest hidden.</p>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="game-step">
+    <div class="game-step-num">STEP 4 — Function: Display the Scoreboard</div>
+    <p>Add this <strong>below Step 3</strong>:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 4 (below Step 3)</span></div><div class="code-body"><span class="com"># --- FUNCTION: Show the score ---</span>
+<span class="kw">def</span> <span class="fn">show_score</span>(<span class="var">stats</span>):
+    <span class="fn">print</span>(<span class="str">"--- Score ---"</span>)
+    <span class="fn">print</span>(<span class="str">"Correct:"</span>, <span class="var">stats</span>[<span class="str">"correct"</span>])
+    <span class="fn">print</span>(<span class="str">"Wrong  :"</span>, <span class="var">stats</span>[<span class="str">"wrong"</span>])
+    <span class="fn">print</span>(<span class="str">"Streak :"</span>, <span class="var">stats</span>[<span class="str">"streak"</span>])
+    <span class="fn">print</span>(<span class="str">"-"</span> <span class="op">*</span> <span class="num">14</span>)</div></div>
+    <p style="font-size:.92rem;color:var(--text-muted);margin-top:.5rem;">This function takes a <strong>dictionary</strong> with the player's stats and displays them. We're using a dict to keep all the score data organized.</p>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="game-step">
+    <div class="game-step-num">STEP 5 — The Main Game Loop</div>
+    <p>This is the biggest step — the actual game! Add this <strong>below Step 4</strong>. Read the comments carefully — they explain every line.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_game.py — Step 5 (below Step 4)</span></div><div class="code-body"><span class="com"># === MAIN GAME ===</span>
+<span class="fn">print</span>(<span class="str">"==============================="</span>)
+<span class="fn">print</span>(<span class="str">"   WORD GUESSING GAME"</span>)
+<span class="fn">print</span>(<span class="str">"==============================="</span>)
+<span class="fn">print</span>(<span class="str">"Guess the word from the hint!"</span>)
+<span class="fn">print</span>(<span class="str">"Type 'quit' to stop playing."</span>)
+<span class="fn">print</span>()
+
+<span class="com"># Stats dictionary — tracks the player's performance</span>
+<span class="var">stats</span> <span class="op">=</span> {
+    <span class="str">"correct"</span>: <span class="num">0</span>,
+    <span class="str">"wrong"</span>: <span class="num">0</span>,
+    <span class="str">"streak"</span>: <span class="num">0</span>,
+    <span class="str">"best_streak"</span>: <span class="num">0</span>
+}
+
+<span class="var">max_wrong_per_word</span> <span class="op">=</span> <span class="num">3</span>    <span class="com"># allowed wrong guesses per word</span>
+<span class="var">playing</span> <span class="op">=</span> <span class="kw">True</span>             <span class="com"># controls the main game loop</span>
+
+<span class="kw">while</span> <span class="var">playing</span>:
+    <span class="com"># Pick a new word and create a hint</span>
+    <span class="var">secret</span> <span class="op">=</span> <span class="fn">pick_word</span>()
+    <span class="var">hint</span> <span class="op">=</span> <span class="fn">create_hint</span>(<span class="var">secret</span>)
+    <span class="var">attempts</span> <span class="op">=</span> <span class="num">0</span>
+    <span class="var">solved</span> <span class="op">=</span> <span class="kw">False</span>
+
+    <span class="fn">print</span>(<span class="str">"Hint:"</span>, <span class="var">hint</span>)
+    <span class="fn">print</span>(<span class="str">"("</span> <span class="op">+</span> <span class="fn">str</span>(<span class="fn">len</span>(<span class="var">secret</span>)) <span class="op">+</span> <span class="str">" letters)"</span>)
+
+    <span class="com"># Inner loop: keep guessing until solved or out of attempts</span>
+    <span class="kw">while</span> <span class="var">attempts</span> <span class="op">&lt;</span> <span class="var">max_wrong_per_word</span> <span class="kw">and</span> <span class="kw">not</span> <span class="var">solved</span>:
+        <span class="var">guess</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Your guess: "</span>).<span class="fn">lower</span>().<span class="fn">strip</span>()
+
+        <span class="kw">if</span> <span class="var">guess</span> <span class="op">==</span> <span class="str">"quit"</span>:
+            <span class="var">playing</span> <span class="op">=</span> <span class="kw">False</span>
+            <span class="var">solved</span> <span class="op">=</span> <span class="kw">True</span>       <span class="com"># exit inner loop too</span>
+        <span class="kw">elif</span> <span class="var">guess</span> <span class="op">==</span> <span class="var">secret</span>:
+            <span class="fn">print</span>(<span class="str">"CORRECT!"</span>)
+            <span class="var">stats</span>[<span class="str">"correct"</span>] <span class="op">=</span> <span class="var">stats</span>[<span class="str">"correct"</span>] <span class="op">+</span> <span class="num">1</span>
+            <span class="var">stats</span>[<span class="str">"streak"</span>] <span class="op">=</span> <span class="var">stats</span>[<span class="str">"streak"</span>] <span class="op">+</span> <span class="num">1</span>
+            <span class="kw">if</span> <span class="var">stats</span>[<span class="str">"streak"</span>] <span class="op">&gt;</span> <span class="var">stats</span>[<span class="str">"best_streak"</span>]:
+                <span class="var">stats</span>[<span class="str">"best_streak"</span>] <span class="op">=</span> <span class="var">stats</span>[<span class="str">"streak"</span>]
+            <span class="var">solved</span> <span class="op">=</span> <span class="kw">True</span>
+        <span class="kw">else</span>:
+            <span class="var">attempts</span> <span class="op">=</span> <span class="var">attempts</span> <span class="op">+</span> <span class="num">1</span>
+            <span class="var">remaining</span> <span class="op">=</span> <span class="var">max_wrong_per_word</span> <span class="op">-</span> <span class="var">attempts</span>
+            <span class="fn">print</span>(<span class="str">"Wrong!"</span>, <span class="var">remaining</span>, <span class="str">"tries left."</span>)
+
+    <span class="com"># After inner loop — did they fail?</span>
+    <span class="kw">if</span> <span class="kw">not</span> <span class="var">solved</span> <span class="kw">and</span> <span class="var">playing</span>:
+        <span class="fn">print</span>(<span class="str">"Out of tries! The word was:"</span>, <span class="var">secret</span>)
+        <span class="var">stats</span>[<span class="str">"wrong"</span>] <span class="op">=</span> <span class="var">stats</span>[<span class="str">"wrong"</span>] <span class="op">+</span> <span class="num">1</span>
+        <span class="var">stats</span>[<span class="str">"streak"</span>] <span class="op">=</span> <span class="num">0</span>    <span class="com"># reset streak</span>
+
+    <span class="kw">if</span> <span class="var">playing</span>:
+        <span class="fn">show_score</span>(<span class="var">stats</span>)
+        <span class="fn">print</span>()
+
+<span class="com"># Game over</span>
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">"=== GAME OVER ==="</span>)
+<span class="fn">print</span>(<span class="str">"Words guessed:"</span>, <span class="var">stats</span>[<span class="str">"correct"</span>])
+<span class="fn">print</span>(<span class="str">"Words missed :"</span>, <span class="var">stats</span>[<span class="str">"wrong"</span>])
+<span class="fn">print</span>(<span class="str">"Best streak  :"</span>, <span class="var">stats</span>[<span class="str">"best_streak"</span>])
+<span class="fn">print</span>(<span class="str">"Thanks for playing!"</span>)</div></div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="game-step">
+    <div class="game-step-num">STEP 6 — Save and Play!</div>
+    <p>Save the file (<strong>Ctrl + S</strong>) and run it:</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Playing the game</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day6&gt;</span> <span class="cmd">python word_game.py</span>
+<span class="output">===============================
+   WORD GUESSING GAME
+===============================
+Guess the word from the hint!
+Type 'quit' to stop playing.
+
+Hint: _ o _ _ e _
+(6 letters)
+Your guess: </span><span class="cmd">rocket</span>
+<span class="output">CORRECT!
+--- Score ---
+Correct: 1
+Wrong  : 0
+Streak : 1
+--------------
+
+Hint: p _ _ _ _ e
+(6 letters)
+Your guess: </span><span class="cmd">puzzle</span>
+<span class="output">CORRECT!
+...</span></div>
+    </div>
+    <p style="font-size:.92rem;color:var(--text-muted);margin-top:.5rem;">Play several rounds! Try getting words right, try getting them wrong, see the streak counter work. Type <code>quit</code> to see the final score.</p>
+  </div>
+
+  <div class="concept">
+    <h3>📖 What Concepts Did This Game Use?</h3>
+    <div>
+      <strong>Variables</strong> — <code>secret</code>, <code>attempts</code>, <code>playing</code>, <code>solved</code><br>
+      <strong>Strings</strong> — <code>.lower()</code>, <code>.strip()</code>, <code>.join()</code>, <code>+</code> concatenation<br>
+      <strong>Lists</strong> — <code>words</code> list, <code>hint</code> list, indexing, <code>range()</code><br>
+      <strong>Dictionary</strong> — <code>stats</code> dict storing score, accessing with <code>["key"]</code><br>
+      <strong>Booleans</strong> — <code>playing</code>, <code>solved</code>, <code>True</code>/<code>False</code><br>
+      <strong>Conditionals</strong> — <code>if/elif/else</code> for checking guess, checking quit<br>
+      <strong>Loops</strong> — <code>while</code> for main game loop and inner guess loop<br>
+      <strong>Functions</strong> — <code>pick_word()</code>, <code>create_hint()</code>, <code>show_score()</code><br>
+      <strong>Import</strong> — <code>import random</code>, <code>random.choice()</code>, <code>random.shuffle()</code>
+    </div>
+  </div>
+
+  <div class="celebrate">
+    <div class="emoji">🎮</div>
+    <h3>You Built a Real Game!</h3>
+    <p>This isn't a tutorial exercise — it's a real, playable game with scoring, streaks, and replayability. You built it using every concept from this course. You're a programmer now.</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- FINAL CHECKLIST -->
+<section class="lab-section" id="final">
+  <div class="section-label">Day 6 Complete</div>
+  <h2>Completion Checklist</h2>
+  <div class="checklist">
+    <h3>🎯 I Can Now…</h3>
+    <label><input type="checkbox"> Identify all Python building blocks: input, output, types, variables, operators, conditionals, loops</label>
+    <label><input type="checkbox"> Create a dictionary with key: value pairs using { }</label>
+    <label><input type="checkbox"> Access, add, change, and check keys in a dictionary</label>
+    <label><input type="checkbox"> Store complex data in dicts (values can be lists, other dicts, any type)</label>
+    <label><input type="checkbox"> Explain what a tuple is and how it differs from a list</label>
+    <label><input type="checkbox"> Explain what None means</label>
+    <label><input type="checkbox"> Define a function with def, parameters, and return</label>
+    <label><input type="checkbox"> Explain the difference between a parameter and an argument</label>
+    <label><input type="checkbox"> Use return to send values back from a function</label>
+    <label><input type="checkbox"> Use the return value in a variable or directly in an expression</label>
+    <label><input type="checkbox"> Understand that functions without return give back None</label>
+    <label><input type="checkbox"> Explain function scope — variables inside functions are local</label>
+    <label><input type="checkbox"> Use default parameter values</label>
+    <label><input type="checkbox"> Build a complete multi-function program (the word game!)</label>
+  </div>
+</section>
+
+</div>
+
+<script>
+function toggleAnswer(btn){const c=btn.nextElementSibling;c.classList.toggle('show');btn.textContent=c.classList.contains('show')?'Hide Answer':'Reveal Answer'}
+function checkMCQ(opt){const mcq=opt.closest('.mcq');if(mcq.dataset.answered)return;mcq.dataset.answered='true';const correct=mcq.dataset.correct,chosen=opt.dataset.value;mcq.querySelectorAll('.mcq-opt').forEach(o=>{if(o.dataset.value===correct)o.classList.add('correct');else if(o===opt&&chosen!==correct)o.classList.add('wrong')});mcq.querySelector('.mcq-explain').classList.add('show')}
+</script>
+</body>
+</html>

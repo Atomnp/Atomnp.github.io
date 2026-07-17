@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 8 — Conventions, Patterns &amp; Reading Code Like a Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181b24;--surface2:#1e222e;--border:#2a2f3e;--text:#e0e4ef;--text-muted:#8891a8;--accent:#6ee7b7;--accent-dim:#2d6a52;--warn:#fbbf24;--blue:#60a5fa;--pink:#f472b6;--orange:#fb923c;--red:#f87171;--purple:#a78bfa;--terminal-bg:#0a0c10;--terminal-green:#4ade80;--terminal-prompt:#6ee7b7;--lab-bg:#141820;--lab-border:#2a4a3a;--check:#22c55e;--correct:#22c55e;--wrong:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;min-height:100vh}.page-wrapper{max-width:880px;margin:0 auto;padding:2rem 1.5rem 6rem}
+.hero{text-align:center;padding:4rem 1rem 3rem}.hero-tag{display:inline-block;background:linear-gradient(135deg,#1a3a2a,#1a3a4a);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;padding:.35rem 1rem;border-radius:99px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem}.hero h1{font-family:'Source Serif 4',serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:1rem}.hero h1 span{color:var(--accent)}.hero-sub{color:var(--text-muted);font-size:1.1rem;max-width:600px;margin:0 auto;line-height:1.7}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:2.5rem 0 3rem}.toc h2{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.2rem}.toc-list{list-style:none}.toc-list li{padding:.5rem 0;border-bottom:1px solid var(--border)}.toc-list li:last-child{border-bottom:none}.toc-list a{color:var(--text);text-decoration:none;font-size:.95rem;display:flex;align-items:center;gap:.75rem;transition:color .2s}.toc-list a:hover{color:var(--accent)}.toc-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-muted);min-width:2rem}
+.lab-section{margin-bottom:4rem;scroll-margin-top:2rem}.section-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem}.lab-section h2{font-family:'Source Serif 4',serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:.5rem}.section-intro{color:var(--text-muted);margin-bottom:1.5rem;font-size:1rem}
+.concept{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.concept h3{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}.concept p,.concept div{font-size:.95rem;line-height:1.8}
+.analogy{background:linear-gradient(135deg,#1a1525,#1e1830);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.analogy-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.warning{background:linear-gradient(135deg,#1f1a10,#221e14);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.warning-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--warn);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.success{background:linear-gradient(135deg,#101f15,#142218);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.success-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.lab-task{background:var(--lab-bg);border:1px solid var(--lab-border);border-radius:12px;padding:1.75rem;margin:1.5rem 0;position:relative}.lab-task::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:12px 12px 0 0}.task-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}.task-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;background:var(--accent-dim);color:var(--accent);padding:.25rem .75rem;border-radius:99px;letter-spacing:.05em}.task-title{font-weight:600;font-size:1.05rem;color:#fff}
+.task-steps{margin-top:.75rem}.task-steps ol{padding-left:1.5rem;counter-reset:sc;list-style:none}.task-steps ol li{counter-increment:sc;position:relative;padding:.4rem 0 .4rem .5rem;font-size:.95rem}.task-steps ol li::before{content:counter(sc);position:absolute;left:-1.5rem;top:.45rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;color:var(--accent);background:var(--accent-dim);width:1.2rem;height:1.2rem;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.terminal{background:var(--terminal-bg);border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}.terminal-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem}.terminal-dot{width:10px;height:10px;border-radius:50%}.terminal-dot.r{background:#f87171}.terminal-dot.y{background:#fbbf24}.terminal-dot.g{background:#4ade80}.terminal-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted);margin-left:.5rem}.terminal-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.terminal-body .prompt{color:var(--terminal-prompt)}.terminal-body .cmd{color:#fff}.terminal-body .output{color:var(--text-muted)}.terminal-body .err{color:var(--red)}
+.code-block{background:#0d1015;border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}.code-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between}.code-lang{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--warn);letter-spacing:.05em}.code-filename{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}.code-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.code-body .kw{color:var(--pink)}.code-body .fn{color:var(--blue)}.code-body .str{color:var(--accent)}.code-body .com{color:#555b70;font-style:italic}.code-body .num{color:var(--orange)}.code-body .var{color:#e0e4ef}.code-body .op{color:var(--warn)}.code-body .ln{color:#3a3f50;user-select:none}.code-body .ann{color:#8891a8}
+.mcq{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.mcq-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}.mcq p.mcq-q{font-size:.95rem;color:#fff;margin-bottom:1rem;font-weight:500}.mcq-options{display:flex;flex-direction:column;gap:.5rem}.mcq-opt{display:flex;align-items:center;gap:.75rem;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.65rem 1rem;cursor:pointer;transition:all .2s;font-size:.9rem;font-family:'JetBrains Mono',monospace}.mcq-opt:hover{border-color:var(--blue)}.mcq-opt.correct{border-color:var(--correct);background:#0f2018;color:var(--correct)}.mcq-opt.wrong{border-color:var(--wrong);background:#200f0f;color:var(--wrong);opacity:.7}.mcq-opt .letter{min-width:1.5rem;height:1.5rem;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--text-muted)}.mcq-opt.correct .letter{border-color:var(--correct);color:var(--correct);background:#0a1a0f}.mcq-opt.wrong .letter{border-color:var(--wrong);color:var(--wrong)}.mcq-explain{display:none;margin-top:1rem;padding:1rem;background:#0f1510;border-radius:8px;border:1px dashed #2a4a2a;font-size:.88rem;color:var(--accent);line-height:1.7}.mcq-explain.show{display:block}
+.answer-toggle{margin-top:.75rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.35rem .9rem;border-radius:6px;cursor:pointer;transition:all .2s}.answer-toggle:hover{border-color:var(--accent);color:var(--accent)}.answer-content{display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);color:var(--accent);font-size:.92rem;line-height:1.7}.answer-content.show{display:block}
+.fill-in{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.fill-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--pink);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}.fill-blank{display:inline-block;border-bottom:2px dashed var(--pink);min-width:80px;color:var(--pink);font-family:'JetBrains Mono',monospace;padding:0 .25rem;cursor:help}
+.debug-box{background:linear-gradient(135deg,#1f1015,#221418);border:1px solid #4a2a2a;border-radius:12px;padding:1.5rem;margin:1.5rem 0}.debug-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.checklist{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin:1.5rem 0}.checklist h3{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--check);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}.checklist label{display:flex;align-items:flex-start;gap:.75rem;padding:.5rem 0;cursor:pointer;font-size:.95rem}.checklist input[type="checkbox"]{appearance:none;width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:3px;cursor:pointer;position:relative}.checklist input[type="checkbox"]:checked{background:var(--check);border-color:var(--check)}.checklist input[type="checkbox"]:checked::after{content:'✓';position:absolute;color:#000;font-size:12px;font-weight:700;top:50%;left:50%;transform:translate(-50%,-50%)}
+.celebrate{background:linear-gradient(135deg,#1a2520,#152030);border:2px solid var(--accent);border-radius:14px;padding:2rem;margin:2rem 0;text-align:center}.celebrate .emoji{font-size:2.5rem;margin-bottom:.75rem}.celebrate h3{font-family:'Source Serif 4',serif;font-size:1.4rem;color:#fff;margin-bottom:.5rem}.celebrate p{color:var(--text-muted);font-size:.95rem;max-width:500px;margin:0 auto}
+/* hover tooltip box */
+.hover-box{background:#1e2430;border:1px solid #3a4a5a;border-radius:8px;padding:1rem 1.25rem;margin:1rem 0;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.7}.hover-box .hb-fn{color:var(--blue)}.hover-box .hb-param{color:var(--orange)}.hover-box .hb-type{color:var(--accent)}.hover-box .hb-ret{color:var(--pink)}.hover-box .hb-def{color:var(--text-muted)}
+code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.15rem .45rem;border-radius:4px;font-size:.88em;color:var(--pink)}.separator{border:none;border-top:1px solid var(--border);margin:3rem 0}strong{color:#fff}
+@media(max-width:600px){.hero h1{font-size:2rem}.page-wrapper{padding:1rem}}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<div class="hero">
+  <div class="hero-tag">Python Course — Day 8</div>
+  <h1>Conventions, Patterns &amp; <span>Reading Code</span></h1>
+  <p class="hero-sub">Today we master the unwritten rules of Python — naming conventions, common patterns, scope, and how to read code hints in VS Code. These skills separate beginners from confident programmers.</p>
+</div>
+
+<div class="toc">
+  <h2>Lab Modules</h2>
+  <ul class="toc-list">
+    <li><a href="#mod1"><span class="toc-num">01</span> Naming Conventions — snake_case &amp; camelCase</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Special Characters in Strings</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Looping Patterns Deep Dive</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Default Arguments in Functions</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> Methods — Actions on Data (Without OOP)</a></li>
+    <li><a href="#mod6"><span class="toc-num">06</span> Scope — Global vs Local Variables</a></li>
+    <li><a href="#mod7"><span class="toc-num">07</span> Type Annotations &amp; Reading VS Code Hints</a></li>
+  </ul>
+</div>
+
+<div class="warning">
+  <div class="warning-label">📌 Setup</div>
+  <p>VS Code → <code>H:\Pooja</code> → create <code>day8</code> → terminal → <code>cd H:\Pooja\day8</code></p>
+</div>
+
+<!-- ═══════════════════ MODULE 1: NAMING ═══════════════════ -->
+<section class="lab-section" id="mod1">
+  <div class="section-label">Module 01</div>
+  <h2>Naming Conventions</h2>
+  <p class="section-intro">Variable names like <code>x</code> or <code>data1</code> are legal but terrible. Professional programmers follow <strong>naming conventions</strong> — agreed-upon styles that make code readable.</p>
+
+  <div class="concept">
+    <h3>💡 snake_case — Python's Convention</h3>
+    <div>
+      In <strong>snake_case</strong>, every word is lowercase and separated by underscores:<br>
+      <code>student_name</code>, <code>total_price</code>, <code>is_logged_in</code>, <code>calculate_tax</code><br><br>
+      This is the <strong>standard convention in Python</strong> for variables, functions, and file names. You'll see it in almost every Python code you read. It's not a rule the computer enforces — <code>StudentName</code> would also work — but the community agreed on snake_case because it's easy to read.
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 camelCase — Other Languages' Convention</h3>
+    <div>
+      In <strong>camelCase</strong>, the first word is lowercase and each following word starts with a capital letter:<br>
+      <code>studentName</code>, <code>totalPrice</code>, <code>isLoggedIn</code>, <code>calculateTax</code><br><br>
+      This is used in JavaScript, Java, and C#. If you read code from those languages, you'll see camelCase everywhere. In Python, we <strong>don't use camelCase</strong> for variables and functions (except for class names, which use <code>PascalCase</code> — but that's for later).
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Why Does This Matter?</h3>
+    <div>
+      <strong>Readability.</strong> Compare: <code>userscoretotal</code> vs <code>user_score_total</code>. The second is instantly readable. When you work on a team (or read someone else's code), consistent naming means everyone can understand the code faster. It's like everyone agreeing to drive on the same side of the road — the convention itself matters less than everyone following it.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 1.1</span><span class="task-title">Practice the Convention</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">naming.py</span></div><div class="code-body"><span class="com"># GOOD — Python snake_case convention</span>
+<span class="var">first_name</span> <span class="op">=</span> <span class="str">"Pooja"</span>
+<span class="var">max_retry_count</span> <span class="op">=</span> <span class="num">3</span>
+<span class="var">is_active</span> <span class="op">=</span> <span class="kw">True</span>
+
+<span class="kw">def</span> <span class="fn">calculate_total</span>(<span class="var">price</span>, <span class="var">tax_rate</span>):
+    <span class="kw">return</span> <span class="var">price</span> <span class="op">+</span> (<span class="var">price</span> <span class="op">*</span> <span class="var">tax_rate</span>)
+
+<span class="com"># BAD — inconsistent or unclear</span>
+<span class="com"># firstName = "Pooja"          # camelCase (not Python style)</span>
+<span class="com"># MAXRETRYCOUNT = 3             # all caps, no separation</span>
+<span class="com"># x = True                      # meaningless name</span>
+<span class="com"># def calcTot(p, t): ...        # abbreviated, unclear</span>
+
+<span class="fn">print</span>(<span class="fn">calculate_total</span>(<span class="num">100</span>, <span class="num">0.18</span>))</div></div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">Which follows Python naming convention?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> totalPrice</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> TotalPrice</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> total_price</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> TOTALPRICE</div>
+    </div>
+    <div class="mcq-explain">Python uses <strong>snake_case</strong>: all lowercase with underscores between words.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 2: ESCAPE CHARS ═══════════════════ -->
+<section class="lab-section" id="mod2">
+  <div class="section-label">Module 02</div>
+  <h2>Special Characters in Strings</h2>
+  <p class="section-intro">Sometimes you need to put things inside a string that you can't just type normally — like a new line, a tab, or a quote character. Python uses the backslash <code>\</code> to create these <strong>escape characters</strong>.</p>
+
+  <div class="concept">
+    <h3>💡 What Is an Escape Character?</h3>
+    <div>
+      The backslash <code>\</code> tells Python: "the next character is special, don't treat it normally." It's called "escaping" because you're escaping the normal meaning.<br><br>
+      <code>\n</code> — <strong>new line</strong> (like pressing Enter)<br>
+      <code>\t</code> — <strong>tab</strong> (large indent space)<br>
+      <code>\\</code> — <strong>literal backslash</strong> (prints a single <code>\</code>)<br>
+      <code>\"</code> — <strong>literal double quote</strong> inside a double-quoted string<br>
+      <code>\'</code> — <strong>literal single quote</strong> inside a single-quoted string
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 2.1</span><span class="task-title">Escape Characters in Action</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">escape.py</span></div><div class="code-body"><span class="com"># \n = new line (most common!)</span>
+<span class="fn">print</span>(<span class="str">"Line 1\nLine 2\nLine 3"</span>)
+
+<span class="fn">print</span>()
+
+<span class="com"># \t = tab (for alignment)</span>
+<span class="fn">print</span>(<span class="str">"Name\tAge\tCity"</span>)
+<span class="fn">print</span>(<span class="str">"Pooja\t20\tMumbai"</span>)
+<span class="fn">print</span>(<span class="str">"Alice\t22\tDelhi"</span>)
+
+<span class="fn">print</span>()
+
+<span class="com"># \\ = literal backslash (for Windows paths)</span>
+<span class="fn">print</span>(<span class="str">"File path: C:\\Users\\Pooja\\Documents"</span>)
+
+<span class="com"># \" = quote inside a string</span>
+<span class="fn">print</span>(<span class="str">"She said \"hello\" to me"</span>)</div></div>
+    <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div><div class="terminal-body"><span class="output">Line 1
+Line 2
+Line 3
+
+Name	Age	City
+Pooja	20	Mumbai
+Alice	22	Delhi
+
+File path: C:\Users\Pooja\Documents
+She said "hello" to me</span></div></div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug — Backslash in Path</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">debug_path.py</span></div><div class="code-body"><span class="var">path</span> <span class="op">=</span> <span class="str">"C:\new_folder\test.txt"</span>
+<span class="fn">print</span>(<span class="var">path</span>)</div></div>
+    <p style="font-size:.9rem;color:var(--text-muted);">Run this — the output looks wrong! Why?</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">The <code>\n</code> in <code>\new_folder</code> is interpreted as a newline, and <code>\t</code> in <code>\test.txt</code> as a tab. Fix: use double backslashes <code>"C:\\new_folder\\test.txt"</code> or a raw string <code>r"C:\new_folder\test.txt"</code> (the <code>r</code> prefix disables escape processing).</div>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>print("A\tB\tC")</code> output?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> A\tB\tC</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> A    B    C (with tab spaces)</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> AtBtC</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain"><code>\t</code> is the tab character — it creates a large space, typically aligning to the next tab stop.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 3: LOOP PATTERNS ═══════════════════ -->
+<section class="lab-section" id="mod3">
+  <div class="section-label">Module 03</div>
+  <h2>Looping Patterns Deep Dive</h2>
+  <p class="section-intro">You know the basics of <code>for</code> loops. Now let's understand every way to loop over lists and dictionaries, and <em>why</em> the syntax looks the way it does.</p>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.1</span><span class="task-title">Three Ways to Loop a List</span></div>
+    <p>In each example, notice: <code>for</code> and <code>in</code> are <strong>keywords</strong> (built into Python). The variable between them is a <strong>name you choose</strong>. Most developers use conventional names — but they could be anything.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">loop_list.py</span></div><div class="code-body"><span class="var">fruits</span> <span class="op">=</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>]
+
+<span class="com"># Way 1: Loop by item (most common)</span>
+<span class="com"># 'fruit' is YOUR variable name — could be 'item', 'f', 'x', anything</span>
+<span class="com"># Convention: use singular of the list name (fruits → fruit)</span>
+<span class="kw">for</span> <span class="var">fruit</span> <span class="kw">in</span> <span class="var">fruits</span>:
+    <span class="fn">print</span>(<span class="var">fruit</span>)
+
+<span class="fn">print</span>()
+
+<span class="com"># Way 2: Loop by index number</span>
+<span class="com"># 'i' is YOUR variable name — convention for index. Could be 'index', 'n'</span>
+<span class="com"># range(len(fruits)) generates [0, 1, 2]</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">fruits</span>)):
+    <span class="fn">print</span>(<span class="str">"Index"</span>, <span class="var">i</span>, <span class="str">"="</span>, <span class="var">fruits</span>[<span class="var">i</span>])
+
+<span class="fn">print</span>()
+
+<span class="com"># Way 3: Loop with both index AND item using enumerate()</span>
+<span class="com"># 'index' and 'fruit' are BOTH your variable names</span>
+<span class="kw">for</span> <span class="var">index</span>, <span class="var">fruit</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="var">fruits</span>):
+    <span class="fn">print</span>(<span class="var">index</span>, <span class="str">"→"</span>, <span class="var">fruit</span>)</div></div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.2</span><span class="task-title">Three Ways to Loop a Dictionary</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">loop_dict.py</span></div><div class="code-body"><span class="var">person</span> <span class="op">=</span> {<span class="str">"name"</span>: <span class="str">"Pooja"</span>, <span class="str">"age"</span>: <span class="num">20</span>, <span class="str">"city"</span>: <span class="str">"Mumbai"</span>}
+
+<span class="com"># Way 1: Loop over keys (default behavior)</span>
+<span class="com"># 'key' is YOUR variable name — convention. Could be 'k', 'field', etc.</span>
+<span class="kw">for</span> <span class="var">key</span> <span class="kw">in</span> <span class="var">person</span>:
+    <span class="fn">print</span>(<span class="var">key</span>, <span class="str">"="</span>, <span class="var">person</span>[<span class="var">key</span>])
+
+<span class="fn">print</span>()
+
+<span class="com"># Way 2: Loop over key-value pairs using .items()</span>
+<span class="com"># .items() returns something like: [("name","Pooja"), ("age",20), ("city","Mumbai")]</span>
+<span class="com"># Each item is a TUPLE (pair). Python "unpacks" it into two variables.</span>
+<span class="com"># 'key' and 'value' are YOUR variable names — convention uses 'k, v' or 'key, value'</span>
+<span class="kw">for</span> <span class="var">key</span>, <span class="var">value</span> <span class="kw">in</span> <span class="var">person</span>.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="var">key</span>, <span class="str">"="</span>, <span class="var">value</span>)
+
+<span class="fn">print</span>()
+
+<span class="com"># Way 3: Loop over values only</span>
+<span class="kw">for</span> <span class="var">value</span> <span class="kw">in</span> <span class="var">person</span>.<span class="fn">values</span>():
+    <span class="fn">print</span>(<span class="var">value</span>)</div></div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Tuple Unpacking — Why <code>for key, value in ...</code> Works</h3>
+    <div>
+      When you write <code>for key, value in person.items():</code>, here's what's happening step by step:<br><br>
+      <code>person.items()</code> returns pairs: <code>[("name", "Pooja"), ("age", 20), ("city", "Mumbai")]</code><br>
+      Each pair is a <strong>tuple</strong> — like a mini list with 2 items.<br>
+      Python can <strong>unpack</strong> a tuple into separate variables: <code>key, value = ("name", "Pooja")</code> puts <code>"name"</code> into <code>key</code> and <code>"Pooja"</code> into <code>value</code>.<br><br>
+      This unpacking happens automatically each iteration of the loop. It's the same as writing:<br>
+      <code>pair = ("name", "Pooja")</code><br>
+      <code>key = pair[0]</code> &nbsp; <code>value = pair[1]</code><br>
+      ...but much shorter and cleaner.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.3</span><span class="task-title">See Tuple Unpacking Yourself</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">unpack.py</span></div><div class="code-body"><span class="com"># Manual unpacking</span>
+<span class="var">pair</span> <span class="op">=</span> (<span class="str">"name"</span>, <span class="str">"Pooja"</span>)
+<span class="var">k</span>, <span class="var">v</span> <span class="op">=</span> <span class="var">pair</span>             <span class="com"># unpacks into two variables</span>
+<span class="fn">print</span>(<span class="var">k</span>)                   <span class="com"># "name"</span>
+<span class="fn">print</span>(<span class="var">v</span>)                   <span class="com"># "Pooja"</span>
+
+<span class="com"># This is exactly what happens inside: for key, value in dict.items()</span>
+<span class="com"># Each iteration, one tuple is unpacked into key and value.</span></div></div>
+  </div>
+
+  <div class="fill-in">
+    <div class="fill-label">✏️ Exercise — Complete the Loop</div>
+    <p>Complete this to print every student's name and grade:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">exercise</span></div><div class="code-body"><span class="var">grades</span> <span class="op">=</span> {<span class="str">"Alice"</span>: <span class="str">"A"</span>, <span class="str">"Bob"</span>: <span class="str">"B"</span>, <span class="str">"Charlie"</span>: <span class="str">"C"</span>}
+
+<span class="kw">for</span> <span class="fill-blank">???</span>, <span class="fill-blank">???</span> <span class="kw">in</span> <span class="var">grades</span>.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="var">name</span>, <span class="str">"got"</span>, <span class="var">grade</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>name</code> and <code>grade</code> — These are variable names you choose. They must match what's used in the <code>print</code> line below. <code>.items()</code> gives tuples like <code>("Alice", "A")</code>, which unpacks into <code>name="Alice"</code> and <code>grade="A"</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 4: DEFAULT ARGS ═══════════════════ -->
+<section class="lab-section" id="mod4">
+  <div class="section-label">Module 04</div>
+  <h2>Default Arguments in Functions</h2>
+  <p class="section-intro">Sometimes a function parameter has a value that's used <em>most of the time</em>. Instead of forcing the caller to provide it every time, you can set a <strong>default value</strong>.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>At a coffee shop: "One coffee, please." The barista assumes <strong>regular size</strong> and <strong>no sugar</strong> unless you say otherwise. Those are <strong>defaults</strong>. But you CAN override them: "Large, two sugars." Default arguments work the same way — sensible assumptions you can override when needed.</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.1</span><span class="task-title">Default Arguments in Action</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">defaults.py</span></div><div class="code-body"><span class="com"># 'greeting' has a default value of "Hello"</span>
+<span class="com"># 'greeting' is a PARAMETER NAME (your choice), "Hello" is the DEFAULT VALUE</span>
+<span class="kw">def</span> <span class="fn">welcome</span>(<span class="var">name</span>, <span class="var">greeting</span><span class="op">=</span><span class="str">"Hello"</span>):
+    <span class="fn">print</span>(<span class="var">greeting</span> <span class="op">+</span> <span class="str">", "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>)
+
+<span class="com"># Call without providing greeting — uses default "Hello"</span>
+<span class="fn">welcome</span>(<span class="str">"Pooja"</span>)                    <span class="com"># Hello, Pooja!</span>
+
+<span class="com"># Call WITH a greeting — overrides the default</span>
+<span class="fn">welcome</span>(<span class="str">"Pooja"</span>, <span class="str">"Good morning"</span>)    <span class="com"># Good morning, Pooja!</span>
+
+<span class="fn">print</span>()
+
+<span class="com"># Practical example: power function</span>
+<span class="com"># Most of the time, we want power of 2 (squaring). So make 2 the default.</span>
+<span class="kw">def</span> <span class="fn">power</span>(<span class="var">base</span>, <span class="var">exponent</span><span class="op">=</span><span class="num">2</span>):
+    <span class="kw">return</span> <span class="var">base</span> <span class="op">**</span> <span class="var">exponent</span>
+
+<span class="fn">print</span>(<span class="fn">power</span>(<span class="num">5</span>))       <span class="com"># 25 (5 squared — used default exponent=2)</span>
+<span class="fn">print</span>(<span class="fn">power</span>(<span class="num">5</span>, <span class="num">3</span>))    <span class="com"># 125 (5 cubed — overrode with exponent=3)</span></div></div>
+  </div>
+
+  <div class="warning">
+    <div class="warning-label">⚠️ Rule: Defaults Must Come Last</div>
+    <p>Parameters with defaults must come <strong>after</strong> parameters without defaults. <code>def func(a, b=10)</code> is valid. <code>def func(a=10, b)</code> is a <strong>SyntaxError</strong>. Think of it like this: the required ingredients come first, the optional ones at the end.</p>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug — Default Before Required</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">debug_default.py</span></div><div class="code-body"><span class="kw">def</span> <span class="fn">greet</span>(<span class="var">greeting</span><span class="op">=</span><span class="str">"Hi"</span>, <span class="var">name</span>):
+    <span class="fn">print</span>(<span class="var">greeting</span>, <span class="var">name</span>)
+
+<span class="fn">greet</span>(<span class="str">"Pooja"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>SyntaxError:</strong> parameter with default (<code>greeting</code>) comes before parameter without default (<code>name</code>). Fix: swap them: <code>def greet(name, greeting="Hi"):</code></div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 5: METHODS ═══════════════════ -->
+<section class="lab-section" id="mod5">
+  <div class="section-label">Module 05</div>
+  <h2>Methods — Actions on Data</h2>
+  <p class="section-intro">You've used methods like <code>.append()</code>, <code>.upper()</code>, and <code>.items()</code>. Let's understand what methods really are — without needing to know about classes or objects yet.</p>
+
+  <div class="concept">
+    <h3>💡 Functions vs Methods — The Simple Difference</h3>
+    <div>
+      A <strong>function</strong> stands on its own: <code>len(my_list)</code>, <code>print("hi")</code>, <code>type(42)</code><br>
+      A <strong>method</strong> is attached to a value with a dot: <code>my_list.append(5)</code>, <code>"hello".upper()</code><br><br>
+      Think of it this way: a <strong>function</strong> is like a tool anyone can use (like a hammer). A <strong>method</strong> is like a button on a specific device (like the shutter button on a camera). The button only exists on the camera — it's attached to it. Similarly, <code>.append()</code> only exists on lists, <code>.upper()</code> only exists on strings.<br><br>
+      <strong>Different types have different methods.</strong> That's why <code>"hello".append(5)</code> fails — strings don't have <code>.append()</code>. And <code>[1,2,3].upper()</code> fails — lists don't have <code>.upper()</code>.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 5.1</span><span class="task-title">Methods by Type — Cheat Sheet</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">methods_cheat.py</span></div><div class="code-body"><span class="com"># === STRING METHODS ===</span>
+<span class="var">text</span> <span class="op">=</span> <span class="str">"  Hello, World!  "</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">strip</span>())            <span class="com"># "Hello, World!" — remove whitespace</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">lower</span>())            <span class="com"># "  hello, world!  "</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">upper</span>())            <span class="com"># "  HELLO, WORLD!  "</span>
+<span class="fn">print</span>(<span class="var">text</span>.<span class="fn">replace</span>(<span class="str">"World"</span>, <span class="str">"Python"</span>))  <span class="com"># swap words</span>
+<span class="fn">print</span>(<span class="str">"a,b,c"</span>.<span class="fn">split</span>(<span class="str">","</span>))    <span class="com"># ["a", "b", "c"] — split into list</span>
+<span class="fn">print</span>(<span class="str">"-"</span>.<span class="fn">join</span>([<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>]))  <span class="com"># "a-b-c" — join list into string</span>
+
+<span class="fn">print</span>()
+
+<span class="com"># === LIST METHODS ===</span>
+<span class="var">nums</span> <span class="op">=</span> [<span class="num">3</span>, <span class="num">1</span>, <span class="num">4</span>]
+<span class="var">nums</span>.<span class="fn">append</span>(<span class="num">9</span>)               <span class="com"># add to end: [3, 1, 4, 9]</span>
+<span class="var">nums</span>.<span class="fn">sort</span>()                  <span class="com"># sort in place: [1, 3, 4, 9]</span>
+<span class="var">nums</span>.<span class="fn">reverse</span>()               <span class="com"># reverse in place: [9, 4, 3, 1]</span>
+<span class="var">nums</span>.<span class="fn">remove</span>(<span class="num">4</span>)               <span class="com"># remove first 4: [9, 3, 1]</span>
+<span class="fn">print</span>(<span class="var">nums</span>)
+<span class="fn">print</span>(<span class="var">nums</span>.<span class="fn">index</span>(<span class="num">3</span>))         <span class="com"># 1 — position of value 3</span>
+
+<span class="fn">print</span>()
+
+<span class="com"># === DICT METHODS ===</span>
+<span class="var">d</span> <span class="op">=</span> {<span class="str">"a"</span>: <span class="num">1</span>, <span class="str">"b"</span>: <span class="num">2</span>}
+<span class="fn">print</span>(<span class="fn">list</span>(<span class="var">d</span>.<span class="fn">keys</span>()))       <span class="com"># ["a", "b"]</span>
+<span class="fn">print</span>(<span class="fn">list</span>(<span class="var">d</span>.<span class="fn">values</span>()))     <span class="com"># [1, 2]</span>
+<span class="fn">print</span>(<span class="fn">list</span>(<span class="var">d</span>.<span class="fn">items</span>()))      <span class="com"># [("a", 1), ("b", 2)]</span>
+<span class="fn">print</span>(<span class="var">d</span>.<span class="fn">get</span>(<span class="str">"c"</span>, <span class="num">0</span>))        <span class="com"># 0 — get value or default (no KeyError!)</span></div></div>
+  </div>
+
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">Why does <code>(5).append(3)</code> fail?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 5 is too small</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> You need to use add() instead</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> append() only works on strings</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> .append() is a list method — integers don't have it</div>
+    </div>
+    <div class="mcq-explain">Different types have different methods. <code>.append()</code> belongs to <strong>lists</strong>. Integers have no <code>.append()</code> method, so you get an <strong>AttributeError</strong>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 6: SCOPE ═══════════════════ -->
+<section class="lab-section" id="mod6">
+  <div class="section-label">Module 06</div>
+  <h2>Scope — Global vs Local</h2>
+  <p class="section-intro">Understanding scope means understanding <em>where</em> a variable exists and who can see it. This is a common source of confusion, so let's make it crystal clear.</p>
+
+  <div class="concept">
+    <h3>💡 The Three Rules of Scope</h3>
+    <div>
+      <strong>Rule 1:</strong> A variable created <strong>outside</strong> any function is <strong>global</strong> — it can be <strong>read</strong> from anywhere, including inside functions.<br><br>
+      <strong>Rule 2:</strong> A variable created <strong>inside</strong> a function is <strong>local</strong> — it only exists while the function runs and <strong>cannot</strong> be seen outside.<br><br>
+      <strong>Rule 3:</strong> If you <strong>assign</strong> to a variable inside a function, Python <strong>always creates a new local variable</strong> — even if a global variable with the same name already exists. The global one is untouched.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 6.1</span><span class="task-title">Rule 3 Is Tricky — See It</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">scope_tricky.py</span></div><div class="code-body"><span class="var">color</span> <span class="op">=</span> <span class="str">"blue"</span>      <span class="com"># GLOBAL variable</span>
+
+<span class="kw">def</span> <span class="fn">paint</span>():
+    <span class="var">color</span> <span class="op">=</span> <span class="str">"red"</span>  <span class="com"># This creates a NEW LOCAL variable called 'color'!</span>
+    <span class="com">#               It does NOT change the global 'color'.</span>
+    <span class="fn">print</span>(<span class="str">"Inside function:"</span>, <span class="var">color</span>)   <span class="com"># red (local)</span>
+
+<span class="fn">paint</span>()
+<span class="fn">print</span>(<span class="str">"Outside function:"</span>, <span class="var">color</span>)     <span class="com"># blue (global — unchanged!)</span></div></div>
+    <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div><div class="terminal-body"><span class="output">Inside function: red
+Outside function: blue</span></div></div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">Inside the function, <code>color</code> is <code>"red"</code> (local copy). Outside, <code>color</code> is still <code>"blue"</code> (the global was never touched). They're two completely different variables that happen to share a name.</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 6.2</span><span class="task-title">Reading Global Without Modifying — Works Fine</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">scope_read.py</span></div><div class="code-body"><span class="var">PI</span> <span class="op">=</span> <span class="num">3.14159</span>    <span class="com"># GLOBAL constant</span>
+
+<span class="kw">def</span> <span class="fn">circle_area</span>(<span class="var">radius</span>):
+    <span class="com"># Reading PI is fine — no assignment, so Python uses the global</span>
+    <span class="kw">return</span> <span class="var">PI</span> <span class="op">*</span> <span class="var">radius</span> <span class="op">**</span> <span class="num">2</span>
+
+<span class="fn">print</span>(<span class="fn">circle_area</span>(<span class="num">5</span>))   <span class="com"># 78.53975 — works! PI was read, not modified.</span></div></div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 6.3</span><span class="task-title">The <code>global</code> Keyword — How (and Why Not)</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">scope_global.py</span></div><div class="code-body"><span class="var">count</span> <span class="op">=</span> <span class="num">0</span>
+
+<span class="kw">def</span> <span class="fn">increment</span>():
+    <span class="kw">global</span> <span class="var">count</span>    <span class="com"># "Don't create a local — use the GLOBAL count"</span>
+    <span class="var">count</span> <span class="op">=</span> <span class="var">count</span> <span class="op">+</span> <span class="num">1</span>
+
+<span class="fn">increment</span>()
+<span class="fn">increment</span>()
+<span class="fn">print</span>(<span class="var">count</span>)   <span class="com"># 2 — the global WAS modified</span>
+
+<span class="com"># THIS WORKS but is considered BAD PRACTICE.</span>
+<span class="com"># Better approach: use parameters and return</span>
+<span class="kw">def</span> <span class="fn">increment_better</span>(<span class="var">value</span>):
+    <span class="kw">return</span> <span class="var">value</span> <span class="op">+</span> <span class="num">1</span>
+
+<span class="var">count</span> <span class="op">=</span> <span class="num">0</span>
+<span class="var">count</span> <span class="op">=</span> <span class="fn">increment_better</span>(<span class="var">count</span>)
+<span class="var">count</span> <span class="op">=</span> <span class="fn">increment_better</span>(<span class="var">count</span>)
+<span class="fn">print</span>(<span class="var">count</span>)   <span class="com"># 2 — same result, clearer code</span></div></div>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q"><code>x = 10</code><br><code>def change():</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;x = 99</code><br><code>change()</code><br><code>print(x)</code><br><br>What is printed?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 99</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 10</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Error</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> None</div>
+    </div>
+    <div class="mcq-explain"><code>x = 99</code> inside the function creates a <strong>new local variable</strong>. It does NOT change the global <code>x</code>. So the global <code>x</code> is still <code>10</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 7: TYPE ANNOTATIONS ═══════════════════ -->
+<section class="lab-section" id="mod7">
+  <div class="section-label">Module 07</div>
+  <h2>Type Annotations &amp; Reading VS Code Hints</h2>
+  <p class="section-intro">When you hover over a function in VS Code, a tooltip appears showing its <strong>signature</strong> — what inputs it takes, their types, and what it returns. Learning to read these hints makes you much faster at using any function.</p>
+
+  <div class="concept">
+    <h3>💡 What Are Type Annotations?</h3>
+    <div>
+      Type annotations are <strong>optional hints</strong> you add to your code to say: "this variable should be an int" or "this function returns a string." Python does <strong>NOT enforce them</strong> — your code runs the same with or without them. They exist purely to help <strong>programmers</strong> (and VS Code) understand the code better. They're especially useful in large projects where many people work on the same code.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 7.1</span><span class="task-title">Basic Type Annotations</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">annotations.py</span></div><div class="code-body"><span class="com"># Variable annotations</span>
+<span class="var">name</span><span class="ann">: str</span> <span class="op">=</span> <span class="str">"Pooja"</span>      <span class="com"># name should be a string</span>
+<span class="var">age</span><span class="ann">: int</span> <span class="op">=</span> <span class="num">20</span>             <span class="com"># age should be an integer</span>
+<span class="var">height</span><span class="ann">: float</span> <span class="op">=</span> <span class="num">5.4</span>       <span class="com"># height should be a float</span>
+<span class="var">is_active</span><span class="ann">: bool</span> <span class="op">=</span> <span class="kw">True</span>    <span class="com"># is_active should be a boolean</span>
+
+<span class="com"># Function annotations — annotate parameters AND return type</span>
+<span class="kw">def</span> <span class="fn">greet</span>(<span class="var">name</span><span class="ann">: str</span>, <span class="var">times</span><span class="ann">: int</span> <span class="op">=</span> <span class="num">1</span>) <span class="ann">-> str</span>:
+    <span class="kw">return</span> (<span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"! "</span>) <span class="op">*</span> <span class="var">times</span>
+
+<span class="com"># Reading the signature:</span>
+<span class="com"># greet(name: str, times: int = 1) -> str</span>
+<span class="com">#       ^^^^^^^^                          name must be a string</span>
+<span class="com">#                  ^^^^^^^^^^^            times must be an int, defaults to 1</span>
+<span class="com">#                              ^^^^^^    returns a string</span>
+
+<span class="fn">print</span>(<span class="fn">greet</span>(<span class="str">"Pooja"</span>))         <span class="com"># Hello, Pooja!</span>
+<span class="fn">print</span>(<span class="fn">greet</span>(<span class="str">"Pooja"</span>, <span class="num">3</span>))      <span class="com"># Hello, Pooja! Hello, Pooja! Hello, Pooja!</span></div></div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 How to Read a VS Code Hover Tooltip</h3>
+    <div>When you hover over a function in VS Code, you'll see something like this:</div>
+  </div>
+
+  <div class="hover-box">
+    (<span class="hb-def">method</span>) <span class="hb-fn">str.replace</span>(<span class="hb-param">old</span>: <span class="hb-type">str</span>, <span class="hb-param">new</span>: <span class="hb-type">str</span>, <span class="hb-param">count</span>: <span class="hb-type">int</span> = <span class="hb-type">-1</span>) -> <span class="hb-ret">str</span>
+  </div>
+
+  <div class="concept">
+    <h3>📖 Reading the Tooltip — Piece by Piece</h3>
+    <div>
+      <code>(method)</code> — this is a method (attached to a value with a dot)<br>
+      <code>str.replace</code> — it belongs to strings, named <code>replace</code><br>
+      <code>old: str</code> — first input: the text to find. Must be a <strong>str</strong>.<br>
+      <code>new: str</code> — second input: the replacement text. Must be a <strong>str</strong>.<br>
+      <code>count: int = -1</code> — third input: how many replacements. <strong>int</strong>, default is <code>-1</code> (meaning replace all). <strong>This is optional</strong> because it has a default.<br>
+      <code>-> str</code> — it <strong>returns</strong> a string (the new text with replacements made)
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 7.2</span><span class="task-title">Practice Reading Tooltips</span></div>
+    <p>In VS Code, type this code. Then hover your mouse over each function/method name and read the tooltip. Match what you see with what the code does.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">read_hints.py</span></div><div class="code-body"><span class="com"># Hover over 'len' — you'll see: len(obj: Sized) -> int</span>
+<span class="com"># Meaning: takes something with a size, returns an int</span>
+<span class="fn">print</span>(<span class="fn">len</span>(<span class="str">"hello"</span>))       <span class="com"># 5</span>
+
+<span class="com"># Hover over 'split' — you'll see: str.split(sep: str | None = None, ...) -> list[str]</span>
+<span class="com"># Meaning: optional separator (str or None), returns a list of strings</span>
+<span class="fn">print</span>(<span class="str">"a-b-c"</span>.<span class="fn">split</span>(<span class="str">"-"</span>))  <span class="com"># ["a", "b", "c"]</span>
+
+<span class="com"># Hover over 'append' — you'll see: list.append(object) -> None</span>
+<span class="com"># Meaning: takes any object, returns None (modifies the list in-place)</span>
+<span class="var">nums</span> <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>]
+<span class="var">nums</span>.<span class="fn">append</span>(<span class="num">3</span>)
+<span class="fn">print</span>(<span class="var">nums</span>)</div></div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 The <code>|</code> Symbol — "or" in Types</h3>
+    <div>
+      When you see <code>str | None</code> in a tooltip, the <code>|</code> means <strong>"or"</strong>. So <code>str | None</code> means "this can be a string or None." You'll also see things like <code>int | float</code> meaning "this can be an integer or a float."<br><br>
+      And if you see a type you don't recognize (like <code>Iterable</code> or <code>Callable</code>), that's a <strong>custom type</strong> created by programmers. Don't worry about it — just know it's a more specific description of what the function expects.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 7.3</span><span class="task-title">Write Your Own Annotated Function</span></div>
+    <p>Write a function that takes a list of numbers and returns the average. Use type annotations.</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer (try first!)</button>
+    <div class="answer-content"><code>def average(numbers: list) -> float:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;total = sum(numbers)</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;return total / len(numbers)</code><br><br><code>print(average([10, 20, 30]))  # 20.0</code></div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">You see this tooltip: <code>round(number: float, ndigits: int = 0) -> int</code><br>Which parameter is optional?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> number</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Both are required</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> ndigits (it has a default = 0)</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> The return type</div>
+    </div>
+    <div class="mcq-explain"><code>ndigits: int = 0</code> has a default value of 0, making it optional. <code>number: float</code> has no default, so it's required.</div>
+  </div>
+
+  <div class="mcq" data-correct="A">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>str | None</code> mean in a type annotation?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> The value can be either a string or None</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> The value must be both a string and None</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Divide the string by None</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> The string cannot be None</div>
+    </div>
+    <div class="mcq-explain">The <code>|</code> symbol means "or" in type annotations. <code>str | None</code> means the value can be a string OR the special value None.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<section class="lab-section" id="final">
+  <div class="section-label">Day 8 Complete</div>
+  <h2>Completion Checklist</h2>
+  <div class="checklist">
+    <h3>🎯 I Can Now…</h3>
+    <label><input type="checkbox"> Explain the difference between snake_case and camelCase</label>
+    <label><input type="checkbox"> Use Python's snake_case convention for variables and functions</label>
+    <label><input type="checkbox"> Use escape characters: \n (newline), \t (tab), \\ (backslash), \" (quote)</label>
+    <label><input type="checkbox"> Loop over a list three ways: by item, by index, with enumerate()</label>
+    <label><input type="checkbox"> Loop over a dict three ways: by keys, by .items(), by .values()</label>
+    <label><input type="checkbox"> Explain tuple unpacking and why <code>for k, v in dict.items()</code> works</label>
+    <label><input type="checkbox"> Use default parameter values in functions</label>
+    <label><input type="checkbox"> Explain the difference between a function and a method</label>
+    <label><input type="checkbox"> Use common methods on strings, lists, and dicts</label>
+    <label><input type="checkbox"> Explain the three rules of variable scope</label>
+    <label><input type="checkbox"> Predict whether a variable change inside a function affects the global</label>
+    <label><input type="checkbox"> Read type annotations: parameter types, default values, return types</label>
+    <label><input type="checkbox"> Read VS Code hover tooltips and understand what a function expects</label>
+    <label><input type="checkbox"> Understand the | symbol means "or" in type annotations</label>
+  </div>
+
+  <div class="celebrate">
+    <div class="emoji">🏆</div>
+    <h3>You Can Read Code Like a Pro!</h3>
+    <p>Naming conventions, escape characters, looping patterns, scope rules, and type annotations — these are the skills that let you read ANY Python code and understand it. You're no longer just writing code; you're reading and understanding code written by others. That's a massive level-up.</p>
+  </div>
+</section>
+
+</div>
+<script>
+function toggleAnswer(btn){const c=btn.nextElementSibling;c.classList.toggle('show');btn.textContent=c.classList.contains('show')?'Hide Answer':'Reveal Answer'}
+function checkMCQ(opt){const mcq=opt.closest('.mcq');if(mcq.dataset.answered)return;mcq.dataset.answered='true';const correct=mcq.dataset.correct,chosen=opt.dataset.value;mcq.querySelectorAll('.mcq-opt').forEach(o=>{if(o.dataset.value===correct)o.classList.add('correct');else if(o===opt&&chosen!==correct)o.classList.add('wrong')});mcq.querySelector('.mcq-explain').classList.add('show')}
+</script>
+</body>
+</html>

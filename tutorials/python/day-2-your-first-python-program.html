@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 2 — Your First Python Program</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #181b24;
+  --surface2: #1e222e;
+  --border: #2a2f3e;
+  --text: #e0e4ef;
+  --text-muted: #8891a8;
+  --accent: #6ee7b7;
+  --accent-dim: #2d6a52;
+  --warn: #fbbf24;
+  --blue: #60a5fa;
+  --pink: #f472b6;
+  --orange: #fb923c;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --terminal-bg: #0a0c10;
+  --terminal-green: #4ade80;
+  --terminal-prompt: #6ee7b7;
+  --lab-bg: #141820;
+  --lab-border: #2a4a3a;
+  --check: #22c55e;
+  --correct: #22c55e;
+  --wrong: #ef4444;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  min-height: 100vh;
+}
+.page-wrapper { max-width: 880px; margin: 0 auto; padding: 2rem 1.5rem 6rem; }
+
+/* HERO */
+.hero { text-align: center; padding: 4rem 1rem 3rem; }
+.hero-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #1a3a2a, #1a3a4a);
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; font-weight: 600;
+  padding: 0.35rem 1rem; border-radius: 99px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-family: 'Source Serif 4', serif;
+  font-size: 2.8rem; font-weight: 700;
+  color: #fff; line-height: 1.2; margin-bottom: 1rem;
+}
+.hero h1 span { color: var(--accent); }
+.hero-sub { color: var(--text-muted); font-size: 1.1rem; max-width: 580px; margin: 0 auto; line-height: 1.7; }
+
+/* TOC */
+.toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 2.5rem 0 3rem; }
+.toc h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.2rem; }
+.toc-list { list-style: none; }
+.toc-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+.toc-list li:last-child { border-bottom: none; }
+.toc-list a { color: var(--text); text-decoration: none; font-size: 0.95rem; display: flex; align-items: center; gap: 0.75rem; transition: color 0.2s; }
+.toc-list a:hover { color: var(--accent); }
+.toc-num { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); min-width: 2rem; }
+
+/* SECTIONS */
+.lab-section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
+.section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.5rem; }
+.lab-section h2 { font-family: 'Source Serif 4', serif; font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+.section-intro { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1rem; }
+
+/* CONCEPT */
+.concept { background: var(--surface); border-left: 3px solid var(--blue); border-radius: 0 10px 10px 0; padding: 1.5rem; margin: 1.5rem 0; }
+.concept h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+.concept p { font-size: 0.95rem; line-height: 1.8; }
+
+/* ANALOGY */
+.analogy { background: linear-gradient(135deg, #1a1525, #1e1830); border-left: 3px solid var(--purple); border-radius: 0 10px 10px 0; padding: 1.5rem; margin: 1.5rem 0; }
+.analogy-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--purple); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+
+/* WARNING */
+.warning { background: linear-gradient(135deg, #1f1a10, #221e14); border-left: 3px solid var(--warn); border-radius: 0 10px 10px 0; padding: 1.5rem; margin: 1.5rem 0; }
+.warning-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--warn); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+
+/* SUCCESS */
+.success { background: linear-gradient(135deg, #101f15, #142218); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 1.5rem; margin: 1.5rem 0; }
+.success-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+
+/* LAB TASK */
+.lab-task { background: var(--lab-bg); border: 1px solid var(--lab-border); border-radius: 12px; padding: 1.75rem; margin: 1.5rem 0; position: relative; }
+.lab-task::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--blue)); border-radius: 12px 12px 0 0; }
+.task-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.task-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; background: var(--accent-dim); color: var(--accent); padding: 0.25rem 0.75rem; border-radius: 99px; letter-spacing: 0.05em; }
+.task-title { font-weight: 600; font-size: 1.05rem; color: #fff; }
+.task-steps { margin-top: 0.75rem; }
+.task-steps ol { padding-left: 1.5rem; counter-reset: step-counter; list-style: none; }
+.task-steps ol li { counter-increment: step-counter; position: relative; padding: 0.4rem 0 0.4rem 0.5rem; font-size: 0.95rem; }
+.task-steps ol li::before { content: counter(step-counter); position: absolute; left: -1.5rem; top: 0.45rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; color: var(--accent); background: var(--accent-dim); width: 1.2rem; height: 1.2rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+/* TERMINAL */
+.terminal { background: var(--terminal-bg); border: 1px solid #1e2230; border-radius: 10px; margin: 1rem 0; overflow: hidden; }
+.terminal-bar { background: #161922; padding: 0.5rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dot.r { background: #f87171; } .terminal-dot.y { background: #fbbf24; } .terminal-dot.g { background: #4ade80; }
+.terminal-title { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin-left: 0.5rem; }
+.terminal-body { padding: 1rem 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.9; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+.terminal-body .prompt { color: var(--terminal-prompt); }
+.terminal-body .cmd { color: #fff; }
+.terminal-body .output { color: var(--text-muted); }
+.terminal-body .comment { color: #555b70; font-style: italic; }
+.terminal-body .highlight { color: var(--warn); }
+.terminal-body .path-hl { color: var(--blue); }
+.terminal-body .file-hl { color: var(--pink); }
+.terminal-body .flag-hl { color: var(--orange); }
+.terminal-body .str-hl { color: var(--accent); }
+
+/* CODE BLOCK (python) */
+.code-block { background: #0d1015; border: 1px solid #1e2230; border-radius: 10px; margin: 1rem 0; overflow: hidden; }
+.code-bar { background: #161922; padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+.code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--warn); letter-spacing: 0.05em; }
+.code-filename { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); }
+.code-body { padding: 1rem 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.9; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+.code-body .kw { color: var(--pink); }
+.code-body .fn { color: var(--blue); }
+.code-body .str { color: var(--accent); }
+.code-body .com { color: #555b70; font-style: italic; }
+.code-body .num { color: var(--orange); }
+.code-body .var { color: #e0e4ef; }
+.code-body .op { color: var(--warn); }
+
+/* MCQ */
+.mcq { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+.mcq-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--orange); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+.mcq p.mcq-q { font-size: 0.95rem; color: #fff; margin-bottom: 1rem; font-weight: 500; }
+.mcq-options { display: flex; flex-direction: column; gap: 0.5rem; }
+.mcq-opt {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 0.65rem 1rem;
+  cursor: pointer; transition: all 0.2s; font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+.mcq-opt:hover { border-color: var(--blue); }
+.mcq-opt.selected { border-color: var(--blue); background: #1a2535; }
+.mcq-opt.correct { border-color: var(--correct); background: #0f2018; color: var(--correct); }
+.mcq-opt.wrong { border-color: var(--wrong); background: #200f0f; color: var(--wrong); opacity: 0.7; }
+.mcq-opt .letter { min-width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); transition: all 0.2s; }
+.mcq-opt.correct .letter { border-color: var(--correct); color: var(--correct); background: #0a1a0f; }
+.mcq-opt.wrong .letter { border-color: var(--wrong); color: var(--wrong); }
+.mcq-explain { display: none; margin-top: 1rem; padding: 1rem; background: #0f1510; border-radius: 8px; border: 1px dashed #2a4a2a; font-size: 0.88rem; color: var(--accent); line-height: 1.7; }
+.mcq-explain.show { display: block; }
+
+/* QUESTION */
+.question { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1.25rem 0; }
+.question-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--orange); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.answer-toggle { margin-top: 0.75rem; background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 0.35rem 0.9rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+.answer-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.answer-content { display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); color: var(--accent); font-size: 0.92rem; }
+.answer-content.show { display: block; }
+
+/* CHECKLIST */
+.checklist { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; margin: 1.5rem 0; }
+.checklist h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--check); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; }
+.checklist label { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; cursor: pointer; font-size: 0.95rem; transition: opacity 0.2s; }
+.checklist input[type="checkbox"] { appearance: none; width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; flex-shrink: 0; margin-top: 3px; cursor: pointer; position: relative; transition: all 0.2s; }
+.checklist input[type="checkbox"]:checked { background: var(--check); border-color: var(--check); }
+.checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; color: #000; font-size: 12px; font-weight: 700; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.checklist label:has(input:checked) { opacity: 0.5; text-decoration: line-through; }
+
+/* DIAGRAM */
+.diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 1.5rem 0; text-align: center; overflow-x: auto; }
+
+/* CELEBRATE */
+.celebrate { background: linear-gradient(135deg, #1a2520, #152030); border: 2px solid var(--accent); border-radius: 14px; padding: 2rem; margin: 2rem 0; text-align: center; }
+.celebrate .emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.celebrate h3 { font-family: 'Source Serif 4', serif; font-size: 1.4rem; color: #fff; margin-bottom: 0.5rem; }
+.celebrate p { color: var(--text-muted); font-size: 0.95rem; max-width: 500px; margin: 0 auto; }
+
+/* MISC */
+code { font-family: 'JetBrains Mono', monospace; background: var(--surface2); padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.88em; color: var(--pink); }
+.separator { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+strong { color: #fff; }
+
+@media (max-width: 600px) {
+  .hero h1 { font-size: 2rem; }
+  .page-wrapper { padding: 1rem; }
+  .lab-task, .concept, .analogy, .warning, .mcq { padding: 1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<!-- ════════════════ HERO ════════════════ -->
+<div class="hero">
+  <div class="hero-tag">Python Course — Day 2</div>
+  <h1>Your First <span>Python</span> Program</h1>
+  <p class="hero-sub">Today you'll master the terminal, install Python, and write real programs that make your computer do what you tell it. By the end, you'll be a person who can code.</p>
+</div>
+
+<!-- ════════════════ TOC ════════════════ -->
+<div class="toc">
+  <h2>Lab Modules</h2>
+  <ul class="toc-list">
+    <li><a href="#mod1"><span class="toc-num">01</span> Terminal Warm-Up — PowerShell Recap &amp; New Commands</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Paths &amp; Navigation — Drives, Folders, and Addresses</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Creating Files &amp; Folders from the Terminal</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Checking If Software Is Installed</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> Downloading &amp; Installing Python</a></li>
+    <li><a href="#mod6"><span class="toc-num">06</span> Running Python &amp; Understanding the PATH</a></li>
+    <li><a href="#mod7"><span class="toc-num">07</span> Command-Line Arguments — Talking to Programs</a></li>
+    <li><a href="#mod8"><span class="toc-num">08</span> Your First Python Program — Hello, World!</a></li>
+    <li><a href="#mod9"><span class="toc-num">09</span> Input → Process → Output — What Programs Really Do</a></li>
+    <li><a href="#mod10"><span class="toc-num">10</span> Cool Programs You Can Already Run</a></li>
+    <li><a href="#mod11"><span class="toc-num">11</span> The Big Picture — A Mini Calculator App</a></li>
+  </ul>
+</div>
+
+<div class="warning">
+  <div class="warning-label">📌 Important Setup Note</div>
+  <p>Throughout this lab, we'll use <strong>PowerShell</strong> as our terminal. We'll store all our course files in <code>H:\Pooja</code>. Make sure you can see the H: drive on your computer before starting.</p>
+</div>
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 1: TERMINAL WARM-UP                                  ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod1">
+  <div class="section-label">Module 01</div>
+  <h2>Terminal Warm-Up — PowerShell Recap</h2>
+  <p class="section-intro">Let's refresh what we learned last time and learn a few more useful commands. Remember: the terminal is just a text-based way to talk to your computer.</p>
+
+  <div class="concept">
+    <h3>💡 Quick Recap from Day 0</h3>
+    <p>The <strong>terminal</strong> is a text window where you type commands. You type a command, press <strong>Enter</strong>, and the computer does what you asked. Today we'll use <strong>PowerShell</strong> — Windows' modern terminal. It works the same way as Command Prompt but has more features.</p>
+  </div>
+
+  <!-- TASK 1.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.1</span>
+      <span class="task-title">Open PowerShell</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Press the <strong>Windows key</strong> on your keyboard (the key with the Windows logo, usually between Ctrl and Alt).</li>
+        <li>Type <code>powershell</code> — you'll see "Windows PowerShell" appear in the search results.</li>
+        <li>Click on it. A blue/dark window will open with text. This is PowerShell — your terminal.</li>
+        <li>You'll see something like this:</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span>
+        <span class="terminal-title">PowerShell</span>
+      </div>
+      <div class="terminal-body"><span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">_</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">The <code>PS</code> at the start means you're in <strong>PowerShell</strong>. The path after it (<code>C:\Users\YourName</code>) is the folder you're currently "standing in."</p>
+  </div>
+
+  <!-- TASK 1.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.2</span>
+      <span class="task-title">Recap — Try These Commands Again</span>
+    </div>
+    <p>Type each of these commands and press Enter after each one. Observe the result before moving to the next.</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Warm-up commands</span></div>
+      <div class="terminal-body"><span class="comment"># 1. Where am I right now?</span>
+<span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">pwd</span>
+<span class="output">Path
+----
+C:\Users\YourName</span>
+
+<span class="comment"># 2. What files and folders are here?</span>
+<span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">ls</span>
+<span class="output">    Directory: C:\Users\YourName
+
+Mode                 Name
+----                 ----
+d----                Desktop
+d----                Documents
+d----                Downloads
+-a---                notes.txt</span>
+
+<span class="comment"># 3. Who am I?</span>
+<span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">whoami</span>
+<span class="output">lab-pc\yourname</span>
+
+<span class="comment"># 4. Repeat text back to me</span>
+<span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">echo "I am learning PowerShell"</span>
+<span class="output">I am learning PowerShell</span>
+
+<span class="comment"># 5. Clear the screen</span>
+<span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">cls</span></div>
+    </div>
+  </div>
+
+  <!-- TASK 1.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 1.3</span>
+      <span class="task-title">New Commands — Get More Information</span>
+    </div>
+    <p>Here are some new commands. Try each one.</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">New commands</span></div>
+      <div class="terminal-body"><span class="comment"># Show today's date and time</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">Get-Date</span>
+<span class="output">Monday, March 30, 2026 10:30:15 AM</span>
+
+<span class="comment"># Show your computer's IP address (how others find you on a network)</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">ipconfig</span>
+<span class="output">Windows IP Configuration
+   IPv4 Address. . . . . . : 192.168.1.105
+   ...</span>
+
+<span class="comment"># Show the last 5 commands you typed (your history!)</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">Get-History</span>
+<span class="output">  Id  CommandLine
+  --  -----------
+   1  pwd
+   2  ls
+   3  whoami
+   ...</span>
+
+<span class="comment"># Tip: You can also press the UP ARROW key to scroll
+# through your previous commands. Try it now!</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Try each command above.</li>
+        <li>Press the <strong>Up Arrow</strong> key a few times. See how it brings back your previous commands? This is a huge time-saver — you don't have to re-type everything.</li>
+        <li>Press the <strong>Down Arrow</strong> to go forward through your history. Press <strong>Escape</strong> to clear the current line.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 2: PATHS & NAVIGATION                                ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod2">
+  <div class="section-label">Module 02</div>
+  <h2>Paths &amp; Navigation — Drives, Folders, and Addresses</h2>
+  <p class="section-intro">Every file has a full address called a <strong>path</strong>. Today we'll navigate between two different drives (C: and H:) and become confident moving around your computer from the terminal.</p>
+
+  <div class="concept">
+    <h3>💡 Your Computer Has Multiple Drives</h3>
+    <p>Think of drives as separate buildings. <strong>C:</strong> is the main building where Windows lives. <strong>H:</strong> is another building (maybe a network drive or a second hard disk your school provides). Each building has its own rooms (folders) and papers (files). To get to a room in a different building, you first need to go to that building.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Key Path Commands Cheat Sheet</h3>
+    <p><code>pwd</code> — "Where am I right now?" (Print Working Directory)<br>
+    <code>cd foldername</code> — Go into a folder<br>
+    <code>cd ..</code> — Go up one folder (to the parent)<br>
+    <code>cd \</code> — Go to the root of the current drive<br>
+    <code>cd H:\Pooja</code> — Jump directly to a specific path (any drive)<br>
+    <code>H:</code> — Switch to the H: drive (just type the drive letter and colon)</p>
+  </div>
+
+  <!-- TASK 2.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.1</span>
+      <span class="task-title">Navigate Between the C: and H: Drives</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Switching drives</span></div>
+      <div class="terminal-body"><span class="comment"># Step 1: You start on the C: drive</span>
+<span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">pwd</span>
+<span class="output">C:\Users\YourName</span>
+
+<span class="comment"># Step 2: Switch to the H: drive</span>
+<span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">cd H:\</span>
+<span class="prompt">PS H:\&gt;</span> <span class="cmd">_</span>
+
+<span class="comment"># Step 3: See what's on the H: drive</span>
+<span class="prompt">PS H:\&gt;</span> <span class="cmd">ls</span>
+<span class="output">    Directory: H:\
+
+Mode                 Name
+----                 ----
+d----                Pooja
+d----                OtherStuff</span>
+
+<span class="comment"># Step 4: Go into the Pooja folder</span>
+<span class="prompt">PS H:\&gt;</span> <span class="cmd">cd Pooja</span>
+<span class="prompt">PS H:\Pooja&gt;</span> <span class="cmd">_</span>
+
+<span class="comment"># Step 5: Switch back to C: drive</span>
+<span class="prompt">PS H:\Pooja&gt;</span> <span class="cmd">cd C:\</span>
+<span class="prompt">PS C:\&gt;</span> <span class="cmd">_</span>
+
+<span class="comment"># Step 6: Jump directly to H:\Pooja from anywhere</span>
+<span class="prompt">PS C:\&gt;</span> <span class="cmd">cd H:\Pooja</span>
+<span class="prompt">PS H:\Pooja&gt;</span> <span class="cmd">_</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Follow every step above in your PowerShell. Watch the prompt change as you move.</li>
+        <li>Make sure you can see <code>H:\Pooja</code> in your prompt before continuing. If the Pooja folder doesn't exist yet, we'll create it in the next module.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 2.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.2</span>
+      <span class="task-title">Navigation Drills — Practice Moving Around</span>
+    </div>
+    <p>Starting from <code>H:\Pooja</code>, follow these navigation instructions exactly. After each step, type <code>pwd</code> to confirm you're in the right place.</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Navigation drill</span></div>
+      <div class="terminal-body"><span class="comment"># Start here</span>
+<span class="prompt">PS H:\Pooja&gt;</span> <span class="cmd">cd C:\Users</span>
+<span class="prompt">PS C:\Users&gt;</span> <span class="cmd">pwd</span>
+<span class="output">C:\Users</span>
+
+<span class="prompt">PS C:\Users&gt;</span> <span class="cmd">cd ..</span>
+<span class="prompt">PS C:\&gt;</span> <span class="cmd">pwd</span>
+<span class="output">C:\</span>
+
+<span class="prompt">PS C:\&gt;</span> <span class="cmd">cd Users\YourName\Desktop</span>
+<span class="prompt">PS C:\Users\YourName\Desktop&gt;</span> <span class="cmd">pwd</span>
+<span class="output">C:\Users\YourName\Desktop</span>
+
+<span class="prompt">PS C:\Users\YourName\Desktop&gt;</span> <span class="cmd">cd ..</span>
+<span class="prompt">PS C:\Users\YourName&gt;</span> <span class="cmd">cd ..</span>
+<span class="prompt">PS C:\Users&gt;</span> <span class="cmd">cd ..</span>
+<span class="prompt">PS C:\&gt;</span> <span class="cmd">_</span>
+
+<span class="comment"># Now jump all the way back to H:\Pooja in one command:</span>
+<span class="prompt">PS C:\&gt;</span> <span class="cmd">cd H:\Pooja</span>
+<span class="prompt">PS H:\Pooja&gt;</span> <span class="cmd">_</span></div>
+    </div>
+  </div>
+
+  <!-- MCQ 2.1 -->
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz — Predict the Output</div>
+    <p class="mcq-q">You are at <code>PS C:\Users\YourName\Desktop&gt;</code>. You type <code>cd ..</code> and press Enter. What will the new prompt show?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> PS C:\Users\YourName\Desktop\..&gt;</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> PS C:\&gt;</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> PS C:\Users\YourName&gt;</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> PS H:\Pooja&gt;</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> <code>cd ..</code> goes up one folder. From <code>Desktop</code>, one folder up is <code>YourName</code>. So the prompt becomes <code>PS C:\Users\YourName&gt;</code>.</div>
+  </div>
+
+  <!-- MCQ 2.2 -->
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz — Predict the Output</div>
+    <p class="mcq-q">You are at <code>PS H:\&gt;</code>. You type <code>cd Pooja</code> then <code>cd ..</code> then <code>cd ..</code>. Where are you now?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> PS H:\Pooja&gt;</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> PS H:\&gt;</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> PS C:\&gt;</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error — you can't go above H:\</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> <code>cd Pooja</code> takes you to <code>H:\Pooja</code>. First <code>cd ..</code> takes you back to <code>H:\</code>. Second <code>cd ..</code> tries to go above <code>H:\</code> but you're already at the root — so you stay at <code>H:\</code>. You can't go above the root of a drive.</div>
+  </div>
+
+  <!-- MCQ 2.3 -->
+  <div class="mcq" data-correct="A">
+    <div class="mcq-label">📝 Quiz — Predict the Output</div>
+    <p class="mcq-q">You type <code>cd H:\Pooja</code> from <code>PS C:\Windows\System32&gt;</code>. What does the prompt show?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> PS H:\Pooja&gt;</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> PS C:\Windows\System32\H:\Pooja&gt;</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Error — you can't switch drives with cd</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> PS C:\Pooja&gt;</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> When you give <code>cd</code> a full path (starting with a drive letter like <code>H:\</code>), it jumps directly there — no matter where you currently are. This is called an <strong>absolute path</strong>.</div>
+  </div>
+
+  <!-- MCQ 2.4 -->
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz — Predict the Output</div>
+    <p class="mcq-q">Which of these is a <strong>file path</strong> (not a folder path)?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> H:\Pooja</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> C:\Users\YourName\Desktop</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> C:\Windows</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> H:\Pooja\hello.py</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> A file path ends with a file name that has an extension (like <code>.py</code>). <code>H:\Pooja\hello.py</code> points to a specific file. The others point to folders.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 3: CREATING FILES & FOLDERS FROM TERMINAL             ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod3">
+  <div class="section-label">Module 03</div>
+  <h2>Creating Files &amp; Folders from the Terminal</h2>
+  <p class="section-intro">Last time you created files and folders by right-clicking. Today you'll do it the programmer way — from the terminal. This is faster and the way you'll do it throughout the course.</p>
+
+  <!-- TASK 3.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.1</span>
+      <span class="task-title">Create the Course Folder (If It Doesn't Exist)</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Creating a folder</span></div>
+      <div class="terminal-body"><span class="comment"># First, go to the H: drive</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">cd H:\</span>
+
+<span class="comment"># Create the Pooja folder (mkdir = "make directory")</span>
+<span class="prompt">PS H:\&gt;</span> <span class="cmd">mkdir Pooja</span>
+<span class="output">    Directory: H:\
+
+Mode                 Name
+----                 ----
+d----                Pooja</span>
+
+<span class="comment"># Go inside it</span>
+<span class="prompt">PS H:\&gt;</span> <span class="cmd">cd Pooja</span>
+<span class="prompt">PS H:\Pooja&gt;</span> <span class="cmd">_</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type the commands above. If the folder already exists, PowerShell will tell you — that's fine, just <code>cd</code> into it.</li>
+        <li>Now <strong>open File Explorer</strong> (press <strong>Windows + E</strong>). Navigate to the <strong>H: drive</strong>. You should see the <strong>Pooja</strong> folder there! You created it from the terminal, but it's a real folder — visible everywhere.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 3.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.2</span>
+      <span class="task-title">Create a Sub-Folder</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Sub-folder</span></div>
+      <div class="terminal-body"><span class="comment"># Make sure you're inside H:\Pooja</span>
+<span class="prompt">PS H:\Pooja&gt;</span> <span class="cmd">mkdir day2</span>
+<span class="output">    Directory: H:\Pooja
+
+Mode                 Name
+----                 ----
+d----                day2</span>
+
+<span class="prompt">PS H:\Pooja&gt;</span> <span class="cmd">cd day2</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">_</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Create the <code>day2</code> folder and go inside it.</li>
+        <li>Check File Explorer again — you should see <code>day2</code> inside <code>Pooja</code>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 3.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.3</span>
+      <span class="task-title">Create a File from the Terminal</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Creating a file</span></div>
+      <div class="terminal-body"><span class="comment"># Make sure you're inside H:\Pooja\day2</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">New-Item -Name "practice.txt" -ItemType "File"</span>
+<span class="output">    Directory: H:\Pooja\day2
+
+Mode                 Name
+----                 ----
+-a---                practice.txt</span>
+
+<span class="comment"># Verify it's there</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">ls</span>
+<span class="output">-a---                practice.txt</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">You just created an empty file called <code>practice.txt</code> from the terminal. Check File Explorer — it's there!</p>
+  </div>
+
+  <!-- TASK 3.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.4</span>
+      <span class="task-title">Open Notepad from the Terminal, Edit, and Save</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Opening Notepad</span></div>
+      <div class="terminal-body"><span class="comment"># Open the file in Notepad directly from terminal</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">notepad practice.txt</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type the command above and press Enter. Notepad will open with the empty file.</li>
+        <li>Inside Notepad, type: <code>My name is [your name]. I am learning Python today!</code></li>
+        <li>Press <strong>Ctrl + S</strong> to save the file.</li>
+        <li>Close Notepad (click the X or press Alt+F4).</li>
+        <li>Now, back in PowerShell, read the file's contents:</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Reading the file</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">Get-Content practice.txt</span>
+<span class="output">My name is Pooja. I am learning Python today!</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);"><code>Get-Content</code> is the PowerShell command to read a file's contents and print them in the terminal. You edited a file in Notepad and confirmed the changes from the terminal — both tools see the same file.</p>
+  </div>
+
+  <!-- TASK 3.5 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.5</span>
+      <span class="task-title">Write to a File Directly from the Terminal</span>
+    </div>
+    <p>You can also put text into a file without even opening Notepad:</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Writing to a file</span></div>
+      <div class="terminal-body"><span class="comment"># Write text directly into a new file</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">"Hello from PowerShell!" | Out-File greeting.txt</span>
+
+<span class="comment"># Read it back to confirm</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">Get-Content greeting.txt</span>
+<span class="output">Hello from PowerShell!</span>
+
+<span class="comment"># List all files — you should now have 2 files</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">ls</span>
+<span class="output">-a---         greeting.txt
+-a---         practice.txt</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 4: CHECKING IF SOFTWARE IS INSTALLED                  ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod4">
+  <div class="section-label">Module 04</div>
+  <h2>Checking If Software Is Installed</h2>
+  <p class="section-intro">Before installing Python, let's first check if it's already on this computer. There's a simple way to check from the terminal.</p>
+
+  <div class="concept">
+    <h3>💡 How to Check If a Program Is Installed</h3>
+    <p>The easiest way to check if a program is installed and ready to use is to <strong>try running it</strong>. If the terminal says "not recognized" — it's either not installed or not set up properly. If it shows a version number or opens the program — it's installed and working.</p>
+  </div>
+
+  <!-- TASK 4.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.1</span>
+      <span class="task-title">Check If Python Is Already Installed</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Checking for Python</span></div>
+      <div class="terminal-body"><span class="comment"># Method 1: Try running python with --version flag</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">python --version</span>
+
+<span class="comment"># IF Python is installed, you'll see something like:</span>
+<span class="output">Python 3.12.4</span>
+
+<span class="comment"># IF Python is NOT installed, you'll see something like:</span>
+<span class="output" style="color:var(--red);">python : The term 'python' is not recognized as the name of a
+cmdlet, function, script file, or operable program.</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type <code>python --version</code> and press Enter.</li>
+        <li>Also try <code>python3 --version</code> — some installations use <code>python3</code> instead of <code>python</code>.</li>
+        <li><strong>Write down what you see.</strong> Did you get a version number, or an error?</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 4.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.2</span>
+      <span class="task-title">Try Checking Other Programs Too</span>
+    </div>
+    <p>Let's practice this skill by checking for other programs. Try each:</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Checking other programs</span></div>
+      <div class="terminal-body"><span class="comment"># Check if Git is installed</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">git --version</span>
+
+<span class="comment"># Check if Node.js is installed</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">node --version</span>
+
+<span class="comment"># Check if Java is installed</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">java --version</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">The pattern is always the same: type the program name followed by <code>--version</code>. If you get a version number, it's installed. If you get an error, it's not (or it's not in the PATH — we'll cover that soon).</p>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">You type <code>python --version</code> and see <code>Python 3.11.5</code>. What does this mean?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> Python needs to be updated</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Python version 3.11.5 is installed and working</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Python is installed but not in the PATH</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Python installation failed</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> If the terminal shows a version number, it means the program is installed AND the terminal knows where to find it. Everything is working.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 5: INSTALLING PYTHON                                  ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod5">
+  <div class="section-label">Module 05</div>
+  <h2>Downloading &amp; Installing Python</h2>
+  <p class="section-intro">If Python is not installed (or you want a fresh install), follow these steps. We'll install it from the terminal — the programmer way. Since you're not an admin on this computer, we'll install it <strong>just for your user account</strong>.</p>
+
+  <div class="warning">
+    <div class="warning-label">⚠️ Already Have Python?</div>
+    <p>If <code>python --version</code> already shows Python 3.10 or higher — <strong>skip this module</strong> and go to Module 6. No need to install again!</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 What We're About to Do</h3>
+    <p>We will: (1) <strong>Download</strong> the Python installer from the internet — this copies a file to your computer. (2) <strong>Run the installer</strong> — this sets up Python on your computer so you can use it. We'll use PowerShell commands for both steps. The installation will be "per-user" which means it doesn't need admin permission.</p>
+  </div>
+
+  <!-- TASK 5.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.1</span>
+      <span class="task-title">Download the Python Installer</span>
+    </div>
+    <p>We'll use a PowerShell command to download the installer file from the official Python website.</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Downloading Python</span></div>
+      <div class="terminal-body"><span class="comment"># Step 1: Navigate to your day2 folder</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">cd H:\Pooja\day2</span>
+
+<span class="comment"># Step 2: Download the Python installer
+# This command downloads a file from the internet
+# Invoke-WebRequest = "go to this website and download something"
+# -Uri = the web address of the file
+# -OutFile = what to name the downloaded file</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.12.4/python-3.12.4-amd64.exe" -OutFile "python-installer.exe"</span>
+
+<span class="comment"># This will take a minute or two. You'll see a progress bar.
+# Wait until the prompt comes back.</span>
+
+<span class="comment"># Step 3: Verify the file was downloaded</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">ls python-installer.exe</span>
+<span class="output">-a---     24985432   python-installer.exe</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type the <code>Invoke-WebRequest</code> command carefully (or copy it from the screen if your instructor provides it). Press Enter.</li>
+        <li>Wait for the download to finish. You'll see a progress bar. It might take 1–3 minutes.</li>
+        <li>Once done, type <code>ls python-installer.exe</code> to make sure the file exists. You should see the file with a large size (about 25 million bytes).</li>
+      </ol>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">You just downloaded a file using the terminal instead of a browser. The file <code>python-installer.exe</code> is now sitting in <code>H:\Pooja\day2</code> — you can see it in File Explorer too.</p>
+  </div>
+
+  <!-- TASK 5.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.2</span>
+      <span class="task-title">Install Python (For Current User Only)</span>
+    </div>
+    <p>Now we run the installer. The special flags tell it to install <strong>just for you</strong> (no admin needed) and to <strong>add Python to the PATH</strong> automatically.</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Installing Python</span></div>
+      <div class="terminal-body"><span class="comment"># Run the installer with these flags:
+# /quiet        = don't show the graphical installer window
+# InstallAllUsers=0 = install for current user only (no admin needed)
+# PrependPath=1     = add Python to PATH (very important!)
+# Include_pip=1     = include pip (a tool to install Python packages)</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">.\python-installer.exe /quiet InstallAllUsers=0 PrependPath=1 Include_pip=1</span>
+
+<span class="comment"># This will take 2-5 minutes. The screen won't show much.
+# Just wait patiently until the prompt returns.</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type the command above exactly and press Enter.</li>
+        <li><strong>Be patient.</strong> The installation runs silently (no windows pop up). Wait until you see the prompt again — that means it's done.</li>
+        <li>The installation is complete when the prompt returns.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 5.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.3</span>
+      <span class="task-title">Close and Reopen PowerShell</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li><strong>Close PowerShell completely</strong> — click the X button on the PowerShell window.</li>
+        <li>Open a <strong>new</strong> PowerShell window (Windows key → type "powershell" → click it).</li>
+        <li>Navigate back to your folder: type <code>cd H:\Pooja\day2</code></li>
+      </ol>
+    </div>
+    <div class="warning">
+      <div class="warning-label">⚠️ Why Close and Reopen?</div>
+      <p>The PATH (the list of locations where the terminal looks for programs) is loaded when the terminal starts. Since we just added Python to the PATH during installation, we need to restart the terminal so it picks up this change. The old terminal window still has the old PATH.</p>
+    </div>
+  </div>
+
+  <!-- TASK 5.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 5.4</span>
+      <span class="task-title">Verify Python Is Installed</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Verifying installation</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">python --version</span>
+<span class="output" style="color:var(--accent);">Python 3.12.4</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">If you see a version number — congratulations, Python is installed! If you still see an error, move on to Module 6 where we'll troubleshoot it.</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 6: RUNNING PYTHON & THE PATH                          ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod6">
+  <div class="section-label">Module 06</div>
+  <h2>Running Python &amp; Understanding the PATH</h2>
+  <p class="section-intro">Let's understand <em>why</em> typing <code>python</code> works — and what to do if it doesn't.</p>
+
+  <!-- TASK 6.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.1</span>
+      <span class="task-title">Run the Python Command</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Running Python</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">python --version</span>
+<span class="output">Python 3.12.4</span></div>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Why Does Typing "python" Work?</h3>
+    <p>When you type <code>python</code>, here's what happens behind the scenes:<br><br>
+    1. The terminal reads your command: <code>python</code><br>
+    2. It asks: "Where is a program called 'python'?"<br>
+    3. It looks through a list of folders called the <strong>PATH</strong><br>
+    4. It finds <code>python.exe</code> in one of those folders<br>
+    5. It runs that program<br><br>
+    The <strong>PATH</strong> is just a <strong>setting</strong> — a list of folder locations stored in your computer. When the terminal needs to find a program, it checks each folder in the PATH list, one by one, until it finds the program. That's it — nothing magical.</p>
+  </div>
+
+  <!-- TASK 6.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.2</span>
+      <span class="task-title">See Where Python Is Installed</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Finding Python's location</span></div>
+      <div class="terminal-body"><span class="comment"># Ask PowerShell: "Where is the python program?"</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">Get-Command python | Select-Object Source</span>
+<span class="output">Source
+------
+C:\Users\YourName\AppData\Local\Programs\Python\Python312\python.exe</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">See that? Python was installed to a folder deep inside your user account. The terminal knows to look there because that folder was added to the PATH during installation.</p>
+  </div>
+
+  <!-- TASK 6.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.3</span>
+      <span class="task-title">See the Entire PATH List</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Viewing the PATH</span></div>
+      <div class="terminal-body"><span class="comment"># Show all the folders in the PATH — one per line</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">$env:PATH -split ";"</span>
+<span class="output">C:\Users\YourName\AppData\Local\Programs\Python\Python312\
+C:\Users\YourName\AppData\Local\Programs\Python\Python312\Scripts\
+C:\Windows\system32
+C:\Windows
+C:\Program Files\...
+...</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Run the command above. You'll see a long list of folders.</li>
+        <li>Look through the list. You should see a line containing <code>Python</code>. That's the line that was added during installation.</li>
+        <li>The terminal checks <strong>each of these folders</strong> whenever you type a command. If it finds a matching <code>.exe</code> in any of them, it runs it.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 What If "python" Doesn't Work? — Don't Panic!</h3>
+    <p>If you get an error like "not recognized," it just means the PATH setting doesn't include Python's folder. The fix is to <strong>add Python's folder to the PATH</strong>. Here's how:</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 6.4</span>
+      <span class="task-title">Manually Add Python to PATH (Only If Needed)</span>
+    </div>
+    <p><strong>Skip this if <code>python --version</code> already works.</strong> Only do this if you get the "not recognized" error.</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Fixing the PATH (only if needed)</span></div>
+      <div class="terminal-body"><span class="comment"># Step 1: Find where Python was installed
+# Look in these common locations:</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">Test-Path "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe"</span>
+<span class="output">True</span>
+<span class="comment"># If the above says "True", Python IS installed, the PATH is just missing it.</span>
+
+<span class="comment"># Step 2: Add Python to your PATH for this session (temporary)</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">$env:PATH = "$env:LOCALAPPDATA\Programs\Python\Python312;$env:LOCALAPPDATA\Programs\Python\Python312\Scripts;$env:PATH"</span>
+
+<span class="comment"># Step 3: Test it now</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">python --version</span>
+<span class="output">Python 3.12.4</span>
+
+<span class="comment"># Step 4: To make it permanent (so it works every time you open PowerShell):</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">[Environment]::SetEnvironmentVariable("PATH", "$env:LOCALAPPDATA\Programs\Python\Python312;$env:LOCALAPPDATA\Programs\Python\Python312\Scripts;" + [Environment]::GetEnvironmentVariable("PATH", "User"), "User")</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);"><strong>Don't be intimidated by that long command.</strong> All it does is add Python's folder to the saved list of PATH folders. You only need to do this once. After this, <code>python</code> will work every time you open PowerShell.</p>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What is the PATH?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> The location of a specific file like C:\Pooja\hello.py</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> A command that runs Python programs</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> A saved list of folders where the terminal looks for programs</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> The internet address of a website</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> The PATH is a setting stored in your computer that contains a list of folder locations. When you type any command, the terminal searches these folders to find the program you asked for. It's like a phone's contact list — you just type a name and the phone knows which number to call.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 7: COMMAND-LINE ARGUMENTS                             ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod7">
+  <div class="section-label">Module 07</div>
+  <h2>Command-Line Arguments — Talking to Programs</h2>
+  <p class="section-intro">When you type <code>python --version</code>, you're not just running Python — you're running Python <em>and telling it something</em>. That <code>--version</code> part is called an <strong>argument</strong>.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Think of going to a coffee shop. You say: <strong>"Coffee, large, no sugar."</strong><br><br>
+    <code>coffee</code> = the program (what you want)<br>
+    <code>large</code> = an argument (how you want it)<br>
+    <code>no sugar</code> = another argument (more instructions)<br><br>
+    In the terminal: <code>python --version</code><br>
+    <code>python</code> = the program<br>
+    <code>--version</code> = the argument ("just tell me your version, don't do anything else")</p>
+  </div>
+
+  <!-- TASK 7.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 7.1</span>
+      <span class="task-title">See Different Arguments in Action</span>
+    </div>
+    <p>The same program can do completely different things depending on what arguments you give it:</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Arguments in action</span></div>
+      <div class="terminal-body"><span class="comment"># Argument: --version → just show version and exit</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">python <span class="flag-hl">--version</span></span>
+<span class="output">Python 3.12.4</span>
+
+<span class="comment"># Argument: -c "code" → run a tiny piece of Python code directly</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">python <span class="flag-hl">-c</span> <span class="str-hl">"print('Hello from an argument!')"</span></span>
+<span class="output">Hello from an argument!</span>
+
+<span class="comment"># Argument: -c with math</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">python <span class="flag-hl">-c</span> <span class="str-hl">"print(2 + 2)"</span></span>
+<span class="output">4</span>
+
+<span class="comment"># No arguments at all → opens Python's interactive mode</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">python</span>
+<span class="output">Python 3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024)
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; </span>
+<span class="comment"># You're now INSIDE Python! Type exit() to get back to PowerShell:</span>
+<span class="prompt">&gt;&gt;&gt;</span> <span class="cmd">exit()</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">_</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Try each command above. Notice how the <strong>same program</strong> (<code>python</code>) does completely different things depending on the arguments.</li>
+        <li>When you run <code>python</code> without arguments and see <code>&gt;&gt;&gt;</code>, you're inside Python's interactive mode. Type <code>exit()</code> to get back to PowerShell.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 7.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 7.2</span>
+      <span class="task-title">Arguments Work with Other Programs Too</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">More argument examples</span></div>
+      <div class="terminal-body"><span class="comment"># ping with an argument (the website to ping)</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">ping <span class="flag-hl">google.com</span></span>
+
+<span class="comment"># notepad with an argument (the file to open)</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">notepad <span class="flag-hl">H:\Pooja\day2\practice.txt</span></span>
+
+<span class="comment"># echo with an argument (the text to repeat)</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">echo <span class="flag-hl">"Arguments are easy!"</span></span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">Every command you've been using has been: <strong>program name</strong> followed by <strong>arguments</strong>. <code>cd H:\Pooja</code> = program <code>cd</code>, argument <code>H:\Pooja</code>. You've been using arguments all along!</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 8: HELLO WORLD                                        ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod8">
+  <div class="section-label">Module 08</div>
+  <h2>Your First Python Program — Hello, World!</h2>
+  <p class="section-intro">This is it. The moment you become a programmer. You're about to write a Python program and run it.</p>
+
+  <!-- TASK 8.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 8.1</span>
+      <span class="task-title">Create Your First Python File</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Make sure you're in <code>H:\Pooja\day2</code>:</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Creating hello.py</span></div>
+      <div class="terminal-body"><span class="prompt">PS&gt;</span> <span class="cmd">cd H:\Pooja\day2</span>
+
+<span class="comment"># Open a new file called hello.py in Notepad</span>
+<span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">notepad hello.py</span>
+<span class="comment"># Notepad will ask "Do you want to create a new file?" — click YES</span></div>
+    </div>
+    <div class="task-steps">
+      <ol start="2">
+        <li>In Notepad, type <strong>exactly</strong> this one line:</li>
+      </ol>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">hello.py</span></div>
+      <div class="code-body"><span class="fn">print</span>(<span class="str">"Hello, World!"</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol start="3">
+        <li>Press <strong>Ctrl + S</strong> to save.</li>
+        <li>Close Notepad.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 8.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 8.2</span>
+      <span class="task-title">Run Your Program!</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Running hello.py</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">python hello.py</span>
+<span class="output" style="color:var(--accent);">Hello, World!</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">Look at that! Your computer just did what <strong>you</strong> told it to do. You wrote an instruction in Python (<code>print("Hello, World!")</code>) and the computer followed it. <code>hello.py</code> is the argument — it tells Python which file to read and run.</p>
+  </div>
+
+  <div class="celebrate">
+    <div class="emoji">🎉</div>
+    <h3>You Just Wrote Your First Program!</h3>
+    <p>Every programmer in history started exactly here — with "Hello, World!" You are now officially someone who can write and run code.</p>
+  </div>
+
+  <!-- TASK 8.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 8.3</span>
+      <span class="task-title">Edit and Re-Run — Make It Yours</span>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Open the file again: <code>notepad hello.py</code></li>
+        <li>Change the text to say something about you. For example:</li>
+      </ol>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">hello.py</span></div>
+      <div class="code-body"><span class="fn">print</span>(<span class="str">"Hello! My name is Pooja and I just learned Python!"</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol start="3">
+        <li>Save (<strong>Ctrl + S</strong>), close Notepad.</li>
+        <li>Run it again:</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Running the edited program</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">python hello.py</span>
+<span class="output" style="color:var(--accent);">Hello! My name is Pooja and I just learned Python!</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">The cycle is: <strong>Edit → Save → Run</strong>. This is the cycle you'll follow thousands of times as a programmer. You change the code, save the file, and run it again to see the result.</p>
+  </div>
+
+  <!-- TASK 8.4 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 8.4</span>
+      <span class="task-title">Take Input from the User</span>
+    </div>
+    <p>Let's make the program <strong>interactive</strong> — it will ask for your name and respond to it.</p>
+    <div class="task-steps">
+      <ol>
+        <li>Open the file: <code>notepad hello.py</code></li>
+        <li>Replace everything with this:</li>
+      </ol>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">hello.py</span></div>
+      <div class="code-body"><span class="var">name</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"What is your name? "</span>)
+<span class="fn">print</span>(<span class="str">"Nice to meet you,"</span>, <span class="var">name</span>, <span class="str">"! Welcome to Python!"</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol start="3">
+        <li>Save and close. Run it:</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Interactive program</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">python hello.py</span>
+<span class="output">What is your name? </span><span class="cmd">Pooja</span>
+<span class="output" style="color:var(--accent);">Nice to meet you, Pooja ! Welcome to Python!</span></div>
+    </div>
+    <p style="margin-top:0.75rem; font-size:0.92rem; color:var(--text-muted);">The program <strong>waited</strong> for you to type something! <code>input()</code> pauses the program and waits for the user to type something and press Enter. Then it stores whatever they typed and uses it later. You just made the computer <strong>listen to you and respond</strong>.</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 9: INPUT → PROCESS → OUTPUT                           ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod9">
+  <div class="section-label">Module 09</div>
+  <h2>Input → Process → Output</h2>
+  <p class="section-intro">Every program you will ever write — from a simple greeting to a video game — does one or more of these three things.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="40" width="170" height="70" rx="12" fill="#1a2030" stroke="#60a5fa" stroke-width="2"/>
+      <text x="115" y="72" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="14" font-weight="600">INPUT</text>
+      <text x="115" y="95" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="11">Get data from user</text>
+
+      <path d="M210 75 L260 75" stroke="#6ee7b7" stroke-width="2" fill="none" marker-end="url(#ar3)"/>
+
+      <rect x="265" y="40" width="170" height="70" rx="12" fill="#1a2520" stroke="#6ee7b7" stroke-width="2"/>
+      <text x="350" y="72" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="14" font-weight="600">PROCESS</text>
+      <text x="350" y="95" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="11">Do something with it</text>
+
+      <path d="M445 75 L495 75" stroke="#f472b6" stroke-width="2" fill="none" marker-end="url(#ar3)"/>
+
+      <rect x="500" y="40" width="170" height="70" rx="12" fill="#2a1525" stroke="#f472b6" stroke-width="2"/>
+      <text x="585" y="72" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="14" font-weight="600">OUTPUT</text>
+      <text x="585" y="95" text-anchor="middle" fill="#8891a8" font-family="DM Sans" font-size="11">Show the result</text>
+
+      <defs><marker id="ar3" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#6ee7b7"/></marker></defs>
+    </svg>
+  </div>
+
+  <div class="concept">
+    <h3>💡 The IPO Model</h3>
+    <p><strong>Input</strong> = getting data (from the keyboard, a file, the internet, etc.)<br>
+    <strong>Process</strong> = doing something with that data (math, decisions, sorting, combining, etc.)<br>
+    <strong>Output</strong> = showing the result (on screen, saving to a file, sending over the internet, etc.)<br><br>
+    Your "Hello World" was just <strong>Output</strong>. Your name program was <strong>Input → Process → Output</strong>. Let's see more examples.</p>
+  </div>
+
+  <!-- TASK 9.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 9.1</span>
+      <span class="task-title">Multiple Print Statements — Output Only</span>
+    </div>
+    <p>Create a new file called <code>about_me.py</code> and paste this:</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Create the file</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">notepad about_me.py</span></div>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">about_me.py</span></div>
+      <div class="code-body"><span class="fn">print</span>(<span class="str">"========================="</span>)
+<span class="fn">print</span>(<span class="str">"   ALL ABOUT ME"</span>)
+<span class="fn">print</span>(<span class="str">"========================="</span>)
+<span class="fn">print</span>(<span class="str">"Name    : Pooja"</span>)
+<span class="fn">print</span>(<span class="str">"Course  : Python Programming"</span>)
+<span class="fn">print</span>(<span class="str">"Day     : 2"</span>)
+<span class="fn">print</span>(<span class="str">"Mood    : Excited!"</span>)
+<span class="fn">print</span>(<span class="str">"========================="</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Paste or type the code above. <strong>Edit the details</strong> to be about you — change the name, add a line about your hobby, change the mood.</li>
+        <li>Save, close, and run: <code>python about_me.py</code></li>
+        <li>You can have as many <code>print()</code> statements as you want. Each one prints one line. The program runs them top to bottom, one at a time.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 9.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 9.2</span>
+      <span class="task-title">Input → Process → Output: A Complete Program</span>
+    </div>
+    <p>Create a new file called <code>birth_year.py</code>:</p>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Create the file</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">notepad birth_year.py</span></div>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">birth_year.py</span></div>
+      <div class="code-body"><span class="com"># INPUT: Ask the user for their age</span>
+<span class="var">age</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"How old are you? "</span>)
+
+<span class="com"># PROCESS: Calculate their birth year</span>
+<span class="var">birth_year</span> <span class="op">=</span> <span class="num">2026</span> <span class="op">-</span> <span class="fn">int</span>(<span class="var">age</span>)
+
+<span class="com"># OUTPUT: Show the result</span>
+<span class="fn">print</span>(<span class="str">"You were probably born in"</span>, <span class="var">birth_year</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Copy and paste the code. Save and run: <code>python birth_year.py</code></li>
+        <li>When it asks for your age, type a number (like <code>20</code>) and press Enter.</li>
+        <li>Notice the three parts: <strong>Input</strong> (asks your age), <strong>Process</strong> (calculates 2026 minus your age), <strong>Output</strong> (shows the birth year).</li>
+      </ol>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Running birth_year.py</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">python birth_year.py</span>
+<span class="output">How old are you? </span><span class="cmd">20</span>
+<span class="output" style="color:var(--accent);">You were probably born in 2006</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 10: COOL PROGRAMS                                     ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod10">
+  <div class="section-label">Module 10</div>
+  <h2>Cool Programs You Can Already Run</h2>
+  <p class="section-intro">Let's see what Python can do. For each program below: create the file, paste the code, run it, and try to <strong>guess how it works</strong> before reading the explanation. No stress — just have fun.</p>
+
+  <!-- TASK 10.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 10.1</span>
+      <span class="task-title">Countdown Timer</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Create and run</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">notepad countdown.py</span></div>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">countdown.py</span></div>
+      <div class="code-body"><span class="kw">import</span> time
+
+<span class="fn">print</span>(<span class="str">"Rocket Launch Countdown!"</span>)
+<span class="fn">print</span>()
+
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>, <span class="num">0</span>, <span class="op">-</span><span class="num">1</span>):
+    <span class="fn">print</span>(<span class="var">i</span>, <span class="str">"..."</span>)
+    time.<span class="fn">sleep</span>(<span class="num">1</span>)
+
+<span class="fn">print</span>(<span class="str">"LIFTOFF! 🚀"</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Paste the code, save, and run: <code>python countdown.py</code></li>
+        <li>Watch the countdown happen in real time — one number per second!</li>
+        <li><strong>Can you guess?</strong> What does <code>time.sleep(1)</code> probably do? What does <code>range(10, 0, -1)</code> probably mean?</li>
+      </ol>
+    </div>
+    <div class="question">
+      <div class="question-label">🤔 What do you think?</div>
+      <p>What does <code>time.sleep(1)</code> do?</p>
+      <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+      <div class="answer-content"><code>time.sleep(1)</code> tells Python to <strong>wait 1 second</strong> before continuing. That's why the numbers appear one per second. If you changed it to <code>time.sleep(3)</code>, it would wait 3 seconds between each number.</div>
+    </div>
+  </div>
+
+  <!-- TASK 10.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 10.2</span>
+      <span class="task-title">Random Compliment Generator</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Create and run</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">notepad compliment.py</span></div>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">compliment.py</span></div>
+      <div class="code-body"><span class="kw">import</span> random
+
+<span class="var">name</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"What is your name? "</span>)
+
+<span class="var">compliments</span> <span class="op">=</span> [
+    <span class="str">"You are doing amazing work!"</span>,
+    <span class="str">"You are a fast learner!"</span>,
+    <span class="str">"Your dedication is inspiring!"</span>,
+    <span class="str">"You have a great attitude!"</span>,
+    <span class="str">"The world needs more people like you!"</span>,
+]
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="var">name</span> <span class="op">+</span> <span class="str">", here is your compliment:"</span>)
+<span class="fn">print</span>(<span class="str">">> "</span> <span class="op">+</span> random.<span class="fn">choice</span>(<span class="var">compliments</span>))</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Paste the code, save, and run: <code>python compliment.py</code></li>
+        <li>Run it 3 or 4 times. Notice you get <strong>different</strong> compliments each time!</li>
+        <li><strong>Try editing:</strong> Add your own compliment to the list (add a new line inside the square brackets, following the same pattern).</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 10.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 10.3</span>
+      <span class="task-title">Password Generator</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Create and run</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">notepad password.py</span></div>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">password.py</span></div>
+      <div class="code-body"><span class="kw">import</span> random
+<span class="kw">import</span> string
+
+<span class="var">length</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"How long should the password be? "</span>)
+<span class="var">length</span> <span class="op">=</span> <span class="fn">int</span>(<span class="var">length</span>)
+
+<span class="var">characters</span> <span class="op">=</span> string.ascii_letters <span class="op">+</span> string.digits <span class="op">+</span> <span class="str">"!@#$%"</span>
+<span class="var">password</span> <span class="op">=</span> <span class="str">""</span>
+
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var">length</span>):
+    <span class="var">password</span> <span class="op">=</span> <span class="var">password</span> <span class="op">+</span> random.<span class="fn">choice</span>(<span class="var">characters</span>)
+
+<span class="fn">print</span>(<span class="str">"Your random password:"</span>, <span class="var">password</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Run it and type <code>12</code> for the length. You'll get a random 12-character password.</li>
+        <li>Run it again — you get a different password each time.</li>
+        <li>This is a <strong>useful</strong> program. You made something that actually helps in real life!</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="success">
+    <div class="success-label">🌟 Superpower Unlocked</div>
+    <p>You now know how to <strong>create a Python file and run it</strong>. That means you can use <strong>AI tools</strong> (like ChatGPT or Claude) to generate Python code for anything you want — a quiz game, a unit converter, a to-do list — then paste it into a file and <strong>run it on your computer</strong>. You don't need to understand every line to make it work. This is a genuine superpower. In the coming classes, you'll also learn to write your own complex programs from scratch.</p>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 11: CALCULATOR APP                                    ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod11">
+  <div class="section-label">Module 11</div>
+  <h2>The Big Picture — A Mini Calculator App</h2>
+  <p class="section-intro">Let's look at a program that's a bit more complex. You won't understand every single word yet — and that's completely fine. The goal is to see the <strong>big picture</strong> of how a real program works. We'll cover every detail starting from the next lecture.</p>
+
+  <!-- TASK 11.1 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 11.1</span>
+      <span class="task-title">Create the Calculator</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Create the file</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">notepad calculator.py</span></div>
+    </div>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">calculator.py</span></div>
+      <div class="code-body"><span class="com"># ===================================</span>
+<span class="com"># MY FIRST CALCULATOR</span>
+<span class="com"># ===================================</span>
+
+<span class="com"># --- INPUT SECTION ---</span>
+<span class="com"># Ask the user for two numbers and an operation</span>
+
+<span class="fn">print</span>(<span class="str">"===== MINI CALCULATOR ====="</span>)
+<span class="fn">print</span>()
+
+<span class="var">first_number</span>  <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Enter the first number : "</span>)
+<span class="var">second_number</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Enter the second number: "</span>)
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">"Choose an operation:"</span>)
+<span class="fn">print</span>(<span class="str">"  1 = Add"</span>)
+<span class="fn">print</span>(<span class="str">"  2 = Subtract"</span>)
+<span class="fn">print</span>(<span class="str">"  3 = Multiply"</span>)
+<span class="fn">print</span>(<span class="str">"  4 = Divide"</span>)
+<span class="fn">print</span>()
+<span class="var">choice</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Your choice (1/2/3/4): "</span>)
+
+<span class="com"># --- PROCESS SECTION ---</span>
+<span class="com"># Convert the text input into actual numbers</span>
+<span class="var">num1</span> <span class="op">=</span> <span class="fn">float</span>(<span class="var">first_number</span>)
+<span class="var">num2</span> <span class="op">=</span> <span class="fn">float</span>(<span class="var">second_number</span>)
+
+<span class="com"># Perform the chosen operation</span>
+<span class="kw">if</span> <span class="var">choice</span> <span class="op">==</span> <span class="str">"1"</span>:
+    <span class="var">result</span> <span class="op">=</span> <span class="var">num1</span> <span class="op">+</span> <span class="var">num2</span>
+    <span class="var">operation_name</span> <span class="op">=</span> <span class="str">"Addition"</span>
+<span class="kw">elif</span> <span class="var">choice</span> <span class="op">==</span> <span class="str">"2"</span>:
+    <span class="var">result</span> <span class="op">=</span> <span class="var">num1</span> <span class="op">-</span> <span class="var">num2</span>
+    <span class="var">operation_name</span> <span class="op">=</span> <span class="str">"Subtraction"</span>
+<span class="kw">elif</span> <span class="var">choice</span> <span class="op">==</span> <span class="str">"3"</span>:
+    <span class="var">result</span> <span class="op">=</span> <span class="var">num1</span> <span class="op">*</span> <span class="var">num2</span>
+    <span class="var">operation_name</span> <span class="op">=</span> <span class="str">"Multiplication"</span>
+<span class="kw">elif</span> <span class="var">choice</span> <span class="op">==</span> <span class="str">"4"</span>:
+    <span class="var">result</span> <span class="op">=</span> <span class="var">num1</span> <span class="op">/</span> <span class="var">num2</span>
+    <span class="var">operation_name</span> <span class="op">=</span> <span class="str">"Division"</span>
+<span class="kw">else</span>:
+    <span class="var">result</span> <span class="op">=</span> <span class="str">"Error"</span>
+    <span class="var">operation_name</span> <span class="op">=</span> <span class="str">"Unknown"</span>
+
+<span class="com"># --- OUTPUT SECTION ---</span>
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">"===== RESULT ====="</span>)
+<span class="fn">print</span>(<span class="str">"Operation:"</span>, <span class="var">operation_name</span>)
+<span class="fn">print</span>(<span class="var">num1</span>, <span class="str">"and"</span>, <span class="var">num2</span>, <span class="str">"="</span>, <span class="var">result</span>)
+<span class="fn">print</span>(<span class="str">"==================="</span>)</div>
+    </div>
+  </div>
+
+  <!-- TASK 11.2 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 11.2</span>
+      <span class="task-title">Run the Calculator</span>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Running the calculator</span></div>
+      <div class="terminal-body"><span class="prompt">PS H:\Pooja\day2&gt;</span> <span class="cmd">python calculator.py</span>
+<span class="output">===== MINI CALCULATOR =====
+
+Enter the first number : </span><span class="cmd">50</span>
+<span class="output">Enter the second number: </span><span class="cmd">8</span>
+<span class="output">
+Choose an operation:
+  1 = Add
+  2 = Subtract
+  3 = Multiply
+  4 = Divide
+
+Your choice (1/2/3/4): </span><span class="cmd">3</span>
+<span class="output" style="color:var(--accent);">
+===== RESULT =====
+Operation: Multiplication
+50.0 and 8.0 = 400.0
+===================</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Run the calculator. Try all 4 operations.</li>
+        <li>Try typing <code>5</code> for the choice. What happens? (The "else" catches invalid choices.)</li>
+        <li>Try dividing by zero (<code>0</code> as the second number, choice <code>4</code>). What happens?</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 11.3 -->
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 11.3</span>
+      <span class="task-title">Understanding the Program — Line by Line</span>
+    </div>
+    <p>Let's read through the code together. You don't need to memorize anything — just build a feeling for how it flows.</p>
+
+    <div class="concept">
+      <h3>📖 Lines Starting with #</h3>
+      <p>Lines that start with <code>#</code> are <strong>comments</strong>. Python completely ignores them. They're notes for humans reading the code. <code># Ask the user for two numbers</code> is just a note to help you understand what the next line does.</p>
+    </div>
+
+    <div class="concept">
+      <h3>📖 Variables — Storing Information</h3>
+      <p><code>first_number = input("Enter the first number : ")</code><br><br>
+      This creates a <strong>variable</strong> called <code>first_number</code>. A variable is like a labeled box — it has a name (<code>first_number</code>) and holds a value (whatever the user types). The <code>=</code> sign means "store this value in this box." After this line, whenever you write <code>first_number</code>, Python knows you mean whatever the user typed.</p>
+    </div>
+
+    <div class="concept">
+      <h3>📖 float() — Converting Text to Numbers</h3>
+      <p><code>num1 = float(first_number)</code><br><br>
+      When you type <code>50</code>, Python actually receives it as the <strong>text</strong> "50" — not the number 50. Text and numbers are different things in programming. <code>float()</code> converts text into an actual number so we can do math with it. Without this, <code>"50" + "8"</code> would give <code>"508"</code> (joining text) instead of <code>58</code> (adding numbers).</p>
+    </div>
+
+    <div class="concept">
+      <h3>📖 if / elif / else — Making Decisions</h3>
+      <p><code>if choice == "1":</code> means "if the user typed 1, do this."<br>
+      <code>elif choice == "2":</code> means "otherwise, if they typed 2, do this instead."<br>
+      <code>else:</code> means "if none of the above matched, do this."<br><br>
+      This is how programs make <strong>decisions</strong>. It's like a flowchart: check the first condition → if no, check the second → if no, check the third → if nothing matches, do the default thing. The <code>==</code> means "is equal to" (two equals signs, not one).</p>
+    </div>
+
+    <div class="concept">
+      <h3>📖 The Big Picture</h3>
+      <p>This program follows the exact <strong>Input → Process → Output</strong> pattern:<br><br>
+      <strong>INPUT:</strong> Three <code>input()</code> calls get two numbers and an operation choice from the user.<br>
+      <strong>PROCESS:</strong> <code>float()</code> converts text to numbers. <code>if/elif/else</code> picks the right math operation. The calculation is done.<br>
+      <strong>OUTPUT:</strong> <code>print()</code> shows the result.<br><br>
+      Every program you'll ever write follows this same pattern — just with more complexity in each section.</p>
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz — Based on the Calculator Code</div>
+    <p class="mcq-q">If the user enters <code>10</code>, <code>3</code>, and <code>2</code> (for subtract), what will the result be?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 13.0</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 7.0</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> 30.0</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> Choice "2" triggers the subtraction branch: <code>10.0 - 3.0 = 7.0</code>.</div>
+  </div>
+
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz — Based on the Calculator Code</div>
+    <p class="mcq-q">What does <code>float()</code> do in this program?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> Makes the number a decimal</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Displays the number on screen</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Rounds the number down</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Converts text input into a number so we can do math</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> <code>input()</code> always gives us text (like the text "50"), even if the user types a number. <code>float()</code> converts that text into an actual number (50.0) so Python can do math with it.</div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz — Based on the Calculator Code</div>
+    <p class="mcq-q">The user enters <code>6</code>, <code>2</code>, and <code>7</code>. What will the "Operation" line say?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> Division</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Addition</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Unknown</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> The program will crash</div>
+    </div>
+    <div class="mcq-explain"><strong>Correct!</strong> The choice <code>7</code> doesn't match "1", "2", "3", or "4", so the <code>else</code> block runs. That sets <code>operation_name</code> to "Unknown" and <code>result</code> to "Error".</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  FINAL CHECKLIST                                              ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="final">
+  <div class="section-label">Day 2 Complete</div>
+  <h2>Completion Checklist</h2>
+  <p class="section-intro">Check off everything you accomplished today. Look at how much you've done!</p>
+
+  <div class="checklist">
+    <h3>🎯 I Can Now…</h3>
+    <label><input type="checkbox"> Open PowerShell and use basic commands (pwd, ls, cd, cls, echo)</label>
+    <label><input type="checkbox"> Navigate between the C: and H: drives</label>
+    <label><input type="checkbox"> Jump to any folder using an absolute path like <code>cd H:\Pooja\day2</code></label>
+    <label><input type="checkbox"> Use <code>cd ..</code> to go up one folder</label>
+    <label><input type="checkbox"> Create folders from the terminal using <code>mkdir</code></label>
+    <label><input type="checkbox"> Create files from the terminal using <code>New-Item</code></label>
+    <label><input type="checkbox"> Open files in Notepad from the terminal</label>
+    <label><input type="checkbox"> Read file contents with <code>Get-Content</code></label>
+    <label><input type="checkbox"> Check if a program is installed using <code>program --version</code></label>
+    <label><input type="checkbox"> Download and install Python from the terminal</label>
+    <label><input type="checkbox"> Explain what the PATH is and why it matters</label>
+    <label><input type="checkbox"> Explain what command-line arguments are</label>
+    <label><input type="checkbox"> Create a <code>.py</code> file, write Python code, and run it</label>
+    <label><input type="checkbox"> Use <code>print()</code> to show output</label>
+    <label><input type="checkbox"> Use <code>input()</code> to get information from the user</label>
+    <label><input type="checkbox"> Understand the Input → Process → Output model</label>
+    <label><input type="checkbox"> Read through a basic Python program and understand the general flow</label>
+  </div>
+
+  <div class="celebrate">
+    <div class="emoji">🏆</div>
+    <h3>You Did Amazing Work Today!</h3>
+    <p>You went from opening a terminal to writing and running real Python programs. You made a calculator. You generated passwords. You taught your computer to count down and launch a rocket. Starting next class, we'll learn Python from the ground up — variables, types, conditions, loops — and you'll understand exactly why everything in today's programs works the way it does.</p>
+  </div>
+
+  <div class="concept" style="border-left-color: var(--accent); margin-top:2rem;">
+    <h3 style="color: var(--accent);">🚀 What's Next?</h3>
+    <p>In the next lecture we'll start learning Python properly — from the very basics. We'll cover variables, data types, operators, and how Python reads your code line by line. All the pieces from today's calculator (like <code>float()</code>, <code>if/elif/else</code>, <code>==</code>) will be explained in full detail. You already have a head start — you've seen them in action!</p>
+  </div>
+</section>
+
+</div><!-- /page-wrapper -->
+
+<script>
+function toggleAnswer(btn) {
+  const content = btn.nextElementSibling;
+  content.classList.toggle('show');
+  btn.textContent = content.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+}
+
+function checkMCQ(opt) {
+  const mcq = opt.closest('.mcq');
+  if (mcq.dataset.answered) return;
+  mcq.dataset.answered = 'true';
+
+  const correct = mcq.dataset.correct;
+  const chosen  = opt.dataset.value;
+
+  // Mark all options
+  mcq.querySelectorAll('.mcq-opt').forEach(o => {
+    if (o.dataset.value === correct) {
+      o.classList.add('correct');
+    } else if (o === opt && chosen !== correct) {
+      o.classList.add('wrong');
+    }
+  });
+
+  // Show explanation
+  mcq.querySelector('.mcq-explain').classList.add('show');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 7 — Files, Modules, Pip &amp; Virtual Environments</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181b24;--surface2:#1e222e;--border:#2a2f3e;--text:#e0e4ef;--text-muted:#8891a8;--accent:#6ee7b7;--accent-dim:#2d6a52;--warn:#fbbf24;--blue:#60a5fa;--pink:#f472b6;--orange:#fb923c;--red:#f87171;--purple:#a78bfa;--terminal-bg:#0a0c10;--terminal-green:#4ade80;--terminal-prompt:#6ee7b7;--lab-bg:#141820;--lab-border:#2a4a3a;--check:#22c55e;--correct:#22c55e;--wrong:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;min-height:100vh}.page-wrapper{max-width:880px;margin:0 auto;padding:2rem 1.5rem 6rem}
+.hero{text-align:center;padding:4rem 1rem 3rem}.hero-tag{display:inline-block;background:linear-gradient(135deg,#1a3a2a,#1a3a4a);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;padding:.35rem 1rem;border-radius:99px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem}.hero h1{font-family:'Source Serif 4',serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:1rem}.hero h1 span{color:var(--accent)}.hero-sub{color:var(--text-muted);font-size:1.1rem;max-width:600px;margin:0 auto;line-height:1.7}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:2.5rem 0 3rem}.toc h2{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.2rem}.toc-list{list-style:none}.toc-list li{padding:.5rem 0;border-bottom:1px solid var(--border)}.toc-list li:last-child{border-bottom:none}.toc-list a{color:var(--text);text-decoration:none;font-size:.95rem;display:flex;align-items:center;gap:.75rem;transition:color .2s}.toc-list a:hover{color:var(--accent)}.toc-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-muted);min-width:2rem}
+.lab-section{margin-bottom:4rem;scroll-margin-top:2rem}.section-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem}.lab-section h2{font-family:'Source Serif 4',serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:.5rem}.section-intro{color:var(--text-muted);margin-bottom:1.5rem;font-size:1rem}
+.concept{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.concept h3{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}.concept p,.concept div{font-size:.95rem;line-height:1.8}
+.analogy{background:linear-gradient(135deg,#1a1525,#1e1830);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.analogy-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.warning{background:linear-gradient(135deg,#1f1a10,#221e14);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.warning-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--warn);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.success{background:linear-gradient(135deg,#101f15,#142218);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}.success-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.lab-task{background:var(--lab-bg);border:1px solid var(--lab-border);border-radius:12px;padding:1.75rem;margin:1.5rem 0;position:relative}.lab-task::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:12px 12px 0 0}.task-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}.task-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;background:var(--accent-dim);color:var(--accent);padding:.25rem .75rem;border-radius:99px;letter-spacing:.05em}.task-title{font-weight:600;font-size:1.05rem;color:#fff}
+.task-steps{margin-top:.75rem}.task-steps ol{padding-left:1.5rem;counter-reset:sc;list-style:none}.task-steps ol li{counter-increment:sc;position:relative;padding:.4rem 0 .4rem .5rem;font-size:.95rem}.task-steps ol li::before{content:counter(sc);position:absolute;left:-1.5rem;top:.45rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;color:var(--accent);background:var(--accent-dim);width:1.2rem;height:1.2rem;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.terminal{background:var(--terminal-bg);border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}.terminal-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem}.terminal-dot{width:10px;height:10px;border-radius:50%}.terminal-dot.r{background:#f87171}.terminal-dot.y{background:#fbbf24}.terminal-dot.g{background:#4ade80}.terminal-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted);margin-left:.5rem}.terminal-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.terminal-body .prompt{color:var(--terminal-prompt)}.terminal-body .cmd{color:#fff}.terminal-body .output{color:var(--text-muted)}.terminal-body .err{color:var(--red)}
+.code-block{background:#0d1015;border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}.code-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between}.code-lang{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--warn);letter-spacing:.05em}.code-filename{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}.code-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}.code-body .kw{color:var(--pink)}.code-body .fn{color:var(--blue)}.code-body .str{color:var(--accent)}.code-body .com{color:#555b70;font-style:italic}.code-body .num{color:var(--orange)}.code-body .var{color:#e0e4ef}.code-body .op{color:var(--warn)}.code-body .ln{color:#3a3f50;user-select:none}
+.mcq{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.mcq-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}.mcq p.mcq-q{font-size:.95rem;color:#fff;margin-bottom:1rem;font-weight:500}.mcq-options{display:flex;flex-direction:column;gap:.5rem}.mcq-opt{display:flex;align-items:center;gap:.75rem;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.65rem 1rem;cursor:pointer;transition:all .2s;font-size:.9rem;font-family:'JetBrains Mono',monospace}.mcq-opt:hover{border-color:var(--blue)}.mcq-opt.correct{border-color:var(--correct);background:#0f2018;color:var(--correct)}.mcq-opt.wrong{border-color:var(--wrong);background:#200f0f;color:var(--wrong);opacity:.7}.mcq-opt .letter{min-width:1.5rem;height:1.5rem;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--text-muted)}.mcq-opt.correct .letter{border-color:var(--correct);color:var(--correct);background:#0a1a0f}.mcq-opt.wrong .letter{border-color:var(--wrong);color:var(--wrong)}.mcq-explain{display:none;margin-top:1rem;padding:1rem;background:#0f1510;border-radius:8px;border:1px dashed #2a4a2a;font-size:.88rem;color:var(--accent);line-height:1.7}.mcq-explain.show{display:block}
+.answer-toggle{margin-top:.75rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.35rem .9rem;border-radius:6px;cursor:pointer;transition:all .2s}.answer-toggle:hover{border-color:var(--accent);color:var(--accent)}.answer-content{display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);color:var(--accent);font-size:.92rem;line-height:1.7}.answer-content.show{display:block}
+.fill-in{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}.fill-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--pink);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}.fill-blank{display:inline-block;border-bottom:2px dashed var(--pink);min-width:80px;color:var(--pink);font-family:'JetBrains Mono',monospace;padding:0 .25rem;cursor:help}
+.debug-box{background:linear-gradient(135deg,#1f1015,#221418);border:1px solid #4a2a2a;border-radius:12px;padding:1.5rem;margin:1.5rem 0}.debug-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.checklist{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin:1.5rem 0}.checklist h3{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--check);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}.checklist label{display:flex;align-items:flex-start;gap:.75rem;padding:.5rem 0;cursor:pointer;font-size:.95rem}.checklist input[type="checkbox"]{appearance:none;width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:3px;cursor:pointer;position:relative}.checklist input[type="checkbox"]:checked{background:var(--check);border-color:var(--check)}.checklist input[type="checkbox"]:checked::after{content:'✓';position:absolute;color:#000;font-size:12px;font-weight:700;top:50%;left:50%;transform:translate(-50%,-50%)}
+.celebrate{background:linear-gradient(135deg,#1a2520,#152030);border:2px solid var(--accent);border-radius:14px;padding:2rem;margin:2rem 0;text-align:center}.celebrate .emoji{font-size:2.5rem;margin-bottom:.75rem}.celebrate h3{font-family:'Source Serif 4',serif;font-size:1.4rem;color:#fff;margin-bottom:.5rem}.celebrate p{color:var(--text-muted);font-size:.95rem;max-width:500px;margin:0 auto}
+code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.15rem .45rem;border-radius:4px;font-size:.88em;color:var(--pink)}.separator{border:none;border-top:1px solid var(--border);margin:3rem 0}strong{color:#fff}
+@media(max-width:600px){.hero h1{font-size:2rem}.page-wrapper{padding:1rem}}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<div class="hero">
+  <div class="hero-tag">Python Course — Day 7</div>
+  <h1>Files, Modules &amp; <span>The Real World</span></h1>
+  <p class="hero-sub">Today you'll learn to read and write files, organize code into multiple files, install packages other developers wrote, and manage project environments like a professional.</p>
+</div>
+
+<div class="toc">
+  <h2>Lab Modules</h2>
+  <ul class="toc-list">
+    <li><a href="#mod1"><span class="toc-num">01</span> Deep Recap — Functions, Dicts &amp; Looping Patterns</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Understanding File Types</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Reading &amp; Writing Text Files and CSVs</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Modules &amp; Imports — Splitting Code Into Files</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> Pip — Installing Packages</a></li>
+    <li><a href="#mod6"><span class="toc-num">06</span> Virtual Environments — Project Isolation</a></li>
+  </ul>
+</div>
+
+<div class="warning">
+  <div class="warning-label">📌 Setup</div>
+  <p>VS Code → <code>H:\Pooja</code> → create <code>day7</code> → terminal → <code>cd H:\Pooja\day7</code></p>
+</div>
+
+<!-- ═══════════════════ MODULE 1: DEEP RECAP ═══════════════════ -->
+<section class="lab-section" id="mod1">
+  <div class="section-label">Module 01</div>
+  <h2>Deep Recap — Functions &amp; Dicts</h2>
+  <p class="section-intro">Before we move forward, let's make two of the most important concepts rock-solid.</p>
+
+  <div class="concept">
+    <h3>💡 Functions Have Two Parts: Definition and Call</h3>
+    <div>
+      <strong>1. Definition</strong> — creating the recipe (<code>def</code>). This does NOT run the code inside.<br>
+      <strong>2. Call</strong> — using the recipe (writing the function name with parentheses). This RUNS the code.<br><br>
+      A function is a <strong>mini-program inside your program</strong>. It takes <strong>input</strong> (parameters), does <strong>processing</strong> (the body), and gives <strong>output</strong> (<code>return</code>). Just like your whole program follows Input → Process → Output, each function does the same thing on a smaller scale.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 1.1</span><span class="task-title">Function Recap — Definition vs Call</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_recap.py</span></div><div class="code-body"><span class="com"># DEFINITION — this creates the function, does NOT run it yet</span>
+<span class="kw">def</span> <span class="fn">calculate_tax</span>(<span class="var">price</span>, <span class="var">rate</span><span class="op">=</span><span class="num">0.1</span>):
+    <span class="var">tax</span> <span class="op">=</span> <span class="var">price</span> <span class="op">*</span> <span class="var">rate</span>
+    <span class="var">total</span> <span class="op">=</span> <span class="var">price</span> <span class="op">+</span> <span class="var">tax</span>
+    <span class="kw">return</span> <span class="var">total</span>
+
+<span class="com"># CALL — this runs the function and gets the result</span>
+<span class="var">result</span> <span class="op">=</span> <span class="fn">calculate_tax</span>(<span class="num">100</span>)       <span class="com"># uses default rate 0.1</span>
+<span class="fn">print</span>(<span class="str">"Total:"</span>, <span class="var">result</span>)            <span class="com"># 110.0</span>
+
+<span class="var">result2</span> <span class="op">=</span> <span class="fn">calculate_tax</span>(<span class="num">200</span>, <span class="num">0.18</span>)  <span class="com"># custom rate</span>
+<span class="fn">print</span>(<span class="str">"Total:"</span>, <span class="var">result2</span>)           <span class="com"># 236.0</span></div></div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Variable Scope — Where Does a Variable Live?</h3>
+    <div>Not all variables are the same. Where you create a variable determines <strong>where it can be used</strong>. This is called <strong>scope</strong>. There are two kinds of variables based on where they are created:</div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Think of a <strong>house with rooms</strong>. Items placed in the <strong>living room</strong> (the main area) can be seen by everyone — that's a <strong>global variable</strong>. Items placed <strong>inside a bedroom</strong> (a function) are private to that room — those are <strong>local variables</strong>. When you leave the bedroom (the function finishes), everything in that room disappears. But the living room items stay.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Local Variables — Created Inside a Function</h3>
+    <div>A variable created <strong>inside</strong> a function is called a <strong>local variable</strong>. It only exists while the function is running. Once the function finishes, the variable is gone — destroyed. No code outside the function can see it or use it. Parameters (the inputs in the parentheses) are also local variables.</div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Global Variables — Created Outside All Functions</h3>
+    <div>A variable created <strong>outside</strong> any function (at the "top level" of your file) is called a <strong>global variable</strong>. It exists for the entire lifetime of the program. Functions CAN <strong>read</strong> global variables (look at them), but they <strong>cannot change</strong> them by default.</div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 1.2</span><span class="task-title">See Local vs Global in Action</span></div>
+    <p>Create <code>scope_demo.py</code>. Read the comments carefully, then run it:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">scope_demo.py</span></div><div class="code-body"><span class="com"># --- GLOBAL VARIABLE (created outside any function) ---</span>
+<span class="var">greeting</span> <span class="op">=</span> <span class="str">"Hello"</span>       <span class="com"># this lives for the whole program</span>
+
+<span class="kw">def</span> <span class="fn">my_function</span>():
+    <span class="com"># --- LOCAL VARIABLE (created inside a function) ---</span>
+    <span class="var">secret</span> <span class="op">=</span> <span class="str">"I am local"</span>   <span class="com"># only exists inside this function</span>
+    <span class="fn">print</span>(<span class="var">greeting</span>)          <span class="com"># CAN read global variable — OK</span>
+    <span class="fn">print</span>(<span class="var">secret</span>)            <span class="com"># CAN use local variable — OK</span>
+
+<span class="fn">my_function</span>()
+
+<span class="fn">print</span>(<span class="var">greeting</span>)              <span class="com"># CAN use global — OK</span>
+<span class="com"># print(secret)             # CANNOT use local from outside — NameError!</span>
+<span class="com"># Uncomment the line above to see the error yourself.</span></div></div>
+    <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div><div class="terminal-body"><span class="output">Hello
+I am local
+Hello</span></div></div>
+    <div class="task-steps">
+      <ol>
+        <li>Run the code as-is and see the output.</li>
+        <li>Now <strong>uncomment</strong> the <code>print(secret)</code> line (remove the <code>#</code>). Save and run again. You'll get: <code>NameError: name 'secret' is not defined</code>. This proves <code>secret</code> only exists inside the function.</li>
+        <li>Comment it back to fix the error.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 1.3</span><span class="task-title">Parameters Are Local Too</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">scope_params.py</span></div><div class="code-body"><span class="kw">def</span> <span class="fn">double</span>(<span class="var">number</span>):      <span class="com"># 'number' is local to this function</span>
+    <span class="var">result</span> <span class="op">=</span> <span class="var">number</span> <span class="op">*</span> <span class="num">2</span>   <span class="com"># 'result' is also local</span>
+    <span class="kw">return</span> <span class="var">result</span>
+
+<span class="var">answer</span> <span class="op">=</span> <span class="fn">double</span>(<span class="num">5</span>)       <span class="com"># answer = 10, this is global</span>
+<span class="fn">print</span>(<span class="var">answer</span>)               <span class="com"># 10 — works fine, 'answer' is global</span>
+
+<span class="com"># print(number)            # NameError — 'number' was local to double()</span>
+<span class="com"># print(result)            # NameError — 'result' was local to double()</span></div></div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">The parameter <code>number</code> and the variable <code>result</code> inside <code>double()</code> are both local. They're born when the function starts, and they die when the function ends. But the <strong>return value</strong> gets sent back and stored in <code>answer</code>, which is global.</p>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz — Scope</div>
+    <p class="mcq-q">What happens when you try to use a local variable outside its function?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> It prints None</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> It prints 0</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> NameError — Python doesn't know that variable exists</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> It works normally</div>
+    </div>
+    <div class="mcq-explain">Local variables are destroyed when the function finishes. Trying to access them outside gives <strong>NameError</strong> because Python has no record of that name anymore.</div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Can a Function Modify a Global Variable?</h3>
+    <div>
+      By default, <strong>no</strong>. A function can <em>read</em> a global variable but cannot <em>change</em> it. If you try to assign to a global name inside a function, Python creates a <strong>new local variable</strong> with the same name instead — it doesn't touch the global one.<br><br>
+      Python does have a <code>global</code> keyword that lets you override this and modify the global variable from inside a function. <strong>But this is considered bad practice.</strong> Let's see both approaches:
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 1.4</span><span class="task-title">Modifying Global — Bad vs Good Approach</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">global_vs_return.py</span></div><div class="code-body"><span class="com"># ===== BAD APPROACH: using 'global' keyword =====</span>
+<span class="var">counter</span> <span class="op">=</span> <span class="num">0</span>
+
+<span class="kw">def</span> <span class="fn">increment_bad</span>():
+    <span class="kw">global</span> <span class="var">counter</span>     <span class="com"># "I want to modify the GLOBAL counter"</span>
+    <span class="var">counter</span> <span class="op">=</span> <span class="var">counter</span> <span class="op">+</span> <span class="num">1</span>
+
+<span class="fn">increment_bad</span>()
+<span class="fn">print</span>(<span class="var">counter</span>)  <span class="com"># 1 — it works, but HOW did counter change? Not obvious!</span>
+
+<span class="com"># The problem: if you have 10 functions all using 'global counter',</span>
+<span class="com"># any one of them could change it at any time. Finding bugs = nightmare.</span>
+
+<span class="fn">print</span>()
+
+<span class="com"># ===== GOOD APPROACH: use parameters + return =====</span>
+<span class="kw">def</span> <span class="fn">increment_good</span>(<span class="var">value</span>):
+    <span class="kw">return</span> <span class="var">value</span> <span class="op">+</span> <span class="num">1</span>
+
+<span class="var">counter</span> <span class="op">=</span> <span class="num">0</span>
+<span class="var">counter</span> <span class="op">=</span> <span class="fn">increment_good</span>(<span class="var">counter</span>)   <span class="com"># CLEAR: counter goes in, new value comes out</span>
+<span class="fn">print</span>(<span class="var">counter</span>)  <span class="com"># 1 — same result, but you can SEE exactly what's happening</span>
+<span class="com"># Reading this line, you KNOW counter is being updated. No mystery.</span></div></div>
+  </div>
+
+  <div class="warning">
+    <div class="warning-label">⚠️ Rule of Thumb</div>
+    <p><strong>Functions should get data IN through parameters and send data OUT through return.</strong> Avoid using the <code>global</code> keyword. If you see yourself needing it, rethink your design — almost always there's a cleaner way using parameters and return values. Professional programmers avoid <code>global</code> in nearly all cases.</p>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">Why is using <code>global</code> inside a function a bad practice?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> It causes a SyntaxError</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Any function can change the variable secretly, making bugs hard to find</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> It makes the program slower</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Python doesn't support global variables</div>
+    </div>
+    <div class="mcq-explain">It works, but when any function can secretly modify a variable, tracing bugs becomes a nightmare. The good approach: pass values in through parameters and return values out — explicit and predictable.</div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Dictionary Recap — A Realistic Example</h3>
+    <div>Think of a car listing website. Each car has properties: brand, model, year, price. A dictionary is perfect for this:</div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 1.5</span><span class="task-title">Dict of a Car, List of Dicts, List of Lists</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">data_patterns.py</span></div><div class="code-body"><span class="com"># --- A single car as a dictionary ---</span>
+<span class="var">car</span> <span class="op">=</span> {<span class="str">"brand"</span>: <span class="str">"Toyota"</span>, <span class="str">"model"</span>: <span class="str">"Corolla"</span>, <span class="str">"year"</span>: <span class="num">2022</span>, <span class="str">"price"</span>: <span class="num">15000</span>}
+<span class="fn">print</span>(<span class="var">car</span>[<span class="str">"brand"</span>], <span class="var">car</span>[<span class="str">"model"</span>])   <span class="com"># Toyota Corolla</span>
+
+<span class="com"># --- A LIST OF DICTS (most common real-world pattern!) ---</span>
+<span class="var">cars</span> <span class="op">=</span> [
+    {<span class="str">"brand"</span>: <span class="str">"Toyota"</span>,  <span class="str">"model"</span>: <span class="str">"Corolla"</span>, <span class="str">"price"</span>: <span class="num">15000</span>},
+    {<span class="str">"brand"</span>: <span class="str">"Honda"</span>,   <span class="str">"model"</span>: <span class="str">"Civic"</span>,   <span class="str">"price"</span>: <span class="num">18000</span>},
+    {<span class="str">"brand"</span>: <span class="str">"Tesla"</span>,   <span class="str">"model"</span>: <span class="str">"Model 3"</span>, <span class="str">"price"</span>: <span class="num">35000</span>},
+]
+
+<span class="fn">print</span>(<span class="str">"\nAll cars:"</span>)
+<span class="kw">for</span> <span class="var">c</span> <span class="kw">in</span> <span class="var">cars</span>:
+    <span class="fn">print</span>(<span class="var">c</span>[<span class="str">"brand"</span>], <span class="var">c</span>[<span class="str">"model"</span>], <span class="str">"- $"</span> <span class="op">+</span> <span class="fn">str</span>(<span class="var">c</span>[<span class="str">"price"</span>]))
+
+<span class="com"># --- Compare: List of Lists (harder to understand) ---</span>
+<span class="var">cars_list</span> <span class="op">=</span> [
+    [<span class="str">"Toyota"</span>, <span class="str">"Corolla"</span>, <span class="num">15000</span>],
+    [<span class="str">"Honda"</span>,  <span class="str">"Civic"</span>,   <span class="num">18000</span>],
+]
+<span class="com"># cars_list[0][2] = 15000... but WHAT is index 2? Price? Year?</span>
+<span class="com"># With dicts: cars[0]["price"] = 15000 — much clearer!</span></div></div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Looping Patterns — List vs Dict</h3>
+    <div>These are the patterns you'll use hundreds of times:</div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 1.6</span><span class="task-title">Looping Patterns</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">loop_patterns.py</span></div><div class="code-body"><span class="com"># --- LOOPING OVER A LIST ---</span>
+<span class="var">fruits</span> <span class="op">=</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>]
+
+<span class="com"># Pattern 1: loop over items directly</span>
+<span class="kw">for</span> <span class="var">fruit</span> <span class="kw">in</span> <span class="var">fruits</span>:
+    <span class="fn">print</span>(<span class="var">fruit</span>)
+
+<span class="com"># Pattern 2: loop with index</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="var">fruits</span>)):
+    <span class="fn">print</span>(<span class="var">i</span>, <span class="str">"→"</span>, <span class="var">fruits</span>[<span class="var">i</span>])
+
+<span class="fn">print</span>()
+
+<span class="com"># --- LOOPING OVER A DICTIONARY ---</span>
+<span class="var">person</span> <span class="op">=</span> {<span class="str">"name"</span>: <span class="str">"Pooja"</span>, <span class="str">"age"</span>: <span class="num">20</span>, <span class="str">"city"</span>: <span class="str">"Mumbai"</span>}
+
+<span class="com"># Pattern 1: loop over keys</span>
+<span class="kw">for</span> <span class="var">key</span> <span class="kw">in</span> <span class="var">person</span>:
+    <span class="fn">print</span>(<span class="var">key</span>, <span class="str">"="</span>, <span class="var">person</span>[<span class="var">key</span>])
+
+<span class="com"># Pattern 2: loop over key-value pairs together</span>
+<span class="kw">for</span> <span class="var">key</span>, <span class="var">value</span> <span class="kw">in</span> <span class="var">person</span>.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="var">key</span>, <span class="str">"="</span>, <span class="var">value</span>)
+
+<span class="com"># Pattern 3: loop over values only</span>
+<span class="kw">for</span> <span class="var">value</span> <span class="kw">in</span> <span class="var">person</span>.<span class="fn">values</span>():
+    <span class="fn">print</span>(<span class="var">value</span>)</div></div>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">Why is using <code>global</code> inside a function a bad practice?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> It causes a SyntaxError</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Any function can change the variable secretly, making bugs hard to find</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> It makes the program slower</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Python doesn't support global variables</div>
+    </div>
+    <div class="mcq-explain">It works, but when any function can secretly modify a variable, tracing bugs becomes a nightmare. Better to pass values in and return values out — explicit and predictable.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 2: FILE TYPES ═══════════════════ -->
+<section class="lab-section" id="mod2">
+  <div class="section-label">Module 02</div>
+  <h2>Understanding File Types</h2>
+  <p class="section-intro">Programs don't just live in the terminal — they read and write files. Let's understand what kinds of files exist and how Python can work with them.</p>
+
+  <div class="concept">
+    <h3>💡 Two Categories of Files</h3>
+    <div>
+      <strong>Text files</strong> — contain human-readable text. You can open them in Notepad and see the content. Examples: <code>.txt</code>, <code>.csv</code>, <code>.py</code>, <code>.html</code>, <code>.json</code>. Python can read these directly.<br><br>
+      <strong>Binary files</strong> — contain data encoded in a way only specific programs understand. Opening them in Notepad shows gibberish. Examples: <code>.jpg</code>, <code>.mp3</code>, <code>.mp4</code>, <code>.pdf</code>, <code>.xlsx</code>. Python needs special libraries (third-party code) to work with these.<br><br>
+      The key idea: <strong>all files can be read and written by Python</strong>. For text files, Python handles it natively. For binary files, you install a package (someone else's code) that knows how to interpret that format. We'll learn about packages in Module 5.
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="A">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">Which of these is a text file that Python can read directly?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> notes.csv</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> photo.jpg</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> song.mp3</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> report.pdf</div>
+    </div>
+    <div class="mcq-explain">CSV files are plain text (comma-separated values). JPG, MP3, and PDF are binary formats that need special libraries.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 3: TEXT & CSV ═══════════════════ -->
+<section class="lab-section" id="mod3">
+  <div class="section-label">Module 03</div>
+  <h2>Reading &amp; Writing Text Files and CSVs</h2>
+  <p class="section-intro">Let's learn to read and write the two most common text-based file types.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Working with a file is like working with a <strong>physical notebook</strong>:<br>
+    1. <strong>Open</strong> the notebook (<code>open()</code>)<br>
+    2. <strong>Read</strong> from it or <strong>Write</strong> to it<br>
+    3. <strong>Close</strong> the notebook when done<br><br>
+    Python uses the <code>with open()</code> pattern, which automatically closes the file for you — like a bookmark that closes the notebook when you walk away.</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.1</span><span class="task-title">Writing a Text File</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">write_file.py</span></div><div class="code-body"><span class="com"># "w" = write mode (creates the file, or overwrites if it exists)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"notes.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> <span class="var">file</span>:
+    <span class="var">file</span>.<span class="fn">write</span>(<span class="str">"Line 1: Hello from Python!\n"</span>)
+    <span class="var">file</span>.<span class="fn">write</span>(<span class="str">"Line 2: I can write files!\n"</span>)
+    <span class="var">file</span>.<span class="fn">write</span>(<span class="str">"Line 3: This is amazing.\n"</span>)
+
+<span class="fn">print</span>(<span class="str">"File written! Check notes.txt in your folder."</span>)</div></div>
+    <div class="concept">
+      <h3>📖 Breaking Down Every Part</h3>
+      <div>
+        <code>with</code> — starts a "managed block" that auto-closes the file when done<br>
+        <code>open("notes.txt", "w")</code> — opens (or creates) a file named "notes.txt" in <strong>write</strong> mode<br>
+        <code>as file</code> — gives the opened file a variable name <code>file</code> (you choose this name)<br>
+        <code>:</code> — starts the indented block (just like <code>if</code> and <code>for</code>)<br>
+        <code>file.write("text")</code> — writes text to the file<br>
+        <code>\n</code> — a special character meaning "new line" (like pressing Enter)
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.2</span><span class="task-title">Reading a Text File</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">read_file.py</span></div><div class="code-body"><span class="com"># "r" = read mode (default — just reads, doesn't change the file)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"notes.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">file</span>:
+    <span class="var">content</span> <span class="op">=</span> <span class="var">file</span>.<span class="fn">read</span>()    <span class="com"># reads the ENTIRE file as one string</span>
+
+<span class="fn">print</span>(<span class="var">content</span>)
+
+<span class="fn">print</span>(<span class="str">"--- Line by line ---"</span>)
+
+<span class="com"># Reading line by line (more useful for processing)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"notes.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">file</span>:
+    <span class="kw">for</span> <span class="var">line</span> <span class="kw">in</span> <span class="var">file</span>:
+        <span class="var">clean_line</span> <span class="op">=</span> <span class="var">line</span>.<span class="fn">strip</span>()   <span class="com"># remove \n from end</span>
+        <span class="fn">print</span>(<span class="str">">"</span>, <span class="var">clean_line</span>)</div></div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.3</span><span class="task-title">Useful Example — Word Counter</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_count.py</span></div><div class="code-body"><span class="kw">with</span> <span class="fn">open</span>(<span class="str">"notes.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">file</span>:
+    <span class="var">text</span> <span class="op">=</span> <span class="var">file</span>.<span class="fn">read</span>()
+
+<span class="var">word_count</span> <span class="op">=</span> <span class="fn">len</span>(<span class="var">text</span>.<span class="fn">split</span>())   <span class="com"># .split() breaks text into words</span>
+<span class="var">char_count</span> <span class="op">=</span> <span class="fn">len</span>(<span class="var">text</span>)
+<span class="var">line_count</span> <span class="op">=</span> <span class="var">text</span>.<span class="fn">count</span>(<span class="str">"\n"</span>)
+
+<span class="fn">print</span>(<span class="str">"Words:"</span>, <span class="var">word_count</span>)
+<span class="fn">print</span>(<span class="str">"Characters:"</span>, <span class="var">char_count</span>)
+<span class="fn">print</span>(<span class="str">"Lines:"</span>, <span class="var">line_count</span>)</div></div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 3.4</span><span class="task-title">Working with CSV Files</span></div>
+    <p>CSV = Comma-Separated Values. It's the simplest format for tabular data (like a spreadsheet). First, create a CSV file:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">csv_write.py</span></div><div class="code-body"><span class="kw">import</span> csv
+
+<span class="com"># Write a CSV file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.csv"</span>, <span class="str">"w"</span>, newline<span class="op">=</span><span class="str">""</span>) <span class="kw">as</span> <span class="var">file</span>:
+    <span class="var">writer</span> <span class="op">=</span> csv.<span class="fn">writer</span>(<span class="var">file</span>)
+    <span class="var">writer</span>.<span class="fn">writerow</span>([<span class="str">"Name"</span>, <span class="str">"Age"</span>, <span class="str">"Grade"</span>])   <span class="com"># header row</span>
+    <span class="var">writer</span>.<span class="fn">writerow</span>([<span class="str">"Pooja"</span>, <span class="num">20</span>, <span class="str">"A"</span>])
+    <span class="var">writer</span>.<span class="fn">writerow</span>([<span class="str">"Alice"</span>, <span class="num">22</span>, <span class="str">"B"</span>])
+    <span class="var">writer</span>.<span class="fn">writerow</span>([<span class="str">"Bob"</span>, <span class="num">19</span>, <span class="str">"A"</span>])
+
+<span class="fn">print</span>(<span class="str">"CSV written!"</span>)</div></div>
+    <p style="margin-top:.5rem;font-size:.92rem;color:var(--text-muted);">Now read it back:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">csv_read.py</span></div><div class="code-body"><span class="kw">import</span> csv
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.csv"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">file</span>:
+    <span class="var">reader</span> <span class="op">=</span> csv.<span class="fn">reader</span>(<span class="var">file</span>)
+    <span class="kw">for</span> <span class="var">row</span> <span class="kw">in</span> <span class="var">reader</span>:
+        <span class="fn">print</span>(<span class="var">row</span>)   <span class="com"># each row is a list: ["Pooja", "20", "A"]</span></div></div>
+  </div>
+
+  <div class="debug-box">
+    <div class="debug-label">🐛 Debug — FileNotFoundError</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">debug_file.py</span></div><div class="code-body"><span class="kw">with</span> <span class="fn">open</span>(<span class="str">"data.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="fn">print</span>(<span class="var">f</span>.<span class="fn">read</span>())</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
+    <div class="answer-content"><strong>FileNotFoundError</strong>: <code>data.txt</code> doesn't exist. You must either create the file first, or check if it exists. Fix: create <code>data.txt</code> first, or use <code>"w"</code> mode to write before reading.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 4: MODULES & IMPORTS ═══════════════════ -->
+<section class="lab-section" id="mod4">
+  <div class="section-label">Module 04</div>
+  <h2>Modules &amp; Imports — Splitting Code</h2>
+  <p class="section-intro">As programs grow, putting everything in one file becomes messy. Modules let you <strong>split code into multiple files</strong> and reuse it.</p>
+
+  <div class="concept">
+    <h3>💡 What Is a Module?</h3>
+    <div>A <strong>module</strong> is just a <code>.py</code> file that contains functions, variables, or classes. When you write <code>import csv</code>, you're importing a module (a file called <code>csv.py</code>) that someone wrote. You can create your own modules too — any <code>.py</code> file can be imported by another <code>.py</code> file.</div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.1</span><span class="task-title">Create Your Own Module</span></div>
+    <p>Create <strong>two files</strong> in your <code>day7</code> folder:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">my_helpers.py — file #1</span></div><div class="code-body"><span class="com"># This file is a MODULE — it contains reusable functions</span>
+
+<span class="kw">def</span> <span class="fn">greet</span>(<span class="var">name</span>):
+    <span class="kw">return</span> <span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>
+
+<span class="kw">def</span> <span class="fn">add</span>(<span class="var">a</span>, <span class="var">b</span>):
+    <span class="kw">return</span> <span class="var">a</span> <span class="op">+</span> <span class="var">b</span>
+
+<span class="var">PI</span> <span class="op">=</span> <span class="num">3.14159</span></div></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">main.py — file #2</span></div><div class="code-body"><span class="com"># This file USES the module</span>
+<span class="kw">import</span> my_helpers
+
+<span class="fn">print</span>(my_helpers.<span class="fn">greet</span>(<span class="str">"Pooja"</span>))   <span class="com"># Hello, Pooja!</span>
+<span class="fn">print</span>(my_helpers.<span class="fn">add</span>(<span class="num">10</span>, <span class="num">5</span>))       <span class="com"># 15</span>
+<span class="fn">print</span>(my_helpers.<span class="var">PI</span>)              <span class="com"># 3.14159</span></div></div>
+    <div class="task-steps">
+      <ol>
+        <li>Create both files. Run <code>python main.py</code> (not my_helpers.py).</li>
+        <li>Notice: <code>import my_helpers</code> makes everything from <code>my_helpers.py</code> accessible with the <code>my_helpers.</code> prefix.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 4.2</span><span class="task-title">Different Import Styles</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">import_styles.py</span></div><div class="code-body"><span class="com"># Style 1: import the whole module</span>
+<span class="kw">import</span> my_helpers
+<span class="fn">print</span>(my_helpers.<span class="fn">greet</span>(<span class="str">"A"</span>))
+
+<span class="com"># Style 2: import specific things (no prefix needed!)</span>
+<span class="kw">from</span> my_helpers <span class="kw">import</span> greet, add
+<span class="fn">print</span>(<span class="fn">greet</span>(<span class="str">"B"</span>))
+
+<span class="com"># Style 3: import with a shorter nickname</span>
+<span class="kw">import</span> my_helpers <span class="kw">as</span> mh
+<span class="fn">print</span>(mh.<span class="fn">greet</span>(<span class="str">"C"</span>))
+
+<span class="com"># Style 4: import everything (not recommended — pollutes namespace)</span>
+<span class="kw">from</span> my_helpers <span class="kw">import</span> <span class="op">*</span>
+<span class="fn">print</span>(<span class="fn">greet</span>(<span class="str">"D"</span>))</div></div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Why Split Into Multiple Files?</h3>
+    <div>
+      <strong>1. Organization</strong> — keep related functions together (e.g., <code>math_helpers.py</code>, <code>file_helpers.py</code>)<br>
+      <strong>2. Reusability</strong> — import the same module in many programs<br>
+      <strong>3. Collaboration</strong> — different people can work on different files<br>
+      <strong>4. Readability</strong> — smaller files are easier to understand
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>from math_utils import add</code> do?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> Creates a file called math_utils.py</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Imports everything from math_utils</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Imports only the add function, usable as add() without prefix</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Runs the math_utils.py file</div>
+    </div>
+    <div class="mcq-explain"><code>from X import Y</code> brings just <code>Y</code> from module <code>X</code> into your code. You can use <code>add()</code> directly without writing <code>math_utils.add()</code>.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 5: PIP ═══════════════════ -->
+<section class="lab-section" id="mod5">
+  <div class="section-label">Module 05</div>
+  <h2>Pip — Installing Packages</h2>
+  <p class="section-intro">You've been using Python's built-in modules (<code>random</code>, <code>csv</code>). But there are <strong>hundreds of thousands</strong> of packages written by other programmers that you can download and use for free.</p>
+
+  <div class="concept">
+    <h3>💡 What Is a Package?</h3>
+    <div>
+      A <strong>package</strong> is a collection of code that someone else wrote, tested, and shared for anyone to use. Instead of writing code to handle image processing from scratch, you install a package like <code>Pillow</code> that already does it. Packages are stored on <strong>PyPI</strong> (Python Package Index) — a website at <code>pypi.org</code> — like an app store for Python code.<br><br>
+      <strong>pip</strong> is the command-line tool that downloads and installs packages from PyPI to your computer. It's like an app store you use from the terminal.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 5.1</span><span class="task-title">Essential Pip Commands</span></div>
+    <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">PowerShell</span></div><div class="terminal-body"><span class="com"># Check pip is installed</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">pip --version</span>
+<span class="output">pip 24.0 from ... (python 3.12)</span>
+
+<span class="com"># Install a package (example: requests — for making web requests)</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">pip install requests</span>
+<span class="output">Downloading requests-2.31.0 ...
+Successfully installed requests-2.31.0</span>
+
+<span class="com"># See all installed packages</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">pip list</span>
+<span class="output">Package    Version
+---------- -------
+pip        24.0
+requests   2.31.0
+...</span>
+
+<span class="com"># Get info about a specific package</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">pip show requests</span>
+
+<span class="com"># Uninstall a package</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">pip uninstall requests</span>
+
+<span class="com"># Search for packages → go to https://pypi.org and search there</span></div></div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 5.2</span><span class="task-title">Install and Use a Package</span></div>
+    <div class="task-steps">
+      <ol>
+        <li>In the terminal: <code>pip install cowsay</code></li>
+        <li>Create <code>use_package.py</code>:</li>
+      </ol>
+    </div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">use_package.py</span></div><div class="code-body"><span class="kw">import</span> cowsay
+
+cowsay.<span class="fn">cow</span>(<span class="str">"I was installed with pip!"</span>)</div></div>
+    <div class="task-steps">
+      <ol start="3">
+        <li>Run: <code>python use_package.py</code>. You'll see a cow made of text characters saying your message!</li>
+        <li>This package was written by someone else, uploaded to PyPI, and you installed it with one command. That's the power of pip.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="concept">
+    <h3>💡 How to Find the Right Package</h3>
+    <div>
+      1. Go to <strong>pypi.org</strong> and search for what you need (e.g., "excel", "email", "image resize")<br>
+      2. Look at the download count — popular packages are usually more reliable<br>
+      3. Check the documentation — good packages have clear instructions<br>
+      4. Install it with <code>pip install package-name</code><br>
+      5. Import it in your code and use it
+    </div>
+  </div>
+
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does <code>pip install pandas</code> do?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> Creates a file called pandas.py</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Opens the pandas website</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Runs a pandas program</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Downloads the pandas package from PyPI and installs it on your computer</div>
+    </div>
+    <div class="mcq-explain"><code>pip install</code> downloads code from PyPI (the Python Package Index) and installs it so you can <code>import</code> it in your programs.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<!-- ═══════════════════ MODULE 6: VIRTUAL ENVIRONMENTS ═══════════════════ -->
+<section class="lab-section" id="mod6">
+  <div class="section-label">Module 06</div>
+  <h2>Virtual Environments — Project Isolation</h2>
+  <p class="section-intro">As a programmer, you'll work on multiple projects. Each project may need different packages or different versions. Virtual environments keep them separate so they don't conflict.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Imagine you have three art projects. One needs oil paints, one needs watercolors, one needs colored pencils. If you dump all supplies into one box, it's chaos — and oil paint might ruin the watercolors. So you give each project its <strong>own supply box</strong>. That's a virtual environment — a <strong>separate, isolated set of packages for each project</strong>.</p>
+  </div>
+
+  <div class="concept">
+    <h3>💡 Why Not Just Install Everything Globally?</h3>
+    <div>
+      Problem: Project A needs <code>requests</code> version 2.25. Project B needs <code>requests</code> version 2.31. If you install globally, only one version exists. One project breaks.<br><br>
+      Solution: Each project gets its own virtual environment with its own packages. Project A's environment has version 2.25. Project B's has 2.31. They never interfere.
+    </div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 6.1</span><span class="task-title">Create a Virtual Environment</span></div>
+    <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">PowerShell</span></div><div class="terminal-body"><span class="com"># Step 1: Make sure you're in your project folder</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">cd H:\Pooja\day7</span>
+
+<span class="com"># Step 2: Create a virtual environment called "venv"</span>
+<span class="prompt">PS H:\Pooja\day7&gt;</span> <span class="cmd">python -m venv venv</span>
+<span class="com"># This creates a folder called "venv" with its own Python + pip inside</span>
+<span class="com"># Wait a few seconds...</span>
+
+<span class="com"># Step 3: Check — a new "venv" folder appeared</span>
+<span class="prompt">PS H:\Pooja\day7&gt;</span> <span class="cmd">ls venv</span>
+<span class="output">Include  Lib  Scripts  pyvenv.cfg</span></div></div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);"><code>python -m venv venv</code> means: "Python, run the <code>venv</code> module to create a virtual environment in a folder called <code>venv</code>." The folder name can be anything, but <code>venv</code> is the convention.</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 6.2</span><span class="task-title">Activate the Virtual Environment</span></div>
+    <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">PowerShell</span></div><div class="terminal-body"><span class="com"># Activate the virtual environment</span>
+<span class="prompt">PS H:\Pooja\day7&gt;</span> <span class="cmd">.\venv\Scripts\Activate</span>
+
+<span class="com"># Notice: the prompt changes! It now shows (venv) at the start:</span>
+<span class="prompt">(venv) PS H:\Pooja\day7&gt;</span> <span class="cmd">_</span>
+
+<span class="com"># Now any pip install goes ONLY into this virtual environment</span>
+<span class="prompt">(venv) PS&gt;</span> <span class="cmd">pip install cowsay</span>
+<span class="output">Successfully installed cowsay-6.1</span>
+
+<span class="com"># Check what's installed in THIS environment</span>
+<span class="prompt">(venv) PS&gt;</span> <span class="cmd">pip list</span>
+<span class="output">Package  Version
+-------- -------
+cowsay   6.1
+pip      24.0</span></div></div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">The <code>(venv)</code> in the prompt tells you the virtual environment is active. Everything you install now is private to this project.</p>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 6.3</span><span class="task-title">Run Your Code Inside the Environment</span></div>
+    <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">PowerShell</span></div><div class="terminal-body"><span class="com"># With (venv) active, run your Python files normally:</span>
+<span class="prompt">(venv) PS H:\Pooja\day7&gt;</span> <span class="cmd">python use_package.py</span>
+<span class="output">  _______________________________
+| I was installed with pip!     |
+  ===============================
+                                \
+                                 \
+                                   ^__^
+                                   (oo)\_______
+                                   (__)\       )\/\
+                                       ||----w |
+                                       ||     ||</span></div></div>
+  </div>
+
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge">TASK 6.4</span><span class="task-title">Deactivate and Switch Projects</span></div>
+    <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">PowerShell</span></div><div class="terminal-body"><span class="com"># Deactivate the current environment</span>
+<span class="prompt">(venv) PS H:\Pooja\day7&gt;</span> <span class="cmd">deactivate</span>
+<span class="prompt">PS H:\Pooja\day7&gt;</span> <span class="cmd">_</span>
+<span class="com"># Notice: (venv) is gone. You're back to the global Python.</span>
+
+<span class="com"># To work on a DIFFERENT project:</span>
+<span class="prompt">PS&gt;</span> <span class="cmd">cd H:\Pooja\other_project</span>
+<span class="prompt">PS H:\Pooja\other_project&gt;</span> <span class="cmd">.\venv\Scripts\Activate</span>
+<span class="prompt">(venv) PS H:\Pooja\other_project&gt;</span> <span class="cmd">python main.py</span>
+
+<span class="com"># Each project has its own venv folder with its own packages!</span></div></div>
+  </div>
+
+  <div class="success">
+    <div class="success-label">🌟 The Professional Workflow</div>
+    <p><strong>1.</strong> Create a project folder<br>
+    <strong>2.</strong> Create a virtual environment: <code>python -m venv venv</code><br>
+    <strong>3.</strong> Activate it: <code>.\venv\Scripts\Activate</code><br>
+    <strong>4.</strong> Install packages: <code>pip install package-name</code><br>
+    <strong>5.</strong> Write and run your code<br>
+    <strong>6.</strong> When switching projects: <code>deactivate</code> → go to other project → activate its environment<br><br>
+    This is exactly how professional Python developers work every day.</p>
+  </div>
+
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">Why do we use virtual environments?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> They make Python run faster</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Different projects can have different package versions without conflicts</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> They protect against viruses</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> They're required to use Python</div>
+    </div>
+    <div class="mcq-explain">Virtual environments isolate each project's packages. Project A can use version 2.0 of a library while Project B uses version 3.0, without any conflict.</div>
+  </div>
+
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">How do you know a virtual environment is active?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> The terminal turns green</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Python opens a special window</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> The prompt shows (venv) at the beginning</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> A notification pops up</div>
+    </div>
+    <div class="mcq-explain">When activated, the terminal prompt starts with <code>(venv)</code> — that's your visual indicator that you're working inside the virtual environment.</div>
+  </div>
+</section>
+
+<hr class="separator">
+
+<section class="lab-section" id="final">
+  <div class="section-label">Day 7 Complete</div>
+  <h2>Completion Checklist</h2>
+  <div class="checklist">
+    <h3>🎯 I Can Now…</h3>
+    <label><input type="checkbox"> Explain why global variables in functions are bad practice</label>
+    <label><input type="checkbox"> Create and loop over a list of dictionaries</label>
+    <label><input type="checkbox"> Use .items(), .values(), .keys() to loop over a dict</label>
+    <label><input type="checkbox"> Explain the difference between text files and binary files</label>
+    <label><input type="checkbox"> Read a text file using open() with "r" mode</label>
+    <label><input type="checkbox"> Write a text file using open() with "w" mode</label>
+    <label><input type="checkbox"> Read and write CSV files using the csv module</label>
+    <label><input type="checkbox"> Create my own module (.py file) and import it in another file</label>
+    <label><input type="checkbox"> Use 4 different import styles: import, from...import, as, *</label>
+    <label><input type="checkbox"> Use pip to install, list, show, and uninstall packages</label>
+    <label><input type="checkbox"> Explain what PyPI is and how to find packages</label>
+    <label><input type="checkbox"> Create a virtual environment with python -m venv venv</label>
+    <label><input type="checkbox"> Activate and deactivate a virtual environment</label>
+    <label><input type="checkbox"> Explain why each project needs its own virtual environment</label>
+  </div>
+
+  <div class="celebrate">
+    <div class="emoji">🏆</div>
+    <h3>You're Thinking Like a Professional!</h3>
+    <p>You can now read files, organize code, install other people's code, and manage project environments. These aren't just "beginner" skills — this is the exact workflow professional developers use daily. You're building real-world capabilities.</p>
+  </div>
+</section>
+
+</div>
+<script>
+function toggleAnswer(btn){const c=btn.nextElementSibling;c.classList.toggle('show');btn.textContent=c.classList.contains('show')?'Hide Answer':'Reveal Answer'}
+function checkMCQ(opt){const mcq=opt.closest('.mcq');if(mcq.dataset.answered)return;mcq.dataset.answered='true';const correct=mcq.dataset.correct,chosen=opt.dataset.value;mcq.querySelectorAll('.mcq-opt').forEach(o=>{if(o.dataset.value===correct)o.classList.add('correct');else if(o===opt&&chosen!==correct)o.classList.add('wrong')});mcq.querySelector('.mcq-explain').classList.add('show')}
+</script>
+</body>
+</html>

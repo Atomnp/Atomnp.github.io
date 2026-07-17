@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 4 — Conditionals, Lists &amp; Loops</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181b24;--surface2:#1e222e;--border:#2a2f3e;--text:#e0e4ef;--text-muted:#8891a8;--accent:#6ee7b7;--accent-dim:#2d6a52;--warn:#fbbf24;--blue:#60a5fa;--pink:#f472b6;--orange:#fb923c;--red:#f87171;--purple:#a78bfa;--terminal-bg:#0a0c10;--terminal-green:#4ade80;--terminal-prompt:#6ee7b7;--lab-bg:#141820;--lab-border:#2a4a3a;--check:#22c55e;--correct:#22c55e;--wrong:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;min-height:100vh}
+.page-wrapper{max-width:880px;margin:0 auto;padding:2rem 1.5rem 6rem}
+.hero{text-align:center;padding:4rem 1rem 3rem}
+.hero-tag{display:inline-block;background:linear-gradient(135deg,#1a3a2a,#1a3a4a);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:600;padding:.35rem 1rem;border-radius:99px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{font-family:'Source Serif 4',serif;font-size:2.8rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:1rem}
+.hero h1 span{color:var(--accent)}
+.hero-sub{color:var(--text-muted);font-size:1.1rem;max-width:580px;margin:0 auto;line-height:1.7}
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:2.5rem 0 3rem}
+.toc h2{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.2rem}
+.toc-list{list-style:none}.toc-list li{padding:.5rem 0;border-bottom:1px solid var(--border)}.toc-list li:last-child{border-bottom:none}
+.toc-list a{color:var(--text);text-decoration:none;font-size:.95rem;display:flex;align-items:center;gap:.75rem;transition:color .2s}.toc-list a:hover{color:var(--accent)}
+.toc-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-muted);min-width:2rem}
+.lab-section{margin-bottom:4rem;scroll-margin-top:2rem}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem}
+.lab-section h2{font-family:'Source Serif 4',serif;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:.5rem}
+.section-intro{color:var(--text-muted);margin-bottom:1.5rem;font-size:1rem}
+.concept{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}
+.concept h3{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.concept p,.concept div{font-size:.95rem;line-height:1.8}
+.analogy{background:linear-gradient(135deg,#1a1525,#1e1830);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}
+.analogy-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.warning{background:linear-gradient(135deg,#1f1a10,#221e14);border-left:3px solid var(--warn);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}
+.warning-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--warn);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.success{background:linear-gradient(135deg,#101f15,#142218);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.5rem;margin:1.5rem 0}
+.success-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.lab-task{background:var(--lab-bg);border:1px solid var(--lab-border);border-radius:12px;padding:1.75rem;margin:1.5rem 0;position:relative}
+.lab-task::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:12px 12px 0 0}
+.task-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.task-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;background:var(--accent-dim);color:var(--accent);padding:.25rem .75rem;border-radius:99px;letter-spacing:.05em}
+.task-badge.debug{background:#4a1a1a;color:var(--red)}
+.task-badge.fill{background:#3a1a3a;color:var(--pink)}
+.task-badge.write{background:var(--accent-dim);color:var(--accent)}
+.task-title{font-weight:600;font-size:1.05rem;color:#fff}
+.task-steps{margin-top:.75rem}.task-steps ol{padding-left:1.5rem;counter-reset:step-counter;list-style:none}
+.task-steps ol li{counter-increment:step-counter;position:relative;padding:.4rem 0 .4rem .5rem;font-size:.95rem}
+.task-steps ol li::before{content:counter(step-counter);position:absolute;left:-1.5rem;top:.45rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:600;color:var(--accent);background:var(--accent-dim);width:1.2rem;height:1.2rem;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.terminal{background:var(--terminal-bg);border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}
+.terminal-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem}
+.terminal-dot{width:10px;height:10px;border-radius:50%}.terminal-dot.r{background:#f87171}.terminal-dot.y{background:#fbbf24}.terminal-dot.g{background:#4ade80}
+.terminal-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted);margin-left:.5rem}
+.terminal-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.terminal-body .prompt{color:var(--terminal-prompt)}.terminal-body .cmd{color:#fff}.terminal-body .output{color:var(--text-muted)}.terminal-body .comment{color:#555b70;font-style:italic}.terminal-body .err{color:var(--red)}
+.code-block{background:#0d1015;border:1px solid #1e2230;border-radius:10px;margin:1rem 0;overflow:hidden}
+.code-bar{background:#161922;padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.code-lang{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--warn);letter-spacing:.05em}
+.code-filename{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}
+.code-body{padding:1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.9;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.code-body .kw{color:var(--pink)}.code-body .fn{color:var(--blue)}.code-body .str{color:var(--accent)}.code-body .com{color:#555b70;font-style:italic}.code-body .num{color:var(--orange)}.code-body .var{color:#e0e4ef}.code-body .op{color:var(--warn)}.code-body .ln{color:#3a3f50;user-select:none}.code-body .ind{color:#2a3a2a}
+.mcq{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.mcq-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--orange);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.mcq p.mcq-q{font-size:.95rem;color:#fff;margin-bottom:1rem;font-weight:500}
+.mcq-options{display:flex;flex-direction:column;gap:.5rem}
+.mcq-opt{display:flex;align-items:center;gap:.75rem;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.65rem 1rem;cursor:pointer;transition:all .2s;font-size:.9rem;font-family:'JetBrains Mono',monospace}
+.mcq-opt:hover{border-color:var(--blue)}
+.mcq-opt.correct{border-color:var(--correct);background:#0f2018;color:var(--correct)}
+.mcq-opt.wrong{border-color:var(--wrong);background:#200f0f;color:var(--wrong);opacity:.7}
+.mcq-opt .letter{min-width:1.5rem;height:1.5rem;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--text-muted);transition:all .2s}
+.mcq-opt.correct .letter{border-color:var(--correct);color:var(--correct);background:#0a1a0f}
+.mcq-opt.wrong .letter{border-color:var(--wrong);color:var(--wrong)}
+.mcq-explain{display:none;margin-top:1rem;padding:1rem;background:#0f1510;border-radius:8px;border:1px dashed #2a4a2a;font-size:.88rem;color:var(--accent);line-height:1.7}
+.mcq-explain.show{display:block}
+.answer-toggle{margin-top:.75rem;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:.35rem .9rem;border-radius:6px;cursor:pointer;transition:all .2s}
+.answer-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.answer-content{display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);color:var(--accent);font-size:.92rem;line-height:1.7}
+.answer-content.show{display:block}
+.fill-in{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.fill-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--pink);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.fill-blank{display:inline-block;border-bottom:2px dashed var(--pink);min-width:80px;color:var(--pink);font-family:'JetBrains Mono',monospace;padding:0 .25rem;cursor:help}
+.debug-box{background:linear-gradient(135deg,#1f1015,#221418);border:1px solid #4a2a2a;border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.debug-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.checklist{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin:1.5rem 0}
+.checklist h3{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--check);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}
+.checklist label{display:flex;align-items:flex-start;gap:.75rem;padding:.5rem 0;cursor:pointer;font-size:.95rem;transition:opacity .2s}
+.checklist input[type="checkbox"]{appearance:none;width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:3px;cursor:pointer;position:relative;transition:all .2s}
+.checklist input[type="checkbox"]:checked{background:var(--check);border-color:var(--check)}
+.checklist input[type="checkbox"]:checked::after{content:'✓';position:absolute;color:#000;font-size:12px;font-weight:700;top:50%;left:50%;transform:translate(-50%,-50%)}
+.checklist label:has(input:checked){opacity:.5;text-decoration:line-through}
+.celebrate{background:linear-gradient(135deg,#1a2520,#152030);border:2px solid var(--accent);border-radius:14px;padding:2rem;margin:2rem 0;text-align:center}
+.celebrate .emoji{font-size:2.5rem;margin-bottom:.75rem}
+.celebrate h3{font-family:'Source Serif 4',serif;font-size:1.4rem;color:#fff;margin-bottom:.5rem}
+.celebrate p{color:var(--text-muted);font-size:.95rem;max-width:500px;margin:0 auto}
+code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.15rem .45rem;border-radius:4px;font-size:.88em;color:var(--pink)}
+.separator{border:none;border-top:1px solid var(--border);margin:3rem 0}
+strong{color:#fff}
+.ex-heading{font-family:'JetBrains Mono',monospace;font-size:.9rem;margin:2.5rem 0 1rem;text-transform:uppercase;letter-spacing:.08em}
+@media(max-width:600px){.hero h1{font-size:2rem}.page-wrapper{padding:1rem}.lab-task,.concept,.analogy,.warning,.mcq,.fill-in,.debug-box{padding:1.25rem}}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+ 
+<div class="hero">
+  <div class="hero-tag">Python Course — Day 4</div>
+  <h1>Conditionals, Lists &amp; <span>Loops</span></h1>
+  <p class="hero-sub">Today you'll teach your programs to make decisions, store collections of data, and repeat actions automatically. These three ideas power almost every program ever written.</p>
+</div>
+ 
+<div class="toc">
+  <h2>Lab Modules</h2>
+  <ul class="toc-list">
+    <li><a href="#mod1"><span class="toc-num">01</span> Quick Recap — Day 3 Review Quiz</a></li>
+    <li><a href="#mod2"><span class="toc-num">02</span> Conditionals — Teaching Programs to Decide</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Lists — Storing Collections of Data</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Loops — Repeating Actions Automatically</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> Conditionals — Practice &amp; Debugging (10 Exercises)</a></li>
+    <li><a href="#mod6"><span class="toc-num">06</span> Lists — Practice &amp; Debugging (10 Exercises)</a></li>
+    <li><a href="#mod7"><span class="toc-num">07</span> Loops — Practice &amp; Debugging (10 Exercises)</a></li>
+  </ul>
+</div>
+ 
+<div class="warning">
+  <div class="warning-label">📌 Setup</div>
+  <p>Open VS Code → open <code>H:\Pooja</code> → create a new folder called <code>day4</code>. Open the integrated terminal (<strong>Ctrl + `</strong>) and navigate: <code>cd H:\Pooja\day4</code>. All files today go inside this folder.</p>
+</div>
+ 
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 1: RECAP                                              ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod1">
+  <div class="section-label">Module 01</div>
+  <h2>Quick Recap — Day 3 Review</h2>
+  <p class="section-intro">Let's make sure yesterday's concepts are solid before building on them. Answer these without looking back.</p>
+ 
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Recap Quiz 1</div>
+    <p class="mcq-q">What is the output of this code?<br><code>x = 10</code><br><code>x = x + 5</code><br><code>print(x)</code></p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 10</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 15</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> x + 5</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain"><code>x</code> starts as 10. Then <code>x = x + 5</code> takes the current value (10), adds 5, and stores 15 back into <code>x</code>.</div>
+  </div>
+ 
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Recap Quiz 2</div>
+    <p class="mcq-q">What is <code>type("42")</code>?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> int</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> float</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> str</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> number</div>
+    </div>
+    <div class="mcq-explain">Anything inside quotes is a <strong>str</strong> (string), even if it looks like a number. <code>"42"</code> is text, <code>42</code> (no quotes) is an int.</div>
+  </div>
+ 
+  <div class="mcq" data-correct="A">
+    <div class="mcq-label">📝 Recap Quiz 3</div>
+    <p class="mcq-q">You run code and get: <code>NameError: name 'scre' is not defined</code>. What happened?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> You misspelled a variable name</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> You forgot a quote</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> You divided by zero</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Python crashed</div>
+    </div>
+    <div class="mcq-explain"><strong>NameError</strong> means Python doesn't recognize the variable name <code>scre</code>. You probably meant <code>score</code>. Always check spelling.</div>
+  </div>
+ 
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Recap Quiz 4</div>
+    <p class="mcq-q">What does <code>"hello".upper()</code> return?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> "hello"</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> "Hello"</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Error</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> "HELLO"</div>
+    </div>
+    <div class="mcq-explain"><code>.upper()</code> converts every letter to uppercase: <code>"HELLO"</code>.</div>
+  </div>
+</section>
+ 
+<hr class="separator">
+ 
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 2: CONDITIONALS                                       ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod2">
+  <div class="section-label">Module 02</div>
+  <h2>Conditionals — Teaching Programs to Decide</h2>
+  <p class="section-intro">Think about any app you use. When you type a wrong password, it shows "Incorrect password." When you type the right one, it logs you in. <strong>Different things happen depending on a condition.</strong> That's what conditionals do.</p>
+ 
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>You make conditional decisions every day without thinking about it:<br><br>
+    <strong>IF</strong> it's raining → take an umbrella<br>
+    <strong>ELSE IF</strong> it's sunny → wear sunglasses<br>
+    <strong>ELSE</strong> → just go outside normally<br><br>
+    You check a <strong>condition</strong> (is it raining?), and depending on the answer (yes or no), you <strong>do different things</strong>. That's all <code>if/elif/else</code> does in Python — it lets the program choose what to do based on a condition.</p>
+  </div>
+ 
+  <div class="concept">
+    <h3>💡 Why Do We Need Conditionals?</h3>
+    <p>Without conditionals, a program would do the exact same thing every time — no matter what. Think of an ATM: it needs to check <em>if</em> you have enough balance before letting you withdraw money. A login page needs to check <em>if</em> your password is correct. A game needs to check <em>if</em> your health reached zero. Conditionals make programs <strong>smart</strong> — they can react differently to different situations.</p>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.1</span>
+      <span class="task-title">Your First If Statement</span>
+    </div>
+    <p>Create <code>if_basic.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">if_basic.py</span></div>
+      <div class="code-body"><span class="var">age</span> <span class="op">=</span> <span class="num">18</span>
+ 
+<span class="kw">if</span> <span class="var">age</span> <span class="op">&gt;=</span> <span class="num">18</span>:
+    <span class="fn">print</span>(<span class="str">"You are an adult."</span>)
+    <span class="fn">print</span>(<span class="str">"You can vote!"</span>)
+ 
+<span class="fn">print</span>(<span class="str">"Program finished."</span>)</div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div>
+      <div class="terminal-body"><span class="output">You are an adult.
+You can vote!
+Program finished.</span></div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Type, save, run. Now <strong>change <code>age</code> to <code>15</code></strong>, save and run again. Notice that "You are an adult" and "You can vote" <strong>don't appear</strong>, but "Program finished" still does.</li>
+        <li>The two <code>print</code> lines that are <strong>indented</strong> (pushed to the right) are <em>inside</em> the if block. They only run when the condition is True. The last <code>print</code> is NOT indented, so it <strong>always runs</strong>.</li>
+      </ol>
+    </div>
+  </div>
+ 
+  <div class="concept">
+    <h3>💡 Indentation — The Most Important Rule in Python</h3>
+    <p>Notice how the two lines inside the <code>if</code> are pushed to the right by 4 spaces? That's called <strong>indentation</strong>. In Python, indentation is <strong>NOT optional</strong> — it's how Python knows which lines are "inside" the if block and which are outside.<br><br>
+    Other programming languages use curly braces <code>{ }</code> to group code. Python uses <strong>spaces</strong>. This forces your code to be visually clean and readable — you can always <em>see</em> the structure just by looking at the spacing.<br><br>
+    <strong>Rule:</strong> Every line inside an <code>if</code> (or <code>elif</code>, <code>else</code>, loop, etc.) MUST be indented by the same amount (4 spaces is the standard). When you stop indenting, you're "outside" the block.</p>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.2</span>
+      <span class="task-title">If / Else</span>
+    </div>
+    <p>Create <code>if_else.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">if_else.py</span></div>
+      <div class="code-body"><span class="var">password</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Enter password: "</span>)
+ 
+<span class="kw">if</span> <span class="var">password</span> <span class="op">==</span> <span class="str">"python123"</span>:
+    <span class="fn">print</span>(<span class="str">"Access granted!"</span>)
+    <span class="fn">print</span>(<span class="str">"Welcome back."</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"Wrong password!"</span>)
+    <span class="fn">print</span>(<span class="str">"Try again."</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Run it and type <code>python123</code> — you get the "Access granted" path.</li>
+        <li>Run it again and type anything else — you get the "Wrong password" path.</li>
+        <li><code>else</code> catches <strong>everything that doesn't match the if condition</strong>. It's the "otherwise" branch.</li>
+      </ol>
+    </div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.3</span>
+      <span class="task-title">If / Elif / Else — Multiple Conditions</span>
+    </div>
+    <p>Create <code>grade.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">grade.py</span></div>
+      <div class="code-body"><span class="var">score</span> <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter your score (0-100): "</span>))
+ 
+<span class="kw">if</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">90</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: A"</span>)
+<span class="kw">elif</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">80</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: B"</span>)
+<span class="kw">elif</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">70</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: C"</span>)
+<span class="kw">elif</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">60</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: D"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"Grade: F"</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Run it with different scores: 95, 85, 72, 55. Notice how Python checks from top to bottom, and <strong>stops at the first match</strong>.</li>
+        <li><code>elif</code> means "else if" — check this condition only if all the ones above were False.</li>
+      </ol>
+    </div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 2.4</span>
+      <span class="task-title">See an IndentationError</span>
+    </div>
+    <p>Create <code>indent_error.py</code> with this <strong>broken</strong> code:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">indent_error.py</span></div>
+      <div class="code-body"><span class="var">x</span> <span class="op">=</span> <span class="num">10</span>
+ 
+<span class="kw">if</span> <span class="var">x</span> <span class="op">&gt;</span> <span class="num">5</span>:
+<span class="fn">print</span>(<span class="str">"x is big"</span>)</div>
+    </div>
+    <div class="task-steps">
+      <ol>
+        <li>Run it. You'll get: <code>IndentationError: expected an indented block after 'if' statement on line 3</code></li>
+        <li>Python is telling you: "You wrote an <code>if</code> on line 3, but the next line isn't indented, so I don't know what's supposed to be inside the if block."</li>
+        <li><strong>Fix:</strong> Add 4 spaces before <code>print</code> on line 4 so it becomes: <code>    print("x is big")</code>. In VS Code, you can also press Tab to indent.</li>
+      </ol>
+    </div>
+  </div>
+ 
+  <div class="concept">
+    <h3>💡 Comparison Operators</h3>
+    <div>
+      <code>==</code> equal to &nbsp;&nbsp; <code>!=</code> not equal to &nbsp;&nbsp; <code>&gt;</code> greater than &nbsp;&nbsp; <code>&lt;</code> less than &nbsp;&nbsp; <code>&gt;=</code> greater or equal &nbsp;&nbsp; <code>&lt;=</code> less or equal<br><br>
+      Remember: <code>=</code> (one equals) is <strong>assignment</strong> (store a value). <code>==</code> (two equals) is <strong>comparison</strong> (check if equal).
+    </div>
+  </div>
+ 
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">What does this print if <code>temp = 25</code>?<br><code>if temp > 30:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Hot")</code><br><code>elif temp > 20:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Warm")</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Cold")</code></p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> Hot</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> Warm</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Cold</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Hot and Warm</div>
+    </div>
+    <div class="mcq-explain">25 is NOT > 30, so the first <code>if</code> is skipped. 25 IS > 20, so the <code>elif</code> matches. Python prints "Warm" and <strong>stops checking</strong> — it doesn't continue to <code>else</code>.</div>
+  </div>
+</section>
+ 
+<hr class="separator">
+ 
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 3: LISTS                                              ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod3">
+  <div class="section-label">Module 03</div>
+  <h2>Lists — Storing Collections of Data</h2>
+  <p class="section-intro">So far, every variable has held <strong>one</strong> value. But what if you need to store 10 student names? Or 50 test scores? You could make 50 separate variables, but that would be a nightmare. That's why <strong>lists</strong> exist.</p>
+ 
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Think of a <strong>shopping list</strong> on paper. Instead of writing each item on a separate piece of paper (separate variables), you write them all on one list. You can add items, remove items, check how many items you have, and go through each item one by one. A Python list works exactly the same way.</p>
+  </div>
+ 
+  <div class="concept">
+    <h3>💡 Why Do We Need Lists?</h3>
+    <p>Think of apps you use: a <strong>to-do app</strong> stores a list of tasks. Your <strong>music player</strong> has a list of songs. <strong>Instagram</strong> shows a list of posts. <strong>Google search</strong> returns a list of results. Whenever an app deals with multiple items of the same kind, there's a list behind the scenes.</p>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.1</span>
+      <span class="task-title">Without Lists vs. With Lists</span>
+    </div>
+    <p>Create <code>list_why.py</code> — see how painful life would be without lists:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">list_why.py</span></div>
+      <div class="code-body"><span class="com"># WITHOUT lists — storing 5 student names:</span>
+<span class="var">student1</span> <span class="op">=</span> <span class="str">"Alice"</span>
+<span class="var">student2</span> <span class="op">=</span> <span class="str">"Bob"</span>
+<span class="var">student3</span> <span class="op">=</span> <span class="str">"Charlie"</span>
+<span class="var">student4</span> <span class="op">=</span> <span class="str">"Diana"</span>
+<span class="var">student5</span> <span class="op">=</span> <span class="str">"Eve"</span>
+<span class="fn">print</span>(<span class="var">student1</span>, <span class="var">student2</span>, <span class="var">student3</span>, <span class="var">student4</span>, <span class="var">student5</span>)
+<span class="com"># Imagine doing this for 100 students... horrible!</span>
+ 
+<span class="fn">print</span>()
+ 
+<span class="com"># WITH a list — all names in ONE variable:</span>
+<span class="var">students</span> <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Charlie"</span>, <span class="str">"Diana"</span>, <span class="str">"Eve"</span>]
+<span class="fn">print</span>(<span class="var">students</span>)</div>
+    </div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.2</span>
+      <span class="task-title">Creating Lists and Accessing Items</span>
+    </div>
+    <p>Create <code>list_basics.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">list_basics.py</span></div>
+      <div class="code-body"><span class="var">fruits</span> <span class="op">=</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>, <span class="str">"date"</span>]
+ 
+<span class="com"># Access items by position (index) — counting starts at 0!</span>
+<span class="fn">print</span>(<span class="var">fruits</span>[<span class="num">0</span>])    <span class="com"># "apple"  — first item</span>
+<span class="fn">print</span>(<span class="var">fruits</span>[<span class="num">1</span>])    <span class="com"># "banana" — second item</span>
+<span class="fn">print</span>(<span class="var">fruits</span>[<span class="num">3</span>])    <span class="com"># "date"   — fourth item</span>
+<span class="fn">print</span>(<span class="var">fruits</span>[<span class="op">-</span><span class="num">1</span>])   <span class="com"># "date"   — last item (shortcut!)</span>
+ 
+<span class="com"># How many items?</span>
+<span class="fn">print</span>(<span class="str">"Total fruits:"</span>, <span class="fn">len</span>(<span class="var">fruits</span>))</div>
+    </div>
+    <div class="warning">
+      <div class="warning-label">⚠️ Indexing Starts at 0</div>
+      <p>The first item is at position <code>[0]</code>, NOT <code>[1]</code>. This trips up beginners constantly. <code>fruits[0]</code> = "apple", <code>fruits[1]</code> = "banana", etc. This is called <strong>zero-based indexing</strong> and it's used in almost every programming language.</p>
+    </div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 3.3</span>
+      <span class="task-title">Modifying Lists</span>
+    </div>
+    <p>Create <code>list_modify.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">list_modify.py</span></div>
+      <div class="code-body"><span class="var">tasks</span> <span class="op">=</span> [<span class="str">"buy milk"</span>, <span class="str">"do homework"</span>]
+<span class="fn">print</span>(<span class="str">"Start:"</span>, <span class="var">tasks</span>)
+ 
+<span class="com"># Add an item to the end</span>
+<span class="var">tasks</span>.<span class="fn">append</span>(<span class="str">"call mom"</span>)
+<span class="fn">print</span>(<span class="str">"After append:"</span>, <span class="var">tasks</span>)
+ 
+<span class="com"># Change an item</span>
+<span class="var">tasks</span>[<span class="num">0</span>] <span class="op">=</span> <span class="str">"buy eggs"</span>
+<span class="fn">print</span>(<span class="str">"After change:"</span>, <span class="var">tasks</span>)
+ 
+<span class="com"># Remove an item</span>
+<span class="var">tasks</span>.<span class="fn">remove</span>(<span class="str">"do homework"</span>)
+<span class="fn">print</span>(<span class="str">"After remove:"</span>, <span class="var">tasks</span>)
+ 
+<span class="com"># Check if something is in the list</span>
+<span class="fn">print</span>(<span class="str">"call mom"</span> <span class="kw">in</span> <span class="var">tasks</span>)   <span class="com"># True</span>
+<span class="fn">print</span>(<span class="str">"go gym"</span> <span class="kw">in</span> <span class="var">tasks</span>)     <span class="com"># False</span></div>
+    </div>
+  </div>
+ 
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q"><code>colors = ["red", "green", "blue"]</code><br>What is <code>colors[1]</code>?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> "red"</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> "blue"</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> "green"</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Error</div>
+    </div>
+    <div class="mcq-explain">Index starts at 0: <code>[0]</code>="red", <code>[1]</code>="green", <code>[2]</code>="blue".</div>
+  </div>
+</section>
+ 
+<hr class="separator">
+ 
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 4: LOOPS                                              ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod4">
+  <div class="section-label">Module 04</div>
+  <h2>Loops — Repeating Actions</h2>
+  <p class="section-intro">What if you want to print "Hello" 100 times? Or greet every student in a list? You could write 100 print statements, but that's insane. <strong>Loops</strong> let you repeat code automatically.</p>
+ 
+  <div class="analogy">
+    <div class="analogy-label">🏠 Real-World Analogy</div>
+    <p>Imagine a teacher calling attendance: "Alice?" ... "Bob?" ... "Charlie?" ... They're doing the <strong>same action</strong> (calling a name) for <strong>each student</strong> in the list. That's a loop — repeating an action for every item in a collection, or repeating an action a certain number of times.</p>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.1</span>
+      <span class="task-title">Without Loops vs. With Loops</span>
+    </div>
+    <p>Create <code>loop_why.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">loop_why.py</span></div>
+      <div class="code-body"><span class="com"># WITHOUT a loop:</span>
+<span class="fn">print</span>(<span class="str">"Hello, Alice!"</span>)
+<span class="fn">print</span>(<span class="str">"Hello, Bob!"</span>)
+<span class="fn">print</span>(<span class="str">"Hello, Charlie!"</span>)
+<span class="fn">print</span>(<span class="str">"Hello, Diana!"</span>)
+ 
+<span class="fn">print</span>()
+ 
+<span class="com"># WITH a loop — same result, much cleaner:</span>
+<span class="var">names</span> <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Charlie"</span>, <span class="str">"Diana"</span>]
+<span class="kw">for</span> <span class="var">name</span> <span class="kw">in</span> <span class="var">names</span>:
+    <span class="fn">print</span>(<span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>)</div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">Both produce the same output. But if you had 1000 names, the loop version is still just 3 lines. The non-loop version would be 1000 lines.</p>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.2</span>
+      <span class="task-title">For Loop with range()</span>
+    </div>
+    <p>Create <code>loop_range.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">loop_range.py</span></div>
+      <div class="code-body"><span class="com"># Print numbers 1 to 5</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    <span class="fn">print</span>(<span class="var">i</span>)
+ 
+<span class="fn">print</span>(<span class="str">"---"</span>)
+ 
+<span class="com"># range(5) means 0, 1, 2, 3, 4  (starts at 0, stops BEFORE 5)</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+    <span class="fn">print</span>(<span class="str">"Repetition"</span>, <span class="var">i</span>)</div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);"><code>range(1, 6)</code> generates: 1, 2, 3, 4, 5 (starts at 1, stops <strong>before</strong> 6). <code>range(5)</code> generates: 0, 1, 2, 3, 4.</p>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.3</span>
+      <span class="task-title">While Loop</span>
+    </div>
+    <p>Create <code>loop_while.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">loop_while.py</span></div>
+      <div class="code-body"><span class="com"># Keep asking until they type "quit"</span>
+<span class="var">command</span> <span class="op">=</span> <span class="str">""</span>
+ 
+<span class="kw">while</span> <span class="var">command</span> <span class="op">!=</span> <span class="str">"quit"</span>:
+    <span class="var">command</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Type something (or 'quit' to exit): "</span>)
+    <span class="fn">print</span>(<span class="str">"You typed:"</span>, <span class="var">command</span>)
+ 
+<span class="fn">print</span>(<span class="str">"Goodbye!"</span>)</div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);"><code>while</code> loops keep repeating <strong>as long as the condition is True</strong>. Once <code>command</code> equals <code>"quit"</code>, the condition becomes False and the loop stops.</p>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header">
+      <span class="task-badge">TASK 4.4</span>
+      <span class="task-title">Loop + List + Conditional — All Together</span>
+    </div>
+    <p>Create <code>combo.py</code>:</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">combo.py</span></div>
+      <div class="code-body"><span class="var">scores</span> <span class="op">=</span> [<span class="num">85</span>, <span class="num">42</span>, <span class="num">91</span>, <span class="num">67</span>, <span class="num">55</span>, <span class="num">78</span>]
+ 
+<span class="fn">print</span>(<span class="str">"Pass/Fail Report:"</span>)
+<span class="kw">for</span> <span class="var">score</span> <span class="kw">in</span> <span class="var">scores</span>:
+    <span class="kw">if</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">60</span>:
+        <span class="fn">print</span>(<span class="var">score</span>, <span class="str">"→ PASS"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="var">score</span>, <span class="str">"→ FAIL"</span>)</div>
+    </div>
+    <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">Notice the indentation: the <code>if/else</code> is indented inside the <code>for</code> loop, and the <code>print</code> statements are indented inside the <code>if/else</code>. Two levels of indentation = 8 spaces.</p>
+  </div>
+ 
+  <div class="mcq" data-correct="D">
+    <div class="mcq-label">📝 Quiz</div>
+    <p class="mcq-q">How many times does this print?<br><code>for i in range(3):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Hi")</code></p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 1</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 2</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> 4</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> 3</div>
+    </div>
+    <div class="mcq-explain"><code>range(3)</code> generates 0, 1, 2 — that's 3 values, so the loop runs 3 times.</div>
+  </div>
+</section>
+ 
+<hr class="separator">
+ 
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 5: CONDITIONALS EXERCISES (10)                        ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod5">
+  <div class="section-label">Module 05</div>
+  <h2>Conditionals — Practice &amp; Debugging</h2>
+  <p class="section-intro">10 exercises: 5 programming + 5 debugging. Create a new file for each one.</p>
+ 
+  <h3 class="ex-heading" style="color:var(--accent)">🚀 Programming Exercises</h3>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">C1</span><span class="task-title">Even or Odd</span></div>
+    <p>Write a program that asks the user for a number and prints whether it's even or odd. (Hint: a number is even if <code>number % 2 == 0</code>. The <code>%</code> operator gives the remainder.)</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer (try for 2-3 min first!)</button>
+    <div class="answer-content"><code>number = int(input("Enter a number: "))</code><br><code>if number % 2 == 0:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Even")</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Odd")</code></div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">C2</span><span class="task-title">Ticket Price</span></div>
+    <p>Write a program: ask for user's age. If age &lt; 5 → "Free", age 5-17 → "Child ticket: $5", age 18-64 → "Adult ticket: $10", age 65+ → "Senior ticket: $7".</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>age = int(input("Enter age: "))</code><br><code>if age &lt; 5:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Free")</code><br><code>elif age &lt;= 17:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Child ticket: $5")</code><br><code>elif age &lt;= 64:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Adult ticket: $10")</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Senior ticket: $7")</code></div>
+  </div>
+ 
+  <div class="fill-in">
+    <div class="fill-label">✏️ C3 — Fill in the Blank</div>
+    <p>Complete this so it prints "Positive", "Negative", or "Zero":</p>
+    <div class="code-block">
+      <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_c3.py</span></div>
+      <div class="code-body"><span class="var">num</span> <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Number: "</span>))
+ 
+<span class="kw">if</span> <span class="var">num</span> <span class="op">&gt;</span> <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">"Positive"</span>)
+<span class="fill-blank">???</span> <span class="var">num</span> <span class="op">&lt;</span> <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">"Negative"</span>)
+<span class="fill-blank">???</span>:
+    <span class="fn">print</span>(<span class="str">"Zero"</span>)</div>
+    </div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">First blank: <code>elif</code> — second blank: <code>else</code></div>
+  </div>
+ 
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 C4 — Predict the Output</div>
+    <p class="mcq-q"><code>x = 15</code><br><code>if x > 20:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("A")</code><br><code>elif x > 10:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("B")</code><br><code>elif x > 5:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("C")</code></p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> A</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> B</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> B and C</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> C</div>
+    </div>
+    <div class="mcq-explain">15 is NOT > 20 → skip. 15 IS > 10 → print "B" and <strong>stop</strong>. Even though 15 > 5 is also true, <code>elif</code> stops at the first match.</div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">C5</span><span class="task-title">Simple Login</span></div>
+    <p>Write a program that asks for username and password. If username is <code>"admin"</code> AND password is <code>"1234"</code> → "Login successful". Otherwise → "Invalid credentials". (Hint: use <code>and</code> to combine conditions: <code>if a == "x" and b == "y":</code>)</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>user = input("Username: ")</code><br><code>pw = input("Password: ")</code><br><code>if user == "admin" and pw == "1234":</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Login successful")</code><br><code>else:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Invalid credentials")</code></div>
+  </div>
+ 
+  <h3 class="ex-heading" style="color:var(--red)">🐛 Debug Exercises</h3>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 CD1 — IndentationError</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">cd1.py</span></div>
+      <div class="code-body"><span class="var">temp</span> <span class="op">=</span> <span class="num">35</span>
+<span class="kw">if</span> <span class="var">temp</span> <span class="op">&gt;</span> <span class="num">30</span>:
+<span class="fn">print</span>(<span class="str">"It's hot!"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>IndentationError on line 3.</strong> The <code>print</code> needs to be indented (4 spaces) to be inside the <code>if</code> block. Fix: <code>&nbsp;&nbsp;&nbsp;&nbsp;print("It's hot!")</code></div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 CD2 — SyntaxError</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">cd2.py</span></div>
+      <div class="code-body"><span class="var">age</span> <span class="op">=</span> <span class="num">20</span>
+<span class="kw">if</span> <span class="var">age</span> <span class="op">&gt;=</span> <span class="num">18</span>
+    <span class="fn">print</span>(<span class="str">"Adult"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>SyntaxError — missing colon <code>:</code></strong> at the end of line 2. Every <code>if</code>, <code>elif</code>, <code>else</code>, <code>for</code>, <code>while</code> line MUST end with <code>:</code>. Fix: <code>if age >= 18:</code></div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 CD3 — Assignment vs Comparison</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">cd3.py</span></div>
+      <div class="code-body"><span class="var">color</span> <span class="op">=</span> <span class="str">"red"</span>
+<span class="kw">if</span> <span class="var">color</span> <span class="op">=</span> <span class="str">"blue"</span>:
+    <span class="fn">print</span>(<span class="str">"Sky color!"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>SyntaxError on line 2.</strong> Used <code>=</code> (assignment) instead of <code>==</code> (comparison). Fix: <code>if color == "blue":</code></div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 CD4 — Logic Bug</div>
+    <p style="font-size:.9rem;color:var(--text-muted);">Expected: score 75 should print "B", but it prints "C". Find the logic error.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">cd4.py</span></div>
+      <div class="code-body"><span class="var">score</span> <span class="op">=</span> <span class="num">75</span>
+<span class="kw">if</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">90</span>:
+    <span class="fn">print</span>(<span class="str">"A"</span>)
+<span class="kw">elif</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">80</span>:
+    <span class="fn">print</span>(<span class="str">"B"</span>)
+<span class="kw">elif</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">60</span>:
+    <span class="fn">print</span>(<span class="str">"C"</span>)
+<span class="kw">elif</span> <span class="var">score</span> <span class="op">&gt;=</span> <span class="num">70</span>:
+    <span class="fn">print</span>(<span class="str">"B"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Logic error — wrong order.</strong> The check <code>>= 60</code> comes before <code>>= 70</code>. Since 75 >= 60 is True, Python prints "C" and stops, never reaching the 70 check. Fix: put higher thresholds first: swap the <code>>= 60</code> and <code>>= 70</code> lines.</div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 CD5 — Mixed Indentation</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">cd5.py</span></div>
+      <div class="code-body"><span class="var">x</span> <span class="op">=</span> <span class="num">10</span>
+<span class="kw">if</span> <span class="var">x</span> <span class="op">&gt;</span> <span class="num">5</span>:
+    <span class="fn">print</span>(<span class="str">"big"</span>)
+     <span class="fn">print</span>(<span class="str">"number"</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>IndentationError — inconsistent indentation.</strong> Line 3 has 4 spaces, line 4 has 5 spaces. All lines in the same block must have the <strong>exact same</strong> indentation. Fix: make line 4 also have exactly 4 spaces.</div>
+  </div>
+</section>
+ 
+<hr class="separator">
+ 
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 6: LISTS EXERCISES (10)                               ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod6">
+  <div class="section-label">Module 06</div>
+  <h2>Lists — Practice &amp; Debugging</h2>
+  <p class="section-intro">10 exercises: 5 programming + 5 debugging.</p>
+ 
+  <h3 class="ex-heading" style="color:var(--accent)">🚀 Programming Exercises</h3>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">L1</span><span class="task-title">Favorite Foods</span></div>
+    <p>Create a list of 4 favorite foods. Print the entire list, print the first item, print the last item, and print how many items are in the list.</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>foods = ["pizza", "biryani", "pasta", "momos"]</code><br><code>print(foods)</code><br><code>print("First:", foods[0])</code><br><code>print("Last:", foods[-1])</code><br><code>print("Total:", len(foods))</code></div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">L2</span><span class="task-title">Shopping List Manager</span></div>
+    <p>Start with <code>items = ["milk", "bread"]</code>. Add "eggs" to the list, then remove "bread", then change the first item to "almond milk". Print the list after each change.</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>items = ["milk", "bread"]</code><br><code>items.append("eggs")</code><br><code>print(items)</code><br><code>items.remove("bread")</code><br><code>print(items)</code><br><code>items[0] = "almond milk"</code><br><code>print(items)</code></div>
+  </div>
+ 
+  <div class="fill-in">
+    <div class="fill-label">✏️ L3 — Fill in the Blank</div>
+    <p>Complete this so it adds "grape" to the list and prints the total count:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_l3.py</span></div>
+      <div class="code-body"><span class="var">fruits</span> <span class="op">=</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>]
+<span class="var">fruits</span>.<span class="fill-blank">???</span>(<span class="str">"grape"</span>)
+<span class="fn">print</span>(<span class="str">"Count:"</span>, <span class="fill-blank">???</span>(<span class="var">fruits</span>))</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content">First blank: <code>append</code> — Second blank: <code>len</code></div>
+  </div>
+ 
+  <div class="mcq" data-correct="B">
+    <div class="mcq-label">📝 L4 — Predict the Output</div>
+    <p class="mcq-q"><code>nums = [10, 20, 30]</code><br><code>nums.append(40)</code><br><code>nums[0] = 99</code><br><code>print(nums)</code></p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> [10, 20, 30, 40]</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> [99, 20, 30, 40]</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> [99, 20, 30]</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> [10, 20, 30, 99]</div>
+    </div>
+    <div class="mcq-explain"><code>append(40)</code> adds 40 at the end: <code>[10,20,30,40]</code>. Then <code>[0] = 99</code> changes the first item: <code>[99,20,30,40]</code>.</div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">L5</span><span class="task-title">Sum of a List</span></div>
+    <p>Create a list <code>numbers = [10, 20, 30, 40, 50]</code>. Use a <code>for</code> loop to calculate the total sum. Print "Sum: 150".</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>numbers = [10, 20, 30, 40, 50]</code><br><code>total = 0</code><br><code>for n in numbers:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;total = total + n</code><br><code>print("Sum:", total)</code></div>
+  </div>
+ 
+  <h3 class="ex-heading" style="color:var(--red)">🐛 Debug Exercises</h3>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LD1 — IndexError</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ld1.py</span></div>
+      <div class="code-body"><span class="var">colors</span> <span class="op">=</span> [<span class="str">"red"</span>, <span class="str">"green"</span>, <span class="str">"blue"</span>]
+<span class="fn">print</span>(<span class="var">colors</span>[<span class="num">3</span>])</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>IndexError: list index out of range.</strong> The list has 3 items at indices 0, 1, 2. Index <code>[3]</code> doesn't exist. Fix: <code>colors[2]</code> for the last item, or <code>colors[-1]</code>.</div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LD2 — Wrong Method</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ld2.py</span></div>
+      <div class="code-body"><span class="var">items</span> <span class="op">=</span> [<span class="str">"pen"</span>, <span class="str">"book"</span>]
+<span class="var">items</span>.<span class="fn">add</span>(<span class="str">"eraser"</span>)
+<span class="fn">print</span>(<span class="var">items</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>AttributeError: list has no method 'add'.</strong> The correct method for lists is <code>.append()</code>, not <code>.add()</code>. Fix: <code>items.append("eraser")</code>.</div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LD3 — TypeError</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ld3.py</span></div>
+      <div class="code-body"><span class="var">nums</span> <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+<span class="fn">print</span>(<span class="str">"Count: "</span> <span class="op">+</span> <span class="fn">len</span>(<span class="var">nums</span>))</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>TypeError.</strong> <code>len(nums)</code> returns an int (3), and you can't <code>+</code> a string with an int. Fix: <code>print("Count: " + str(len(nums)))</code> or simpler: <code>print("Count:", len(nums))</code>.</div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LD4 — Missing Brackets</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ld4.py</span></div>
+      <div class="code-body"><span class="var">animals</span> <span class="op">=</span> <span class="str">"cat"</span>, <span class="str">"dog"</span>, <span class="str">"bird"</span>
+<span class="fn">print</span>(<span class="var">animals</span>[<span class="num">0</span>])</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Not a crash, but wrong type.</strong> Without square brackets <code>[]</code>, Python creates a <strong>tuple</strong> (a different type), not a list. It still works with indexing, but you can't use <code>.append()</code> etc. Fix: <code>animals = ["cat", "dog", "bird"]</code>.</div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LD5 — ValueError</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ld5.py</span></div>
+      <div class="code-body"><span class="var">fruits</span> <span class="op">=</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>]
+<span class="var">fruits</span>.<span class="fn">remove</span>(<span class="str">"cherry"</span>)
+<span class="fn">print</span>(<span class="var">fruits</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>ValueError: list.remove(x): x not in list.</strong> You can't remove "cherry" because it's not in the list. Fix: check first: <code>if "cherry" in fruits:</code> then <code>fruits.remove("cherry")</code>, or remove an item that actually exists.</div>
+  </div>
+</section>
+ 
+<hr class="separator">
+ 
+<!-- ╔═══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  MODULE 7: LOOPS EXERCISES (10)                               ║ -->
+<!-- ╚═══════════════════════════════════════════════════════════════╝ -->
+<section class="lab-section" id="mod7">
+  <div class="section-label">Module 07</div>
+  <h2>Loops — Practice &amp; Debugging</h2>
+  <p class="section-intro">10 exercises: 5 programming + 5 debugging.</p>
+ 
+  <h3 class="ex-heading" style="color:var(--accent)">🚀 Programming Exercises</h3>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">LP1</span><span class="task-title">Multiplication Table</span></div>
+    <p>Ask the user for a number. Print its multiplication table from 1 to 10. Example for 5: <code>5 x 1 = 5</code>, <code>5 x 2 = 10</code>, etc.</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>num = int(input("Enter a number: "))</code><br><code>for i in range(1, 11):</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print(num, "x", i, "=", num * i)</code></div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">LP2</span><span class="task-title">Count Vowels</span></div>
+    <p>Given <code>word = "programming"</code>, use a loop to count how many vowels (a, e, i, o, u) are in the word. Print the count.</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>word = "programming"</code><br><code>count = 0</code><br><code>for letter in word:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if letter in "aeiou":</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count = count + 1</code><br><code>print("Vowels:", count)</code></div>
+  </div>
+ 
+  <div class="fill-in">
+    <div class="fill-label">✏️ LP3 — Fill in the Blank</div>
+    <p>Complete this so it prints numbers 1 to 5:</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">ex_lp3.py</span></div>
+      <div class="code-body"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="fill-blank">???</span>, <span class="fill-blank">???</span>):
+    <span class="fn">print</span>(<span class="var">i</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>range(1, 6)</code> — starts at 1, stops before 6, giving: 1, 2, 3, 4, 5.</div>
+  </div>
+ 
+  <div class="mcq" data-correct="C">
+    <div class="mcq-label">📝 LP4 — Predict the Output</div>
+    <p class="mcq-q"><code>total = 0</code><br><code>for n in [2, 4, 6]:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;total = total + n</code><br><code>print(total)</code></p>
+    <div class="mcq-options">
+      <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> 6</div>
+      <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> 246</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> 12</div>
+      <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> 0</div>
+    </div>
+    <div class="mcq-explain">Loop: total = 0+2 = 2, then 2+4 = 6, then 6+6 = 12. Final: 12.</div>
+  </div>
+ 
+  <div class="lab-task">
+    <div class="task-header"><span class="task-badge write">LP5</span><span class="task-title">Find the Largest</span></div>
+    <p>Given <code>numbers = [34, 78, 12, 95, 56]</code>. Use a loop to find and print the largest number. (Don't use the built-in <code>max()</code> function — do it manually with a loop and an if statement.)</p>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><code>numbers = [34, 78, 12, 95, 56]</code><br><code>biggest = numbers[0]</code><br><code>for n in numbers:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;if n > biggest:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;biggest = n</code><br><code>print("Largest:", biggest)</code></div>
+  </div>
+ 
+  <h3 class="ex-heading" style="color:var(--red)">🐛 Debug Exercises</h3>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LPD1 — IndentationError</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">lpd1.py</span></div>
+      <div class="code-body"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+<span class="fn">print</span>(<span class="var">i</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>IndentationError.</strong> The <code>print</code> must be indented inside the <code>for</code> block. Fix: <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code></div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LPD2 — Infinite Loop</div>
+    <p style="font-size:.9rem;color:var(--text-muted);">Warning: this will run forever. Press <strong>Ctrl + C</strong> to stop it!</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">lpd2.py</span></div>
+      <div class="code-body"><span class="var">count</span> <span class="op">=</span> <span class="num">0</span>
+<span class="kw">while</span> <span class="var">count</span> <span class="op">&lt;</span> <span class="num">5</span>:
+    <span class="fn">print</span>(<span class="var">count</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Infinite loop.</strong> <code>count</code> never changes — it's always 0, so <code>count &lt; 5</code> is always True. Fix: add <code>count = count + 1</code> inside the loop (indented).</div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LPD3 — Off-by-One</div>
+    <p style="font-size:.9rem;color:var(--text-muted);">Expected: print 1 to 10. Actual: prints 1 to 9.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">lpd3.py</span></div>
+      <div class="code-body"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">10</span>):
+    <span class="fn">print</span>(<span class="var">i</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Off-by-one error.</strong> <code>range(1, 10)</code> goes 1 through 9 (stops <em>before</em> 10). Fix: <code>range(1, 11)</code> to include 10.</div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LPD4 — SyntaxError</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">lpd4.py</span></div>
+      <div class="code-body"><span class="var">names</span> <span class="op">=</span> [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>]
+<span class="kw">for</span> <span class="var">name</span> <span class="kw">in</span> <span class="var">names</span>
+    <span class="fn">print</span>(<span class="str">"Hi,"</span>, <span class="var">name</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>SyntaxError — missing colon.</strong> Fix: <code>for name in names:</code> (add <code>:</code> at the end).</div>
+  </div>
+ 
+  <div class="debug-box">
+    <div class="debug-label">🐛 LPD5 — Logic Bug</div>
+    <p style="font-size:.9rem;color:var(--text-muted);">Expected: print the sum of all numbers. Actual: prints only the last number.</p>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">lpd5.py</span></div>
+      <div class="code-body"><span class="var">numbers</span> <span class="op">=</span> [<span class="num">5</span>, <span class="num">10</span>, <span class="num">15</span>]
+<span class="kw">for</span> <span class="var">n</span> <span class="kw">in</span> <span class="var">numbers</span>:
+    <span class="var">total</span> <span class="op">=</span> <span class="var">n</span>
+<span class="fn">print</span>(<span class="str">"Sum:"</span>, <span class="var">total</span>)</div></div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Answer</button>
+    <div class="answer-content"><strong>Logic bug.</strong> <code>total = n</code> <em>replaces</em> total with n each time instead of <em>adding</em> to it. Also, <code>total</code> needs to be initialized before the loop. Fix: add <code>total = 0</code> before the loop, and change line 3 to <code>total = total + n</code>.</div>
+  </div>
+</section>
+ 
+<hr class="separator">
+ 
+<!-- FINAL -->
+<section class="lab-section" id="final">
+  <div class="section-label">Day 4 Complete</div>
+  <h2>Completion Checklist</h2>
+ 
+  <div class="checklist">
+    <h3>🎯 I Can Now…</h3>
+    <label><input type="checkbox"> Write if / elif / else statements to make decisions</label>
+    <label><input type="checkbox"> Use comparison operators: ==, !=, >, <, >=, <=</label>
+    <label><input type="checkbox"> Understand and fix IndentationErrors</label>
+    <label><input type="checkbox"> Explain why Python uses indentation instead of { }</label>
+    <label><input type="checkbox"> Create a list and access items by index (starting at 0)</label>
+    <label><input type="checkbox"> Add, remove, and change items in a list</label>
+    <label><input type="checkbox"> Use a for loop to repeat code for each item in a list</label>
+    <label><input type="checkbox"> Use range() to repeat code a specific number of times</label>
+    <label><input type="checkbox"> Use a while loop to repeat until a condition changes</label>
+    <label><input type="checkbox"> Combine loops with conditionals and lists</label>
+    <label><input type="checkbox"> Debug IndentationError, infinite loops, off-by-one, and logic errors</label>
+  </div>
+ 
+  <div class="celebrate">
+    <div class="emoji">🏆</div>
+    <h3>You've Unlocked the Core of Programming!</h3>
+    <p>Conditionals, lists, and loops are the backbone of nearly every program ever written. A game? Loops + conditionals. A social media feed? Lists + loops. A chatbot? Conditionals + loops. You now have the tools to build real things. Next time we'll learn about <strong>functions</strong> — reusable blocks of code — and start building more complex projects.</p>
+  </div>
+</section>
+ 
+</div>
+ 
+<script>
+function toggleAnswer(btn){const c=btn.nextElementSibling;c.classList.toggle('show');btn.textContent=c.classList.contains('show')?'Hide Answer':'Reveal Answer'}
+function checkMCQ(opt){const mcq=opt.closest('.mcq');if(mcq.dataset.answered)return;mcq.dataset.answered='true';const correct=mcq.dataset.correct,chosen=opt.dataset.value;mcq.querySelectorAll('.mcq-opt').forEach(o=>{if(o.dataset.value===correct)o.classList.add('correct');else if(o===opt&&chosen!==correct)o.classList.add('wrong')});mcq.querySelector('.mcq-explain').classList.add('show')}
+</script>
+</body>
+</html>

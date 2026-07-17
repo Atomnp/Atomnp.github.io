@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Complex Numbers — A Visual Tutorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Newsreader:ital,opsz@0,6..72;1,6..72&family=Caveat:wght@500;700&family=Spline+Sans+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6EC;
+    --paper-2:#F4ECDD;
+    --ink:#211A14;
+    --ink-soft:#6b5d4e;
+    --line:#d9cdb8;
+
+    --re:#2B5FA8;      /* real part / first number (blue) */
+    --im:#C0398B;      /* imaginary part / second number (magenta) */
+    --z:#E2542F;       /* the number itself / result (coral) */
+    --circ:#1F8A78;    /* unit circle / special points (teal) */
+    --ang:#D98324;     /* angles / arcs (amber) */
+    --vio:#6A4C93;     /* extras (violet) */
+    --shadow: 0 18px 40px -22px rgba(33,26,20,.4);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 14% -5%, #fff7e9 0%, transparent 45%),
+      radial-gradient(circle at 92% 8%, #f6ead4 0%, transparent 40%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader", Georgia, serif;
+    font-size:19px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background-image:
+      linear-gradient(rgba(180,160,130,.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180,160,130,.10) 1px, transparent 1px);
+    background-size:28px 28px;
+  }
+  .wrap{position:relative; z-index:1; max-width:880px; margin:0 auto; padding:0 22px 120px;}
+
+  header.hero{text-align:center; padding:70px 10px 22px;}
+  .kicker{font-family:"Spline Sans Mono",monospace; letter-spacing:.32em; text-transform:uppercase; font-size:.7rem; color:var(--ink-soft);}
+  h1{font-family:"Fraunces",serif; font-weight:900; font-size:clamp(2.4rem,7.6vw,4.4rem); line-height:.98; margin:.25em 0 .15em; letter-spacing:-.02em;}
+  h1 .em{color:var(--z); font-style:italic; font-weight:500;}
+  .sub{font-size:1.15rem; color:var(--ink-soft); max-width:620px; margin:0 auto;}
+  .scroll-hint{margin-top:30px; font-family:"Caveat",cursive; font-size:1.5rem; color:var(--z);}
+  .scroll-hint span{display:inline-block; animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+  section{margin-top:78px;}
+  .step-no{font-family:"Spline Sans Mono",monospace; font-size:.72rem; letter-spacing:.2em; color:var(--z); text-transform:uppercase;}
+  h2{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(1.8rem,4.5vw,2.7rem); line-height:1.05; margin:.1em 0 .5em; letter-spacing:-.01em;}
+  h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.3rem; margin:1.6em 0 .3em;}
+  p{margin:.7em 0;}
+  strong{color:var(--z); font-weight:600;}
+  .lead{font-size:1.18rem;}
+  .re{color:var(--re);font-weight:700} .imw{color:var(--im);font-weight:700}
+  .zw{color:var(--z);font-weight:700} .circw{color:var(--circ);font-weight:700}
+  .angw{color:var(--ang);font-weight:700} .viow{color:var(--vio);font-weight:700}
+
+  .card{background:rgba(255,255,255,.55); border:1px solid var(--line); border-radius:16px; padding:20px 22px; box-shadow:var(--shadow); margin:22px 0;}
+  .big-idea{background:linear-gradient(180deg,#fff8ec,#fdeed4); border:1px solid #e7d4ad; border-left:6px solid var(--z);}
+  .big-idea .label{font-family:"Caveat",cursive; font-size:1.5rem; color:var(--z); line-height:1;}
+  .big-idea p{font-size:1.22rem; margin:.3em 0 0;}
+  .takeaway{font-family:"Caveat",cursive; font-size:1.55rem; color:var(--circ); line-height:1.25; margin-top:6px;}
+  .takeaway::before{content:"✎  "; opacity:.7;}
+
+  .def{background:linear-gradient(180deg,#fefdfa,#f7f1e3); border:1px solid var(--line); border-left:5px solid var(--circ); border-radius:12px; padding:13px 18px; margin:18px 0;}
+  .def .term{font-family:"Fraunces",serif; font-weight:600; font-size:1.12rem; color:var(--ink);}
+  .def .term::before{content:"🧭  ";}
+  .def p{margin:.35em 0 0; font-size:1.02rem;}
+  .def .sym{font-family:"Spline Sans Mono",monospace; background:var(--paper-2); border-radius:5px; padding:1px 6px; font-size:.9em;}
+  .sym{font-family:"Spline Sans Mono",monospace; background:var(--paper-2); border-radius:5px; padding:1px 6px; font-size:.9em;}
+  .note{font-size:.98rem; color:var(--ink-soft);}
+  .note b{color:var(--ink);}
+
+  ul.clean{list-style:none; padding-left:0; margin:.6em 0;}
+  ul.clean li{padding:7px 0 7px 30px; position:relative; border-bottom:1px dashed var(--line);}
+  ul.clean li::before{content:"▸"; position:absolute; left:6px; color:var(--z);}
+  ol.timeline{list-style:none; padding-left:0; margin:.6em 0;}
+  ol.timeline li{display:flex; gap:14px; padding:8px 0; border-bottom:1px dashed var(--line); align-items:baseline;}
+  ol.timeline .yr{font-family:"Spline Sans Mono",monospace; color:var(--z); min-width:64px; font-weight:600; font-size:.9rem;}
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:620px){.two-col{grid-template-columns:1fr;}}
+  .minicard{background:rgba(255,255,255,.5); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+  .minicard h4{margin:.1em 0 .3em; font-family:"Fraunces",serif; font-size:1.05rem;}
+
+  .formula{text-align:center; font-family:"Spline Sans Mono",monospace; font-size:1.12rem; color:var(--ink); margin:.6em 0; line-height:2;}
+
+  .widget{background:#fffdf8; border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:var(--shadow); margin:26px 0;}
+  .widget canvas{display:block; width:100%; height:auto; border-radius:10px; cursor:grab; touch-action:none;}
+  .widget canvas.dragging{cursor:grabbing;}
+  .widget canvas.click{cursor:zoom-in;}
+  .controls{display:flex; flex-wrap:wrap; gap:16px 26px; align-items:center; margin-top:16px;}
+  .ctrl{flex:1 1 200px; min-width:180px;}
+  .ctrl label{font-size:.82rem; color:var(--ink-soft); font-family:"Spline Sans Mono",monospace; display:block; margin-bottom:4px;}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:3px; background:var(--line); outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--z); cursor:pointer; border:3px solid #fffdf8; box-shadow:0 2px 6px rgba(0,0,0,.25);}
+  input[type=range]::-moz-range-thumb{width:22px; height:22px; border-radius:50%; background:var(--z); cursor:pointer; border:3px solid #fffdf8;}
+  .readouts{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
+  .pill{font-family:"Spline Sans Mono",monospace; font-size:.95rem; background:var(--paper-2); border:1px solid var(--line); border-radius:10px; padding:8px 14px; color:var(--ink);}
+  .pill b{color:var(--ink);}
+  .pill.big{font-size:1.15rem; padding:10px 18px;}
+  .pill.re{border-color:var(--re);color:var(--re)} .pill.im{border-color:var(--im);color:var(--im)}
+  .pill.z{border-color:var(--z);color:var(--z)} .pill.circ{border-color:var(--circ);color:var(--circ)}
+  .pill.ang{border-color:var(--ang);color:var(--ang)} .pill.vio{border-color:var(--vio);color:var(--vio)}
+  .hint{font-family:"Caveat",cursive; font-size:1.25rem; color:var(--ink-soft); margin-top:10px;}
+  .btn{font-family:"Spline Sans Mono",monospace; font-size:.85rem; background:var(--ink); color:var(--paper); border:none; border-radius:10px; padding:9px 16px; cursor:pointer; transition:transform .1s;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn.alt{background:var(--circ);}
+  .btn.ghost{background:var(--paper-2); color:var(--ink-soft); border:1px solid var(--line);}
+  .btn.on{background:var(--z); color:#fff;}
+  .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+
+  .legend{display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:center; margin:14px 0 0;}
+  .legend .k{display:flex; align-items:center; gap:7px; font-family:"Spline Sans Mono",monospace; font-size:.74rem; color:var(--ink-soft);}
+  .legend .sw{width:24px; height:5px; border-radius:3px;}
+
+  table.simple{width:100%; border-collapse:collapse; font-family:"Spline Sans Mono",monospace; font-size:.86rem; margin:8px 0;}
+  table.simple th,table.simple td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top;}
+  table.simple th{background:var(--paper-2);}
+  table.simple td.yes{color:var(--circ); font-weight:700;}
+  table.simple td.no{color:var(--z);}
+
+  .footer{text-align:center; margin-top:90px; color:var(--ink-soft); font-size:.95rem;}
+  .footer .big{font-family:"Fraunces",serif; font-size:1.6rem; color:var(--ink); font-weight:600; font-style:italic;}
+  .divider{height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); margin:6px 0;}
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s, transform .7s;}
+  .reveal.in{opacity:1; transform:none;}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1; transform:none; transition:none;}
+    .scroll-hint span{animation:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="kicker">Mathematics · Built to be Seen, Not Just Read</div>
+    <h1>The Secret Life of <span class="em">i</span></h1>
+    <p class="sub">Complex numbers have a scary name but a simple secret: they are just
+       <b>points that can do arithmetic</b>. Multiplying by <b>i</b> only means turning a quarter-circle.
+       Once you <em>see</em> this, the "impossible" number becomes one of the most useful tools in science.
+       Everything below can be dragged — try all of it.</p>
+    <div class="scroll-hint">start with a story <span>↓</span></div>
+
+    <div class="legend">
+      <div class="k"><span class="sw" style="background:var(--z)"></span>the number / result</div>
+      <div class="k"><span class="sw" style="background:var(--re)"></span>real part / 1st number</div>
+      <div class="k"><span class="sw" style="background:var(--im)"></span>imaginary part / 2nd number</div>
+      <div class="k"><span class="sw" style="background:var(--circ)"></span>unit circle</div>
+      <div class="k"><span class="sw" style="background:var(--ang)"></span>angle</div>
+    </div>
+    <p class="hint" style="text-align:center">Remember these colors — they are used everywhere below.</p>
+  </header>
+
+  <!-- ===================== 1. WHY INVENT NUMBERS ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 1 · The story so far</div>
+    <h2>We have been inventing numbers all along</h2>
+    <p class="lead">Schools rarely tell you this: the numbers you know were not found in nature. People
+       <strong>invented</strong> them, one group at a time. Every time, people first said the new numbers were nonsense.
+       Later the new numbers became so useful that everyone forgot they had complained.</p>
+
+    <p>It always happens the same way. Someone finds an equation that the current numbers <em>cannot solve</em>. There
+       are two choices. You can say "no solution" and stop. Or you can invent a new number that <b>is</b> the
+       solution, and then check if it follows the rules. Look at the pattern:</p>
+
+    <div class="card">
+      <table class="simple">
+        <tr><th>The equation</th><th>The problem</th><th>The invention</th></tr>
+        <tr><td>x + 3 = 7</td><td>fine — counting numbers work (x = 4)</td><td>counting numbers 1, 2, 3…</td></tr>
+        <tr><td>x + 7 = 3</td><td>"you cannot take 7 from 3!"</td><td><b>negative numbers</b> (x = −4)</td></tr>
+        <tr><td>3x = 7</td><td>"7 does not split into 3 equal wholes!"</td><td><b>fractions</b> (x = 7/3)</td></tr>
+        <tr><td>x² = 2</td><td>"no fraction squares to exactly 2!"</td><td><b>irrationals</b> (x = √2 = 1.41421…)</td></tr>
+        <tr><td>x² = −1</td><td>"nothing squares to a negative!"</td><td><b>?</b> — this tutorial</td></tr>
+      </table>
+    </div>
+
+    <p>And every new number was mocked when it first appeared:</p>
+    <ul class="clean">
+      <li><b>Negative numbers</b> were called "absurd" and "false" in Europe for hundreds of years. What could −3 apples
+          mean? (Then banking arrived: −3 is a <em>debt</em>. Suddenly it was very real.)</li>
+      <li><b>Zero</b> was not trusted — a number for <em>nothing</em>? Some accountants in the Middle Ages were not
+          allowed to use it, because it made fraud too easy.</li>
+      <li><b>Irrational numbers</b> shocked the ancient Greeks. The Pythagoreans believed every number was a fraction.
+          The story says that when one of them, Hippasus, proved √2 is not a fraction, they were so upset that they
+          drowned him at sea. The diagonal of a simple 1×1 square had broken their view of the world.</li>
+    </ul>
+
+    <p>So when you meet a number called "<em>imaginary</em>" and you feel it is <em>fake</em>, you are not alone.
+       People said the same thing about every new number, every time. The name "imaginary" was only an insult (you will
+       meet the person who said it soon). Your job here is not to "believe" in a magic number. Your job is to watch one
+       more invention prove that it is useful, just like negatives and fractions did.</p>
+
+    <div class="card big-idea">
+      <div class="label">the pattern ✦</div>
+      <p>A new kind of number is <strong>invented</strong> when an equation needs it. It survives if it
+         <b>follows the rules without contradiction</b> and turns out to be <b>useful</b>. That is the whole test.
+         "Does it feel real?" was never the test.</p>
+    </div>
+    <p class="takeaway">Numbers are tools. When our tools cannot solve a problem, we build a new tool.</p>
+  </section>
+
+  <!-- ===================== 2. THE HISTORY ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 2 · Who and when — the real story</div>
+    <h2>The strange history of √−1</h2>
+    <p class="lead">Here is a surprise: complex numbers were <strong>not</strong> invented to solve x² = −1. Nobody worried
+       about that equation. If x² = −1 has no answer, that is fine — you just say "no answer" and move on. Complex numbers
+       were forced into existence by a harder problem: the <b>cubic equation</b>. And by one of the pettiest fights in the
+       history of mathematics.</p>
+
+    <h3>Italy, 1500s: math was a competition</h3>
+    <p>In Italy in the 1500s, mathematicians built their reputation (and won university jobs) through public
+       <b>math contests</b>. Two people exchanged lists of problems. Whoever solved more problems won. If you lost badly,
+       you could lose your job. So if you found a powerful method, you did <em>not</em> share it. You kept it secret.</p>
+    <p>The prize everyone wanted was a method for cubic equations — equations that contain x³, like
+       <span class="sym">x³ = 15x + 4</span>. Around <b>1515</b>, a professor in Bologna named <b>Scipione del Ferro</b>
+       solved a whole family of them. He told almost no one, and kept the method secret until he was dying. In <b>1535</b>,
+       a self-taught mathematician named <b>Niccolò Tartaglia</b> found the method again on his own, and used it to beat an
+       opponent in a contest: 30 problems to 0.</p>
+    <p>Then came <b>Girolamo Cardano</b> — a doctor, gambler, astrologer, and brilliant mathematician. He asked Tartaglia
+       for the secret many times. In <b>1539</b> Tartaglia finally shared it, but only after Cardano made a serious promise
+       never to publish it. Later, Cardano found del Ferro's <em>earlier</em> solution, decided his promise no longer held,
+       and in <b>1545</b> published everything in his book <em>Ars Magna</em> ("The Great Art"). Tartaglia was angry, and
+       the fight lasted the rest of their lives. But now the world had "Cardano's formula" — and with it, a very strange
+       problem.</p>
+
+    <h3>The formula that needed the impossible</h3>
+    <p>For cubics of the form <span class="sym">x³ = px + q</span>, Cardano's formula says:</p>
+    <p class="formula">x = ∛( q/2 + √( (q/2)² − (p/3)³ ) ) + ∛( q/2 − √( (q/2)² − (p/3)³ ) )</p>
+    <p>Do not memorize it. Just watch what happens when we put in a normal, simple cubic:</p>
+
+    <div class="card">
+      <h3 style="margin-top:0">The 1572 problem: x³ = 15x + 4</h3>
+      <p style="margin:.3em 0">First, notice that this equation <b>clearly has a real answer</b>. Try x = 4:
+         4³ = 64, and 15·4 + 4 = 64. ✓ So x = 4 works. No strange numbers anywhere.</p>
+      <p style="margin:.3em 0">Now use the formula. Here p = 15 and q = 4, so:</p>
+      <p class="formula">(q/2)² − (p/3)³ = 2² − 5³ = 4 − 125 = <b>−121</b></p>
+      <p style="margin:.3em 0">The formula needs <span class="sym">√−121</span> — the square root of a <b>negative</b>
+         number — in the middle of the calculation:</p>
+      <p class="formula">x = ∛(2 + √−121) + ∛(2 − √−121)</p>
+      <p style="margin:.3em 0">So the trusted formula says the path to the real answer <b>4</b> goes straight through
+         "impossible" numbers. If you refuse to take square roots of negatives, the formula fails — on an equation you can
+         solve by hand. That is a real problem.</p>
+    </div>
+
+    <h3>Bombelli's bold idea</h3>
+    <p>In <b>1572</b>, an Italian engineer named <b>Rafael Bombelli</b> — a practical man who spent his career draining
+       swamps — had a bold idea. What if we just <b>keep going</b>? Treat √−1 as a real quantity. Do not ask what it
+       <em>is</em>. Just make it follow the normal rules of algebra, where the only new fact is (√−1)² = −1, and see where
+       the calculation leads.</p>
+    <p>Write √−121 as 11·√−1 (check: (11√−1)² = 121 · (−1) = −121 ✓). Then Bombelli noticed something wonderful. Watch
+       him cube (2 + √−1), using only basic algebra:</p>
+    <div class="card">
+      <p class="formula">(2 + √−1)² = 4 + 4√−1 + (√−1)² = 4 + 4√−1 − 1 = 3 + 4√−1</p>
+      <p class="formula">(3 + 4√−1)(2 + √−1) = 6 + 3√−1 + 8√−1 + 4(√−1)² = 6 + 11√−1 − 4 = <b>2 + 11√−1</b></p>
+      <p style="margin:.4em 0 0">So <span class="sym">(2 + √−1)³ = 2 + 11√−1</span>, which means
+         <span class="sym">∛(2 + 11√−1) = 2 + √−1</span>. The same trick gives
+         <span class="sym">∛(2 − 11√−1) = 2 − √−1</span>. Now add them, exactly as Cardano's formula instructs:</p>
+      <p class="formula">x = (2 + √−1) + (2 − √−1) = <b>4</b> ✓</p>
+    </div>
+    <p>The "impossible" parts <b>cancelled each other perfectly</b> and gave the true, real answer. The imaginary
+       numbers worked like temporary support: they held the calculation up in the middle, then disappeared at the end.
+       This was the moment complex numbers proved they were worth keeping — not because people believed in them, but
+       because they <strong>worked</strong>.</p>
+
+    <h3>The slow road to acceptance</h3>
+    <ol class="timeline">
+      <li><span class="yr">1515</span><span>Scipione del Ferro secretly solves the first cubics.</span></li>
+      <li><span class="yr">1535</span><span>Tartaglia finds the method again, and wins his famous contest 30–0.</span></li>
+      <li><span class="yr">1545</span><span>Cardano breaks his promise and publishes <em>Ars Magna</em>. The formula reaches the world — and the world meets √−1.</span></li>
+      <li><span class="yr">1572</span><span>Bombelli's bold idea: follow the algebra, and √−1 gives real answers. He writes the first rules for calculating with these numbers.</span></li>
+      <li><span class="yr">1637</span><span>René Descartes does not like them and calls them "imaginary" as an insult. The name stays.</span></li>
+      <li><span class="yr">1748</span><span>Leonhard Euler finds the amazing formula e<sup>iθ</sup> = cos θ + i sin θ (Step 9), and in 1777 introduces the symbol <b>i</b> for √−1.</span></li>
+      <li><span class="yr">1799</span><span>Caspar Wessel, a Norwegian <em>land surveyor</em>, is the first to draw complex numbers as points in a plane. He publishes in Danish, and the world ignores it for a hundred years.</span></li>
+      <li><span class="yr">1806</span><span>Jean-Robert Argand, a bookkeeper in Paris, draws the same picture on his own — the "Argand diagram."</span></li>
+      <li><span class="yr">1831</span><span>Carl Friedrich Gauss, the greatest mathematician of the time, accepts the picture, gives them the name <b>complex number</b>, and says the mystery is over: these are just points, and nothing about them is imaginary.</span></li>
+      <li><span class="yr">1830s</span><span>William Rowan Hamilton removes the last mystery: a complex number is officially just a <b>pair of real numbers</b> (a, b) with one clever multiplication rule. (This is the main point of Step 11.)</span></li>
+    </ol>
+
+    <p class="note">Notice who kept this idea moving forward: an engineer who drained swamps, a land surveyor, a
+       bookkeeper. Practical people who cared whether it <b>worked</b>, not whether it sounded believable. Notice the time
+       too — about <b>260 years</b> passed between Bombelli's idea and Gauss making it accepted. So if complex numbers feel
+       strange to you this week, that is normal: they felt strange to the smartest people alive for over two hundred
+       years.</p>
+
+    <div class="card big-idea">
+      <div class="label">why we really needed them ✦</div>
+      <p>Complex numbers were not a philosophical dream. We were forced to use them because <strong>a formula for real
+         problems, with real answers, would not work without them</strong>. They started as a helper for cubic equations —
+         and turned out to be a whole new world.</p>
+    </div>
+  </section>
+
+  <!-- ===================== 3. MEET i ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 3 · The new tool</div>
+    <h2>Meet i — and the four-step cycle of its powers</h2>
+    <p class="lead">Now let us name the invention properly. We define one new number and one new rule. Everything else
+       is normal algebra that you already know.</p>
+
+    <div class="def">
+      <div class="term">The imaginary unit <span class="sym">i</span></div>
+      <p><span class="sym">i</span> is defined as the number whose square is −1:</p>
+      <p class="formula" style="margin:.4em 0">i² = −1</p>
+      <p>That is its only job. <span class="sym">i</span> is <b>not</b> anywhere on the normal number line — no number to
+         the left or right of zero squares to a negative. It is truly <em>new</em>, the way negative numbers were new to
+         people who only counted sheep. (So where does it live, if not on the line? Step 4 will show you, and the answer
+         is beautiful.)</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Imaginary numbers</div>
+      <p>Real multiples of <span class="sym">i</span>, like <span class="sym">2i</span>, <span class="sym">−5i</span>, or
+         <span class="sym">0.5i</span>, are called <b>imaginary numbers</b>. They follow normal algebra:
+         <span class="sym">2i + 3i = 5i</span>, and <span class="sym">(2i)² = 4·i² = −4</span>. So 2i is a square root
+         of −4. Now every negative number has square roots.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Complex numbers and their two parts</div>
+      <p>A <b>complex number</b> is a real number plus an imaginary number, written
+         <span class="sym">z = a + bi</span> — for example <span class="sym">3 + 2i</span>. The number
+         <span class="sym">a</span> is the <b>real part</b>, written Re(z). The number <span class="sym">b</span> is the
+         <b>imaginary part</b>, written Im(z). (Note: the imaginary part of 3 + 2i is the plain number 2, not 2i.)</p>
+    </div>
+
+    <p class="note"><b>About the name.</b> "Complex" does <em>not</em> mean complicated here. It means "made of
+       <b>several parts</b> joined together" — the same way a building complex is several buildings joined together.
+       A complex number is a two-part number: one real part and one imaginary part. And "imaginary," as you saw, came
+       from Descartes making a joke in 1637. Both names are just accidents of history. The numbers themselves are as
+       solid as −3.</p>
+
+    <p>Two quick checks that make everything clear:</p>
+    <ul class="clean">
+      <li><b>Every real number is already a complex number.</b> 7 is just 7 + 0i (imaginary part zero). The old numbers
+          are not replaced — they are a special case of the new ones, like whole numbers living inside fractions.</li>
+      <li><b>Pure imaginary numbers are complex too.</b> −5i is 0 + (−5)i (real part zero).</li>
+    </ul>
+
+    <h3>The powers of i: a four-step cycle</h3>
+    <p>What happens when you keep multiplying by i? Use i² = −1 again and again:</p>
+    <p class="formula">i¹ = i &nbsp;&nbsp;·&nbsp;&nbsp; i² = −1 &nbsp;&nbsp;·&nbsp;&nbsp; i³ = i²·i = −i &nbsp;&nbsp;·&nbsp;&nbsp; i⁴ = i²·i² = (−1)(−1) = 1</p>
+    <p>At i⁴ we are back to 1, so the pattern <b>repeats forever</b>: i, −1, −i, 1, i, −1, −i, 1, … a cycle of four.
+       Press the button below and watch the cycle. Look carefully at the <em>shape</em> the arrow makes, because it is
+       quietly showing you the biggest secret in this tutorial.</p>
+
+    <div class="widget">
+      <canvas id="cv-ipow" data-w="760" data-h="430"></canvas>
+      <div class="btnrow">
+        <button class="btn alt" id="ip-mul">× i &nbsp;(multiply by i once)</button>
+        <button class="btn ghost" id="ip-reset">↺ back to 1</button>
+      </div>
+      <div class="readouts">
+        <div class="pill z big" id="ip-val">current value: i⁰ = 1</div>
+        <div class="pill" id="ip-seq">press × i and watch where the arrow goes…</div>
+      </div>
+      <p class="hint" id="ip-hint">Each press multiplies by i. Count how many presses it takes to return to 1.</p>
+    </div>
+
+    <p>Did you see it? Every multiplication by i <b>turned the arrow a quarter-circle</b>. Four quarter-turns = one full
+       turn = back to 1. The algebra (a cycle of four) and the picture (four quarter-turns) are the same fact. Remember
+       this — Step 7 will build on it in a big way.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0">Worked example — very large powers</h3>
+      <p style="margin:.3em 0">What is i²⁰²⁵? Do not multiply 2025 times. The cycle repeats every 4, so only the
+         <b>remainder after dividing by 4</b> matters. 2025 = 4 × 506 + <b>1</b>, so i²⁰²⁵ = i¹ = <b>i</b>.
+         (Every group of four turns is one full turn that changes nothing. Only the 1 extra quarter-turn counts.)</p>
+    </div>
+    <p class="takeaway">One new number (i), one new rule (i² = −1). Its powers cycle: i, −1, −i, 1 — four quarter-turns.</p>
+  </section>
+
+  <!-- ===================== 4. THE PLANE ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 4 · The picture that ended the mystery</div>
+    <h2>The complex plane: every number gets a home</h2>
+    <p class="lead">For 250 years, the hard question was "but <em>where is</em> i?" It is not left of zero, not right of
+       zero, and not between any two numbers on the line. Wessel, Argand, and Gauss finally gave the answer, and it is
+       simple: <strong>step off the line.</strong></p>
+    <p>Think of the real number line as a street that runs east–west. Every real number has an address on that street.
+       The new idea: <b>i lives one step north</b>. Not further along the street — <em>off</em> the street, in a direction
+       the street never used. Real numbers measure east–west. Imaginary numbers measure north–south. A complex number
+       <span class="sym">a + bi</span> is simply the point you reach by going <span class="re">a steps east</span> and
+       <span class="imw">b steps north</span>. Now the whole flat plane is full of numbers.</p>
+
+    <div class="def">
+      <div class="term">The complex plane (Argand diagram)</div>
+      <p>A flat plane where the horizontal axis is the <b>real axis</b> (the old number line, drawn in
+         <span class="re">blue</span>) and the vertical axis is the <b>imaginary axis</b> (multiples of i, in
+         <span class="imw">magenta</span>). The complex number <span class="sym">z = a + bi</span> is drawn at the
+         point (a, b). We usually also draw an arrow from the origin 0 to the point. The number and its arrow are two
+         ways to see the same thing.</p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-plane" data-w="760" data-h="440"></canvas>
+      <div class="readouts">
+        <div class="pill z big">z = <b id="pl-z">3.0 + 2.0i</b></div>
+        <div class="pill re">real part Re(z) = <b id="pl-re">3.0</b></div>
+        <div class="pill im">imaginary part Im(z) = <b id="pl-im">2.0</b></div>
+      </div>
+      <p class="hint">↑ Drag the coral dot anywhere. East–west position = real part; north–south = imaginary part.
+         Put it on the horizontal axis and z becomes a normal real number.</p>
+    </div>
+
+    <p>Play with it until three things feel clear:</p>
+    <ul class="clean">
+      <li>Drag z onto the <b>horizontal axis</b> → the imaginary part becomes 0 and z is just a real number. The old
+          number line is <em>inside</em> the plane, running through its middle.</li>
+      <li>Drag z onto the <b>vertical axis</b> → the real part becomes 0 and z is pure imaginary. The point one step up
+          is i itself; one step down is −i.</li>
+      <li>Left of the vertical axis, the real part is negative. Below the horizontal axis, the imaginary part is
+          negative. Every point in the plane is a real number in this system.</li>
+    </ul>
+
+    <p class="note">This picture — drag an arrow, split it into parts — may feel familiar from the <b>vectors tutorial</b>.
+       That is not a coincidence. A complex number looks exactly like a 2-D vector with an x-part and a y-part. So a fair
+       question comes up: <em>"then why do we need a new name for it at all?"</em> Keep that question in mind. It is a
+       good one, and Step 11 answers it fully.</p>
+
+    <div class="card big-idea">
+      <div class="label">the mystery, solved ✦</div>
+      <p>"Where is √−1?" was the wrong question — like asking where north is <em>on</em> an east–west street. i is not on
+         the line because <strong>i is the second dimension</strong>. Numbers grew up: they went from a line to a plane.</p>
+    </div>
+    <p class="takeaway">A complex number a + bi is the point (a, b): a steps east, b steps north. The number line was just the ground floor.</p>
+  </section>
+
+  <!-- ===================== 5. ADDITION ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 5 · First arithmetic</div>
+    <h2>Adding: walk one, then walk the other</h2>
+    <p class="lead">Now some arithmetic. Adding complex numbers is very easy: <b>add the real parts, and add the
+       imaginary parts</b>. Keep east–west and north–south separate, just like the independent components in the vectors
+       tutorial.</p>
+
+    <div class="def">
+      <div class="term">Addition and subtraction rule</div>
+      <p class="formula" style="margin:.4em 0">(a + bi) + (c + di) = (a + c) + (b + d)i</p>
+      <p>In words: add the eastward steps, and add the northward steps. Subtraction is the same with minus signs:
+         (a + bi) − (c + di) = (a − c) + (b − d)i.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Worked example</h3>
+      <p style="margin:.3em 0"><span class="sym">(3 + 2i) + (1 − 4i)</span>: real parts 3 + 1 = 4, imaginary parts
+         2 + (−4) = −2. Answer: <span class="sym">4 − 2i</span>. Walk 3 east and 2 north, then 1 east and 4 south — you
+         end up 4 east and 2 south. That is the whole idea.</p>
+    </div>
+
+    <p>On the plane, this is <b>tip-to-tail</b>: put the start of the second arrow at the end of the first arrow. The sum
+       is the arrow from the origin straight to the final point. Do it in either order and you draw a parallelogram — the
+       same final point both ways.</p>
+
+    <div class="widget">
+      <canvas id="cv-add" data-w="760" data-h="440"></canvas>
+      <div class="readouts">
+        <div class="pill re">z = <b id="ad-z">2.0 + 1.0i</b></div>
+        <div class="pill im">w = <b id="ad-w">1.0 + 2.0i</b></div>
+        <div class="pill z big">z + w = <b id="ad-sum">3.0 + 3.0i</b></div>
+      </div>
+      <p class="hint">↑ Drag the blue and magenta dots. The dashed lines complete the parallelogram; the coral arrow is
+         the sum. Notice: real parts add together, imaginary parts add together — always separate.</p>
+    </div>
+
+    <p class="note">So far, complex numbers behave <em>exactly</em> like 2-D vectors. This widget could sit in the vectors
+       tutorial without any change. The surprise comes in the next section: <b>vectors cannot do what happens in
+       Step 7.</b></p>
+    <p class="takeaway">Addition = walking arrows tip-to-tail. Real parts and imaginary parts never mix.</p>
+  </section>
+
+  <!-- ===================== 6. POLAR FORM ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 6 · The second address</div>
+    <h2>Every number has two addresses</h2>
+    <p class="lead">Suppose you are standing at 0 and want to tell a friend where the number z is. You have two good
+       ways to do it. Way one — the <b>street address</b>: "go <span class="re">a east</span>, then
+       <span class="imw">b north</span>." That is a + bi, the form we have used so far. Way two — the
+       <b>straight-line address</b>: "face <span class="angw">this direction</span>, then walk
+       <span class="zw">this far</span> in a straight line." Same point, different description. For multiplication (the
+       next step), the second address is extremely useful.</p>
+
+    <div class="def">
+      <div class="term">Modulus <span class="sym">|z|</span> — the "how far"</div>
+      <p>The straight-line distance from 0 to z, written |z| (also called the <em>absolute value</em>). It is the length
+         of the arrow. We find it with the Pythagorean theorem — the same right triangle used for a vector:</p>
+      <p class="formula" style="margin:.4em 0">|z| = √(a² + b²)</p>
+      <p>It is never negative, and |z| = 0 only when z = 0 itself.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Argument <span class="sym">arg(z)</span> — the "which way"</div>
+      <p>The angle θ from the positive real axis (east) to the arrow, measured <b>counter-clockwise</b>. East is 0°,
+         north (toward i) is 90°, west (toward −1) is 180°, and south (toward −i) is 270°, which is the same as −90°.
+         You find it from tan θ = b/a (and check which quadrant you are in).</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Polar form</div>
+      <p>If you know r = |z| and θ = arg(z), you can rebuild the parts using the same triangle from vectors —
+         <span class="re">a = r cos θ</span> and <span class="imw">b = r sin θ</span> — so any complex number can be
+         written as:</p>
+      <p class="formula" style="margin:.4em 0">z = r (cos θ + i sin θ)</p>
+      <p>This is the <b>polar form</b> ("polar" means based on distance and angle). The a + bi version is called
+         <b>rectangular form</b>. Two forms, one number.</p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-polar" data-w="760" data-h="440"></canvas>
+      <div class="readouts">
+        <div class="pill z">street address: z = <b id="po-rect">3.0 + 4.0i</b></div>
+        <div class="pill ang big">straight line: r = <b id="po-r">5.0</b>, θ = <b id="po-th">53.1°</b></div>
+      </div>
+      <p class="hint">↑ Drag the dot. The coral line is r (how far), the amber arc is θ (which way). Try to place it
+         exactly on the teal unit circle — that is where r = 1 lives.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Worked example — a familiar triangle</h3>
+      <p style="margin:.3em 0">Take z = 3 + 4i. Modulus: |z| = √(3² + 4²) = √25 = <b>5</b> — the well-known 3-4-5
+         triangle from the vectors tutorial. Angle: tan θ = 4/3, so θ ≈ <b>53.1°</b>. Second address:
+         z = 5(cos 53.1° + i sin 53.1°). Check that it rebuilds: 5 cos 53.1° ≈ 3 ✓ and 5 sin 53.1° ≈ 4 ✓.</p>
+    </div>
+
+    <p class="note">The <span class="circw">teal circle</span> in the widget is the <b>unit circle</b> — all the numbers
+       with r = 1, meaning they are at distance exactly 1 from zero. It looks like background now, but it is about to
+       become very important: the numbers on it are the "pure rotations."</p>
+    <p class="takeaway">Rectangular a + bi says "east and north." Polar r∠θ says "how far and which way." Same number, two addresses.</p>
+  </section>
+
+  <!-- ===================== 7. MULTIPLICATION ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 7 · The most important idea</div>
+    <h2>Multiplication is rotate-and-stretch</h2>
+    <p class="lead">This is the most important section in the tutorial. Adding complex numbers works just like adding
+       vectors — nothing new. But complex numbers can do one thing vectors cannot: <strong>you can multiply two of them,
+       and the answer is still a point in the plane</strong>. When that happens, something beautiful appears.</p>
+
+    <h3>First, the plain algebra</h3>
+    <p>To multiply (a + bi)(c + di), just expand the brackets the way you learned in algebra class, then use i² = −1 to
+       simplify:</p>
+    <p class="formula">(a + bi)(c + di) = ac + adi + bci + bd·i² = <b>(ac − bd) + (ad + bc)i</b></p>
+
+    <div class="card">
+      <h3 style="margin-top:0">Worked example</h3>
+      <p style="margin:.3em 0"><span class="sym">(2 + i)(1 + 3i)</span> = 2 + 6i + i + 3i² = 2 + 7i − 3 =
+         <b>−1 + 7i</b>. Correct, but it does not show us anything — it is just a group of symbols. Now watch the same
+         multiplication in polar form.</p>
+    </div>
+
+    <h3>Now, the surprise</h3>
+    <p>Change everything in that example to straight-line addresses (length and angle):</p>
+    <ul class="clean">
+      <li><span class="sym">2 + i</span>: length √(4+1) = √5 ≈ 2.24, angle ≈ <b>26.6°</b></li>
+      <li><span class="sym">1 + 3i</span>: length √(1+9) = √10 ≈ 3.16, angle ≈ <b>71.6°</b></li>
+      <li>the answer <span class="sym">−1 + 7i</span>: length √(1+49) = √50 ≈ <b>7.07</b>, angle ≈ <b>98.1°</b></li>
+    </ul>
+    <p>Now look carefully. √5 × √10 = √50 — <b>the lengths multiplied</b>. And 26.6° + 71.6° = 98.1° — <b>the angles
+       added</b>. This is not just true for this example. It is <em>always</em> true, for every pair of complex
+       numbers:</p>
+
+    <div class="def">
+      <div class="term">The multiplication rule, as geometry</div>
+      <p class="formula" style="margin:.4em 0">|z·w| = |z| · |w| &nbsp;&nbsp;&nbsp;&nbsp; arg(z·w) = arg(z) + arg(w)</p>
+      <p>Multiplying by a complex number w does exactly two things to z: it <b>stretches</b> z's arrow by the factor |w|,
+         and it <b>rotates</b> z's arrow counter-clockwise by the angle of w. So multiplication is one instruction:
+         <em>turn by this much, and scale by this much.</em></p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-mult" data-w="760" data-h="460"></canvas>
+      <div class="btnrow">
+        <button class="btn ghost" id="mu-i">set w = i (pure quarter-turn)</button>
+        <button class="btn ghost" id="mu-2">set w = 2 (pure stretch)</button>
+        <button class="btn ghost" id="mu-neg1">set w = −1 (about-face)</button>
+      </div>
+      <div class="readouts">
+        <div class="pill re">z = <b id="mu-z">—</b></div>
+        <div class="pill im">w = <b id="mu-w">—</b></div>
+        <div class="pill z big">z·w = <b id="mu-p">—</b></div>
+        <div class="pill">lengths: <b id="mu-mod">—</b></div>
+        <div class="pill ang">angles: <b id="mu-arg">—</b></div>
+      </div>
+      <p class="hint">↑ Drag the blue z and magenta w. The coral arrow is the product — watch its angle always equal the
+         two angles <em>added together</em>. Then try the three preset buttons.</p>
+    </div>
+
+    <p>Use those preset buttons and see what they show:</p>
+    <ul class="clean">
+      <li><b>w = 2</b> (length 2, angle 0°): the product simply <b>doubles</b> z. Multiplying by a positive real number
+          only stretches, with no turn. Normal multiplication is just the special case where the angle is zero.</li>
+      <li><b>w = −1</b> (length 1, angle 180°): the product is z turned <b>half a turn</b>. You have always known that
+          "multiplying by −1 changes the sign." It was secretly "rotate by 180°" the whole time.</li>
+      <li><b>w = i</b> (length 1, angle 90°): the product is z turned a <b>quarter-turn</b> counter-clockwise, with the
+          same length. Multiplying by i <em>is</em> a 90° rotation. Nothing more, nothing less.</li>
+    </ul>
+
+    <div class="card big-idea">
+      <div class="label">the key point of the whole subject ✦</div>
+      <p>What does i² = −1 <em>really</em> mean? Multiplying by i is a quarter-turn. Do it <b>twice</b>: two
+         quarter-turns = half a turn = 180° = multiplying by −1. So <strong>i² = −1 is not strange — it is the simple
+         geometric fact that two left turns make you face backwards.</strong> The equation that "could not have a
+         solution" was just rotation, waiting for someone to draw the picture.</p>
+    </div>
+
+    <p>And now x² = −1 answers itself. It asks: "which operation, done twice, turns you all the way around?" A
+       quarter-turn. Which quarter-turn? Either one: counter-clockwise (that is i) or clockwise (that is −i). Two
+       solutions, both easy to see, and neither one is truly imaginary.</p>
+
+    <h3>The mirror image, and how to divide</h3>
+    <div class="def">
+      <div class="term">Conjugate <span class="sym">z̄</span></div>
+      <p>The <b>conjugate</b> of z = a + bi is <span class="sym">z̄ = a − bi</span>: same real part, imaginary part with
+         its sign flipped. On the plane, it is the mirror image of z across the real axis (same length, opposite angle).
+         Its useful property: <span class="sym">z · z̄ = a² + b² = |z|²</span> — a complex number times its conjugate is
+         always a plain <b>real</b> number that is not negative. (Check: (a+bi)(a−bi) = a² − (bi)² = a² + b².)</p>
+    </div>
+    <div class="def">
+      <div class="term">Division</div>
+      <p>To divide, multiply the top and bottom by the conjugate of the bottom. This makes the bottom a real number, and
+         then you just divide the parts:</p>
+      <p class="formula" style="margin:.4em 0">(3 + 2i)/(1 + i) = (3 + 2i)(1 − i) / ((1 + i)(1 − i)) = (5 − i)/2 = 2.5 − 0.5i</p>
+      <p>Check it: (2.5 − 0.5i)(1 + i) = 2.5 + 2.5i − 0.5i − 0.5i² = 3 + 2i ✓. On the plane, dividing by w does the
+         opposite of multiplying: shrink by |w| and rotate <em>clockwise</em> by w's angle. Every complex number except 0
+         can be divided by — remember this for Step 11, where it becomes very important.</p>
+    </div>
+    <p class="takeaway">To multiply: lengths multiply, angles add. ×i = quarter-turn, so i² = −1 just means "two left turns = facing backwards."</p>
+  </section>
+
+  <!-- ===================== 8. POWERS & ROOTS ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 8 · The rule pays off</div>
+    <h2>Powers spiral, roots share the circle</h2>
+    <p class="lead">If multiplying once means "turn by θ and stretch by r," then multiplying z by itself again and again
+       means <b>turning by θ every time and stretching by r every time</b>. So the powers of a complex number walk like
+       steps of a staircase around the origin.</p>
+
+    <div class="def">
+      <div class="term">De Moivre's theorem</div>
+      <p>For z = r(cos θ + i sin θ):</p>
+      <p class="formula" style="margin:.4em 0">zⁿ = rⁿ ( cos nθ + i sin nθ )</p>
+      <p>The length is raised to the power n; the angle is <b>multiplied</b> by n. (This is just the multiplication rule
+         used n times: angles θ + θ + … + θ = nθ.) Named after Abraham de Moivre, 1707.</p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-pow" data-w="760" data-h="460"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>power n (show z¹ … zⁿ)</label><input id="pw-slider" type="range" min="1" max="8" step="1" value="6"></div>
+      </div>
+      <div class="readouts">
+        <div class="pill z">z = <b id="pw-z">—</b></div>
+        <div class="pill vio big">zⁿ = <b id="pw-zn">—</b></div>
+      </div>
+      <p class="hint" id="pw-hint">↑ Drag z. If |z| &gt; 1 the powers spiral outward; if |z| &lt; 1 they spiral inward toward 0;
+         put z exactly on the teal unit circle and the powers go around it forever without growing.</p>
+    </div>
+
+    <p>That last case — |z| = 1 — is worth a moment. Numbers <em>on the unit circle</em> do not stretch anything; they
+       are <b>pure rotations</b>. Their powers just move around the circle like the hand of a clock. This is why the unit
+       circle is the most important part of the complex plane.</p>
+
+    <h3>Going backwards: roots</h3>
+    <p>A square root asks "what number, squared, gives this?" — that is, what angle, when <em>doubled</em>, reaches the
+       target angle, and what length, when squared, gives the target length? An n-th root asks the same, but with n.
+       Here is the beautiful surprise: there are always <b>n different answers</b>, and they are perfectly evenly
+       spaced.</p>
+
+    <div class="def">
+      <div class="term">n-th roots and roots of unity</div>
+      <p>Every non-zero complex number has exactly <b>n</b> n-th roots. They all have the same length
+         (<span class="sym">r^(1/n)</span>) and their angles are <b>360°/n apart</b> — so on the plane they form the
+         corners of a perfect regular polygon with n sides, centred on 0. The n-th roots of <b>1</b> are called the
+         <b>roots of unity</b>: one of them is 1 itself, and the others complete the polygon around the unit circle.</p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-roots" data-w="760" data-h="460"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>which root: n</label><input id="rt-slider" type="range" min="2" max="8" step="1" value="3"></div>
+      </div>
+      <div class="readouts">
+        <div class="pill z">the target w = <b id="rt-w">1.0 + 0.0i</b></div>
+        <div class="pill circ big" id="rt-info">its 3 cube roots, 120° apart</div>
+      </div>
+      <p class="hint">↑ Drag the coral target w and move the n slider. The teal dots are ALL the n-th roots of w — raise
+         any one of them to the n-th power and you land exactly on w. Leave w at 1 to see the classic "roots of unity"
+         polygons.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Worked example — the three cube roots of 8</h3>
+      <p style="margin:.3em 0">Everyone knows one answer: 2. But 8 has length 8 and angle 0°, so its cube roots have
+         length 8^(1/3) = 2 and angles 0°, 120°, and 240°. Those are <b>2</b>, <b>−1 + √3·i</b>, and <b>−1 − √3·i</b>.
+         Check the second one: it has length 2 and angle 120°; cube it using De Moivre → length 2³ = 8, angle
+         360° = 0°. That is 8 ✓. The other two roots, which your calculator never showed you, were off the number line
+         the whole time.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">The Fundamental Theorem of Algebra</div>
+      <p>The big result. In the complex plane, <b>every</b> polynomial equation of degree n has exactly n solutions
+         (counting repeated ones). x² = −1: two solutions. x⁵ + 3x − 7 = 0: five solutions. No exceptions, ever. Gauss
+         proved it in 1799, at age 21. Remember the list of inventions in Step 1, each one fixing an unsolvable equation?
+         It <b>ends here</b>: with complex numbers, no polynomial is ever unsolvable again. We never need to invent
+         another number for this job. The set of tools is complete.</p>
+    </div>
+    <p class="takeaway">Powers: multiply the angle by n, raise the length to the power n — a spiral staircase. Roots: n answers, evenly spaced on a circle.</p>
+  </section>
+
+  <!-- ===================== 9. EULER ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 9 · The most famous equation in math</div>
+    <h2>Euler's formula: the spinning number</h2>
+    <p class="lead">One more improvement to the "straight-line address," and it gives us what many mathematicians call the
+       most beautiful equation ever written. Meet the number <b>e</b> and its amazing trick.</p>
+
+    <div class="def">
+      <div class="term">The number <span class="sym">e</span></div>
+      <p><span class="sym">e ≈ 2.71828…</span> is the natural number for growth — the number that appears whenever
+         something grows smoothly and continuously (compound interest, populations, radioactive decay). Its exponential
+         eˣ has one key habit: when you multiply, the exponents <b>add</b>: <span class="sym">eᵃ · eᵇ = eᵃ⁺ᵇ</span>.
+         Keep watching that habit.</p>
+    </div>
+
+    <p>Now remember Step 7: when you multiply complex numbers, <b>angles add</b>. And for exponentials, <b>exponents
+       add</b>. Same behavior! Euler (1748) proved they are not just similar — they are literally the same operation:</p>
+
+    <div class="def">
+      <div class="term">Euler's formula</div>
+      <p class="formula" style="margin:.4em 0">e<sup>iθ</sup> = cos θ + i sin θ</p>
+      <p>Think of it as a machine: put in an angle θ (in radians), and e<sup>iθ</sup> gives you <b>the point on the unit
+         circle at that angle</b>. It is a pure rotation — length exactly 1, direction θ. It deserves the exponential
+         name because it follows the exponential rule: e<sup>iα</sup> · e<sup>iβ</sup> = e<sup>i(α+β)</sup> — multiply
+         two rotations, and the angles add, which is exactly Step 7's rule. The notation is not decoration; it is the
+         rule "angles add" written in exponent form.</p>
+    </div>
+
+    <p>Watch the machine run. The coral point is e<sup>iθ</sup> moving around the unit circle as θ grows. Its
+       <span class="re">shadow on the real axis is cos θ</span>, its
+       <span class="imw">shadow on the imaginary axis is sin θ</span>, and off to the right you can see the height draw a
+       perfect sine wave — the same wave from the interference tutorial. Circular motion and waves
+       are the same thing viewed from different angles, and e<sup>iθ</sup> is the number that says so.</p>
+
+    <div class="widget">
+      <canvas id="cv-euler" data-w="760" data-h="420"></canvas>
+      <div class="btnrow">
+        <button class="btn alt" id="eu-play">▶ Play</button>
+        <button class="btn ghost" id="eu-pause">⏸ Pause</button>
+      </div>
+      <div class="readouts">
+        <div class="pill ang">θ = <b id="eu-th">0°</b></div>
+        <div class="pill re">cos θ = <b id="eu-cos">1.00</b></div>
+        <div class="pill im">sin θ = <b id="eu-sin">0.00</b></div>
+        <div class="pill z big">e^(iθ) = <b id="eu-form">1.00 + 0.00i</b></div>
+      </div>
+      <p class="hint">The point never leaves the unit circle — e^(iθ) is pure rotation. Its up-and-down shadow, drawn
+         over time, IS the sine wave.</p>
+    </div>
+
+    <p>With Euler's formula, the polar form gets its final, clean form. Instead of writing z = r(cos θ + i sin θ), we
+       write <span class="sym">z = r·e<sup>iθ</sup></span> — "length r, pointing at angle θ." Three symbols carry the
+       whole geometric story, and the multiplication rule becomes one line of exponent algebra:
+       r₁e<sup>iα</sup> · r₂e<sup>iβ</sup> = r₁r₂ e<sup>i(α+β)</sup>. Lengths multiply, angles add — now using the same
+       exponent rules you learned in school.</p>
+
+    <div class="card big-idea">
+      <div class="label">Euler's identity ✦</div>
+      <p>Put θ = π radians (half a turn, 180°) into the formula: e<sup>iπ</sup> = cos 180° + i sin 180° = −1 + 0i. Move
+         the 1 to the other side and you get</p>
+      <p class="formula" style="margin:.5em 0">e<sup>iπ</sup> + 1 = 0</p>
+      <p>Five of the most important numbers in mathematics — e, i, π, 1, 0 — in one short equation, each used exactly
+         once. And after this tutorial it is not even mysterious: it just says <strong>"half a turn from 1 lands on
+         −1."</strong> You can see it in the widget above every time the point crosses the left side of the circle.</p>
+    </div>
+    <p class="takeaway">e^(iθ) = the point at angle θ on the unit circle. Rotation became an exponent — and e^(iπ) = −1 is just "half a turn."</p>
+  </section>
+
+  <!-- ===================== 10. REAL WORLD ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 10 · Where it runs the world</div>
+    <h2>The "imaginary" number in your pocket</h2>
+    <p class="lead">Complex numbers stopped being just a helper tool long ago. Because they turn <b>rotation and
+       oscillation into simple arithmetic</b>, they are the natural language of anything that spins, waves, or vibrates —
+       which is most of physics and almost all of electronics.</p>
+
+    <ul class="clean">
+      <li><b>Electricity in your walls.</b> Mains electricity is AC — the voltage goes up and down 50–60 times per
+         second. Engineers write that oscillation as a rotating complex number (a <b>phasor</b>, r·e<sup>iωt</sup>),
+         which turns very hard circuit calculus into simple multiplication and addition. (One detail: electrical
+         engineers write <span class="sym">j</span> instead of i, because i was already used for electric current.)</li>
+      <li><b>Every sound you stream.</b> Audio compression, equalizers, and noise cancelling all use the Fourier
+         transform, which breaks any signal into a sum of spinning e<sup>iωt</sup> terms — pure rotations at different
+         speeds. Your music is stored and processed as complex numbers.</li>
+      <li><b>Phone signals, Wi-Fi, radar, MRI machines.</b> All of them store information in the size <em>and angle</em>
+         of waves — that is, in the length and angle of complex numbers. An MRI image is built from a plane full of
+         complex measurements.</li>
+      <li><b>Quantum mechanics.</b> The state of an electron is described by a <em>complex-valued</em> wavefunction — not
+         just for convenience, but because it is needed. Nature itself seems to keep its records in complex numbers.
+         (The uncertainty-principle tutorial continues this idea.)</li>
+      <li><b>Computer graphics and games.</b> Rotating a 2-D image is one complex multiplication. For 3-D rotations,
+         games use quaternions — the 4-D bigger relative of complex numbers that you will meet in Step 11.</li>
+      <li><b>Fractals.</b> The most famous image in mathematics, below, is nothing but Step 7's arithmetic repeated.</li>
+    </ul>
+
+    <h3>The Mandelbrot set: infinity from one line of arithmetic</h3>
+    <p>Here is the whole method. Pick a point <span class="sym">c</span> in the complex plane. Start with z = 0 and
+       repeat the step <span class="sym">z → z² + c</span> again and again (square the number — one complex
+       multiplication — then add c). Only two things can happen: either z stays near the origin forever, or it grows
+       toward infinity. Paint c <b>dark</b> if it stays near; if it grows, colour it by how quickly. That is all. No
+       other rules. The result may be the most detailed object in mathematics — and it is made from nothing but the
+       multiply-and-add you learned three sections ago.</p>
+
+    <div class="widget">
+      <canvas id="cv-mandel" data-w="760" data-h="500" class="click"></canvas>
+      <div class="btnrow">
+        <button class="btn ghost" id="mb-out">− zoom out</button>
+        <button class="btn ghost" id="mb-reset">↺ reset view</button>
+      </div>
+      <div class="readouts">
+        <div class="pill vio big">zoom: <b id="mb-zoom">1×</b></div>
+        <div class="pill">recipe: z → z² + c, repeated. dark = trapped, colours = escaped</div>
+      </div>
+      <p class="hint">Click (or tap) anywhere to zoom in ×2 on that spot. Every thin thread and spiral you find is more
+         complex multiplication. There is no end — it stays detailed forever, at every zoom level.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">The Mandelbrot set</div>
+      <p>The set of all complex numbers c for which the repeated step z → z² + c (starting from z = 0) stays bounded
+         forever. First drawn in 1980 by Benoît Mandelbrot at IBM, it became the symbol of fractal geometry: an
+         endlessly detailed edge made from a single line of complex arithmetic.</p>
+    </div>
+    <p class="takeaway">Anything that rotates or oscillates — power grids, songs, signals, electrons — speaks complex numbers naturally.</p>
+  </section>
+
+  <!-- ===================== 11. WHY NOT JUST COORDINATES ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 11 · The question you've been holding</div>
+    <h2>"Isn't this just coordinate geometry?"</h2>
+    <p class="lead">Since Step 4 you have had a good reason to be doubtful. A complex number is a point (a, b). Descartes
+       gave us points with coordinates back in 1637. The vectors tutorial gave us arrows we can add. So why all the
+       excitement — <strong>why is coordinate geometry, or vectors, not enough?</strong> This section is the honest
+       answer, and it is the deepest idea on this page.</p>
+
+    <h3>What each system can actually do</h3>
+    <p>Think of it as three levels of the same plane. Each level can do more:</p>
+    <p><b>Level 1 — Coordinate geometry (points).</b> A point (a, b) is an <em>address</em>. You can plot it, measure
+       distances between addresses, find midpoints, and describe lines and circles. This is great for geometry. But try
+       to <em>calculate with the points themselves</em>: what is Paris + London? What is (2, 3) × (1, 4)? Coordinate
+       geometry has no answer — points are locations, not amounts. There is no arithmetic <b>of</b> points, only
+       arithmetic <b>about</b> them (which you do by hand, on each coordinate separately).</p>
+    <p><b>Level 2 — Vectors (arrows).</b> This is a real step up: arrows can be <b>added</b> (tip-to-tail — Step 5 used
+       this!) and stretched by normal numbers. But now ask for multiplication: given arrows u and v, what is u × v, as an
+       arrow in the plane? Vectors offer two products. Look carefully at what each one gives back:</p>
+    <ul class="clean">
+      <li>The <b>dot product</b> u·v gives back a plain <em>number</em>, not an arrow. The answer has left the plane —
+          you cannot take the result and dot it with something else and keep going. The chain stops after one step.</li>
+      <li>The <b>cross product</b> u×v gives back an arrow pointing <em>out of the page</em> — at a right angle to the
+          plane, into the third dimension. The answer has left the plane, literally.</li>
+      <li>And neither product can be <b>reversed</b>: there is no such thing as "dividing by a vector." Knowing u·v and u
+          does not tell you v. Questions like "u times what equals w?" have no vector answer.</li>
+    </ul>
+    <p>So vectors can be combined, but they have no true multiplication that stays in the plane. And without
+       multiplication you certainly cannot square anything — so a question like x² = −1 cannot even be <em>asked</em> in
+       the language of points or vectors, and definitely cannot be answered.</p>
+    <p><b>Level 3 — Complex numbers.</b> Same plane, same points, plus <b>one extra rule</b> — and that rule changes
+       everything.</p>
+
+    <div class="def">
+      <div class="term">Hamilton's definition: points + one rule</div>
+      <p>In the 1830s, William Rowan Hamilton removed the last bit of mystery. He <em>defined</em> complex numbers with
+         no i and no square roots at all — just pairs of ordinary real numbers, with two rules:</p>
+      <p class="formula" style="margin:.4em 0">(a, b) + (c, d) = (a + c, b + d)<br>(a, b) × (c, d) = (ac − bd, ad + bc)</p>
+      <p>The first rule is vector addition — nothing new. The <b>second rule is the whole invention</b>. It is Step 7's
+         "lengths multiply, angles add" written in coordinates: a multiplication of points that always gives back a point
+         in the plane.</p>
+    </div>
+
+    <p>And watch what that one rule does to the "impossible" number. In Hamilton's language, i is simply the point
+       (0, 1) — one step north. Multiply it by itself <em>using only the rule</em>:</p>
+    <p class="formula">(0, 1) × (0, 1) = (0·0 − 1·1, 0·1 + 1·0) = (−1, 0)</p>
+    <p>The point one step north, squared, is the point one step <em>west</em> — which is the real number −1. There it
+       is: <b>i² = −1, computed with ordinary real numbers and one multiplication rule.</b> No imagination was ever
+       needed. The "mystery" was only ever a missing definition.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0">The scorecard</h3>
+      <table class="simple">
+        <tr><th>Can it…</th><th>Points (coord. geometry)</th><th>Vectors</th><th>Complex numbers</th></tr>
+        <tr><td>plot positions, measure distance</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+        <tr><td>add two of them</td><td class="no">no</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+        <tr><td>multiply two of them → same kind of thing</td><td class="no">no</td><td class="no">no (dot → number, cross → 3-D)</td><td class="yes">yes — rotate &amp; stretch</td></tr>
+        <tr><td>divide (undo a multiplication)</td><td class="no">no</td><td class="no">no</td><td class="yes">yes (by anything ≠ 0)</td></tr>
+        <tr><td>solve equations like x² = −1</td><td class="no">can't ask</td><td class="no">can't ask</td><td class="yes">yes — all polynomials, always</td></tr>
+        <tr><td>express rotation as arithmetic</td><td class="no">no</td><td class="no">no (needs matrices bolted on)</td><td class="yes">yes — multiply by e^(iθ)</td></tr>
+      </table>
+    </div>
+
+    <p>Try the difference yourself. Below, drag the two arrows u and v. The panel shows what each system gives back when
+       you ask it to "multiply" them — and where each answer <em>lives</em>:</p>
+
+    <div class="widget">
+      <canvas id="cv-compare" data-w="760" data-h="440"></canvas>
+      <div class="readouts">
+        <div class="pill re">dot product u·v = <b id="cp-dot">—</b> &nbsp;(a bare number — left the plane)</div>
+        <div class="pill vio">cross product = <b id="cp-cross">—</b> &nbsp;(points out of the screen — left the plane)</div>
+        <div class="pill z big">complex product = <b id="cp-prod">—</b> &nbsp;(the coral arrow — still in the plane!)</div>
+      </div>
+      <p class="hint">↑ Drag blue u and magenta v. Only one of the three "multiplications" gives back an arrow you can
+         see, keep, and multiply again: the complex one.</p>
+    </div>
+
+    <h3>Why that one rule matters so much</h3>
+    <ul class="clean">
+      <li><b>The plane becomes a number system.</b> Add, subtract, multiply, divide — all four operations work, and
+          every non-zero number can be divided by. Mathematicians call such a system a <b>field</b>. The real line is a
+          field; Hamilton's rule makes the whole plane a field too. Points are no longer just background — they became
+          numbers.</li>
+      <li><b>Equations become solvable.</b> With real multiplication you can square points, cube them, and build
+          polynomials from them — and the Fundamental Theorem of Algebra (Step 8) promises that every polynomial equation
+          has its full set of answers. Coordinate geometry cannot even ask the question.</li>
+      <li><b>Rotation becomes arithmetic.</b> With vectors, rotating needs extra tools (rotation matrices, trig
+          formulas). With complex numbers, rotation IS multiplication: turn by θ = multiply by e<sup>iθ</sup>. Geometry
+          problems become short algebra steps. This one feature is why physics and engineering use complex numbers
+          everywhere.</li>
+      <li><b>Calculus works on it.</b> Because you can divide, the difference quotient makes sense, and a whole subject —
+          <em>complex analysis</em> — comes from doing calculus with complex numbers. It is surprisingly powerful (it can
+          solve real integrals that normal methods cannot), but that is a topic for another tutorial.</li>
+    </ul>
+
+    <h3>And why the plane is special: Hamilton's 13-year search</h3>
+    <p>Here is a nice ending. If one clever rule turns 2-D points into numbers, surely some rule turns <b>3-D</b> points
+       into numbers too? Hamilton thought so. He searched for the 3-D multiplication rule for <b>thirteen years</b>. His
+       children would ask at breakfast, "Papa, can you multiply triplets yet?" and he had to admit he could only add
+       them. Every rule he tried failed at division.</p>
+    <p>On 16 October 1843, while walking along the Royal Canal in Dublin, the answer came to him: it is
+       <b>impossible in 3-D</b> — but it works in <b>four</b> dimensions, if you give up the rule that a×b = b×a. He was
+       so happy that he carved the equations of his new "quaternions" into the stone of Broom Bridge right there (a
+       plaque marks the spot today). Later, mathematicians proved the full result: number systems with real
+       multiplication and division exist <b>only</b> in dimensions 1 (the real numbers), 2 (the complex numbers), 4
+       (quaternions — you lose a×b = b×a) and 8 (octonions — you lose even more). You cannot do this in 3-D, or 5-D, or
+       anywhere else. <strong>So the plane is not just <em>a</em> place where geometry and arithmetic join — it is almost
+       <em>the</em> place.</strong> Complex numbers are not just a convenient notation; they hold a truly special spot in
+       mathematics.</p>
+
+    <div class="card big-idea">
+      <div class="label">the answer, in short ✦</div>
+      <p>Coordinate geometry gives you a <b>flat surface</b>. Vectors give you arrows you can <b>add</b>. Complex numbers
+         turn the surface itself into a <b>number system</b> — every point can multiply, divide, solve equations, and
+         rotate, all by simple arithmetic. <strong>A complex number is a point that can do arithmetic</strong> — and the
+         plane is one of the only places in all of mathematics where that is possible.</p>
+    </div>
+    <p class="takeaway">Same plane, one extra rule: (a,b)×(c,d) = (ac−bd, ad+bc). That rule is the whole upgrade — and it only exists in dimensions 1, 2, 4, 8.</p>
+  </section>
+
+  <!-- ===================== RECAP ===================== -->
+  <section class="reveal">
+    <div class="step-no">Putting it together</div>
+    <h2>Everything on one page</h2>
+    <div class="card">
+      <p style="margin-top:0">The whole journey, in order:</p>
+      <ul class="clean">
+        <li><strong>Numbers are inventions</strong>, made whenever an equation needs one (Step 1).</li>
+        <li><strong>√−1 was forced on us</strong> by cubic equations with real answers — Cardano 1545, Bombelli's bold idea 1572 (Step 2).</li>
+        <li><strong>i is defined by i² = −1</strong>; its powers cycle i, −1, −i, 1 — four quarter-turns (Step 3).</li>
+        <li><strong>a + bi is the point (a, b)</strong> on the complex plane; the real line runs through its middle (Step 4).</li>
+        <li><strong>Addition</strong> = tip-to-tail; real and imaginary parts stay separate (Step 5).</li>
+        <li><strong>Polar form</strong>: every number is also "distance r at angle θ" (Step 6).</li>
+        <li><strong>Multiplication = rotate and stretch</strong>: lengths multiply, angles add; ×i is a quarter-turn, so i²=−1 is geometry (Step 7).</li>
+        <li><strong>Powers spiral, n-th roots form perfect polygons</strong>; every polynomial is fully solvable — FTA (Step 8).</li>
+        <li><strong>e^(iθ) = cos θ + i sin θ</strong>: rotation written as an exponent; e^(iπ)+1=0 (Step 9).</li>
+        <li><strong>Phasors, Fourier, quantum, fractals</strong> — the arithmetic of everything that spins or waves (Step 10).</li>
+        <li><strong>Not "just" coordinates</strong>: one multiplication rule turns the plane into a number system — possible only in dimensions 1, 2, 4, 8 (Step 11).</li>
+      </ul>
+    </div>
+
+    <h3>Glossary — every term in one place</h3>
+    <div class="card">
+      <table class="simple">
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td>imaginary unit i</td><td>the number defined by i² = −1; the point (0, 1), one step "north" of 0</td></tr>
+        <tr><td>imaginary number</td><td>a real multiple of i, e.g. 2i, −5i; lives on the vertical axis</td></tr>
+        <tr><td>complex number</td><td>a two-part number z = a + bi; equivalently the point (a, b)</td></tr>
+        <tr><td>real part Re(z)</td><td>the a in a + bi; east–west position</td></tr>
+        <tr><td>imaginary part Im(z)</td><td>the b in a + bi (a real number!); north–south position</td></tr>
+        <tr><td>complex plane / Argand diagram</td><td>the plane of all complex numbers: real axis across, imaginary axis up</td></tr>
+        <tr><td>rectangular form</td><td>writing z as a + bi — the "street address"</td></tr>
+        <tr><td>modulus |z|</td><td>distance from 0: √(a² + b²); the arrow's length</td></tr>
+        <tr><td>argument arg(z)</td><td>angle from the positive real axis, counter-clockwise</td></tr>
+        <tr><td>polar form</td><td>z = r(cos θ + i sin θ) = r·e^(iθ) — the "straight-line address"</td></tr>
+        <tr><td>unit circle</td><td>all z with |z| = 1; the pure rotations</td></tr>
+        <tr><td>conjugate z̄</td><td>a − bi; mirror of z across the real axis; z·z̄ = |z|²</td></tr>
+        <tr><td>De Moivre's theorem</td><td>zⁿ = rⁿ(cos nθ + i sin nθ): power the length, multiply the angle</td></tr>
+        <tr><td>n-th roots of unity</td><td>the n solutions of zⁿ = 1; corners of a regular n-gon on the unit circle</td></tr>
+        <tr><td>Fundamental Theorem of Algebra</td><td>every degree-n polynomial has exactly n complex roots (Gauss, 1799)</td></tr>
+        <tr><td>e</td><td>≈ 2.71828, base of natural growth; exponents add: eᵃeᵇ = eᵃ⁺ᵇ</td></tr>
+        <tr><td>Euler's formula</td><td>e^(iθ) = cos θ + i sin θ: the point at angle θ on the unit circle</td></tr>
+        <tr><td>Euler's identity</td><td>e^(iπ) + 1 = 0 — "half a turn from 1 lands on −1"</td></tr>
+        <tr><td>phasor</td><td>a rotating complex number r·e^(iωt) representing an oscillation (AC circuits)</td></tr>
+        <tr><td>Mandelbrot set</td><td>all c where z → z² + c (from z = 0) stays bounded forever</td></tr>
+        <tr><td>ordered pair (Hamilton)</td><td>complex numbers defined as pairs (a, b) with the rule (a,b)(c,d) = (ac−bd, ad+bc)</td></tr>
+        <tr><td>field</td><td>a number system where +, −, ×, ÷ all work; the complex plane is one</td></tr>
+        <tr><td>dot product</td><td>vector "product" returning a bare number — not an arrow in the plane</td></tr>
+        <tr><td>cross product</td><td>vector product returning an arrow perpendicular to the plane (3-D)</td></tr>
+        <tr><td>quaternions</td><td>Hamilton's 4-D number system (1843); used for 3-D rotation in games/graphics</td></tr>
+        <tr><td>j</td><td>the symbol electrical engineers use for i (i was taken by current)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div class="divider" style="margin-bottom:26px"></div>
+    <p class="big">A complex number is a point that can do arithmetic.</p>
+    <p>Multiplying by i is a quarter-turn. Everything else — Euler, fractals, the electricity in your walls — follows from that one picture. 🧭</p>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   Shared toolkit (warm paper theme) — square-scale views so
+   circles are circles and angles are honest.
+   ========================================================= */
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function setup(c){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const cssW=c.clientWidth||+c.dataset.w;
+  const cssH=cssW*(c.dataset.h/c.dataset.w);
+  if(c._cw!==cssW){ c.style.height=cssH+"px"; c.width=Math.round(cssW*dpr); c.height=Math.round(cssH*dpr); c._cw=cssW; }
+  const ctx=c.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,W:cssW,H:cssH};
+}
+/* square-scale view: x-range fixed, y-range derived so 1 unit is the
+   same number of pixels both ways (circles stay round, angles honest) */
+function sqView(W,H,xmin,xmax,ycenter,pad){
+  pad=pad||{l:16,r:16,t:16,b:16};
+  const px0=pad.l,px1=W-pad.r,py0=pad.t,py1=H-pad.b;
+  const ppu=(px1-px0)/(xmax-xmin);
+  const yspan=(py1-py0)/ppu;
+  const ymin=(ycenter||0)-yspan/2, ymax=(ycenter||0)+yspan/2;
+  return {xmin,xmax,ymin,ymax,px0,px1,py0,py1,
+    X:x=>px0+(x-xmin)*ppu,
+    Y:y=>py1-(y-ymin)*ppu,
+    invX:px=>xmin+(px-px0)/ppu,
+    invY:py=>ymin+(py1-py)/ppu};
+}
+function niceStep(span){
+  const raw=span/6, p=Math.pow(10,Math.floor(Math.log10(raw))), c=raw/p;
+  return (c<=1?1:c<=2?2:c<=5?5:10)*p;
+}
+function fmtTick(n){ return (Math.abs(n)>=1&&Math.abs(n%1)<1e-9)? String(Math.round(n)) : String(+n.toFixed(2)); }
+function grid(ctx,v,step){
+  step=step||1;
+  ctx.save(); ctx.lineWidth=1; ctx.strokeStyle="rgba(180,160,130,.30)";
+  ctx.font='10px "Spline Sans Mono", monospace';
+  for(let k=Math.ceil(v.xmin/step); k<=Math.floor(v.xmax/step); k++){
+    const px=v.X(k*step);
+    ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();
+  }
+  for(let k=Math.ceil(v.ymin/step); k<=Math.floor(v.ymax/step); k++){
+    const py=v.Y(k*step);
+    ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();
+  }
+  ctx.strokeStyle="rgba(33,26,20,.50)"; ctx.lineWidth=1.5;
+  if(v.ymin<=0&&v.ymax>=0){const py=v.Y(0);ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();}
+  if(v.xmin<=0&&v.xmax>=0){const px=v.X(0);ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();}
+  ctx.fillStyle="rgba(107,93,78,.85)";
+  if(v.ymin<=0&&v.ymax>=0){
+    for(let k=Math.ceil(v.xmin/step); k<=Math.floor(v.xmax/step); k++){
+      const x=k*step; if(Math.abs(x)<1e-9)continue;
+      ctx.fillText(fmtTick(x),v.X(x)+3,v.Y(0)+14);
+    }
+  }
+  if(v.xmin<=0&&v.xmax>=0){
+    for(let k=Math.ceil(v.ymin/step); k<=Math.floor(v.ymax/step); k++){
+      const y=k*step; if(Math.abs(y)<1e-9)continue;
+      ctx.fillText(fmtTick(y)+"i",v.X(0)+5,v.Y(y)-3);
+    }
+  }
+  ctx.restore();
+}
+function axisNames(ctx,v){
+  plabel(ctx,v.px1-22,v.Y(0)-6,"Re",css('--re'),12);
+  plabel(ctx,v.X(0)+7,v.py0+13,"Im",css('--im'),12);
+}
+function parrow(ctx,x0,y0,x1,y1,color,w){
+  const dx=x1-x0,dy=y1-y0,len=Math.hypot(dx,dy); if(len<2)return;
+  const a=Math.atan2(dy,dx), head=Math.max(8,Math.min(14,len*0.3)), wing=0.42;
+  ctx.save();
+  ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=w||3; ctx.lineCap="round"; ctx.lineJoin="round";
+  const bx=x1-Math.cos(a)*head*0.85, by=y1-Math.sin(a)*head*0.85;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(bx,by);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x1,y1);
+  ctx.lineTo(x1-Math.cos(a-wing)*head,y1-Math.sin(a-wing)*head);
+  ctx.lineTo(x1-Math.cos(a+wing)*head,y1-Math.sin(a+wing)*head);
+  ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+function warrow(ctx,v,x0,y0,x1,y1,color,w){parrow(ctx,v.X(x0),v.Y(y0),v.X(x1),v.Y(y1),color,w);}
+function pdot(ctx,px,py,color,r){
+  ctx.save();
+  ctx.beginPath();ctx.arc(px,py,(r||7)+3,0,7);ctx.fillStyle="#fffdf8";ctx.fill();
+  ctx.beginPath();ctx.arc(px,py,r||7,0,7);ctx.fillStyle=color;ctx.fill();
+  ctx.restore();
+}
+function plabel(ctx,px,py,text,color,size,align){
+  ctx.save();ctx.font=`${size||13}px "Spline Sans Mono", monospace`;ctx.fillStyle=color;ctx.textAlign=align||"left";ctx.fillText(text,px,py);ctx.restore();
+}
+function dashed(ctx,x0,y0,x1,y1,color,w){
+  ctx.save();ctx.setLineDash([5,5]);ctx.strokeStyle=color;ctx.lineWidth=w||1.4;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();ctx.restore();
+}
+function unitCircle(ctx,v,color){
+  const r=v.X(1)-v.X(0);
+  ctx.save();ctx.strokeStyle=color||"rgba(31,138,120,.55)";ctx.lineWidth=1.8;
+  ctx.beginPath();ctx.arc(v.X(0),v.Y(0),r,0,7);ctx.stroke();ctx.restore();
+}
+/* arc from world-angle 0 to theta (radians, CCW positive), radius in px */
+function angleArc(ctx,v,theta,rpx,color,label){
+  if(Math.abs(theta)<0.02)return;
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=2.2;
+  ctx.beginPath();ctx.arc(v.X(0),v.Y(0),rpx,0,-theta,theta>0);ctx.stroke();ctx.restore();
+  if(label){
+    const mid=theta/2;
+    plabel(ctx,v.X(0)+Math.cos(mid)*(rpx+14)-5,v.Y(0)-Math.sin(mid)*(rpx+14)+4,label,color,12);
+  }
+}
+const fmtC=(a,b,d)=>{d=(d===undefined)?2:d;const s=b<0?"−":"+";return `${a.toFixed(d)} ${s} ${Math.abs(b).toFixed(d)}i`;};
+const degOf=(x,y)=>Math.atan2(y,x)*180/Math.PI;
+
+/* animation registry — ticks only visible canvases */
+const animators=[];
+const animObs=new IntersectionObserver(es=>es.forEach(e=>{const a=animators.find(x=>x.canvas===e.target);if(a)a.active=e.isIntersecting;}),{threshold:0.03});
+function registerAnim(canvas,tick){const a={canvas,tick,active:false};animators.push(a);animObs.observe(canvas);return a;}
+let _last=performance.now();
+function loop(now){const dt=Math.min((now-_last)/1000,0.05);_last=now;for(const a of animators){if(a.active)a.tick(dt);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+
+/* multi-handle dragging: on press, grabs the nearest handle within 32px */
+function dragHandles(canvas,getView,handles){
+  let active=-1;
+  function pos(e){const r=canvas.getBoundingClientRect();
+    const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+    const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+    return {cx,cy};}
+  function start(e){
+    const {cx,cy}=pos(e), v=getView();
+    let best=1e9,bi=-1;
+    handles.forEach((h,i)=>{const p=h.get();const d=Math.hypot(v.X(p.x)-cx,v.Y(p.y)-cy);if(d<best){best=d;bi=i;}});
+    if(best<=32){active=bi;canvas.classList.add('dragging');move(e);e.preventDefault();}
+  }
+  function move(e){
+    if(active<0)return;
+    const {cx,cy}=pos(e), v=getView();
+    handles[active].set(v.invX(cx),v.invY(cy));
+    e.preventDefault();
+  }
+  function end(){active=-1;canvas.classList.remove('dragging');}
+  canvas.addEventListener('mousedown',start);window.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false});canvas.addEventListener('touchmove',move,{passive:false});window.addEventListener('touchend',end);
+}
+const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
+  const r=Math.hypot(p.x,p.y)||1e-9;
+  if(r>maxR){p.x*=maxR/r;p.y*=maxR/r;}
+  if(minR&&r<minR){p.x*=minR/r;p.y*=minR/r;}
+  return p;
+};
+
+/* =========================================================
+   3. Powers of i — the four-step dance
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-ipow');
+  const mul=document.getElementById('ip-mul'), reset=document.getElementById('ip-reset');
+  const val=document.getElementById('ip-val'), seq=document.getElementById('ip-seq');
+  const NAMES=['1','i','−1','−i'];
+  let n=0, disp=0; // disp = animated angle in degrees
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-1.9,1.9,0,{l:16,r:16,t:14,b:14});
+    grid(ctx,v,1); axisNames(ctx,v);
+    unitCircle(ctx,v);
+    // the four home positions
+    const anchors=[[1,0,'1',10,-12],[0,1,'i',12,-10],[-1,0,'−1',-30,-12],[0,-1,'−i',12,20]];
+    anchors.forEach(a=>{
+      pdot(ctx,v.X(a[0]),v.Y(a[1]),"rgba(31,138,120,.8)",4);
+      plabel(ctx,v.X(a[0])+a[3],v.Y(a[1])+a[4],a[2],css('--circ'),15);
+    });
+    // the animated arrow
+    const th=disp*Math.PI/180;
+    warrow(ctx,v,0,0,Math.cos(th),Math.sin(th),css('--z'),4.5);
+    pdot(ctx,v.X(Math.cos(th)),v.Y(Math.sin(th)),css('--z'),8);
+    // swept arc showing total rotation so far (last full turn only)
+    const sweep=Math.min(disp,360)*Math.PI/180;
+    angleArc(ctx,v,sweep,34,"rgba(217,131,36,.8)");
+    plabel(ctx,v.px0+4,v.py1-6,"each ×i = one quarter-turn counter-clockwise",css('--ink-soft'),12);
+  }
+  registerAnim(c,dt=>{
+    const target=n*90;
+    if(Math.abs(target-disp)>0.05){ disp+=(target-disp)*Math.min(1,dt*5); draw(); }
+  });
+  function update(){
+    const r=n%4, full=Math.floor(n/4);
+    val.textContent=`current value: i^${n} = ${NAMES[r]}`;
+    if(n===0) seq.textContent='press × i and watch where the arrow goes…';
+    else seq.textContent=`${n} quarter-turn${n>1?'s':''} = ${full} full spin${full===1?'':'s'} + ${r} quarter${r===1?'':'s'} → ${NAMES[r]}`;
+    draw();
+  }
+  mul.onclick=()=>{n++;update();};
+  reset.onclick=()=>{n=0;disp=0;update();};
+  window.addEventListener('resize',draw); update();
+})();
+
+/* =========================================================
+   4. The complex plane — drag a number around
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-plane');
+  const oz=document.getElementById('pl-z'), ore=document.getElementById('pl-re'), oim=document.getElementById('pl-im');
+  let z={x:3,y:2}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-6,6,0,{l:16,r:16,t:14,b:14}); view=v;
+    grid(ctx,v,1); axisNames(ctx,v);
+    // component arrows along the axes (same picture as the vectors tutorial)
+    warrow(ctx,v,0,0,z.x,0,css('--re'),4);
+    warrow(ctx,v,0,0,0,z.y,css('--im'),4);
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(z.x),v.Y(0),"rgba(192,57,139,.55)",1.5);
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(0),v.Y(z.y),"rgba(43,95,168,.55)",1.5);
+    warrow(ctx,v,0,0,z.x,z.y,css('--z'),4);
+    pdot(ctx,v.X(0),v.Y(0),css('--ink'),4);
+    pdot(ctx,v.X(z.x),v.Y(z.y),css('--z'),9);
+    plabel(ctx,v.X(z.x)+12,v.Y(z.y)-10,"z = "+fmtC(z.x,z.y,1),css('--z'),13);
+    oz.textContent=fmtC(z.x,z.y,1);
+    ore.textContent=z.x.toFixed(1); oim.textContent=z.y.toFixed(1);
+  }
+  dragHandles(c,()=>view,[{
+    get:()=>z,
+    set:(x,y)=>{z.x=Math.max(-5.5,Math.min(5.5,x));z.y=Math.max(-3.1,Math.min(3.1,y));draw();}
+  }]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   5. Addition — tip-to-tail parallelogram
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-add');
+  const oz=document.getElementById('ad-z'), ow=document.getElementById('ad-w'), os=document.getElementById('ad-sum');
+  let z={x:2,y:1}, w={x:1,y:2}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-8,8,0,{l:16,r:16,t:14,b:14}); view=v;
+    grid(ctx,v,1); axisNames(ctx,v);
+    const s={x:z.x+w.x, y:z.y+w.y};
+    // parallelogram: a dashed copy of w starting at z's tip, and of z at w's tip
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(s.x),v.Y(s.y),"rgba(192,57,139,.6)",1.6);
+    dashed(ctx,v.X(w.x),v.Y(w.y),v.X(s.x),v.Y(s.y),"rgba(43,95,168,.6)",1.6);
+    warrow(ctx,v,0,0,z.x,z.y,css('--re'),4);
+    warrow(ctx,v,0,0,w.x,w.y,css('--im'),4);
+    warrow(ctx,v,0,0,s.x,s.y,css('--z'),4.5);
+    pdot(ctx,v.X(z.x),v.Y(z.y),css('--re'),8);
+    pdot(ctx,v.X(w.x),v.Y(w.y),css('--im'),8);
+    pdot(ctx,v.X(s.x),v.Y(s.y),css('--z'),7);
+    plabel(ctx,v.X(z.x)+10,v.Y(z.y)+16,"z",css('--re'),14);
+    plabel(ctx,v.X(w.x)+10,v.Y(w.y)-8,"w",css('--im'),14);
+    plabel(ctx,v.X(s.x)+10,v.Y(s.y)-8,"z+w",css('--z'),14);
+    oz.textContent=fmtC(z.x,z.y,1); ow.textContent=fmtC(w.x,w.y,1); os.textContent=fmtC(s.x,s.y,1);
+  }
+  const clampP=(p,x,y)=>{p.x=Math.max(-3.6,Math.min(3.6,x));p.y=Math.max(-2.0,Math.min(2.0,y));};
+  dragHandles(c,()=>view,[
+    {get:()=>z, set:(x,y)=>{clampP(z,x,y);draw();}},
+    {get:()=>w, set:(x,y)=>{clampP(w,x,y);draw();}}
+  ]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   6. Polar form — two addresses for one number
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-polar');
+  const orect=document.getElementById('po-rect'), orr=document.getElementById('po-r'), oth=document.getElementById('po-th');
+  let z={x:2.4,y:1.8}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-4.2,4.2,0,{l:16,r:16,t:14,b:14}); view=v;
+    grid(ctx,v,1); axisNames(ctx,v);
+    unitCircle(ctx,v);
+    const r=Math.hypot(z.x,z.y), th=Math.atan2(z.y,z.x);
+    // light projections (street address)
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(z.x),v.Y(0),"rgba(192,57,139,.45)",1.3);
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(0),v.Y(z.y),"rgba(43,95,168,.45)",1.3);
+    // crow's flight: r line + theta arc
+    angleArc(ctx,v,th,40,css('--ang'),"θ");
+    ctx.save();ctx.strokeStyle=css('--z');ctx.lineWidth=4;ctx.lineCap="round";
+    ctx.beginPath();ctx.moveTo(v.X(0),v.Y(0));ctx.lineTo(v.X(z.x),v.Y(z.y));ctx.stroke();ctx.restore();
+    plabel(ctx,v.X(z.x/2)+8,v.Y(z.y/2)-8,"r = "+r.toFixed(2),css('--z'),13);
+    pdot(ctx,v.X(0),v.Y(0),css('--ink'),4);
+    pdot(ctx,v.X(z.x),v.Y(z.y),css('--z'),9);
+    plabel(ctx,v.px0+4,v.py1-6,"teal circle = unit circle (r = 1)",css('--ink-soft'),12);
+    let deg=th*180/Math.PI;
+    orect.textContent=fmtC(z.x,z.y,1);
+    orr.textContent=r.toFixed(2); oth.textContent=deg.toFixed(1)+"°";
+  }
+  dragHandles(c,()=>view,[{
+    get:()=>z,
+    set:(x,y)=>{
+      z.x=Math.max(-3.9,Math.min(3.9,x)); z.y=Math.max(-2.1,Math.min(2.1,y));
+      clampMod(z,3.9,0.2); draw();
+    }
+  }]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   7. Multiplication — rotate & stretch (the centerpiece)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-mult');
+  const oz=document.getElementById('mu-z'),ow=document.getElementById('mu-w'),op=document.getElementById('mu-p');
+  const omod=document.getElementById('mu-mod'),oarg=document.getElementById('mu-arg');
+  const bi=document.getElementById('mu-i'),b2=document.getElementById('mu-2'),bn=document.getElementById('mu-neg1');
+  let z={x:1.6,y:0.6}, w={x:1.0,y:1.0}, view=null;
+  function product(){ return {x:z.x*w.x - z.y*w.y, y:z.x*w.y + z.y*w.x}; }
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const p=product();
+    const half=Math.max(3.2, 1.18*Math.max(Math.hypot(p.x,p.y), Math.hypot(z.x,z.y), Math.hypot(w.x,w.y)));
+    const v=sqView(W,H,-half,half,0,{l:16,r:16,t:14,b:14}); view=v;
+    grid(ctx,v,niceStep(2*half)); axisNames(ctx,v);
+    unitCircle(ctx,v);
+    const az=Math.atan2(z.y,z.x), aw=Math.atan2(w.y,w.x), ap=Math.atan2(p.y,p.x);
+    angleArc(ctx,v,az,30,css('--re'));
+    angleArc(ctx,v,aw,44,css('--im'));
+    angleArc(ctx,v,ap,58,css('--z'));
+    warrow(ctx,v,0,0,z.x,z.y,css('--re'),4);
+    warrow(ctx,v,0,0,w.x,w.y,css('--im'),4);
+    warrow(ctx,v,0,0,p.x,p.y,css('--z'),4.5);
+    pdot(ctx,v.X(z.x),v.Y(z.y),css('--re'),8);
+    pdot(ctx,v.X(w.x),v.Y(w.y),css('--im'),8);
+    pdot(ctx,v.X(p.x),v.Y(p.y),css('--z'),7);
+    plabel(ctx,v.X(z.x)+10,v.Y(z.y)+16,"z",css('--re'),14);
+    plabel(ctx,v.X(w.x)+10,v.Y(w.y)-8,"w",css('--im'),14);
+    plabel(ctx,v.X(p.x)+10,v.Y(p.y)-8,"z·w",css('--z'),14);
+    const mz=Math.hypot(z.x,z.y), mw=Math.hypot(w.x,w.y);
+    const dz=az*180/Math.PI, dw=aw*180/Math.PI;
+    let sum=dz+dw; while(sum>180)sum-=360; while(sum<=-180)sum+=360;
+    oz.textContent=fmtC(z.x,z.y,1); ow.textContent=fmtC(w.x,w.y,1); op.textContent=fmtC(p.x,p.y,1);
+    omod.textContent=`${mz.toFixed(2)} × ${mw.toFixed(2)} = ${(mz*mw).toFixed(2)}`;
+    oarg.textContent=`${dz.toFixed(1)}° + ${dw.toFixed(1)}° = ${sum.toFixed(1)}°`;
+  }
+  const mk=(pt)=>({get:()=>pt, set:(x,y)=>{pt.x=x;pt.y=y;clampMod(pt,2.5,0.15);draw();}});
+  dragHandles(c,()=>view,[mk(z),mk(w)]);
+  bi.onclick=()=>{w={x:0,y:1};draw();};
+  b2.onclick=()=>{w={x:2,y:0};draw();};
+  bn.onclick=()=>{w={x:-1,y:0};draw();};
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   8a. Powers — the spiral staircase (De Moivre)
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-pow');
+  const slider=document.getElementById('pw-slider');
+  const oz=document.getElementById('pw-z'), ozn=document.getElementById('pw-zn');
+  let z={x:0.86,y:0.72}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const n=+slider.value;
+    const r=Math.hypot(z.x,z.y), th=Math.atan2(z.y,z.x);
+    // all the powers
+    const pts=[];
+    for(let k=1;k<=n;k++){ const rk=Math.pow(r,k), ak=th*k; pts.push({x:rk*Math.cos(ak), y:rk*Math.sin(ak)}); }
+    let maxR=1.4; pts.forEach(p=>{maxR=Math.max(maxR,Math.hypot(p.x,p.y));});
+    const half=maxR*1.22;
+    const v=sqView(W,H,-half,half,0,{l:16,r:16,t:14,b:14}); view=v;
+    grid(ctx,v,niceStep(2*half)); axisNames(ctx,v);
+    unitCircle(ctx,v);
+    // connect the staircase
+    ctx.save();ctx.strokeStyle="rgba(106,76,147,.5)";ctx.lineWidth=2;ctx.beginPath();
+    ctx.moveTo(v.X(pts[0].x),v.Y(pts[0].y));
+    for(let k=1;k<pts.length;k++)ctx.lineTo(v.X(pts[k].x),v.Y(pts[k].y));
+    ctx.stroke();ctx.restore();
+    // dots for each power
+    pts.forEach((p,idx)=>{
+      const last=idx===pts.length-1;
+      pdot(ctx,v.X(p.x),v.Y(p.y), last?css('--vio'):"rgba(31,138,120,.9)", last?8:5);
+      if(idx===0||last||idx===1)
+        plabel(ctx,v.X(p.x)+9,v.Y(p.y)-7, "z"+(idx===0?"":"^"+(idx+1)), last?css('--vio'):css('--circ'),12);
+    });
+    // z itself (the handle) — same as pts[0]
+    warrow(ctx,v,0,0,z.x,z.y,css('--z'),3.5);
+    pdot(ctx,v.X(z.x),v.Y(z.y),css('--z'),9);
+    const zn=pts[pts.length-1];
+    oz.textContent=`${fmtC(z.x,z.y,2)}  (r=${r.toFixed(2)}, θ=${(th*180/Math.PI).toFixed(1)}°)`;
+    ozn.textContent=`${fmtC(zn.x,zn.y,2)}  (r=${Math.pow(r,n).toFixed(2)}, θ=${(th*180/Math.PI*n).toFixed(1)}°)`;
+  }
+  dragHandles(c,()=>view,[{
+    get:()=>z, set:(x,y)=>{z.x=x;z.y=y;clampMod(z,1.9,0.3);draw();}
+  }]);
+  slider.addEventListener('input',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   8b. n-th roots — sharing the circle
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-roots');
+  const slider=document.getElementById('rt-slider');
+  const ow=document.getElementById('rt-w'), info=document.getElementById('rt-info');
+  const NAME={2:'square',3:'cube',4:'4th',5:'5th',6:'6th',7:'7th',8:'8th'};
+  let w={x:1,y:0}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-3.3,3.3,0,{l:16,r:16,t:14,b:14}); view=v;
+    grid(ctx,v,1); axisNames(ctx,v);
+    unitCircle(ctx,v);
+    const n=+slider.value;
+    const R=Math.hypot(w.x,w.y), TH=Math.atan2(w.y,w.x);
+    const rr=Math.pow(R,1/n);
+    const roots=[];
+    for(let k=0;k<n;k++){ const a=(TH+2*Math.PI*k)/n; roots.push({x:rr*Math.cos(a), y:rr*Math.sin(a)}); }
+    // polygon connecting the roots
+    ctx.save();ctx.strokeStyle="rgba(106,76,147,.55)";ctx.lineWidth=2;ctx.beginPath();
+    roots.forEach((p,idx)=>{ idx? ctx.lineTo(v.X(p.x),v.Y(p.y)) : ctx.moveTo(v.X(p.x),v.Y(p.y)); });
+    ctx.closePath();ctx.stroke();ctx.restore();
+    roots.forEach((p,idx)=>{
+      pdot(ctx,v.X(p.x),v.Y(p.y),css('--circ'),7);
+      if(idx===0) plabel(ctx,v.X(p.x)+9,v.Y(p.y)-8,"a root",css('--circ'),12);
+    });
+    // the target w
+    warrow(ctx,v,0,0,w.x,w.y,css('--z'),3.5);
+    pdot(ctx,v.X(w.x),v.Y(w.y),css('--z'),9);
+    plabel(ctx,v.X(w.x)+10,v.Y(w.y)+16,"w (drag me)",css('--z'),12);
+    ow.textContent=fmtC(w.x,w.y,1);
+    info.textContent=`its ${n} ${NAME[n]} roots, ${(360/n).toFixed(0)}° apart`;
+  }
+  dragHandles(c,()=>view,[{
+    get:()=>w, set:(x,y)=>{w.x=x;w.y=y;
+      w.x=Math.max(-2.9,Math.min(2.9,w.x)); w.y=Math.max(-1.7,Math.min(1.7,w.y));
+      clampMod(w,2.9,0.2); draw();}
+  }]);
+  slider.addEventListener('input',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   9. Euler's formula — the spinning number + its sine shadow
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-euler');
+  const play=document.getElementById('eu-play'), pause=document.getElementById('eu-pause');
+  const oth=document.getElementById('eu-th'), oc=document.getElementById('eu-cos'), osn=document.getElementById('eu-sin'), of=document.getElementById('eu-form');
+  let th=0, playing=true, hist=[];
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const R=Math.min(H*0.36,W*0.20), cx=R+58, cy=H*0.52;
+    const tx0=cx+R+44, step=2, count=Math.max(10,Math.floor((W-16-tx0)/step));
+    // axes
+    ctx.save();ctx.strokeStyle="rgba(33,26,20,.30)";ctx.lineWidth=1.3;
+    ctx.beginPath();ctx.moveTo(cx-R-20,cy);ctx.lineTo(W-14,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cy-R-16);ctx.lineTo(cx,cy+R+16);ctx.stroke();ctx.restore();
+    // unit circle
+    ctx.save();ctx.strokeStyle="rgba(31,138,120,.6)";ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();ctx.restore();
+    const cs=Math.cos(th), sn=Math.sin(th);
+    const Px=cx+R*cs, Py=cy-R*sn;
+    // angle arc
+    const a=((th%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+    ctx.save();ctx.strokeStyle=css('--ang');ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(cx,cy,24,0,-a,a>0);ctx.stroke();ctx.restore();
+    // shadows: cos on real axis (blue), sin on imaginary axis (magenta)
+    ctx.save();ctx.lineCap="round";
+    ctx.strokeStyle=css('--re');ctx.lineWidth=4.5;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(Px,cy);ctx.stroke();
+    ctx.strokeStyle=css('--im');ctx.lineWidth=4.5;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx,Py);ctx.stroke();
+    ctx.restore();
+    dashed(ctx,Px,Py,Px,cy,"rgba(43,95,168,.5)",1.3);
+    dashed(ctx,Px,Py,cx,Py,"rgba(192,57,139,.5)",1.3);
+    // radius + point
+    ctx.save();ctx.strokeStyle=css('--z');ctx.lineWidth=3.4;ctx.lineCap="round";
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(Px,Py);ctx.stroke();ctx.restore();
+    pdot(ctx,Px,Py,css('--z'),8);
+    plabel(ctx,cx+R*0.5*cs-14,cy+16,"cos θ",css('--re'),12);
+    plabel(ctx,cx+8,cy-R*0.5*sn,"sin θ",css('--im'),12);
+    plabel(ctx,Px+10,Py-10,"e^(iθ)",css('--z'),13);
+    // sine wave streaming right
+    ctx.save();ctx.strokeStyle="rgba(192,57,139,.65)";ctx.lineWidth=2.4;ctx.beginPath();
+    for(let k=0;k<Math.min(count,hist.length);k++){
+      const x=tx0+k*step, y=cy-R*hist[k];
+      k? ctx.lineTo(x,y) : ctx.moveTo(x,y);
+    }
+    ctx.stroke();ctx.restore();
+    if(hist.length) dashed(ctx,Px,Py,tx0,cy-R*hist[0],"rgba(107,93,78,.5)",1.3);
+    plabel(ctx,tx0+8,cy+R+14,"time →  (the sine wave, streamed)",css('--ink-soft'),12);
+    // readouts
+    const deg=(a*180/Math.PI);
+    oth.textContent=deg.toFixed(0)+"°";
+    oc.textContent=cs.toFixed(2); osn.textContent=sn.toFixed(2);
+    of.textContent=fmtC(cs,sn,2);
+  }
+  registerAnim(c,dt=>{
+    if(playing){ th+=dt*1.1; hist.unshift(Math.sin(th)); if(hist.length>500)hist.pop(); }
+    draw();
+  });
+  play.onclick=()=>playing=true; pause.onclick=()=>playing=false;
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   10. The Mandelbrot set — z → z² + c, repeated
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-mandel');
+  const zoomO=document.getElementById('mb-zoom');
+  const bOut=document.getElementById('mb-out'), bReset=document.getElementById('mb-reset');
+  const BW=228,BH=150, MAXIT=100;
+  const off=document.createElement('canvas'); off.width=BW; off.height=BH;
+  const octx=off.getContext('2d'); const img=octx.createImageData(BW,BH);
+  const HOME={cx:-0.6, cy:0, span:3.4};
+  let cxm=HOME.cx, cym=HOME.cy, span=HOME.span;
+  // theme palette for escape speed: paper -> sand -> coral -> violet -> blue
+  const stops=[[251,246,236],[242,200,121],[226,84,47],[106,76,147],[43,95,168]];
+  function pal(t){
+    const x=Math.min(0.9999,Math.max(0,t))*(stops.length-1);
+    const i=Math.floor(x), f=x-i, A=stops[i], B=stops[i+1];
+    return [A[0]+(B[0]-A[0])*f, A[1]+(B[1]-A[1])*f, A[2]+(B[2]-A[2])*f];
+  }
+  function render(){
+    const spanY=span*BH/BW, d=img.data;
+    for(let j=0,p=0;j<BH;j++){
+      const ci=cym+spanY/2-(j+.5)/BH*spanY;
+      for(let i=0;i<BW;i++,p+=4){
+        const cr=cxm-span/2+(i+.5)/BW*span;
+        let zr=0, zi=0, it=0;
+        while(it<MAXIT){
+          const zr2=zr*zr, zi2=zi*zi;
+          if(zr2+zi2>4)break;
+          zi=2*zr*zi+ci; zr=zr2-zi2+cr; it++;   // z -> z² + c
+        }
+        if(it>=MAXIT){ d[p]=33;d[p+1]=26;d[p+2]=20; }        // trapped: ink
+        else { const rgb=pal(Math.pow(it/MAXIT,0.45)); d[p]=rgb[0];d[p+1]=rgb[1];d[p+2]=rgb[2]; }
+        d[p+3]=255;
+      }
+    }
+    octx.putImageData(img,0,0);
+  }
+  function draw(){
+    const {ctx,W,H}=setup(c);
+    ctx.imageSmoothingEnabled=true;
+    ctx.clearRect(0,0,W,H);
+    ctx.drawImage(off,0,0,BW,BH,0,0,W,H);
+    const zoom=HOME.span/span;
+    zoomO.textContent=(zoom>=100? zoom.toFixed(0) : zoom>=10? zoom.toFixed(1) : zoom.toFixed(2)).replace(/\.0+$/,'')+"×";
+  }
+  c.addEventListener('click',e=>{
+    const r=c.getBoundingClientRect();
+    const fx=(e.clientX-r.left)/r.width, fy=(e.clientY-r.top)/r.height;
+    const spanY=span*BH/BW;
+    cxm=cxm-span/2+fx*span;
+    cym=cym+spanY/2-fy*spanY;
+    span/=2;
+    render(); draw();
+  });
+  bOut.onclick=()=>{ span=Math.min(HOME.span,span*2); if(span===HOME.span){cxm=HOME.cx;cym=HOME.cy;} render(); draw(); };
+  bReset.onclick=()=>{ cxm=HOME.cx;cym=HOME.cy;span=HOME.span; render(); draw(); };
+  window.addEventListener('resize',draw);
+  render(); draw();
+})();
+
+/* =========================================================
+   11. The comparison — dot vs cross vs complex product
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-compare');
+  const odot=document.getElementById('cp-dot'), ocr=document.getElementById('cp-cross'), opr=document.getElementById('cp-prod');
+  let u={x:2,y:0.8}, w={x:0.8,y:1.6}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const p={x:u.x*w.x-u.y*w.y, y:u.x*w.y+u.y*w.x};
+    const half=Math.max(3.4, 1.18*Math.max(Math.hypot(p.x,p.y),Math.hypot(u.x,u.y),Math.hypot(w.x,w.y)));
+    const v=sqView(W,H,-half,half,0,{l:16,r:16,t:14,b:14}); view=v;
+    grid(ctx,v,niceStep(2*half)); axisNames(ctx,v);
+    unitCircle(ctx,v,"rgba(31,138,120,.35)");
+    warrow(ctx,v,0,0,u.x,u.y,css('--re'),4);
+    warrow(ctx,v,0,0,w.x,w.y,css('--im'),4);
+    warrow(ctx,v,0,0,p.x,p.y,css('--z'),4.5);
+    pdot(ctx,v.X(u.x),v.Y(u.y),css('--re'),8);
+    pdot(ctx,v.X(w.x),v.Y(w.y),css('--im'),8);
+    pdot(ctx,v.X(p.x),v.Y(p.y),css('--z'),7);
+    plabel(ctx,v.X(u.x)+10,v.Y(u.y)+16,"u",css('--re'),14);
+    plabel(ctx,v.X(w.x)+10,v.Y(w.y)-8,"v",css('--im'),14);
+    plabel(ctx,v.X(p.x)+10,v.Y(p.y)-8,"u·v as complex numbers",css('--z'),12);
+    const dot=u.x*w.x+u.y*w.y, cr=u.x*w.y-u.y*w.x;
+    odot.textContent=dot.toFixed(2);
+    ocr.textContent=Math.abs(cr).toFixed(2)+(cr>=0?" ⊙ toward you":" ⊗ away from you");
+    opr.textContent=fmtC(p.x,p.y,1);
+  }
+  const mk=(pt)=>({get:()=>pt, set:(x,y)=>{pt.x=x;pt.y=y;clampMod(pt,2.2,0.15);draw();}});
+  dragHandles(c,()=>view,[mk(u),mk(w)]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* reveal on scroll */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
