@@ -1,5 +1,14 @@
 [
   {
+    "slug": "molecular-dynamics",
+    "title": "Molecular dynamics, and where machine learning comes in",
+    "date": "2026-08-07",
+    "category": "Physics",
+    "summary": "How molecular dynamics actually works, then where machine learning fits. Two interactive pages: a live 2D argon box with the 1860s Maxwell-Boltzmann curve drawn on top as a check, and a real trained neural-network potential that can break a bond a classical force field never could. Every atom is integrated live in the browser.",
+    "math": false,
+    "url": "projects/molecular-dynamics/md-basics.html"
+  },
+  {
     "slug": "rotary-position-embeddings",
     "title": "Rotary position embeddings, one rotation at a time",
     "date": "2026-07-30",

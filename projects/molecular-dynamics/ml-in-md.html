@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where machine learning comes into molecular dynamics</title>
+<meta name="description" content="Where machine learning fits into molecular dynamics: why raw atom coordinates fail, how symmetry functions fix it, and a real trained neural-network potential that can break a bond. Part 2 of 2, interactive throughout.">
+<meta name="author" content="Aayush Neupane">
+<link rel="canonical" href="https://neupaneaayush.com.np/projects/molecular-dynamics/ml-in-md.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Where machine learning comes into molecular dynamics">
+<meta property="og:description" content="Why you cannot feed raw coordinates to a network, and a real trained potential that breaks a bond a pair potential never could.">
+<meta property="og:url" content="https://neupaneaayush.com.np/projects/molecular-dynamics/ml-in-md.html">
+<link rel="icon" href="../../assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="../../assets/icon.png">
+<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="./shared.css">
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="backbar" id="backbar">
+  <div class="backbar-in">
+    <a class="back" href="../../blog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Writing</a>
+    <div class="series">
+      <a href="./md-basics.html" title="How molecular dynamics works">Part 1</a>
+      <a class="here" href="./ml-in-md.html" title="Where machine learning comes in">Part 2</a>
+    </div>
+    <button class="toggle" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">
+      <span class="cat">Physics</span>
+      <span class="meta">Aug 7, 2026 · Part 2 of 2</span>
+    </div>
+    <h1>Where machine learning comes in</h1>
+    <p class="lede">
+      Part 1 ended with one question: given where the atoms are, what is the
+      energy? Every model is an attempt to answer it. This page is about letting a
+      computer work out the answer instead of a human guessing it.
+    </p>
+    <div class="post-rule"></div>
+  </header>
+
+  <p class="note">
+    If you have not read <a href="./md-basics.html">Part 1</a>, start there. This
+    page assumes you know that force is the slope of the energy, and that a pair
+    potential adds up every pair of atoms.
+  </p>
+
+  <h2>1. The best answer is quantum mechanics, and it is painfully slow</h2>
+  <p>
+    Every model in Part 1 was a guess at the shape of the energy. There is one
+    way to stop guessing: work out what the electrons are actually doing. That is
+    quantum mechanics, and it gives real answers, bonds that break, metals that
+    behave like metals, chemistry that happens.
+  </p>
+  <p>
+    The catch is the cost. Here are the real numbers from a simulation of one
+    small molecule of five atoms, measured on a laptop:
+  </p>
+
+  <table>
+    <thead><tr><th>Method</th><th class="num">Time for one energy</th><th>Good enough to…</th></tr></thead>
+    <tbody>
+      <tr><td>Pair potential</td><td class="num">~0.000001 s</td><td>simulate argon</td></tr>
+      <tr><td>Classical force field</td><td class="num">~0.000001 s</td><td>simulate proteins, but bonds never break</td></tr>
+      <tr><td><strong>Quantum mechanics (DFT)</strong></td><td class="num"><strong>2.6 s</strong></td><td>get the chemistry right</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    2.6 seconds does not sound slow. But remember the loop: you need this
+    <em>every single step</em>, and a step is one femtosecond. To simulate one
+    nanosecond, still a very short time in biology, you need a million steps.
+  </p>
+  <div class="eq">1,000,000 steps × 2.6 s ≈ <span class="an2">one month of computing</span></div>
+  <p>
+    And that is for five atoms. A protein has tens of thousands. This is the wall
+    the whole field ran into.
+  </p>
+
+  <div class="widget" id="w-tradeoff">
+    <div class="widget-head"><span class="tag">the problem</span> Fast or right, pick one</div>
+    <canvas id="c-tradeoff"></canvas>
+    <div class="widget-note">
+      Everything useful sits along the bottom-left to top-right diagonal. The
+      corner everybody actually wants, accurate <em>and</em> fast, was empty.
+    </div>
+  </div>
+
+  <h2>2. The idea: learn the answer from examples</h2>
+  <p>
+    Here is the trick, and it is simpler than it sounds.
+  </p>
+  <p>
+    You cannot afford to run quantum mechanics a million times. But you
+    <em>can</em> afford to run it a few thousand times. So do that: pick a few
+    thousand arrangements of the atoms, and compute the exact energy for each
+    one. That is your set of examples.
+  </p>
+  <p>
+    Then fit a flexible mathematical function to those examples, one with enough
+    knobs to bend into almost any shape. Afterwards, throw away the quantum
+    calculation and just use the fit. The fit runs in microseconds.
+  </p>
+  <div class="keypoint">
+    <p><b>This is the whole idea.</b> Pay the expensive cost a few thousand
+    times, up front. Then get answers essentially for free, forever.</p>
+  </div>
+  <p>
+    The widget below shows this happening. The grey curve is the truth, which in
+    real life you never get to see. The dots are the expensive calculations you
+    chose to run. The blue curve is what a machine learning model builds from
+    only those dots.
+  </p>
+
+  <div class="widget" id="w-fit">
+    <div class="widget-head">
+      <span class="tag">try it</span> Learning a curve from a handful of expensive answers
+    </div>
+    <canvas id="c-fit"></canvas>
+    <div class="controls">
+      <div class="ctl">
+        <label for="fit-n">examples computed</label>
+        <input type="range" id="fit-n" min="2" max="40" step="1" value="4">
+        <span class="val" id="fit-n-val">4</span>
+      </div>
+      <button id="fit-new">Different examples</button>
+      <div class="ctl">
+        <label><input type="checkbox" id="fit-truth" checked> show the hidden truth</label>
+      </div>
+    </div>
+    <div class="readout">
+      <div><div class="rk">quantum runs used</div><div class="rv" id="fit-cost">, </div></div>
+      <div><div class="rk">time that cost</div><div class="rv" id="fit-time">, </div></div>
+      <div><div class="rk">worst error</div><div class="rv" id="fit-err">, </div></div>
+      <div><div class="rk">verdict</div><div class="rv" id="fit-verdict">, </div></div>
+    </div>
+    <div class="widget-note">
+      With four examples the fit invents nonsense between them. By about fifteen
+      it is nearly perfect. Notice where it stays worst longest: the steep wall on
+      the left, where the curve changes fastest. Deciding <em>which</em>
+      arrangements are worth computing is a real part of the job.
+    </div>
+  </div>
+
+  <h2>3. The catch: you cannot just feed in the coordinates</h2>
+  <p>
+    So we need a function that takes atom positions and returns energy. The
+    obvious thing is to feed the raw numbers, x, y, z for every atom, straight
+    into a neural network. This does not work, and the reason is important.
+  </p>
+  <p>
+    A molecule sitting in empty space has the same energy no matter
+    <strong>where</strong> it is, no matter <strong>which way it is turned</strong>,
+    and no matter <strong>what order you happen to list identical atoms in</strong>.
+    Physics does not care about any of those. But the raw numbers change
+    completely.
+  </p>
+
+  <div class="widget" id="w-invariance">
+    <div class="widget-head">
+      <span class="tag">try it</span> The molecule has not changed. The numbers have.
+    </div>
+    <canvas id="c-invariance"></canvas>
+    <div class="controls">
+      <button id="inv-move">Move it</button>
+      <button id="inv-rotate">Turn it</button>
+      <button id="inv-swap">Swap two identical atoms</button>
+      <button id="inv-reset">Reset</button>
+    </div>
+    <div class="readout">
+      <div><div class="rk">raw coordinates</div><div class="rv" id="inv-raw" style="color:var(--danger)">, </div></div>
+      <div><div class="rk">distances between atoms</div><div class="rv" id="inv-dist" style="color:var(--good)">, </div></div>
+      <div><div class="rk">true energy</div><div class="rv" id="inv-energy">unchanged</div></div>
+    </div>
+    <div class="widget-note">
+      Press the buttons. The raw coordinates jump around every time. The
+      distances never move. The real energy never moves either, so distances are
+      telling the truth about the molecule and raw coordinates are not.
+    </div>
+  </div>
+
+  <p>
+    If you trained a network on raw coordinates, it would waste all its effort
+    learning that turning a molecule does nothing, and it would still get it
+    wrong for angles it had never seen. Worse, it would give two different
+    answers for the same molecule described two different ways.
+  </p>
+
+  <h2>4. The fix: describe each atom by what it can see</h2>
+  <p>
+    Instead of feeding in positions, we give the network a description of each
+    atom's <strong>surroundings</strong>, built only out of distances and angles
+    to its neighbours.
+  </p>
+  <p>
+    Think of it as a fingerprint of the neighbourhood. "There are two atoms about
+    1.1 Å away, one at 1.8 Å, nothing else nearby, and the angle between the
+    first two is 109°." That description is unchanged if you move the molecule,
+    turn it, or relabel identical atoms, because it never mentions where
+    anything is in absolute terms.
+  </p>
+
+  <div class="widget" id="w-fingerprint">
+    <div class="widget-head">
+      <span class="tag">drag it</span> Drag a neighbour. Watch the fingerprint.
+    </div>
+    <canvas id="c-fingerprint"></canvas>
+    <div class="controls">
+      <button id="fp-rotate">Turn the whole thing</button>
+      <button id="fp-reset">Reset</button>
+    </div>
+    <div class="widget-note">
+      Dragging a neighbour changes the fingerprint, because the molecule really
+      did change. Turning the whole thing leaves it completely still, because the
+      molecule really did not. That is exactly the behaviour we needed and could
+      not get from raw coordinates.
+    </div>
+  </div>
+
+  <h2>5. What exactly does the model predict?</h2>
+  <p>
+    This is the part people get most confused about, so here it is spelled out.
+  </p>
+  <p>
+    <strong>What comes out of the model is one number for the whole system:</strong>
+    the total energy of all the atoms together. Plus the forces, which are just
+    the slope of that one number, three numbers per atom. That is all. There is
+    no separate prediction for each atom.
+  </p>
+  <p>
+    But <em>inside</em>, the model works atom by atom. Each atom's fingerprint
+    goes through a small network which returns a number, and those numbers get
+    added up:
+  </p>
+  <div class="eq">total energy = <span class="an">sum over atoms of (each atom's own number)</span></div>
+  <p>
+    So does that mean the model learns "the energy of one atom"? No, and this is
+    the important bit.
+  </p>
+  <div class="keypoint">
+    <p><b>Nobody ever tells the network what a single atom's energy should be.</b>
+    There is no such measurement. Quantum mechanics does not produce one either.
+    The only thing ever compared against the truth is the <b>sum</b>.</p>
+  </div>
+  <p>
+    The per-atom numbers are the network's own invention. It is free to divide
+    the total between the atoms however it likes, as long as the total comes out
+    right. Two differently trained networks will split it differently and both
+    be equally correct. So you should not read a single atom's number as "how
+    much energy this atom has": that quantity does not exist, because an atom's
+    energy only means anything in relation to its neighbours.
+  </p>
+  <p>Why bother splitting it up at all, then? Two reasons, both practical:</p>
+  <ul>
+    <li><strong>It works for any number of atoms.</strong> Train on molecules
+      with 5 atoms, then run on 500. There is no fixed-size input, just one
+      network applied once per atom.</li>
+    <li><strong>It builds in the physics you want for free.</strong> Adding up
+      per-atom terms makes the energy automatically unchanged when you relabel
+      identical atoms, and it makes a system of two far-apart molecules come out
+      to exactly the sum of their separate energies.</li>
+  </ul>
+  <p>
+    The widget below uses a real trained model. Drag the slider to
+    stretch a bond in a methane molecule and watch what happens.
+  </p>
+
+  <div class="widget" id="w-share">
+    <div class="widget-head">
+      <span class="tag">real model</span> Invented shares, real total
+      <span style="margin-left:auto;font-weight:400;color:var(--text-muted)"
+            id="share-status">loading…</span>
+    </div>
+    <canvas id="c-share"></canvas>
+    <div class="controls">
+      <div class="ctl">
+        <label for="share-r">stretch the C&ndash;H bond</label>
+        <input type="range" id="share-r" min="0" max="100" step="1" value="58">
+        <span class="val" id="share-r-val">-</span>
+      </div>
+    </div>
+    <div class="readout">
+      <div><div class="rk">model total</div><div class="rv" id="share-total" style="color:var(--neural)">-</div></div>
+      <div><div class="rk">quantum truth</div><div class="rv" id="share-truth">-</div></div>
+      <div><div class="rk">difference</div><div class="rv" id="share-diff" style="color:var(--good)">-</div></div>
+    </div>
+    <div class="widget-note">
+      The grey bars are the five per-atom numbers the network made up. Watch how
+      the departing hydrogen and the carbon trade energy back and forth as the
+      bond stretches. Nobody taught it to do that, and nobody checked it.
+      <br><br>
+      The only thing that was ever checked is the pair on the right: the model's
+      total against the quantum answer. Those two agree to a fraction of a
+      kcal/mol across the whole stretch, which is the entire claim the model
+      makes.
+    </div>
+  </div>
+
+  <h2>6. Two more pieces, and you have a real model</h2>
+
+  <h3>The sum is many-body, even though it looks like the pair sum</h3>
+  <p>
+    Adding up per-atom terms looks like the pair sum from Part 1, but there is a
+    crucial difference.
+    A pair term only ever sees two atoms. An atom's fingerprint sees
+    <em>all</em> of its neighbours at once, so the network can learn exactly the
+    kind of crowding effect that EAM had to hard-code, and anything else besides.
+    It is many-body without anybody deciding in advance what the many-body rule
+    should be.
+  </p>
+  <p>
+    It also means the model does not care how big your system is. Every hydrogen
+    atom shares the same small network. Train on small molecules, run on large
+    ones.
+  </p>
+
+  <h3>Learn from forces, not just energies</h3>
+  <p>
+    Every quantum calculation gives you the energy, one number. But it also
+    gives you the force on every atom, almost for free. For a molecule of N
+    atoms, that is 3N more numbers, all from the same expensive calculation.
+  </p>
+
+  <div class="widget" id="w-forces">
+    <div class="widget-head"><span class="tag">why it matters</span> What one expensive calculation gives you</div>
+    <canvas id="c-forces"></canvas>
+    <div class="widget-note">
+      Energies tell you how high the surface is at one point. Forces tell you
+      which way it tilts and how steeply, the shape, not just the height. Three
+      slopes still do not pin the curve perfectly, but they get you far closer
+      than three heights alone, from the very same calculations. That is why a
+      few thousand are enough instead of a few hundred thousand.
+    </div>
+  </div>
+
+  <h2>7. Putting it together</h2>
+  <p>Here is the whole recipe, in order:</p>
+  <ol>
+    <li>Choose a few thousand arrangements of your atoms.</li>
+    <li>Run the slow, accurate quantum calculation on each one. Keep the energy
+      <em>and</em> the forces.</li>
+    <li>Turn each atom's surroundings into a fingerprint of distances and angles.</li>
+    <li>Train a small network: fingerprint in, that atom's energy out.</li>
+    <li>Add up the atoms to get the total energy. Take its slope to get forces.</li>
+    <li>Put those forces into the loop from Part 1 and run your simulation.</li>
+  </ol>
+  <p>
+    That is a machine-learned interatomic potential. It is not magic and it is
+    not a black box replacing physics; it is a very good curve fit to a physics
+    calculation you could not afford to keep repeating.
+  </p>
+
+  <div class="keypoint">
+    <p><b>What it buys you.</b> This exact recipe reproduces a quantum
+    dissociation curve to within 0.3 kcal/mol, and runs about
+    <b>17,000× faster</b> than the quantum calculation it learned from, fast
+    enough to run live in a browser tab.</p>
+  </div>
+
+  <h2>8. What it does not fix</h2>
+  <p>Worth being straight about, because these are real limits.</p>
+  <ul>
+    <li><strong>It only knows what it was shown.</strong> Ask it about a
+      situation unlike anything in its training set and it will answer
+      confidently and possibly wrongly. This is the central difficulty in the
+      field.</li>
+    <li><strong>It still needs the expensive calculations.</strong> You have not
+      escaped quantum mechanics; you have spread its cost out.</li>
+    <li><strong>It is slower than a pair potential.</strong> Roughly a thousand
+      times slower, just a hundred thousand times faster than quantum. It sits
+      in between, which is exactly why it is useful.</li>
+  </ul>
+  <p>
+    None of that stops it working. Modern general-purpose versions of this idea
+    are trained on millions of structures across most of the periodic table, and
+    they have genuinely changed what simulations people can run.
+  </p>
+
+  <div class="foot">
+    <p>That is the end of the two-part explainer. Back to
+      <a href="./md-basics.html">Part 1: How molecular dynamics works</a>, or reach me on
+      <a href="https://github.com/atomnp">GitHub</a> or by
+      <a href="mailto:neupane0403@gmail.com">email</a>.</p>
+  </div>
+
+  <div class="post-foot">
+    <div class="card">
+      <img src="../../assets/linkedin_pp.jpeg" alt="Aayush Neupane" width="52" height="52">
+      <div class="n"><b>Aayush Neupane</b><br><span>CS Researcher &amp; Engineer · MS CS, University of Kansas</span></div>
+      <a class="to-all" href="../../blog.html">All writing →</a>
+    </div>
+  </div>
+
+</div>
+<script type="module" src="./ml-in-md.js"></script>
+<script src="./chrome.js"></script>
+</body>
+</html>

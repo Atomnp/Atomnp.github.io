@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How molecular dynamics works, from forces to atoms</title>
+<meta name="description" content="An interactive, from-scratch explainer of molecular dynamics: forces, the integration loop, the Lennard-Jones curve, and a live 2D argon box with the Maxwell-Boltzmann curve drawn on top. Part 1 of 2.">
+<meta name="author" content="Aayush Neupane">
+<link rel="canonical" href="https://neupaneaayush.com.np/projects/molecular-dynamics/md-basics.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How molecular dynamics works">
+<meta property="og:description" content="Forces, the integration loop, and a live 2D argon simulation. An interactive explainer, built from the ground up.">
+<meta property="og:url" content="https://neupaneaayush.com.np/projects/molecular-dynamics/md-basics.html">
+<link rel="icon" href="../../assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="../../assets/icon.png">
+<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="stylesheet" href="./shared.css">
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="backbar" id="backbar">
+  <div class="backbar-in">
+    <a class="back" href="../../blog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Writing</a>
+    <div class="series">
+      <a class="here" href="./md-basics.html" title="How molecular dynamics works">Part 1</a>
+      <a href="./ml-in-md.html" title="Where machine learning comes in">Part 2</a>
+    </div>
+    <button class="toggle" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">
+      <span class="cat">Physics</span>
+      <span class="meta">Aug 7, 2026 · Part 1 of 2</span>
+    </div>
+    <h1>How molecular dynamics works</h1>
+    <p class="lede">
+      Molecular dynamics is a way of making a movie of atoms. You start by putting
+      atoms somewhere. Then you work out the force on each one, nudge them a tiny
+      step, and repeat. Do that a few million times and you have a movie.
+    </p>
+    <div class="post-rule"></div>
+  </header>
+
+  <p>
+    This page builds the idea from the beginning. If you know that force makes
+    things accelerate, you know enough to start. Everything below is something
+    you can play with.
+  </p>
+
+  <h2>1. What is a film of atoms actually for?</h2>
+  <p>
+    Making the film is not the point. What you want are answers you cannot get
+    any other way. They come in two kinds.
+  </p>
+  <p>
+    <strong>Numbers you can check against experiment.</strong> Nearly every
+    property of a material is really an average over atoms jiggling about. Run
+    the film long enough, average over it, and out come real measurable
+    quantities: melting and boiling points, density, stiffness, viscosity, how
+    tightly a drug molecule holds on to its target, how fast a reaction goes.
+    Those averages are the actual product. The film is just how you get them.
+  </p>
+  <p>
+    <strong>Mechanisms nothing can show you.</strong> No instrument watches a
+    protein fold, or lithium ions squeezing through a battery electrode, or a
+    crack starting deep inside a lump of metal. Experiments usually tell you
+    what happened. The film tells you how it happened.
+  </p>
+  <p>Some things this is genuinely used for:</p>
+  <ul>
+    <li><strong>Drug discovery.</strong> Does this candidate molecule stay stuck
+      to its target protein, and how tightly? That number decides whether a drug
+      is worth making.</li>
+    <li><strong>Materials.</strong> At what temperature does this alloy melt?
+      Where does it crack, and why there?</li>
+    <li><strong>Batteries.</strong> How fast do ions move through this
+      electrolyte? That sets how quickly the battery can charge.</li>
+    <li><strong>Biology.</strong> How does an ion channel in a cell membrane
+      open and shut?</li>
+  </ul>
+  <div class="keypoint">
+    <p><b>Keep this in mind for the rest of the page.</b> Everything below is
+    machinery for producing those averages. In section 7 you will measure one
+    yourself, and watch it tell a solid apart from a liquid.</p>
+  </div>
+
+  <h2>2. The whole method is one loop</h2>
+  <p>
+    Here is the entire algorithm. There is nothing hidden behind it.
+  </p>
+  <ol>
+    <li>Look at where all the atoms are.</li>
+    <li>Work out the force on each atom.</li>
+    <li>Use <code>a = F / m</code> to get each atom's acceleration.</li>
+    <li>Move every atom forward by a very small slice of time.</li>
+    <li>Go back to step 1.</li>
+  </ol>
+  <p>
+    That "small slice of time" is usually about one femtosecond, a millionth of
+    a billionth of a second. Atoms vibrate incredibly fast, so if you take bigger
+    steps you miss the motion and the simulation blows up.
+  </p>
+
+  <div class="widget" id="w-loop">
+    <div class="widget-head"><span class="tag">try it</span> One atom, one step at a time</div>
+    <canvas id="c-loop"></canvas>
+    <div class="controls">
+      <button id="loop-step">Take one step</button>
+      <button id="loop-run">Run</button>
+      <button id="loop-reset">Reset</button>
+      <div class="ctl">
+        <label for="loop-dt">step size</label>
+        <input type="range" id="loop-dt" min="1" max="60" step="1" value="14">
+        <span class="val" id="loop-dt-val">medium</span>
+      </div>
+    </div>
+    <div class="readout">
+      <div><div class="rk">position</div><div class="rv" id="loop-x">, </div></div>
+      <div><div class="rk">velocity</div><div class="rv" id="loop-v">, </div></div>
+      <div><div class="rk">force</div><div class="rv" id="loop-f">, </div></div>
+      <div><div class="rk">steps taken</div><div class="rv" id="loop-n">0</div></div>
+    </div>
+    <div class="widget-note">
+      The ball sits in a valley. Push the step size up and watch the simulation
+      lose track of the motion, then fly apart. This is the single most common
+      way a real simulation fails.
+    </div>
+  </div>
+
+  <h2>3. Force is the steepness of an energy hill</h2>
+  <p>
+    Step 2 of the loop says "work out the force". Where does it come from? In almost
+    every simulation, forces are not stored directly. Instead we store
+    <strong>energy</strong>, and the force falls out of it.
+  </p>
+  <p>
+    Think of a ball on a hill. Where the hill is steep, the ball is pushed hard.
+    Where it is flat, nothing pushes it. And the push is always
+    <em>downhill</em>. That is the whole rule:
+  </p>
+  <div class="eq">force = − (how fast energy changes with position)</div>
+  <p>
+    The minus sign just means "downhill". If you know the energy of every
+    arrangement of atoms, you know every force, everywhere. So the real job of a
+    molecular simulation is to answer one question:
+    <strong>given where the atoms are, what is the energy?</strong>
+  </p>
+
+  <div class="widget" id="w-slope">
+    <div class="widget-head"><span class="tag">drag it</span> Drag the ball. Watch the arrow.</div>
+    <canvas id="c-slope"></canvas>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--neural)"></i> the ball</span>
+      <span><i style="background:var(--classical)"></i> force on it</span>
+      <span><i style="background:var(--good)"></i> the slope right there</span>
+    </div>
+    <div class="widget-note">
+      Steep hill, big arrow. Flat bottom, no arrow. The arrow always points
+      downhill. That is the only thing "force is minus the slope of the energy"
+      means.
+    </div>
+  </div>
+
+  <h2>4. The energy between two atoms</h2>
+  <p>
+    Now we need actual energy values. Start with the simplest case in all of
+    chemistry: two atoms of argon, a gas that does not react with anything.
+  </p>
+  <p>They feel two competing effects.</p>
+  <ul>
+    <li><strong>They pull together when far apart.</strong> Even neutral atoms
+      attract each other faintly, because their electrons wobble in step. This
+      is weak and fades fast with distance.</li>
+    <li><strong>They push apart hard when too close.</strong> Two atoms cannot
+      sit in the same place. Squeeze them and they shove back extremely
+      violently.</li>
+  </ul>
+  <p>
+    Add those together and you get a curve with a dip in it. The bottom of the
+    dip is the comfortable distance, where the atoms would happily sit. This
+    is the <strong>Lennard-Jones potential</strong>, and it is the single most
+    used model in all of molecular simulation.
+  </p>
+
+  <div class="widget" id="w-lj">
+    <div class="widget-head">
+      <span class="tag">drag it</span> Drag the right-hand atom
+      <span style="margin-left:auto">
+        <span class="seg">
+          <button id="lj-total" class="active">Total</button>
+          <button id="lj-parts">Show the two parts</button>
+        </span>
+      </span>
+    </div>
+    <canvas id="c-lj"></canvas>
+    <div class="controls">
+      <button id="lj-release">Let go and watch</button>
+      <button id="lj-reset">Put it back</button>
+    </div>
+    <div class="readout">
+      <div><div class="rk">distance</div><div class="rv" id="lj-r">, </div></div>
+      <div><div class="rk">energy</div><div class="rv" id="lj-e">, </div></div>
+      <div><div class="rk">force</div><div class="rv" id="lj-f">, </div></div>
+      <div><div class="rk">they are</div><div class="rv" id="lj-state">, </div></div>
+    </div>
+    <div class="widget-note">
+      Press <em>Let go and watch</em> from a stretched position. The atoms fall
+      toward each other, overshoot, get shoved back, and oscillate, exactly
+      like a ball rolling in the valley from section 3. That is a vibrating
+      molecule.
+    </div>
+  </div>
+
+  <h2>5. Many atoms: just add up every pair</h2>
+  <p>
+    With more than two atoms, the simplest assumption is that the total energy
+    is the sum over every pair of atoms, one pair at a time:
+  </p>
+  <div class="eq">total energy = <span class="an">sum of the energy of every pair</span></div>
+  <p>
+    That is called a <strong>pair potential</strong>. It is a guess, and a
+    surprisingly good one for simple things like argon. Below are a few hundred
+    argon atoms doing nothing but obeying that rule.
+  </p>
+  <div class="note">
+    <p><strong>Careful: whose energy is it?</strong> This trips people up, so it
+    is worth pinning down now. The thing that physically exists is
+    <em>one number for the whole system</em>: the total energy of all the atoms
+    together. That total is what forces come from, and it is the only part that
+    is real.</p>
+    <p>Splitting the total up and saying "this particular atom owns 3 units of
+    it" is bookkeeping we invent for convenience. It is useful, and every model
+    on this page does it, but no experiment can hand you one atom's share,
+    because an atom's energy only means anything in relation to its neighbours.
+    Hold on to that distinction. It comes back in Part 2, where it decides what
+    the machine learning model is actually taught.</p>
+  </div>
+  <p>
+    Nobody programmed "become a liquid" or "form a crystal" into this. Those
+    behaviours simply appear once you add up pairs and let the atoms move.
+  </p>
+
+  <div class="widget" id="w-box">
+    <div class="widget-head">
+      <span class="tag">play</span> A few hundred argon atoms
+      <span style="margin-left:auto;font-weight:400;color:var(--text-muted)"
+            id="box-phase">, </span>
+    </div>
+    <canvas id="c-box"></canvas>
+    <div class="controls">
+      <div class="ctl">
+        <label for="box-temp">temperature</label>
+        <input type="range" id="box-temp" min="5" max="250" step="1" value="40">
+        <span class="val" id="box-temp-val">40 K</span>
+      </div>
+      <button id="box-cool">Cool it down</button>
+      <button id="box-heat">Heat it up</button>
+      <button id="box-reset">Reset</button>
+      <div class="ctl">
+        <label><input type="checkbox" id="box-color" checked> colour by neighbours</label>
+      </div>
+    </div>
+    <div class="readout">
+      <div><div class="rk">atoms</div><div class="rv" id="box-n">, </div></div>
+      <div><div class="rk">pairs checked / step</div><div class="rv" id="box-pairs">, </div></div>
+      <div><div class="rk">measured temp</div><div class="rv" id="box-tmeas">, </div></div>
+      <div><div class="rk">simulated time</div><div class="rv" id="box-time">, </div></div>
+    </div>
+    <div class="widget-note">
+      It starts frozen. Below about 50 K it is a solid, every atom pinned, six
+      neighbours around each one. Above about 100 K it boils and the atoms fill
+      the box. In between it is a liquid: still stuck together, but flowing.
+      Blue means many neighbours, orange means few, so a droplet shows a blue
+      core and an orange skin: its inside and its surface.
+      <br><br>
+      Those two temperatures are not settings. Nothing in the code mentions
+      melting or boiling. They are consequences of one curve from section 4,
+      added up over every pair.
+    </div>
+  </div>
+
+  <h2>6. Temperature is just how fast the atoms are moving</h2>
+  <p>
+    "Temperature" sounds like its own thing, but in a simulation it is only a
+    measure of motion. Add up the kinetic energy of every atom, divide by the
+    number of atoms, and that <em>is</em> the temperature.
+  </p>
+  <p>
+    Not every atom moves at the same speed. They constantly collide and trade
+    energy, so at any moment there is a spread, a few crawling, a few racing,
+    most somewhere in the middle. That spread always settles into the same
+    characteristic shape.
+  </p>
+
+  <div class="widget" id="w-speed">
+    <div class="widget-head"><span class="tag">watch</span> The spread of atom speeds</div>
+    <canvas id="c-speed"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--neural)"></i> measured right now, in the box above</span>
+      <span><i style="background:var(--classical)"></i> the shape theory predicts</span>
+    </div>
+    <div class="widget-note">
+      The orange curve is not fitted to the bars. It is the Maxwell–Boltzmann
+      distribution, worked out on paper in the 1860s. The bars are our
+      simulation. Nobody told the simulation about this curve; it falls out of
+      atoms bumping into each other. Change the temperature above and watch both
+      move together.
+    </div>
+  </div>
+
+  <h2>7. Getting a real number out of the film</h2>
+  <p>
+    Section 1 promised that the point of all this is averages you can compare
+    with the real world. Here is one of them, done properly.
+  </p>
+  <p>
+    Pick a moment. Remember where every atom is. Then keep watching, and measure
+    how far each atom has wandered from its remembered spot. Average the square
+    of that distance over all the atoms. That is the
+    <strong>mean squared displacement</strong>, and it settles the question
+    "solid or liquid?" without anybody having to squint at the picture.
+  </p>
+  <ul>
+    <li><strong>In a solid</strong> each atom is trapped by its neighbours. It
+      rattles in place but never goes anywhere, so the curve rises a little and
+      then flattens off.</li>
+    <li><strong>In a liquid</strong> atoms slide past one another and keep
+      wandering, so the curve climbs steadily and never flattens.</li>
+  </ul>
+  <p>
+    The slope of that climb is the <strong>diffusion coefficient</strong>, a
+    number you can look up in a table and check. This is a measurement, not a
+    picture.
+  </p>
+
+  <div class="widget" id="w-msd">
+    <div class="widget-head">
+      <span class="tag">measure it</span> How far do the atoms actually get?
+      <span style="margin-left:auto;font-weight:400;color:var(--text-muted)"
+            id="msd-phase">settling</span>
+    </div>
+    <canvas id="c-msd"></canvas>
+    <div class="controls">
+      <div class="ctl">
+        <label for="msd-temp">temperature</label>
+        <input type="range" id="msd-temp" min="10" max="200" step="5" value="25">
+        <span class="val" id="msd-temp-val">25 K</span>
+      </div>
+      <button id="msd-restart">Measure again</button>
+    </div>
+    <div class="readout">
+      <div><div class="rk">watched for</div><div class="rv" id="msd-time">0.0 ps</div></div>
+      <div><div class="rk">mean squared distance</div><div class="rv" id="msd-val">0.00</div></div>
+      <div><div class="rk">typical wander</div><div class="rv" id="msd-wander">0.00</div></div>
+      <div><div class="rk">verdict</div><div class="rv" id="msd-verdict">measuring</div></div>
+    </div>
+    <div class="widget-note">
+      Leave it cold, around 25 K, and the curve jumps up briefly and then lies
+      flat. The atoms are stuck, jiggling inside a cage of neighbours about half
+      an angstrom across, and the jiggling never adds up to going anywhere. Push
+      the slider to 100 K and the same curve turns into a straight climb that
+      never stops.
+      <br><br>
+      Nothing changed except one number, but the measurement now says liquid
+      instead of solid, and it says so in units an experimentalist could argue
+      with.
+    </div>
+  </div>
+
+  <h2>8. Where "add up the pairs" falls apart</h2>
+  <p>
+    Pair potentials work well for argon. For metals they fail, and the reason is
+    worth understanding, because it is the same reason machine learning became
+    useful later.
+  </p>
+  <p>
+    In a metal the outer electrons are not tied to single atoms. They are shared
+    across the whole piece of metal, like a pooled resource. So how strongly an
+    atom is held depends on <strong>how many neighbours it has in total</strong>,
+    not on each neighbour separately.
+  </p>
+  <p>
+    Add a neighbour to a lonely atom and you get a strong new bond. Add a
+    neighbour to an atom that already has eleven and you barely gain anything, the shared electrons are already spread thin. Bonds get weaker as atoms get
+    more crowded.
+  </p>
+  <p>
+    A pair potential cannot express that. It counts every bond separately, so
+    twelve neighbours must be worth exactly twelve times one neighbour. The fix
+    is the <strong>embedded atom method (EAM)</strong>: on top of the pair sum,
+    each atom gets an extra energy that depends on the total electron density it
+    sits in, and that extra term grows like a square root rather than a straight
+    line.
+  </p>
+
+  <div class="widget" id="w-coord">
+    <div class="widget-head">
+      <span class="tag">compare</span> How tightly is an atom held?
+    </div>
+    <canvas id="c-coord"></canvas>
+    <div class="controls">
+      <div class="ctl">
+        <label for="coord-n">neighbours</label>
+        <input type="range" id="coord-n" min="1" max="12" step="1" value="4">
+        <span class="val" id="coord-n-val">4</span>
+      </div>
+    </div>
+    <div class="readout">
+      <div><div class="rk">pair model says</div><div class="rv" id="coord-pair" style="color:var(--classical)">, </div></div>
+      <div><div class="rk">EAM says</div><div class="rv" id="coord-eam" style="color:var(--neural)">, </div></div>
+      <div><div class="rk">they disagree by</div><div class="rv" id="coord-diff">, </div></div>
+    </div>
+    <div class="widget-note">
+      Both models are tuned to give the <em>same</em> answer for an atom buried
+      in bulk copper, with 12 neighbours. That is the only place they are made to
+      agree. Everywhere else, surfaces, edges, cracks, defects, melting, they
+      disagree, and the pair model is the one that is wrong.
+    </div>
+  </div>
+
+  <p>
+    You can check which one is right with a real measurement. A
+    <strong>vacancy</strong> is a missing atom inside a crystal. The energy
+    needed to make one is compared below with the energy needed to boil a single
+    atom away entirely (the cohesive energy).
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>For copper</th><th class="num">vacancy energy ÷ cohesive energy</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Pair potential predicts</td><td class="num">1.0</td></tr>
+      <tr><td>EAM predicts</td><td class="num">~0.3</td></tr>
+      <tr><td><strong>Experiment</strong></td><td class="num"><strong>0.36</strong></td></tr>
+    </tbody>
+  </table>
+  <p class="note">
+    A pair potential is not slightly off here. It is wrong by roughly a factor of
+    three, and no amount of re-tuning its numbers fixes it, the shape of the
+    model is what is wrong. Adding one many-body term repairs it.
+    <br><br>
+    Copper values: cohesive energy 3.54 eV, vacancy formation energy about
+    1.28 eV.
+  </p>
+
+  <h2>9. So the whole field is one question</h2>
+  <p>
+    Every model on this page is an attempt to answer the same question: given
+    the positions of the atoms, what is the energy? Once you can answer it, the
+    loop in section 2 does the rest.
+  </p>
+  <p>The answers get better and more expensive as you go down this list:</p>
+  <table>
+    <thead><tr><th>Model</th><th>Idea</th><th>Trouble</th></tr></thead>
+    <tbody>
+      <tr><td>Pair potential</td><td>Add up every pair</td><td>Wrong for metals, cannot break bonds</td></tr>
+      <tr><td>EAM</td><td>Pairs plus a crowding term</td><td>Built for metals; must be hand-tuned per material</td></tr>
+      <tr><td>Classical force field</td><td>Springs for bonds, plus pair terms</td><td>Bonds can never break (not covered here)</td></tr>
+      <tr><td>Quantum mechanics</td><td>Actually solve for the electrons</td><td>Correct, but agonisingly slow</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Notice the pattern. Every model above is a <em>shape</em> that a human chose,
+    with a few numbers fitted to data. Choose the shape well and it works in the
+    situations you designed it for. Step outside those situations and it breaks,
+    and you cannot fix it by adjusting the numbers.
+  </p>
+  <div class="keypoint">
+    <p><b>That is the opening for machine learning.</b> Instead of a human
+    guessing the shape of the energy function, run the slow, accurate quantum
+    calculation a few thousand times, then let a flexible function learn the
+    shape from those answers.</p>
+  </div>
+
+  <a class="next" href="./ml-in-md.html">
+    <div class="k">Next · Part 2</div>
+    <div class="t">Where machine learning comes in →</div>
+    <div class="d">Why you cannot just feed atom coordinates to a neural network,
+      and what people do instead.</div>
+  </a>
+
+  <div class="foot">
+    <p>Part 1 of a two-part explainer. Continue to
+      <a href="./ml-in-md.html">Where machine learning comes in</a>, or reach me on
+      <a href="https://github.com/atomnp">GitHub</a> or by
+      <a href="mailto:neupane0403@gmail.com">email</a>.</p>
+  </div>
+
+  <div class="post-foot">
+    <div class="card">
+      <img src="../../assets/linkedin_pp.jpeg" alt="Aayush Neupane" width="52" height="52">
+      <div class="n"><b>Aayush Neupane</b><br><span>CS Researcher &amp; Engineer · MS CS, University of Kansas</span></div>
+      <a class="to-all" href="../../blog.html">All writing →</a>
+    </div>
+  </div>
+
+</div>
+<script type="module" src="./md-basics.js"></script>
+<script src="./chrome.js"></script>
+</body>
+</html>
