@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vectors, The Language of Arrows</title>
+<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<style>
+  :root{ --paper:#F6F7F8; --surface:#FFFFFF; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B; --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E; --va:#33409E; --vb:#C0479A; --res:#C0503A; --teal:#0F9E77; --ang:#C08A2E; --vio:#6A4CC0; --code-bg:#F1F2F6; --code-ink:#2B3350; --grid:rgba(20,23,28,.09); --halo:#FFFFFF; --guide:rgba(20,23,28,.34); --shadow:0 10px 30px -18px rgba(20,23,28,.28); --serif:"Charter","Newsreader","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif; --sans:"Inter","Helvetica Neue","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif; --mono:"SF Mono","JetBrains Mono","Fira Code",ui-monospace,Menlo,Consolas,monospace; }
+  @media (prefers-color-scheme:dark){:root{ --paper:#0E1116; --surface:#161A21; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2; --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6; --va:#8FA0FF; --vb:#E56DB1; --res:#F0876A; --teal:#38C9A0; --ang:#E3B85A; --vio:#B39CF5; --code-bg:#171C26; --code-ink:#C4CCE6; --grid:rgba(231,234,240,.10); --halo:#161A21; --guide:rgba(231,234,240,.30); --shadow:0 14px 34px -18px rgba(0,0,0,.7); }}
+  :root[data-theme="light"]{ --paper:#F6F7F8; --surface:#FFFFFF; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B; --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E; --va:#33409E; --vb:#C0479A; --res:#C0503A; --teal:#0F9E77; --ang:#C08A2E; --vio:#6A4CC0; --code-bg:#F1F2F6; --code-ink:#2B3350; --grid:rgba(20,23,28,.09); --halo:#FFFFFF; --guide:rgba(20,23,28,.34); --shadow:0 10px 30px -18px rgba(20,23,28,.28); }
+  :root[data-theme="dark"]{ --paper:#0E1116; --surface:#161A21; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2; --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6; --va:#8FA0FF; --vb:#E56DB1; --res:#F0876A; --teal:#38C9A0; --ang:#E3B85A; --vio:#B39CF5; --code-bg:#171C26; --code-ink:#C4CCE6; --grid:rgba(231,234,240,.10); --halo:#161A21; --guide:rgba(231,234,240,.30); --shadow:0 14px 34px -18px rgba(0,0,0,.7); }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;transition:background .35s,color .35s;}
+  .wrap{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:0 22px 120px;}
+
+  .backbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--paper) 85%,transparent);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid transparent;transition:border-color .3s;}
+  .backbar.scrolled{border-color:var(--line);}
+  .backbar-in{max-width:820px;margin:0 auto;padding:0 22px;height:56px;display:flex;align-items:center;justify-content:space-between;font-family:var(--sans);}
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:.9rem;font-weight:600;text-decoration:none;}
+  .back:hover{color:var(--accent-ink);}
+  .back svg{width:16px;height:16px;}
+  .toggle{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center;}
+  .toggle:hover{border-color:var(--accent);}
+  .toggle svg{width:17px;height:17px;}
+
+  header.hero{text-align:center;padding:44px 0 20px;}
+  .kicker{font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;font-size:.68rem;color:var(--accent-ink);}
+  h1{font-family:var(--sans);font-weight:720;font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.04;margin:.28em 0 .2em;letter-spacing:-.025em;color:var(--ink);}
+  h1 .em{font-family:var(--serif);color:var(--accent-ink);font-style:italic;font-weight:500;}
+  .sub{font-size:1.12rem;color:var(--ink-soft);max-width:64ch;margin:0 auto;}
+  .scroll-hint{margin-top:26px;font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);}
+  .scroll-hint span{display:inline-block;animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+  section{margin-top:64px;}
+  .step-no{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--accent-ink);text-transform:uppercase;}
+  h2{font-family:var(--sans);font-weight:680;font-size:clamp(1.6rem,4vw,2.2rem);line-height:1.12;margin:.18em 0 .5em;letter-spacing:-.02em;color:var(--ink);}
+  h3{font-family:var(--sans);font-weight:660;font-size:1.2rem;margin:1.5em 0 .3em;color:var(--ink);letter-spacing:-.01em;}
+  p{margin:.75em 0;color:var(--ink-2);}
+  strong{color:var(--ink);font-weight:640;}
+  .lead{font-size:1.14rem;color:var(--ink-2);}
+  .va{color:var(--va);font-weight:640} .vb{color:var(--vb);font-weight:640}
+  .resw{color:var(--res);font-weight:640} .tealw{color:var(--teal);font-weight:640}
+  .angw{color:var(--ang);font-weight:640} .viow{color:var(--vio);font-weight:640}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin:22px 0;}
+  .big-idea{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;}
+  .big-idea .label{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);}
+  .big-idea p{font-size:1.1rem;margin:.4em 0 0;}
+  .takeaway{font-family:var(--serif);font-style:italic;font-size:1.08rem;color:var(--ink);border-left:3px solid var(--teal);padding:2px 0 2px 16px;margin:18px 0;}
+  .takeaway::before{content:"\270E  ";opacity:.7;color:var(--teal);}
+
+  .def{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:0 12px 12px 0;padding:14px 18px;margin:18px 0;}
+  .def .term{font-family:var(--sans);font-weight:660;font-size:1.05rem;color:var(--ink);letter-spacing:-.01em;}
+  .def .term::before{content:"\1F3F9  ";}
+  .def p{margin:.35em 0 0;font-size:1rem;color:var(--ink-2);}
+  .sym{font-family:var(--mono);background:var(--code-bg);color:var(--code-ink);border-radius:5px;padding:1px 6px;font-size:.86em;}
+  .note{font-size:.96rem;color:var(--ink-soft);}
+  .note b{color:var(--ink);}
+
+  .ask{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--ang);border-radius:0 12px 12px 0;padding:14px 18px;margin:18px 0;}
+  .ask .q{font-family:var(--serif);font-style:italic;font-size:1.06rem;color:var(--ink);line-height:1.4;}
+  .ask .q::before{content:"\1F64B ";font-style:normal;}
+  .ask p{margin:.4em 0 0;font-size:1rem;color:var(--ink-2);}
+
+  ul.clean{list-style:none;padding-left:0;margin:.6em 0;}
+  ul.clean li{padding:7px 0 7px 30px;position:relative;border-bottom:1px dashed var(--line);color:var(--ink-2);}
+  ul.clean li::before{content:"\25B8";position:absolute;left:6px;color:var(--accent-ink);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:620px){.two-col{grid-template-columns:1fr;}}
+  .minicard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);}
+  .minicard h4{margin:.1em 0 .5em;font-family:var(--sans);font-size:.95rem;font-weight:660;letter-spacing:-.01em;}
+  .minicard.s h4{color:var(--va);} .minicard.v h4{color:var(--res);}
+  .formula{text-align:center;font-family:var(--mono);font-size:1.02rem;color:var(--ink);background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:.8em 0;line-height:1.9;overflow-x:auto;}
+
+  .widget{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);margin:26px 0;}
+  .widget canvas{display:block;width:100%;height:auto;border-radius:10px;cursor:grab;touch-action:none;}
+  .widget canvas.dragging{cursor:grabbing;}
+  .controls{display:flex;flex-wrap:wrap;gap:16px 26px;align-items:center;margin-top:16px;}
+  .ctrl{flex:1 1 200px;min-width:180px;}
+  .ctrl label{font-size:.72rem;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px;}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;background:var(--line);outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.25);}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid var(--surface);}
+  .readouts{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+  .pill{font-family:var(--mono);font-size:.9rem;background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:7px 13px;color:var(--ink-2);}
+  .pill b{color:var(--ink);}
+  .pill.big{font-size:1.1rem;padding:9px 16px;}
+  .pill.va{border-color:color-mix(in srgb,var(--va) 55%,var(--line));color:var(--va)}
+  .pill.vb{border-color:color-mix(in srgb,var(--vb) 55%,var(--line));color:var(--vb)}
+  .pill.res{border-color:color-mix(in srgb,var(--res) 55%,var(--line));color:var(--res)}
+  .pill.teal{border-color:color-mix(in srgb,var(--teal) 55%,var(--line));color:var(--teal)}
+  .pill.ang{border-color:color-mix(in srgb,var(--ang) 55%,var(--line));color:var(--ang)}
+  .pill.vio{border-color:color-mix(in srgb,var(--vio) 55%,var(--line));color:var(--vio)}
+  .hint{font-family:var(--sans);font-style:italic;font-size:.88rem;color:var(--ink-soft);margin-top:12px;}
+  .btn{font-family:var(--sans);font-size:.85rem;font-weight:600;background:var(--accent);color:#fff;border:none;border-radius:9px;padding:9px 16px;cursor:pointer;transition:transform .12s;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn.alt{background:var(--teal);}
+  .btn.on{background:var(--res);color:#fff;}
+  .btn.ghost{background:var(--surface);color:var(--ink-2);border:1px solid var(--line);}
+  :root[data-theme="dark"] .btn:not(.ghost){color:#0E1116;}
+  @media(prefers-color-scheme:dark){.btn:not(.ghost){color:#0E1116;}}
+  :root[data-theme="dark"] .btn.ghost{color:var(--ink-2);}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;margin:14px 0 0;}
+  .legend .k{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--ink-soft);}
+  .legend .sw{width:24px;height:5px;border-radius:3px;}
+
+  table.simple{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.84rem;margin:8px 0;}
+  table.simple th,table.simple td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;color:var(--ink-2);}
+  table.simple th{background:var(--paper);color:var(--ink);}
+
+  .footer{text-align:center;margin-top:80px;color:var(--ink-soft);font-size:.95rem;}
+  .footer .big{font-family:var(--serif);font-size:1.5rem;color:var(--ink);font-weight:500;font-style:italic;}
+  .divider{height:1px;background:var(--line);margin:6px 0;}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.scroll-hint span{animation:none}}
+</style>
+</head>
+<body>
+<div class="backbar" id="backbar">
+  <div class="backbar-in">
+    <a class="back" href="/tutorials/math/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Math</a>
+    <button class="toggle" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
+  </div>
+</div>
+<div class="wrap">
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="kicker">Mathematics · Built to be Seen, Not Just Read</div>
+    <h1>The Language of <span class="em">Arrows</span></h1>
+    <p class="sub">A vector is just an arrow: a <b>size</b> and a <b>direction</b>. That one picture explains how to add
+       journeys, split forces, measure angles, and find areas, without memorising anything. Everything below is
+       draggable. And every "small" question you were afraid to ask in class? We answer it here.</p>
+    <div class="scroll-hint">start from zero <span>↓</span></div>
+
+    <div class="legend">
+      <div class="k"><span class="sw" style="background:var(--va)"></span>vector a</div>
+      <div class="k"><span class="sw" style="background:var(--vb)"></span>vector b</div>
+      <div class="k"><span class="sw" style="background:var(--res)"></span>result</div>
+      <div class="k"><span class="sw" style="background:var(--teal)"></span>unit vector / special</div>
+      <div class="k"><span class="sw" style="background:var(--ang)"></span>angle</div>
+      <div class="k"><span class="sw" style="background:var(--vio)"></span>scaling / area</div>
+    </div>
+    <p class="hint" style="text-align:center">Keep this color code in mind, it's used everywhere below.</p>
+  </header>
+
+  <!-- ===================== 1. WHAT IS A VECTOR ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 1 · The idea</div>
+    <h2>Some quantities need a direction</h2>
+    <p class="lead">Say your friend calls from Kathmandu: <em>"I walked 5 km today."</em> You know how <b>much</b> she
+       walked, but you have no idea <b>where</b> she ended up. Toward Bhaktapur? Toward Kirtipur? Round and round
+       Tundikhel? The number 5 alone is not the full story.</p>
+    <p>Now compare: <em>"I walked 5 km toward Bhaktapur."</em> That's complete. Size <b>and</b> direction. Quantities
+       like this, where direction is part of the information, are called <b>vectors</b>. Quantities that are just a
+       size are called <b>scalars</b>.</p>
+
+    <div class="two-col">
+      <div class="minicard s">
+        <h4>Scalars, size only</h4>
+        <ul class="clean" style="font-size:.95rem">
+          <li>temperature, 25 °C</li>
+          <li>mass, 60 kg</li>
+          <li>time, 45 minutes</li>
+          <li>distance, 5 km</li>
+          <li>speed, 40 km/h</li>
+        </ul>
+      </div>
+      <div class="minicard v">
+        <h4>Vectors, size and direction</h4>
+        <ul class="clean" style="font-size:.95rem">
+          <li>displacement, 5 km <b>toward Bhaktapur</b></li>
+          <li>velocity, 40 km/h <b>heading north</b></li>
+          <li>force, a 20 N push <b>to the right</b></li>
+          <li>weight, pull of gravity <b>straight down</b></li>
+          <li>wind, 30 km/h <b>from the mountains</b></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="def">
+      <div class="term">Vector &amp; scalar</div>
+      <p>A <b>vector</b> is a quantity with both a <b>magnitude</b> (size) and a <b>direction</b>. A <b>scalar</b> is a
+         quantity with magnitude only. We draw a vector as an <b>arrow</b>: its length shows the magnitude, and the way
+         it points shows the direction.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Notation you'll meet</div>
+      <p>In books, vectors are written in bold (<b>a</b>) or with a small arrow on top
+         (<span class="sym">a&#8407;</span>). An arrow from point A to point B is written
+         <span class="sym">AB&#8407;</span>, A is the <b>tail</b> (start), B is the <b>head</b> or <b>tip</b> (the
+         pointed end). The magnitude of <span class="sym">a&#8407;</span> is written
+         <span class="sym">|a&#8407;|</span> or just <span class="sym">a</span> (plain, not bold).</p>
+    </div>
+
+    <p>Drag the arrow's tip below and get a feel for the two ingredients, length and direction:</p>
+
+    <div class="widget">
+      <canvas id="cv-arrow" data-w="760" data-h="420"></canvas>
+      <div class="readouts">
+        <div class="pill res big">magnitude |a| = <b id="ar-mag">3.6</b></div>
+        <div class="pill ang">direction = <b id="ar-dir">34°</b> from east, anticlockwise</div>
+      </div>
+      <p class="hint">↑ Drag the coral tip. Longer arrow = bigger magnitude. Turning it changes only the direction.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Temperature can be −5. Negative! Doesn't that make it a vector?"</div>
+      <p>Lovely question, and no. The minus sign in −5 °C means "below zero," a position on a scale. It is not a
+         direction <em>in space</em>. You can't point your finger along "−5 degrees." A vector's direction is a real
+         spatial direction, north, up, toward the door. Sign ≠ direction. Temperature stays a scalar.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Distance and displacement, aren't they the same thing?"</div>
+      <p>Walk all the way around Rani Pokhari and stop where you started. Your <b>distance</b> (path length, a scalar)
+         might be 1 km. Your <b>displacement</b> (start-to-end arrow, a vector) is <b>zero</b>, you got nowhere! Distance
+         cares about the journey; displacement only cares about start and finish, and which way.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Speed vs velocity, same confusion?"</div>
+      <p>Same pattern exactly. <b>Speed</b> (scalar) is the number on the speedometer: 40 km/h. <b>Velocity</b> (vector)
+         is 40 km/h <em>heading north</em>. A bus going around a roundabout at a steady 40 km/h has constant speed but
+         constantly changing velocity, because its direction keeps changing.</p>
+    </div>
+    <p class="takeaway">Vector = magnitude + direction, drawn as an arrow. Scalar = just a number with a unit.</p>
+  </section>
+
+  <!-- ===================== 2. THE VECTOR FAMILY ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 2 · Meet the family</div>
+    <h2>When are two arrows "the same vector"?</h2>
+    <p class="lead">Here is the single most important, and most surprising, rule about vectors, and it's the one
+       students silently get wrong for months: <strong>a vector does not have a location.</strong> Only its length and
+       its direction matter. Where you happen to draw it is not part of the vector.</p>
+
+    <div class="def">
+      <div class="term">Equal vectors</div>
+      <p>Two vectors are <b>equal</b> if they have the same magnitude <b>and</b> the same direction, full stop. They may
+         be drawn in different corners of the page; they are still the same vector. Think of "3 steps east": whether you
+         take those steps in Pokhara or in Kathmandu, the instruction is identical.</p>
+    </div>
+
+    <p>Try it with your hands. Below, the <span class="tealw">teal arrow</span> is fixed. Drag the
+       <span class="resw">coral arrow's tip</span> until the two are equal, same length, same direction, even though
+       they live in different places:</p>
+
+    <div class="widget">
+      <canvas id="cv-equal" data-w="760" data-h="420"></canvas>
+      <div class="btnrow">
+        <button class="btn ghost" id="eq-move">⇄ move my arrow to a new home</button>
+      </div>
+      <div class="readouts">
+        <div class="pill teal">target: <b id="eq-target">2.0 east, 1.5 north</b></div>
+        <div class="pill res">yours: <b id="eq-yours">–</b></div>
+        <div class="pill big" id="eq-state">not equal yet, keep adjusting…</div>
+      </div>
+      <p class="hint">↑ When they match, press "move my arrow", notice the vector doesn't change at all when its home
+         changes. That's the whole lesson.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"If I move an arrow somewhere else, isn't it a different arrow now?"</div>
+      <p>It's a different <em>drawing</em>, but the same <em>vector</em>, the way "3 steps east" written on two
+         different pages is still the same instruction. A vector is the instruction, not the ink. (Mathematicians say
+         vectors are "free", free to slide anywhere, as long as you don't stretch or turn them.)</p>
+    </div>
+
+    <p>Now the rest of the family, small definitions you'll use constantly:</p>
+
+    <div class="def">
+      <div class="term">Zero vector <span class="sym">0&#8407;</span></div>
+      <p>The vector with magnitude 0, the "instruction" to not move at all. It's the only vector with <b>no
+         direction</b> (an arrow of zero length points nowhere). It plays the same role as the number 0:
+         <span class="sym">a&#8407; + 0&#8407; = a&#8407;</span>.</p>
+    </div>
+    <div class="ask">
+      <div class="q">"A vector with no direction? Isn't that against the definition? Why do we even need it?"</div>
+      <p>Same reason we need the number 0. What is 5 − 5? What is your displacement after walking around Rani Pokhari?
+         The answers need a name. Without a zero vector, subtraction breaks. It's a strange member of the family, but
+         the family doesn't work without it.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Negative of a vector <span class="sym">−a&#8407;</span></div>
+      <p>Same magnitude, exactly <b>opposite</b> direction. If <span class="sym">a&#8407;</span> is "5 km toward
+         Bhaktapur," then <span class="sym">−a&#8407;</span> is "5 km away from Bhaktapur." Adding them gives the zero
+         vector: you go and come back, net movement zero.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Unit vector</div>
+      <p>Any vector whose magnitude is exactly <b>1</b>. It carries pure direction with no size information, a
+         "direction-only" vector. The unit vector along <span class="sym">a&#8407;</span> is written
+         <span class="sym">â</span> (read "a-hat"). Step 3 shows how to make one.</p>
+    </div>
+    <div class="ask">
+      <div class="q">"Does a unit vector have to point along the x-axis or something?"</div>
+      <p>No, it can point <em>anywhere</em>. "Unit" is only about the length being 1. There are infinitely many unit
+         vectors, one for every possible direction, and together their tips trace out a circle of radius 1.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Parallel (collinear) vectors</div>
+      <p>Vectors that point along the <b>same line</b>, either the same direction or exactly opposite. One is always a
+         stretched/flipped copy of the other: <span class="sym">b&#8407; = k·a&#8407;</span> for some number k. (Same
+         direction if k &gt; 0, opposite if k &lt; 0.)</p>
+    </div>
+    <p class="takeaway">A vector has no home. Same length + same direction = same vector, wherever it's drawn.</p>
+  </section>
+
+  <!-- ===================== 3. COMPONENTS ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 3 · The master skill</div>
+    <h2>Components: every arrow is "some east + some north"</h2>
+    <p class="lead">Kathmandu's streets don't run diagonally for long, and neither does vector arithmetic. The trick
+       that makes everything computable: describe any arrow by <b>how far it goes across</b> and <b>how far it goes
+       up</b>. Two plain numbers replace one slanted arrow.</p>
+
+    <div class="def">
+      <div class="term">The standard unit vectors <span class="sym">î</span> and <span class="sym">ĵ</span></div>
+      <p><span class="sym">î</span> ("i-hat") is the unit vector pointing along the positive x-axis (east).
+         <span class="sym">ĵ</span> ("j-hat") points along the positive y-axis (north). They are the official
+         "one step east" and "one step north." Any 2-D vector can be built from them:</p>
+      <p class="formula" style="margin:.4em 0">a&#8407; = a₁î + a₂ĵ &nbsp;&nbsp; means &nbsp;&nbsp; "a₁ steps east, then a₂ steps north"</p>
+      <p>The numbers a₁ and a₂ are the <b>components</b> of the vector. (In 3-D there's a third friend,
+         <span class="sym">k̂</span>, pointing up out of the page, and vectors become a₁î + a₂ĵ + a₃k̂, everything in
+         this tutorial extends by simply carrying one more component along.)</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Magnitude from components</div>
+      <p>The vector, its east-part and its north-part form a right triangle, so Pythagoras gives the length:</p>
+      <p class="formula" style="margin:.4em 0">|a&#8407;| = √(a₁² + a₂²)</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Making a unit vector (normalising)</div>
+      <p>To get the pure direction of <span class="sym">a&#8407;</span>, divide the vector by its own length:</p>
+      <p class="formula" style="margin:.4em 0">â = a&#8407; / |a&#8407;|</p>
+      <p>Same direction, length shrunk (or grown) to exactly 1. Example: a&#8407; = 3î + 4ĵ has |a&#8407;| = 5, so
+         â = (3/5)î + (4/5)ĵ = 0.6î + 0.8ĵ. Check: √(0.36 + 0.64) = √1 = 1 ✓.</p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-comp" data-w="760" data-h="440"></canvas>
+      <div class="readouts">
+        <div class="pill res big">a&#8407; = <b id="cp-vec">3.0î + 2.0ĵ</b></div>
+        <div class="pill">|a&#8407;| = <b id="cp-mag">3.6</b></div>
+        <div class="pill teal">â = <b id="cp-unit">0.83î + 0.55ĵ</b> (length 1)</div>
+      </div>
+      <p class="hint">↑ Drag the tip. Blue = east-part, magenta = north-part, and the little teal arrow is â, it hugs
+         the unit circle no matter how long you stretch a.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Components can be negative. But you said magnitude is always positive. Contradiction?"</div>
+      <p>No contradiction, they're answering different questions. A component answers "which way along <em>this
+         axis</em>, and how far?", so −3 for the east-component means "3 steps <em>west</em>." The sign IS the direction
+         along that axis. Magnitude answers "how long is the whole arrow?", and lengths are never negative.
+         |−3î| = 3, just as a 3-metre rope is 3 metres long whichever way it lies.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Is (3, 2) a point or a vector? I've seen both!"</div>
+      <p>Both notations exist, and yes, it's confusing. (3, 2) the <b>point</b> is a location on the map. 3î + 2ĵ the
+         <b>vector</b> is the instruction "3 east, 2 north", which, if you start at the origin, <em>lands</em> on that
+         point. They're deeply connected (Step 5 makes the connection official), but keep the roles straight: point =
+         place, vector = movement.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Why the hat on î and ĵ?"</div>
+      <p>The hat (ˆ) is the uniform worn by unit vectors, any vector wearing a hat has length exactly 1. î and ĵ are
+         just the two most famous hat-wearers.</p>
+    </div>
+    <p class="takeaway">Any vector = (east number)·î + (north number)·ĵ. Length by Pythagoras. Divide by the length to get the pure direction â.</p>
+  </section>
+
+  <!-- ===================== 4. ADD, SUBTRACT, SCALE ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 4 · Arithmetic with arrows</div>
+    <h2>Adding journeys, not numbers</h2>
+    <p class="lead">What should "adding two vectors" even mean? Think of them as journeys. Walk journey
+       <span class="va">a</span>, then from where you stop, walk journey <span class="vb">b</span>. The sum
+       <span class="resw">a + b</span> is the single straight journey from your original start to your final stop.</p>
+
+    <div class="def">
+      <div class="term">Triangle law (tip-to-tail) &amp; parallelogram law</div>
+      <p>Place b's tail on a's tip; then <span class="sym">a&#8407; + b&#8407;</span> runs from a's tail to b's tip,
+         that's the <b>triangle law</b>. Do it in the other order (a after b) and you trace the other half of a
+         parallelogram, landing at the same spot, the <b>parallelogram law</b>. Both are the same idea drawn twice.
+         In components it's beautifully boring: <b>add the east-parts, add the north-parts.</b></p>
+      <p class="formula" style="margin:.4em 0">(a₁î + a₂ĵ) + (b₁î + b₂ĵ) = (a₁+b₁)î + (a₂+b₂)ĵ</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Subtraction</div>
+      <p>Subtracting is adding the reverse: <span class="sym">a&#8407; − b&#8407; = a&#8407; + (−b&#8407;)</span>, walk
+         a, then walk b <em>backwards</em>. Handy picture: if a and b start from the same point,
+         <span class="sym">a&#8407; − b&#8407;</span> is the arrow <b>from b's tip to a's tip</b>.</p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-addsub" data-w="760" data-h="440"></canvas>
+      <div class="btnrow">
+        <button class="btn on" id="as-add">show a + b</button>
+        <button class="btn ghost" id="as-sub">show a − b</button>
+      </div>
+      <div class="readouts">
+        <div class="pill va">a = <b id="as-a">–</b></div>
+        <div class="pill vb">b = <b id="as-b">–</b></div>
+        <div class="pill res big" id="as-reslabel">a + b = <b id="as-res">–</b></div>
+      </div>
+      <p class="hint" id="as-hint">↑ Drag the blue and magenta tips. The dashed lines complete the parallelogram, both
+         walking orders reach the same coral destination.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Why can't I just add the lengths? 3 + 4 should be 7!"</div>
+      <p>Try it on foot: walk 3 km east, then 4 km north. Are you 7 km from home? No, you're 5 km away (Pythagoras:
+         √(9+16) = 5). The two journeys partly "waste" each other by pointing different ways. Lengths only add
+         straightforwardly when the vectors point the <b>same</b> direction. In the widget above, line a and b up and
+         watch |a + b| finally equal |a| + |b|.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"In tip-to-tail, which vector goes first?"</div>
+      <p>Either! a + b = b + a, that's exactly what the parallelogram picture proves. The two routes are the two ways
+         around the parallelogram, and they end at the same corner.</p>
+    </div>
+
+    <h3>Scaling: stretching and flipping</h3>
+    <p>Multiplying a vector by an ordinary number k (a scalar, hence "scalar multiplication") stretches it. k = 2
+       doubles it. k = ½ halves it. And a <b>negative</b> k flips it around, then stretches: −2a is twice as long,
+       pointing exactly backwards. Slide k below and watch, especially what happens as k passes through zero:</p>
+
+    <div class="widget">
+      <canvas id="cv-scale" data-w="760" data-h="380"></canvas>
+      <div class="controls">
+        <div class="ctrl"><label>the scalar k (drag through negative!)</label><input id="sc-k" type="range" min="-2" max="2" step="0.05" value="1.5"></div>
+      </div>
+      <div class="readouts">
+        <div class="pill va">a = <b>2.0î + 1.0ĵ</b></div>
+        <div class="pill vio big">k·a = <b id="sc-out">3.0î + 1.5ĵ</b></div>
+      </div>
+      <p class="hint">↑ k &gt; 0 stretches, k between 0 and 1 shrinks, k = 0 collapses to the zero vector, k &lt; 0 flips
+         the direction. Notice −1·a is exactly the "negative vector" from Step 2.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Multiplying a vector by a number is allowed. So can I multiply a vector by a vector?"</div>
+      <p>Ah, <em>the</em> question. Not the way you'd guess, and the honest answer takes two whole sections. Vectors
+         have not one but <b>two</b> famous multiplications, invented for two different jobs, and neither works like
+         number-times-number. That's Steps 6 and 7, the best part of the tutorial.</p>
+    </div>
+    <p class="takeaway">Add = tip-to-tail (components just add). Subtract = add the reverse. Scale by k = stretch; negative k also flips.</p>
+  </section>
+
+  <!-- ===================== 5. POSITION VECTORS ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 5 · Points join the game</div>
+    <h2>Position vectors: turning places into arrows</h2>
+    <p class="lead">So far, points (places) and vectors (movements) have been different creatures. Here's the bridge
+       between them, and it makes geometry problems solvable by pure arithmetic.</p>
+
+    <div class="def">
+      <div class="term">Position vector</div>
+      <p>Fix an origin O (any agreed reference point, the city centre, say). The <b>position vector</b> of a point A is
+         the arrow <span class="sym">OA&#8407;</span> from the origin to A, usually written
+         <span class="sym">a&#8407;</span>. It's the movement instruction "how to get to A from O." Every point now has
+         its own personal vector, and vice versa.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">The most useful little formula: <span class="sym">AB&#8407; = b&#8407; − a&#8407;</span></div>
+      <p>The arrow from point A to point B is <b>destination minus start</b>. Why? To travel O→A→B along vectors:
+         going backwards along a then forwards along b takes you from A to B, so
+         <span class="sym">AB&#8407; = −a&#8407; + b&#8407; = b&#8407; − a&#8407;</span>.</p>
+    </div>
+
+    <div class="def">
+      <div class="term">Midpoint</div>
+      <p>The midpoint M of A and B has position vector <span class="sym">m&#8407; = (a&#8407; + b&#8407;)/2</span>,
+         the average of the two position vectors, component by component. (Halfway between the two addresses.)</p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-pos" data-w="760" data-h="440"></canvas>
+      <div class="readouts">
+        <div class="pill va">a&#8407; (to A) = <b id="po-a">–</b></div>
+        <div class="pill vb">b&#8407; (to B) = <b id="po-b">–</b></div>
+        <div class="pill res big">AB&#8407; = b&#8407; − a&#8407; = <b id="po-ab">–</b></div>
+        <div class="pill teal">midpoint m&#8407; = <b id="po-m">–</b></div>
+      </div>
+      <p class="hint">↑ Drag points A and B. The coral arrow always equals "b minus a", check the components yourself.
+         The teal dot faithfully stays halfway.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"A point is a dot. An arrow is a movement. How can a point BE a vector?"</div>
+      <p>It can't, quite, and your instinct is right. The position vector isn't the point; it's the <b>trip to</b> the
+         point from the agreed origin. Once everyone agrees on the origin, "the point A" and "the trip to A" carry the
+         same information, so we happily switch between them. The origin is the handshake that makes it work.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Why b − a and not a − b? I always mix them up."</div>
+      <p>Remember it on the number line first. From 2 to 5, how far do you move? 5 − 2 = 3, forwards. From 5 to 2?
+         2 − 5 = −3, backwards. It's always <b>destination minus start</b>, vectors just do this in two directions at
+         once. And a − b would be the reverse arrow, BA&#8407;.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"What if someone picks a different origin? Does everything break?"</div>
+      <p>Beautiful question. Position vectors <em>do</em> change (the trip to A from Patan differs from the trip from
+         Thamel). But look at AB&#8407; = b&#8407; − a&#8407;: shifting the origin adds the same extra trip to both a and
+         b, and the subtraction <b>cancels it out</b>. Arrows between actual points don't care where the origin is.
+         The physics-flavoured facts survive; only the bookkeeping changes.</p>
+    </div>
+    <p class="takeaway">Point A ↔ arrow from origin to A. From A to B: destination minus start, b − a. Midpoint: the average.</p>
+  </section>
+
+  <!-- ===================== 6. DOT PRODUCT ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 6 · Multiplying vectors, part one</div>
+    <h2>The dot product: how much do two vectors agree?</h2>
+    <p class="lead">Time to answer Step 4's cliffhanger. The first vector multiplication was invented to answer a very
+       physical question: <em>how much does one vector help another?</em> If you pull a suitcase with a slanted handle,
+       only the part of your pull along the floor moves the suitcase; the upward part is wasted. The dot product
+       measures the <b>useful, agreeing part</b>.</p>
+
+    <div class="def">
+      <div class="term">Dot product (scalar product)</div>
+      <p>Two equivalent formulas, one geometric, one for computing:</p>
+      <p class="formula" style="margin:.4em 0">a&#8407; · b&#8407; = |a&#8407;| |b&#8407;| cos θ &nbsp;&nbsp;=&nbsp;&nbsp; a₁b₁ + a₂b₂</p>
+      <p>where θ is the angle between them (tails together). The answer is a plain <b>number</b> (a scalar, hence the
+         name). Read it as: (length of a) × (length of b's shadow on a). The cos θ is the "agreement factor": 1 when
+         aligned, 0 when perpendicular, −1 when opposite.</p>
+    </div>
+
+    <p>Drag the two vectors below. Watch the <span class="tealw">teal shadow</span>, that's b's projection onto a,
+       and watch the dot product respond:</p>
+
+    <div class="widget">
+      <canvas id="cv-dot" data-w="760" data-h="440"></canvas>
+      <div class="readouts">
+        <div class="pill ang">angle θ = <b id="dt-th">–</b></div>
+        <div class="pill res big">a·b = a₁b₁ + a₂b₂ = <b id="dt-dot">–</b></div>
+        <div class="pill teal" id="dt-state">–</div>
+      </div>
+      <p class="hint">↑ Make them perpendicular and watch the dot product hit exactly 0, the shadow vanishes. Push past
+         90° and it goes negative: b now leans <em>against</em> a.</p>
+    </div>
+
+    <p>Three readings of the same number:</p>
+    <ul class="clean">
+      <li><b>Positive</b> dot product → the vectors broadly agree (θ &lt; 90°). Your pull helps the suitcase forward.</li>
+      <li><b>Zero</b> → exactly perpendicular (cos 90° = 0). No cooperation at all. This is the most-used fact in all of
+          vector maths: <strong>perpendicular ⟺ dot product = 0</strong>.</li>
+      <li><b>Negative</b> → they broadly oppose (θ &gt; 90°). You're pulling partly backwards.</li>
+    </ul>
+
+    <div class="card">
+      <h3 style="margin-top:0">The dot product's best trick: finding angles</h3>
+      <p style="margin:.3em 0">Flip the geometric formula around and the angle between any two vectors pops out:</p>
+      <p class="formula">cos θ = (a&#8407; · b&#8407;) / (|a&#8407;| |b&#8407;|)</p>
+      <p style="margin:.3em 0">Example: a = 3î + ĵ and b = î + 2ĵ. Dot: 3·1 + 1·2 = 5. Lengths: √10 and √5. So
+         cos θ = 5/√50 = 1/√2, giving θ = <b>45°</b>. No protractor, no drawing, the components knew the angle all
+         along. (Set the widget to roughly these vectors and check!)</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Why is the answer a number and not a vector? Multiplication should give the same kind of thing back!"</div>
+      <p>Because of the question it answers. "How much do these agree?" is an <em>amount</em>, not a direction, like a
+         score, not an arrow. (Fun fact: this is exactly why complex-number multiplication had to be invented separately
+, but that's another tutorial.) When the answer genuinely needs a direction, we use the other product, in
+         Step 7.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"What is a vector dotted with itself?"</div>
+      <p>The angle with itself is 0°, cos 0 = 1, so a&#8407;·a&#8407; = |a&#8407;|², the length squared. In components:
+         a₁² + a₂², which is Pythagoras again. A tidy freebie: dot any vector with itself to find its length.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Who ordered the cos θ? Why cosine specifically?"</div>
+      <p>The shadow! Drop a perpendicular from b's tip onto a's line: basic trigonometry says the shadow's length is
+         |b| cos θ. The dot product is |a| × (that shadow). Cosine isn't a decree from a textbook, it's just what
+         shadows do.</p>
+    </div>
+    <p class="takeaway">a·b = |a||b|cos θ = a₁b₁ + a₂b₂, a number measuring agreement. Zero means perpendicular. It also finds angles.</p>
+  </section>
+
+  <!-- ===================== 7. CROSS PRODUCT ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 7 · Multiplying vectors, part two</div>
+    <h2>The cross product: how much do two vectors spread apart?</h2>
+    <p class="lead">The dot product loved alignment. The second multiplication is its opposite twin: it measures how
+       much two vectors <b>spread apart</b>, and its favourite picture is <em>area</em>. Two vectors, tails together,
+       frame a parallelogram. The cross product's size is exactly that parallelogram's area.</p>
+
+    <div class="def">
+      <div class="term">Cross product (vector product)</div>
+      <p class="formula" style="margin:.4em 0">|a&#8407; × b&#8407;| = |a&#8407;| |b&#8407;| sin θ &nbsp; = &nbsp; area of the parallelogram</p>
+      <p>In 2-D components this area computes as <span class="sym">a₁b₂ − a₂b₁</span> (up to sign). The result of a
+         cross product is a <b>vector</b>: its magnitude is the area, and its direction is <b>perpendicular to both</b>
+         a and b, in 2-D, straight out of (or into) the page, given by the right-hand rule below. The triangle with
+         sides a and b has half that area: ½|a&#8407; × b&#8407;|.</p>
+    </div>
+
+    <div class="widget">
+      <canvas id="cv-cross" data-w="760" data-h="440"></canvas>
+      <div class="readouts">
+        <div class="pill ang">angle θ = <b id="cr-th">–</b></div>
+        <div class="pill vio big">area = |a×b| = <b id="cr-area">–</b></div>
+        <div class="pill" id="cr-dir">direction:, </div>
+      </div>
+      <p class="hint">↑ The shaded parallelogram IS the cross product's magnitude. Make the vectors perpendicular for
+         maximum area; drag them parallel and watch the area, and the cross product, collapse to zero.</p>
+    </div>
+
+    <p>Notice the perfect symmetry with Step 6:</p>
+    <div class="two-col">
+      <div class="minicard s">
+        <h4>Dot · (cos θ)</h4>
+        <p style="margin:.2em 0;font-size:.97rem">Biggest when <b>aligned</b> (θ = 0°).<br>Zero when <b>perpendicular</b>.<br>Answer: a number (agreement).</p>
+      </div>
+      <div class="minicard v">
+        <h4>Cross × (sin θ)</h4>
+        <p style="margin:.2em 0;font-size:.97rem">Zero when <b>aligned</b> (no area!).<br>Biggest when <b>perpendicular</b>.<br>Answer: a vector (area + turning direction).</p>
+      </div>
+    </div>
+    <p>So the two products split the work: dot detects <b>perpendicular</b> (= 0 there), cross detects
+       <b>parallel</b> (= 0 there). Between them, any angle question is covered.</p>
+
+    <div class="def">
+      <div class="term">The right-hand rule</div>
+      <p>Point your right hand's fingers along a, curl them toward b (through the smaller angle): your thumb shows the
+         direction of a × b. Curling from a to b anticlockwise on the page → thumb points <b>out of the page</b> at you
+         (drawn ⊙, like an arrow tip). Clockwise → <b>into the page</b> (drawn ⊗, like arrow feathers). This is also
+         why order matters: <span class="sym">a × b = −(b × a)</span>, swap them and your curl reverses.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Out of the page?? That sounds made up. Why does the answer leave the paper?"</div>
+      <p>Fair suspicion, here's the honest reason. The cross product describes a <em>turning</em> (a on its way toward
+         b). A turning in this page can go two ways: anticlockwise or clockwise. What single arrow could label those two
+         choices without unfairly favouring some direction inside the page? Only the perpendicular: out for one,
+         in for the other. It's the same trick as a screw or a fan: the spin happens in a flat circle, but the screw
+         advances along the axis. The perpendicular is the only honest home for the answer.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"Why sin now? Cos was for dot!"</div>
+      <p>Look at the parallelogram: its area is base × height = |a| × (|b| sin θ), the height is the part of b
+         <em>perpendicular</em> to a, and perpendicular parts come with sine. Dot wanted b's shadow <em>along</em> a
+         (cosine); cross wants b's reach <em>away from</em> a (sine). Each formula is just the geometry it measures.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q">"What is a × a?"</div>
+      <p>Zero vector. A "parallelogram" made of one vector twice is a flat line segment, no area. Same for any two
+         parallel vectors: that's the "cross detects parallel" superpower.</p>
+    </div>
+
+    <p class="note"><b>Where you'll meet these in physics:</b> the dot product computes <b>work</b> (W = F·d, only the
+       force along the movement counts), and the cross product computes <b>torque</b> and magnetic forces (turning
+       effects). The two tutorials, this one and the physics vectors one, meet exactly here.</p>
+    <p class="takeaway">|a×b| = |a||b|sin θ = the parallelogram's area; direction by the right-hand rule. Zero ⟺ parallel.</p>
+  </section>
+
+  <!-- ===================== 8. UNDERSTANDING CHECKS ===================== -->
+  <section class="reveal">
+    <div class="step-no">Step 8 · Try the ideas out</div>
+    <h2>Three little challenges (with full answers)</h2>
+    <p class="lead">Not exam drills, just three chances to feel the ideas working. Try each one in your head or on
+       paper first, then read the walkthrough. The widgets above are your laboratory: set them up and verify!</p>
+
+    <div class="card">
+      <h3 style="margin-top:0">1 · The angle without a protractor</h3>
+      <p style="margin:.3em 0"><b>Question:</b> what's the angle between a = 3î + ĵ and b = î + 2ĵ?</p>
+      <p style="margin:.3em 0"><b>Walkthrough:</b> dot product first: a·b = (3)(1) + (1)(2) = 5. Lengths:
+         |a| = √(9+1) = √10, |b| = √(1+4) = √5. Then cos θ = 5 / (√10·√5) = 5/√50 = 1/√2 → θ = <b>45°</b>.
+         Verify on the Step 6 widget: drag a and b to roughly these components and read the angle pill.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">2 · Prove it's a right angle, no drawing needed</h3>
+      <p style="margin:.3em 0"><b>Question:</b> u = 2î + ĵ and v = −î + 2ĵ. Perpendicular or not?</p>
+      <p style="margin:.3em 0"><b>Walkthrough:</b> u·v = (2)(−1) + (1)(2) = −2 + 2 = <b>0</b>. Zero dot product =
+         perpendicular, guaranteed, no picture required. (Notice how the components did it: swap them and flip one
+         sign, that's the general recipe for building a perpendicular in 2-D.)</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">3 · The area of a triangle from its corners</h3>
+      <p style="margin:.3em 0"><b>Question:</b> a triangle has corners A(0, 0), B(4, 1), C(1, 3). Its area?</p>
+      <p style="margin:.3em 0"><b>Walkthrough:</b> make two side vectors from A (Step 5!): AB&#8407; = 4î + ĵ and
+         AC&#8407; = î + 3ĵ. Cross product size: |4·3 − 1·1| = 11, that's the parallelogram; the triangle is half:
+         area = <b>5.5</b>. Geometry became two multiplications and a subtraction. That's the whole point of vectors.</p>
+    </div>
+  </section>
+
+  <!-- ===================== RECAP ===================== -->
+  <section class="reveal">
+    <div class="step-no">Putting it together</div>
+    <h2>Everything on one page</h2>
+    <div class="card">
+      <ul class="clean">
+        <li><strong>Vector</strong> = magnitude + direction, drawn as an arrow; location is not part of it.</li>
+        <li><strong>Components:</strong> every vector = a₁î + a₂ĵ; length by Pythagoras; â = a/|a| for pure direction.</li>
+        <li><strong>Add</strong> tip-to-tail (components just add); subtract = add the reverse; k·a stretches (negative k flips).</li>
+        <li><strong>Position vectors</strong> turn points into arrows; AB&#8407; = b − a; midpoint = average.</li>
+        <li><strong>Dot product</strong> a·b = |a||b|cos θ = a₁b₁ + a₂b₂, agreement; zero ⟺ perpendicular; finds angles.</li>
+        <li><strong>Cross product</strong> |a×b| = |a||b|sin θ, the parallelogram's area; zero ⟺ parallel; direction by right hand.</li>
+      </ul>
+    </div>
+
+    <h3>Glossary, every term in one place</h3>
+    <div class="card">
+      <table class="simple">
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td>scalar</td><td>quantity with size only (mass, time, temperature, speed, distance)</td></tr>
+        <tr><td>vector</td><td>quantity with size and direction (displacement, velocity, force)</td></tr>
+        <tr><td>magnitude |a&#8407;|</td><td>the vector's length; never negative; √(a₁² + a₂²)</td></tr>
+        <tr><td>tail / head (tip)</td><td>where the arrow starts / the pointed end where it ends</td></tr>
+        <tr><td>equal vectors</td><td>same magnitude and same direction, location irrelevant</td></tr>
+        <tr><td>zero vector 0&#8407;</td><td>magnitude 0, no direction; the "don't move" instruction</td></tr>
+        <tr><td>negative −a&#8407;</td><td>same magnitude, opposite direction</td></tr>
+        <tr><td>unit vector â</td><td>any vector of length exactly 1; â = a&#8407;/|a&#8407;|</td></tr>
+        <tr><td>î, ĵ, k̂</td><td>unit vectors along the x, y, z axes ("one step east / north / up")</td></tr>
+        <tr><td>components a₁, a₂</td><td>the east-part and north-part; signs carry direction along each axis</td></tr>
+        <tr><td>parallel / collinear</td><td>along one line; b&#8407; = k·a&#8407; for some number k</td></tr>
+        <tr><td>triangle law</td><td>tip-to-tail addition: a then b, sum from start to finish</td></tr>
+        <tr><td>parallelogram law</td><td>same addition drawn both orders, same destination</td></tr>
+        <tr><td>scalar multiplication</td><td>k·a&#8407;: stretch by |k|, flip if k &lt; 0</td></tr>
+        <tr><td>position vector</td><td>arrow from the origin to a point; the "trip to" the point</td></tr>
+        <tr><td>AB&#8407; = b&#8407; − a&#8407;</td><td>arrow between points: destination minus start</td></tr>
+        <tr><td>midpoint</td><td>position vector (a&#8407; + b&#8407;)/2, the average</td></tr>
+        <tr><td>dot (scalar) product</td><td>a·b = |a||b|cos θ = a₁b₁ + a₂b₂; a number; 0 ⟺ perpendicular</td></tr>
+        <tr><td>projection (shadow)</td><td>the part of b lying along a; length |b&#8407;| cos θ</td></tr>
+        <tr><td>cross (vector) product</td><td>|a×b| = |a||b|sin θ = parallelogram area; 0 ⟺ parallel</td></tr>
+        <tr><td>right-hand rule</td><td>curl fingers a→b; thumb gives a×b's direction (⊙ out / ⊗ in)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div class="divider" style="margin-bottom:26px"></div>
+    <p class="big">A vector is an instruction: how far, and which way.</p>
+    <p>Add them tip-to-tail, split them into east + north, dot them to find agreement, cross them to find area. That's the whole language. 🏹</p>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   Shared toolkit (warm paper theme), square-scale views so
+   angles and lengths are honest on screen.
+   ========================================================= */
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function setup(c){
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const cssW=c.clientWidth||+c.dataset.w;
+  const cssH=cssW*(c.dataset.h/c.dataset.w);
+  if(c._cw!==cssW){ c.style.height=cssH+"px"; c.width=Math.round(cssW*dpr); c.height=Math.round(cssH*dpr); c._cw=cssW; }
+  const ctx=c.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,W:cssW,H:cssH};
+}
+function sqView(W,H,xmin,xmax,ycenter,pad){
+  pad=pad||{l:16,r:16,t:14,b:14};
+  const px0=pad.l,px1=W-pad.r,py0=pad.t,py1=H-pad.b;
+  const ppu=(px1-px0)/(xmax-xmin);
+  const yspan=(py1-py0)/ppu;
+  const ymin=(ycenter||0)-yspan/2, ymax=(ycenter||0)+yspan/2;
+  return {xmin,xmax,ymin,ymax,px0,px1,py0,py1,
+    X:x=>px0+(x-xmin)*ppu,
+    Y:y=>py1-(y-ymin)*ppu,
+    invX:px=>xmin+(px-px0)/ppu,
+    invY:py=>ymin+(py1-py)/ppu};
+}
+function fmtTick(n){ return (Math.abs(n)>=1&&Math.abs(n%1)<1e-9)? String(Math.round(n)) : String(+n.toFixed(2)); }
+function grid(ctx,v,step){
+  step=step||1;
+  ctx.save(); ctx.lineWidth=1; ctx.strokeStyle=css('--grid');
+  ctx.font='10px "Spline Sans Mono", monospace';
+  for(let k=Math.ceil(v.xmin/step); k<=Math.floor(v.xmax/step); k++){
+    const px=v.X(k*step);
+    ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();
+  }
+  for(let k=Math.ceil(v.ymin/step); k<=Math.floor(v.ymax/step); k++){
+    const py=v.Y(k*step);
+    ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();
+  }
+  ctx.strokeStyle=css('--guide'); ctx.lineWidth=1.5;
+  if(v.ymin<=0&&v.ymax>=0){const py=v.Y(0);ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();}
+  if(v.xmin<=0&&v.xmax>=0){const px=v.X(0);ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();}
+  ctx.fillStyle="rgba(107,93,78,.85)";
+  if(v.ymin<=0&&v.ymax>=0){
+    for(let k=Math.ceil(v.xmin/step); k<=Math.floor(v.xmax/step); k++){
+      const x=k*step; if(Math.abs(x)<1e-9)continue;
+      ctx.fillText(fmtTick(x),v.X(x)+3,v.Y(0)+14);
+    }
+  }
+  if(v.xmin<=0&&v.xmax>=0){
+    for(let k=Math.ceil(v.ymin/step); k<=Math.floor(v.ymax/step); k++){
+      const y=k*step; if(Math.abs(y)<1e-9)continue;
+      ctx.fillText(fmtTick(y),v.X(0)+5,v.Y(y)-3);
+    }
+  }
+  ctx.restore();
+}
+function parrow(ctx,x0,y0,x1,y1,color,w){
+  const dx=x1-x0,dy=y1-y0,len=Math.hypot(dx,dy); if(len<2)return;
+  const a=Math.atan2(dy,dx), head=Math.max(8,Math.min(14,len*0.3)), wing=0.42;
+  ctx.save();
+  ctx.strokeStyle=color; ctx.fillStyle=color; ctx.lineWidth=w||3; ctx.lineCap="round"; ctx.lineJoin="round";
+  const bx=x1-Math.cos(a)*head*0.85, by=y1-Math.sin(a)*head*0.85;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(bx,by);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x1,y1);
+  ctx.lineTo(x1-Math.cos(a-wing)*head,y1-Math.sin(a-wing)*head);
+  ctx.lineTo(x1-Math.cos(a+wing)*head,y1-Math.sin(a+wing)*head);
+  ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+function warrow(ctx,v,x0,y0,x1,y1,color,w){parrow(ctx,v.X(x0),v.Y(y0),v.X(x1),v.Y(y1),color,w);}
+function pdot(ctx,px,py,color,r){
+  ctx.save();
+  ctx.beginPath();ctx.arc(px,py,(r||7)+3,0,7);ctx.fillStyle=css('--halo');ctx.fill();
+  ctx.beginPath();ctx.arc(px,py,r||7,0,7);ctx.fillStyle=color;ctx.fill();
+  ctx.restore();
+}
+function plabel(ctx,px,py,text,color,size,align){
+  ctx.save();ctx.font=`${size||13}px "Spline Sans Mono", monospace`;ctx.fillStyle=color;ctx.textAlign=align||"left";ctx.fillText(text,px,py);ctx.restore();
+}
+function dashed(ctx,x0,y0,x1,y1,color,w){
+  ctx.save();ctx.setLineDash([5,5]);ctx.strokeStyle=color;ctx.lineWidth=w||1.4;
+  ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();ctx.restore();
+}
+function unitCircle(ctx,v,color){
+  const r=v.X(1)-v.X(0);
+  ctx.save();ctx.strokeStyle=color||"rgba(31,138,120,.45)";ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.arc(v.X(0),v.Y(0),r,0,7);ctx.stroke();ctx.restore();
+}
+/* arc between two world angles (radians), drawn the short way around */
+function arcBetween(ctx,v,a1,a2,rpx,color){
+  let d=a2-a1;
+  while(d>Math.PI)d-=2*Math.PI; while(d<-Math.PI)d+=2*Math.PI;
+  if(Math.abs(d)<0.02)return;
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=2.2;
+  ctx.beginPath();ctx.arc(v.X(0),v.Y(0),rpx,-a1,-(a1+d),d>0);ctx.stroke();ctx.restore();
+}
+const fmtV=(x,y,d)=>{d=(d===undefined)?1:d;const s=y<0?"−":"+";return `${x.toFixed(d)}î ${s} ${Math.abs(y).toFixed(d)}ĵ`;};
+const degBetween=(a,b)=>{
+  const ma=Math.hypot(a.x,a.y), mb=Math.hypot(b.x,b.y);
+  if(ma<1e-9||mb<1e-9)return 0;
+  let c=(a.x*b.x+a.y*b.y)/(ma*mb); c=Math.max(-1,Math.min(1,c));
+  return Math.acos(c)*180/Math.PI;
+};
+const clampMod=(p,maxR,minR)=>{
+  const r=Math.hypot(p.x,p.y)||1e-9;
+  if(r>maxR){p.x*=maxR/r;p.y*=maxR/r;}
+  if(minR&&r<minR){p.x*=minR/r;p.y*=minR/r;}
+  return p;
+};
+
+/* multi-handle dragging: grabs the nearest handle within 32px */
+function dragHandles(canvas,getView,handles){
+  let active=-1;
+  function pos(e){const r=canvas.getBoundingClientRect();
+    const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+    const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+    return {cx,cy};}
+  function start(e){
+    const {cx,cy}=pos(e), v=getView();
+    let best=1e9,bi=-1;
+    handles.forEach((h,i)=>{const p=h.get();const d=Math.hypot(v.X(p.x)-cx,v.Y(p.y)-cy);if(d<best){best=d;bi=i;}});
+    if(best<=32){active=bi;canvas.classList.add('dragging');move(e);e.preventDefault();}
+  }
+  function move(e){
+    if(active<0)return;
+    const {cx,cy}=pos(e), v=getView();
+    handles[active].set(v.invX(cx),v.invY(cy));
+    e.preventDefault();
+  }
+  function end(){active=-1;canvas.classList.remove('dragging');}
+  canvas.addEventListener('mousedown',start);window.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false});canvas.addEventListener('touchmove',move,{passive:false});window.addEventListener('touchend',end);
+}
+
+/* =========================================================
+   1. One draggable arrow, magnitude and direction
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-arrow');
+  const om=document.getElementById('ar-mag'), od=document.getElementById('ar-dir');
+  let tip={x:3,y:2}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-6,6,0); view=v; grid(ctx,v,1);
+    warrow(ctx,v,0,0,tip.x,tip.y,css('--res'),4.5);
+    pdot(ctx,v.X(0),v.Y(0),css('--ink'),4);
+    pdot(ctx,v.X(tip.x),v.Y(tip.y),css('--res'),9);
+    plabel(ctx,v.X(0)+8,v.Y(0)+18,"tail",css('--ink-soft'),12);
+    plabel(ctx,v.X(tip.x)+11,v.Y(tip.y)-9,"tip (head)",css('--res'),12);
+    const m=Math.hypot(tip.x,tip.y);
+    let deg=Math.atan2(tip.y,tip.x)*180/Math.PI; if(deg<0)deg+=360;
+    om.textContent=m.toFixed(1); od.textContent=deg.toFixed(0)+"°";
+  }
+  dragHandles(c,()=>view,[{
+    get:()=>tip,
+    set:(x,y)=>{tip.x=Math.max(-5.5,Math.min(5.5,x));tip.y=Math.max(-2.9,Math.min(2.9,y));clampMod(tip,5.5,0.3);draw();}
+  }]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   2. "Make them equal", vectors have no home
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-equal');
+  const moveBtn=document.getElementById('eq-move');
+  const otgt=document.getElementById('eq-target'), oyou=document.getElementById('eq-yours'), ost=document.getElementById('eq-state');
+  const T={x:2,y:1.5};                 // the target vector's components
+  const Atail={x:-4.2,y:0.6};          // target's home (fixed)
+  let Btail={x:0.8,y:-1.6};            // your arrow's home
+  let comp={x:0.8,y:-0.8};             // your arrow's components (draggable via tip)
+  let view=null;
+  function isEqual(){ return Math.hypot(comp.x-T.x,comp.y-T.y)<0.2; }
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-6.5,6.5,0); view=v; grid(ctx,v,1);
+    const ok=isEqual();
+    // target vector (teal, fixed home)
+    warrow(ctx,v,Atail.x,Atail.y,Atail.x+T.x,Atail.y+T.y,css('--teal'),4.5);
+    plabel(ctx,v.X(Atail.x)-4,v.Y(Atail.y)+22,"target",css('--teal'),12);
+    // your vector
+    const col= ok? css('--teal') : css('--res');
+    warrow(ctx,v,Btail.x,Btail.y,Btail.x+comp.x,Btail.y+comp.y,col,4.5);
+    pdot(ctx,v.X(Btail.x+comp.x),v.Y(Btail.y+comp.y),col,9);
+    plabel(ctx,v.X(Btail.x)-4,v.Y(Btail.y)+22,"yours (drag the tip)",col,12);
+    if(ok) plabel(ctx,v.X(0),v.py0+18,"EQUAL, different homes, same vector!",css('--teal'),14,"center");
+    otgt.textContent=`${T.x.toFixed(1)} east, ${T.y.toFixed(1)} north`;
+    oyou.textContent=`${comp.x.toFixed(1)} east, ${comp.y.toFixed(1)} north`;
+    ost.textContent= ok? "✓ equal! now press the move button →" : "not equal yet, keep adjusting…";
+    ost.style.color= ok? css('--teal') : css('--ink-soft');
+  }
+  dragHandles(c,()=>view,[{
+    get:()=>({x:Btail.x+comp.x, y:Btail.y+comp.y}),
+    set:(x,y)=>{
+      comp.x=Math.max(-3.4,Math.min(3.4,x-Btail.x));
+      comp.y=Math.max(-3.0,Math.min(3.0,y-Btail.y));
+      draw();
+    }
+  }]);
+  moveBtn.onclick=()=>{
+    // relocate the home; the vector (components) stays identical
+    Btail={x:-1+Math.random()*4, y:-2.2+Math.random()*3.2};
+    draw();
+  };
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   3. Components + the unit vector â
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-comp');
+  const ov=document.getElementById('cp-vec'), om=document.getElementById('cp-mag'), ou=document.getElementById('cp-unit');
+  let tip={x:3,y:2}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-6,6,0); view=v; grid(ctx,v,1);
+    unitCircle(ctx,v);
+    // components along axes
+    warrow(ctx,v,0,0,tip.x,0,css('--va'),4);
+    warrow(ctx,v,0,0,0,tip.y,css('--vb'),4);
+    dashed(ctx,v.X(tip.x),v.Y(tip.y),v.X(tip.x),v.Y(0),"rgba(192,57,139,.5)",1.4);
+    dashed(ctx,v.X(tip.x),v.Y(tip.y),v.X(0),v.Y(tip.y),"rgba(43,95,168,.5)",1.4);
+    // the vector
+    warrow(ctx,v,0,0,tip.x,tip.y,css('--res'),4.5);
+    // unit vector along it
+    const m=Math.hypot(tip.x,tip.y);
+    const ux=tip.x/m, uy=tip.y/m;
+    warrow(ctx,v,0,0,ux,uy,css('--teal'),4);
+    pdot(ctx,v.X(tip.x),v.Y(tip.y),css('--res'),9);
+    plabel(ctx,v.X(tip.x/2)+4,v.Y(0)+18,`${tip.x.toFixed(1)}î`,css('--va'),12);
+    plabel(ctx,v.X(0)+7,v.Y(tip.y/2)+4,`${tip.y.toFixed(1)}ĵ`,css('--vb'),12);
+    plabel(ctx,v.X(ux)+9,v.Y(uy)+15,"â",css('--teal'),14);
+    ov.textContent=fmtV(tip.x,tip.y);
+    om.textContent=m.toFixed(1);
+    ou.textContent=fmtV(ux,uy,2)+" (length 1)";
+  }
+  dragHandles(c,()=>view,[{
+    get:()=>tip,
+    set:(x,y)=>{tip.x=Math.max(-5.5,Math.min(5.5,x));tip.y=Math.max(-2.9,Math.min(2.9,y));clampMod(tip,5.5,0.5);draw();}
+  }]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   4a. Addition & subtraction, parallelogram
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-addsub');
+  const bAdd=document.getElementById('as-add'), bSub=document.getElementById('as-sub');
+  const oa=document.getElementById('as-a'), ob=document.getElementById('as-b'), ores=document.getElementById('as-res');
+  const reslabel=document.getElementById('as-reslabel'), hint=document.getElementById('as-hint');
+  let a={x:2.5,y:0.8}, b={x:1,y:2}, mode='add', view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-8,8,0); view=v; grid(ctx,v,1);
+    if(mode==='add'){
+      const s={x:a.x+b.x,y:a.y+b.y};
+      dashed(ctx,v.X(a.x),v.Y(a.y),v.X(s.x),v.Y(s.y),"rgba(192,57,139,.6)",1.6);
+      dashed(ctx,v.X(b.x),v.Y(b.y),v.X(s.x),v.Y(s.y),"rgba(43,95,168,.6)",1.6);
+      warrow(ctx,v,0,0,s.x,s.y,css('--res'),4.5);
+      pdot(ctx,v.X(s.x),v.Y(s.y),css('--res'),7);
+      plabel(ctx,v.X(s.x)+10,v.Y(s.y)-8,"a+b",css('--res'),14);
+      ores.textContent=fmtV(s.x,s.y);
+    } else {
+      const d={x:a.x-b.x,y:a.y-b.y};
+      // -b ghost, and the tip-to-tip shortcut
+      warrow(ctx,v,0,0,-b.x,-b.y,"rgba(192,57,139,.45)",3);
+      plabel(ctx,v.X(-b.x)+8,v.Y(-b.y)+16,"−b",css('--vb'),12);
+      dashed(ctx,v.X(b.x),v.Y(b.y),v.X(a.x),v.Y(a.y),"rgba(226,84,47,.7)",1.8);
+      warrow(ctx,v,0,0,d.x,d.y,css('--res'),4.5);
+      pdot(ctx,v.X(d.x),v.Y(d.y),css('--res'),7);
+      plabel(ctx,v.X(d.x)+10,v.Y(d.y)-8,"a−b",css('--res'),14);
+      ores.textContent=fmtV(d.x,d.y);
+    }
+    warrow(ctx,v,0,0,a.x,a.y,css('--va'),4);
+    warrow(ctx,v,0,0,b.x,b.y,css('--vb'),4);
+    pdot(ctx,v.X(a.x),v.Y(a.y),css('--va'),8);
+    pdot(ctx,v.X(b.x),v.Y(b.y),css('--vb'),8);
+    plabel(ctx,v.X(a.x)+10,v.Y(a.y)+16,"a",css('--va'),14);
+    plabel(ctx,v.X(b.x)+10,v.Y(b.y)-8,"b",css('--vb'),14);
+    oa.textContent=fmtV(a.x,a.y); ob.textContent=fmtV(b.x,b.y);
+  }
+  function setMode(m){
+    mode=m;
+    bAdd.classList.toggle('on',m==='add'); bAdd.classList.toggle('ghost',m!=='add');
+    bSub.classList.toggle('on',m==='sub'); bSub.classList.toggle('ghost',m!=='sub');
+    reslabel.childNodes[0].textContent = (m==='add'?'a + b = ':'a − b = ');
+    hint.textContent = m==='add'
+      ? "↑ Drag the blue and magenta tips. The dashed lines complete the parallelogram, both walking orders reach the same coral destination."
+      : "↑ Two views of a − b: the coral arrow from the origin (a plus the faint −b), and the dashed shortcut, the same arrow drawn from b's tip to a's tip.";
+    draw();
+  }
+  const clampP=(p,x,y)=>{p.x=Math.max(-3.6,Math.min(3.6,x));p.y=Math.max(-2.1,Math.min(2.1,y));};
+  dragHandles(c,()=>view,[
+    {get:()=>a, set:(x,y)=>{clampP(a,x,y);draw();}},
+    {get:()=>b, set:(x,y)=>{clampP(b,x,y);draw();}}
+  ]);
+  bAdd.onclick=()=>setMode('add'); bSub.onclick=()=>setMode('sub');
+  window.addEventListener('resize',draw); setMode('add');
+})();
+
+/* =========================================================
+   4b. Scaling, stretch and flip
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-scale');
+  const sk=document.getElementById('sc-k'), out=document.getElementById('sc-out');
+  const a={x:2,y:1};
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-5.5,5.5,0); grid(ctx,v,1);
+    const k=+sk.value, kx=k*a.x, ky=k*a.y;
+    // k·a first (underneath), then a on top
+    warrow(ctx,v,0,0,kx,ky,css('--vio'),5);
+    warrow(ctx,v,0,0,a.x,a.y,css('--va'),3.2);
+    plabel(ctx,v.X(a.x)+9,v.Y(a.y)-8,"a",css('--va'),14);
+    if(Math.hypot(kx,ky)>0.15) plabel(ctx,v.X(kx)+9,v.Y(ky)+16,`k·a  (k=${k.toFixed(2)})`,css('--vio'),13);
+    else plabel(ctx,v.X(0)+10,v.Y(0)-12,"k = 0 → the zero vector",css('--vio'),13);
+    out.textContent=fmtV(kx,ky);
+  }
+  sk.addEventListener('input',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   5. Position vectors, AB = b − a, midpoint
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-pos');
+  const oa=document.getElementById('po-a'), ob=document.getElementById('po-b'), oab=document.getElementById('po-ab'), om=document.getElementById('po-m');
+  let A={x:-2.5,y:-1}, B={x:3,y:1.6}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-6.5,6.5,0); view=v; grid(ctx,v,1);
+    // position vectors (faint)
+    warrow(ctx,v,0,0,A.x,A.y,"rgba(43,95,168,.55)",3);
+    warrow(ctx,v,0,0,B.x,B.y,"rgba(192,57,139,.55)",3);
+    // AB
+    warrow(ctx,v,A.x,A.y,B.x,B.y,css('--res'),4.5);
+    // midpoint
+    const M={x:(A.x+B.x)/2, y:(A.y+B.y)/2};
+    pdot(ctx,v.X(M.x),v.Y(M.y),css('--teal'),6);
+    plabel(ctx,v.X(M.x)+9,v.Y(M.y)+16,"M",css('--teal'),13);
+    // points
+    pdot(ctx,v.X(A.x),v.Y(A.y),css('--va'),9);
+    pdot(ctx,v.X(B.x),v.Y(B.y),css('--vb'),9);
+    pdot(ctx,v.X(0),v.Y(0),css('--ink'),5);
+    plabel(ctx,v.X(A.x)-8,v.Y(A.y)+24,"A (drag)",css('--va'),12);
+    plabel(ctx,v.X(B.x)+10,v.Y(B.y)-10,"B (drag)",css('--vb'),12);
+    plabel(ctx,v.X(0)+8,v.Y(0)+18,"O (origin)",css('--ink-soft'),11);
+    plabel(ctx,v.X((A.x+B.x)/2)+8,v.Y((A.y+B.y)/2)-12,"AB = b − a",css('--res'),12);
+    oa.textContent=fmtV(A.x,A.y); ob.textContent=fmtV(B.x,B.y);
+    oab.textContent=fmtV(B.x-A.x,B.y-A.y); om.textContent=fmtV(M.x,M.y);
+  }
+  const clampP=(p,x,y)=>{p.x=Math.max(-5.8,Math.min(5.8,x));p.y=Math.max(-2.6,Math.min(2.6,y));};
+  dragHandles(c,()=>view,[
+    {get:()=>A, set:(x,y)=>{clampP(A,x,y);draw();}},
+    {get:()=>B, set:(x,y)=>{clampP(B,x,y);draw();}}
+  ]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   6. Dot product, the shadow / agreement meter
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-dot');
+  const oth=document.getElementById('dt-th'), odot=document.getElementById('dt-dot'), ost=document.getElementById('dt-state');
+  let a={x:3,y:0.8}, b={x:1.4,y:2.2}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-6,6,0); view=v; grid(ctx,v,1);
+    const ma=Math.hypot(a.x,a.y);
+    // the line along a (faint, both ways) so a "shadow behind" makes sense
+    const ux=a.x/ma, uy=a.y/ma;
+    dashed(ctx,v.X(-ux*5.6),v.Y(-uy*5.6),v.X(ux*5.6),v.Y(uy*5.6),"rgba(107,93,78,.25)",1);
+    // projection (shadow) of b on a
+    const t=(a.x*b.x+a.y*b.y)/(ma*ma);
+    const F={x:t*a.x, y:t*a.y};
+    ctx.save();ctx.strokeStyle=css('--teal');ctx.lineWidth=6;ctx.lineCap="round";
+    ctx.beginPath();ctx.moveTo(v.X(0),v.Y(0));ctx.lineTo(v.X(F.x),v.Y(F.y));ctx.stroke();ctx.restore();
+    dashed(ctx,v.X(b.x),v.Y(b.y),v.X(F.x),v.Y(F.y),"rgba(31,138,120,.6)",1.5);
+    plabel(ctx,v.X(F.x/2)+6,v.Y(F.y/2)+20,"b's shadow on a",css('--teal'),12);
+    // angle arc
+    arcBetween(ctx,v,Math.atan2(a.y,a.x),Math.atan2(b.y,b.x),34,css('--ang'));
+    // the vectors
+    warrow(ctx,v,0,0,a.x,a.y,css('--va'),4.5);
+    warrow(ctx,v,0,0,b.x,b.y,css('--vb'),4.5);
+    pdot(ctx,v.X(a.x),v.Y(a.y),css('--va'),8);
+    pdot(ctx,v.X(b.x),v.Y(b.y),css('--vb'),8);
+    plabel(ctx,v.X(a.x)+10,v.Y(a.y)+16,"a",css('--va'),14);
+    plabel(ctx,v.X(b.x)+10,v.Y(b.y)-8,"b",css('--vb'),14);
+    const th=degBetween(a,b), dot=a.x*b.x+a.y*b.y;
+    oth.textContent=th.toFixed(1)+"°";
+    odot.textContent=dot.toFixed(2);
+    if(Math.abs(dot)<0.15){ ost.textContent="⊥ perpendicular! dot ≈ 0"; ost.style.color=css('--res'); }
+    else if(dot>0){ ost.textContent="agreeing (θ < 90°)"; ost.style.color=css('--teal'); }
+    else { ost.textContent="opposing (θ > 90°), shadow points backwards"; ost.style.color=css('--vio'); }
+  }
+  const mk=(p)=>({get:()=>p, set:(x,y)=>{p.x=x;p.y=y;
+    p.x=Math.max(-5.4,Math.min(5.4,p.x)); p.y=Math.max(-2.7,Math.min(2.7,p.y));
+    clampMod(p,5.4,0.5); draw();}});
+  dragHandles(c,()=>view,[mk(a),mk(b)]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* =========================================================
+   7. Cross product, the parallelogram's area
+   ========================================================= */
+(function(){
+  const c=document.getElementById('cv-cross');
+  const oth=document.getElementById('cr-th'), oar=document.getElementById('cr-area'), odr=document.getElementById('cr-dir');
+  let a={x:2.6,y:0.6}, b={x:0.9,y:2.1}, view=null;
+  function draw(){
+    const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
+    const v=sqView(W,H,-6.5,6.5,0); view=v; grid(ctx,v,1);
+    // shaded parallelogram 0 -> a -> a+b -> b
+    ctx.save();
+    ctx.fillStyle="rgba(106,76,147,.16)";
+    ctx.strokeStyle="rgba(106,76,147,.55)";
+    ctx.lineWidth=1.6;
+    ctx.beginPath();
+    ctx.moveTo(v.X(0),v.Y(0));
+    ctx.lineTo(v.X(a.x),v.Y(a.y));
+    ctx.lineTo(v.X(a.x+b.x),v.Y(a.y+b.y));
+    ctx.lineTo(v.X(b.x),v.Y(b.y));
+    ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.restore();
+    // angle arc
+    arcBetween(ctx,v,Math.atan2(a.y,a.x),Math.atan2(b.y,b.x),30,css('--ang'));
+    // vectors
+    warrow(ctx,v,0,0,a.x,a.y,css('--va'),4.5);
+    warrow(ctx,v,0,0,b.x,b.y,css('--vb'),4.5);
+    pdot(ctx,v.X(a.x),v.Y(a.y),css('--va'),8);
+    pdot(ctx,v.X(b.x),v.Y(b.y),css('--vb'),8);
+    plabel(ctx,v.X(a.x)+10,v.Y(a.y)+16,"a",css('--va'),14);
+    plabel(ctx,v.X(b.x)+10,v.Y(b.y)-8,"b",css('--vb'),14);
+    const cross=a.x*b.y-a.y*b.x;
+    // area label at the parallelogram's centre
+    const cxm=(a.x+b.x)/2, cym=(a.y+b.y)/2;
+    if(Math.abs(cross)>0.4) plabel(ctx,v.X(cxm),v.Y(cym)+4,"area = "+Math.abs(cross).toFixed(1),css('--vio'),13,"center");
+    // direction symbol top-right
+    const sym= cross>0? "⊙ out of the page (anticlockwise a→b)" : "⊗ into the page (clockwise a→b)";
+    const px=v.px1-28, py=v.py0+30;
+    ctx.save();
+    ctx.strokeStyle=css('--vio');ctx.fillStyle=css('--vio');ctx.lineWidth=2.4;
+    ctx.beginPath();ctx.arc(px,py,13,0,7);ctx.stroke();
+    if(cross>0){ ctx.beginPath();ctx.arc(px,py,3.5,0,7);ctx.fill(); }
+    else{ ctx.beginPath();ctx.moveTo(px-8,py-8);ctx.lineTo(px+8,py+8);ctx.moveTo(px+8,py-8);ctx.lineTo(px-8,py+8);ctx.stroke(); }
+    ctx.restore();
+    const th=degBetween(a,b);
+    oth.textContent=th.toFixed(1)+"°";
+    oar.textContent=Math.abs(cross).toFixed(2)+(Math.abs(cross)<0.3?"  → nearly parallel!":"");
+    odr.textContent="direction: "+sym;
+  }
+  const mk=(p)=>({get:()=>p, set:(x,y)=>{p.x=x;p.y=y;
+    p.x=Math.max(-3.1,Math.min(3.1,p.x)); p.y=Math.max(-2.6,Math.min(2.6,p.y));
+    clampMod(p,3.1,0.5); draw();}});
+  dragHandles(c,()=>view,[mk(a),mk(b)]);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* reveal on scroll */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  var SUN='<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>';
+  var MOON='<path d="M20 14.5A8 8 0 0 1 9.5 4 8.2 8.2 0 1 0 20 14.5Z"/>';
+  function cur(){return root.getAttribute('data-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}
+  function paint(){btn.querySelector('svg').innerHTML=cur()==='dark'?SUN:MOON;}
+  paint();
+  btn.addEventListener('click',function(){
+    var n=cur()==='dark'?'light':'dark';
+    root.setAttribute('data-theme',n);
+    try{localStorage.setItem('theme',n);}catch(e){}
+    paint();
+    window.dispatchEvent(new Event('resize'));
+  });
+  var bar=document.getElementById('backbar');
+  function onScroll(){bar.classList.toggle('scrolled',window.scrollY>8);}
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+})();
+</script>
+</body>
+</html>
