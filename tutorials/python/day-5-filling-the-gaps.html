@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 5 — Filling the Gaps: Deep Understanding</title>
+<title>Day 5, Filling the Gaps: Deep Understanding</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0f1117;--surface:#181b24;--surface2:#1e222e;--border:#2a2f3e;--text:#e0e4ef;--text-muted:#8891a8;--accent:#6ee7b7;--accent-dim:#2d6a52;--warn:#fbbf24;--blue:#60a5fa;--pink:#f472b6;--orange:#fb923c;--red:#f87171;--purple:#a78bfa;--terminal-bg:#0a0c10;--terminal-green:#4ade80;--terminal-prompt:#6ee7b7;--lab-bg:#141820;--lab-border:#2a4a3a;--check:#22c55e;--correct:#22c55e;--wrong:#ef4444}
@@ -37,7 +37,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <div class="page-wrapper">
 
 <div class="hero">
-  <div class="hero-tag">Python Course — Day 5</div>
+  <div class="hero-tag">Python Course, Day 5</div>
   <h1>Filling the <span>Gaps</span></h1>
   <p class="hero-sub">Today we slow down and deeply understand everything that felt confusing. By the end of this lesson, the foundations will feel rock-solid.</p>
 </div>
@@ -45,13 +45,13 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <div class="toc">
   <h2>Lab Modules</h2>
   <ul class="toc-list">
-    <li><a href="#mod1"><span class="toc-num">01</span> Mastering print() — All the Ways to Show Output</a></li>
+    <li><a href="#mod1"><span class="toc-num">01</span> Mastering print(), All the Ways to Show Output</a></li>
     <li><a href="#mod2"><span class="toc-num">02</span> Booleans &amp; All the Operators</a></li>
-    <li><a href="#mod3"><span class="toc-num">03</span> Data Structures — Lists, Sets, Strings Explicitly</a></li>
+    <li><a href="#mod3"><span class="toc-num">03</span> Data Structures, Lists, Sets, Strings Explicitly</a></li>
     <li><a href="#mod4"><span class="toc-num">04</span> Variables, Naming Rules &amp; Memory</a></li>
     <li><a href="#mod5"><span class="toc-num">05</span> Understanding Loops &amp; Conditionals Deeply</a></li>
     <li><a href="#mod6"><span class="toc-num">06</span> The Complete Python Error Guide (13 Types)</a></li>
-    <li><a href="#mod7"><span class="toc-num">07</span> Pattern Printing — Thinking Like a Programmer</a></li>
+    <li><a href="#mod7"><span class="toc-num">07</span> Pattern Printing, Thinking Like a Programmer</a></li>
   </ul>
 </div>
 
@@ -111,11 +111,11 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
   </div>
 
   <div class="concept">
-    <h3>💡 Comma vs Plus — The Key Difference</h3>
+    <h3>💡 Comma vs Plus, The Key Difference</h3>
     <div>
-      <strong>Comma (,)</strong> — <code>print("Age:", 20)</code> → <code>Age: 20</code><br>
+      <strong>Comma (,)</strong>, <code>print("Age:", 20)</code> → <code>Age: 20</code><br>
       Automatically adds a space. Can mix any types (strings, numbers, booleans). <strong>This is the easiest and safest way.</strong><br><br>
-      <strong>Plus (+)</strong> — <code>print("Age: " + str(20))</code> → <code>Age: 20</code><br>
+      <strong>Plus (+)</strong>, <code>print("Age: " + str(20))</code> → <code>Age: 20</code><br>
       No automatic space. ALL items MUST be strings (so you need <code>str()</code> to convert numbers). Gives you full control over formatting.
     </div>
   </div>
@@ -144,11 +144,11 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
   <p class="section-intro">We've used <code>int</code>, <code>float</code>, and <code>str</code>. There's a fourth essential type: <strong>bool</strong> (boolean). It can only be one of two values: <code>True</code> or <code>False</code>. This is the type Python uses every time it makes a decision in an <code>if</code> statement.</p>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 2.1</span><span class="task-title">Booleans — True and False</span></div>
+    <div class="task-header"><span class="task-badge">TASK 2.1</span><span class="task-title">Booleans, True and False</span></div>
     <p>Create <code>booleans.py</code>:</p>
     <div class="code-block">
       <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">booleans.py</span></div>
-      <div class="code-body"><span class="com"># Boolean values — only two possibilities</span>
+      <div class="code-body"><span class="com"># Boolean values, only two possibilities</span>
 <span class="var">is_sunny</span> <span class="op">=</span> <span class="kw">True</span>
 <span class="var">is_raining</span> <span class="op">=</span> <span class="kw">False</span>
 
@@ -166,10 +166,10 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
   </div>
 
   <div class="concept">
-    <h3>💡 = vs == — This Is CRITICAL</h3>
+    <h3>💡 = vs ==, This Is CRITICAL</h3>
     <div>
-      <code style="color:var(--warn);background:#2a2510">=</code> &nbsp; <strong>Assignment</strong> — stores a value: <code>x = 10</code> means "put 10 into x"<br><br>
-      <code style="color:var(--accent);background:#102a20">==</code> &nbsp; <strong>Comparison</strong> — checks if equal: <code>x == 10</code> means "is x equal to 10?" and returns True or False<br><br>
+      <code style="color:var(--warn);background:#2a2510">=</code> &nbsp; <strong>Assignment</strong>, stores a value: <code>x = 10</code> means "put 10 into x"<br><br>
+      <code style="color:var(--accent);background:#102a20">==</code> &nbsp; <strong>Comparison</strong>, checks if equal: <code>x == 10</code> means "is x equal to 10?" and returns True or False<br><br>
       If you accidentally write <code>if x = 5:</code> (one equals) instead of <code>if x == 5:</code> (two equals), you'll get a <strong>SyntaxError</strong>. Single <code>=</code> is never allowed inside an <code>if</code> condition.
     </div>
   </div>
@@ -231,7 +231,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <!-- ╚═════════════════════════════════════════════════════════════╝ -->
 <section class="lab-section" id="mod3">
   <div class="section-label">Module 03</div>
-  <h2>Data Structures — Explicitly</h2>
+  <h2>Data Structures, Explicitly</h2>
   <p class="section-intro">Let's be very clear about the syntax for strings, lists, and sets. Every bracket and quote matters.</p>
 
   <div class="concept">
@@ -246,13 +246,13 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 3.1</span><span class="task-title">Strings — Quotes Hands-On</span></div>
+    <div class="task-header"><span class="task-badge">TASK 3.1</span><span class="task-title">Strings, Quotes Hands-On</span></div>
     <div class="code-block">
       <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">quotes.py</span></div>
       <div class="code-body"><span class="com"># Both are identical strings</span>
 <span class="var">a</span> <span class="op">=</span> <span class="str">"Hello"</span>
 <span class="var">b</span> <span class="op">=</span> <span class="str">'Hello'</span>
-<span class="fn">print</span>(<span class="var">a</span> <span class="op">==</span> <span class="var">b</span>)   <span class="com"># True — they're the same!</span>
+<span class="fn">print</span>(<span class="var">a</span> <span class="op">==</span> <span class="var">b</span>)   <span class="com"># True, they're the same!</span>
 
 <span class="com"># Use double quotes when text has a single quote</span>
 <span class="var">c</span> <span class="op">=</span> <span class="str">"It's a beautiful day"</span>
@@ -269,10 +269,10 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
     <div>
       A list is created with <strong>square brackets</strong> <code>[ ]</code> and items are separated by <strong>commas</strong>:<br>
       <code>my_list = [item1, item2, item3]</code><br><br>
-      <code>numbers = [10, 20, 30]</code> — a list of integers<br>
-      <code>names = ["Alice", "Bob"]</code> — a list of strings<br>
-      <code>empty_list = []</code> — a list with nothing in it<br>
-      <code>mixed = [1, "hello", 3.14, True]</code> — lists can mix types<br><br>
+      <code>numbers = [10, 20, 30]</code>, a list of integers<br>
+      <code>names = ["Alice", "Bob"]</code>, a list of strings<br>
+      <code>empty_list = []</code>, a list with nothing in it<br>
+      <code>mixed = [1, "hello", 3.14, True]</code>, lists can mix types<br><br>
       You can also create a list from other things: <code>list("hello")</code> → <code>['h', 'e', 'l', 'l', 'o']</code>
     </div>
   </div>
@@ -284,21 +284,21 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
       <code>my_set = {item1, item2, item3}</code><br><br>
       <code>colors = {"red", "green", "blue"}</code><br>
       <code>nums = {1, 2, 2, 3, 3, 3}</code> → becomes <code>{1, 2, 3}</code> (duplicates removed!)<br>
-      <code>empty_set = set()</code> — NOT <code>{}</code> (that creates an empty dictionary, a different type)<br><br>
+      <code>empty_set = set()</code>, NOT <code>{}</code> (that creates an empty dictionary, a different type)<br><br>
       Use a set when you care about unique values. Example: finding all unique words in a text.
     </div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 3.2</span><span class="task-title">List vs Set — See the Difference</span></div>
+    <div class="task-header"><span class="task-badge">TASK 3.2</span><span class="task-title">List vs Set, See the Difference</span></div>
     <div class="code-block">
       <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">list_vs_set.py</span></div>
-      <div class="code-body"><span class="com"># LIST — keeps duplicates, keeps order, uses [ ]</span>
+      <div class="code-body"><span class="com"># LIST, keeps duplicates, keeps order, uses [ ]</span>
 <span class="var">my_list</span> <span class="op">=</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"apple"</span>, <span class="str">"cherry"</span>]
 <span class="fn">print</span>(<span class="str">"List:"</span>, <span class="var">my_list</span>)
 <span class="fn">print</span>(<span class="str">"List length:"</span>, <span class="fn">len</span>(<span class="var">my_list</span>))
 
-<span class="com"># SET — removes duplicates, no fixed order, uses { }</span>
+<span class="com"># SET, removes duplicates, no fixed order, uses { }</span>
 <span class="var">my_set</span> <span class="op">=</span> {<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"apple"</span>, <span class="str">"cherry"</span>}
 <span class="fn">print</span>(<span class="str">"Set:"</span>, <span class="var">my_set</span>)
 <span class="fn">print</span>(<span class="str">"Set length:"</span>, <span class="fn">len</span>(<span class="var">my_set</span>))
@@ -319,7 +319,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
       <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> Error</div>
       <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> 1</div>
     </div>
-    <div class="mcq-explain">A set removes duplicates: <code>{1, 2, 2, 3, 3, 3}</code> becomes <code>{1, 2, 3}</code> — that's 3 unique items.</div>
+    <div class="mcq-explain">A set removes duplicates: <code>{1, 2, 2, 3, 3, 3}</code> becomes <code>{1, 2, 3}</code>, that's 3 unique items.</div>
   </div>
 </section>
 
@@ -391,10 +391,10 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
       <strong>ALLOWED:</strong><br>
       <code>name</code> <code>age</code> <code>student_name</code> <code>score1</code> <code>_private</code> <code>myVar</code><br><br>
       <strong>NOT ALLOWED:</strong><br>
-      <code>1name</code> — cannot start with a number<br>
-      <code>my name</code> — cannot have spaces (use <code>my_name</code> instead)<br>
-      <code>my-name</code> — hyphens not allowed (use underscores)<br>
-      <code>class</code> <code>for</code> <code>if</code> <code>print</code> — these are Python keywords/built-ins, don't use them as variable names<br><br>
+      <code>1name</code>, cannot start with a number<br>
+      <code>my name</code>, cannot have spaces (use <code>my_name</code> instead)<br>
+      <code>my-name</code>, hyphens not allowed (use underscores)<br>
+      <code>class</code> <code>for</code> <code>if</code> <code>print</code>, these are Python keywords/built-ins, don't use them as variable names<br><br>
       <strong>CASE SENSITIVE:</strong> <code>Name</code>, <code>name</code>, and <code>NAME</code> are three <em>completely different</em> variables.
     </div>
   </div>
@@ -472,7 +472,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
       <strong>Iteration 4:</strong> <code>i</code> gets the value <code>4</code> → the indented code runs with i=4<br>
       <strong>Iteration 5:</strong> <code>i</code> gets the value <code>5</code> → the indented code runs with i=5<br>
       <strong>Done!</strong> No more values → loop ends → Python continues with the code after the loop.<br><br>
-      The variable <code>i</code> is <strong>automatically updated</strong> every time the loop goes around. You don't need to change it yourself — the <code>for</code> loop does that for you.
+      The variable <code>i</code> is <strong>automatically updated</strong> every time the loop goes around. You don't need to change it yourself, the <code>for</code> loop does that for you.
     </div>
   </div>
 
@@ -510,16 +510,16 @@ fruit is now: cherry</span></div>
     <h3>💡 What Can Go Inside an <code>if</code> Condition?</h3>
     <div>
       The <code>if</code> condition can be <strong>anything that Python can evaluate to True or False</strong>:<br><br>
-      <code>if True:</code> — always runs<br>
-      <code>if False:</code> — never runs<br>
-      <code>if x > 5:</code> — runs if the comparison is True<br>
-      <code>if name == "Pooja":</code> — runs if name equals "Pooja"<br>
-      <code>if x:</code> — runs if x is "truthy" (non-zero number, non-empty string)<br>
-      <code>if "hello":</code> — runs! (non-empty string = True)<br>
-      <code>if "":</code> — does NOT run (empty string = False)<br>
-      <code>if 0:</code> — does NOT run (zero = False)<br>
-      <code>if 42:</code> — runs! (any non-zero number = True)<br>
-      <code>if my_list:</code> — runs if the list is not empty<br><br>
+      <code>if True:</code>, always runs<br>
+      <code>if False:</code>, never runs<br>
+      <code>if x > 5:</code>, runs if the comparison is True<br>
+      <code>if name == "Pooja":</code>, runs if name equals "Pooja"<br>
+      <code>if x:</code>, runs if x is "truthy" (non-zero number, non-empty string)<br>
+      <code>if "hello":</code>, runs! (non-empty string = True)<br>
+      <code>if "":</code>, does NOT run (empty string = False)<br>
+      <code>if 0:</code>, does NOT run (zero = False)<br>
+      <code>if 42:</code>, runs! (any non-zero number = True)<br>
+      <code>if my_list:</code>, runs if the list is not empty<br><br>
       <strong>Falsy values</strong> (treated as False): <code>False</code>, <code>0</code>, <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>None</code><br>
       <strong>Everything else is Truthy</strong> (treated as True).
     </div>
@@ -534,7 +534,7 @@ fruit is now: cherry</span></div>
       <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> for=keyword, in=keyword, num=variable</div>
       <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> They're all keywords</div>
     </div>
-    <div class="mcq-explain"><code>for</code> and <code>in</code> are Python <strong>keywords</strong> (built into the language — you can't change them). <code>num</code> is a <strong>variable name</strong> that YOU chose. It gets a new value from the list on each iteration.</div>
+    <div class="mcq-explain"><code>for</code> and <code>in</code> are Python <strong>keywords</strong> (built into the language, you can't change them). <code>num</code> is a <strong>variable name</strong> that YOU chose. It gets a new value from the list on each iteration.</div>
   </div>
 </section>
 
@@ -551,10 +551,10 @@ fruit is now: cherry</span></div>
   <!-- 1. SyntaxError -->
   <div class="error-card">
     <h4>1. SyntaxError</h4>
-    <p class="error-desc">Python's grammar rule was broken — it can't even begin to understand the code.</p>
+    <p class="error-desc">Python's grammar rule was broken, it can't even begin to understand the code.</p>
   </div>
   <div class="debug-box">
-    <div class="debug-label">🐛 Debug E1 — Missing quotes</div>
+    <div class="debug-label">🐛 Debug E1, Missing quotes</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e1.py</span></div><div class="code-body"><span class="var">msg</span> <span class="op">=</span> <span class="str">"Hello World</span>
 <span class="fn">print</span>(<span class="var">msg</span>)</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
@@ -562,7 +562,7 @@ fruit is now: cherry</span></div>
   </div>
 
   <div class="debug-box">
-    <div class="debug-label">🐛 Debug E1b — Missing colon</div>
+    <div class="debug-label">🐛 Debug E1b, Missing colon</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e1b.py</span></div><div class="code-body"><span class="kw">if</span> <span class="num">5</span> <span class="op">&gt;</span> <span class="num">3</span>
     <span class="fn">print</span>(<span class="str">"yes"</span>)</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
@@ -580,20 +580,20 @@ fruit is now: cherry</span></div>
 <span class="fn">print</span>(<span class="var">i</span>)
     <span class="fn">print</span>(<span class="str">"done"</span>)</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
-    <div class="answer-content">Line 2 has no indentation, line 3 has indentation — inconsistent. Fix: indent line 2 with 4 spaces: <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code></div>
+    <div class="answer-content">Line 2 has no indentation, line 3 has indentation, inconsistent. Fix: indent line 2 with 4 spaces: <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code></div>
   </div>
 
   <!-- 3. NameError -->
   <div class="error-card">
     <h4>3. NameError</h4>
-    <p class="error-desc">You used a variable name that Python doesn't recognize — it was never created, or it's misspelled.</p>
+    <p class="error-desc">You used a variable name that Python doesn't recognize, it was never created, or it's misspelled.</p>
   </div>
   <div class="debug-box">
     <div class="debug-label">🐛 Debug E3</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e3.py</span></div><div class="code-body"><span class="var">user_name</span> <span class="op">=</span> <span class="str">"Pooja"</span>
 <span class="fn">print</span>(<span class="str">"Hello,"</span>, <span class="var">User_name</span>)</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
-    <div class="answer-content"><code>User_name</code> (capital U) doesn't exist — only <code>user_name</code> (lowercase u) does. Python is case-sensitive. Fix: <code>print("Hello,", user_name)</code></div>
+    <div class="answer-content"><code>User_name</code> (capital U) doesn't exist, only <code>user_name</code> (lowercase u) does. Python is case-sensitive. Fix: <code>print("Hello,", user_name)</code></div>
   </div>
 
   <!-- 4. TypeError -->
@@ -612,14 +612,14 @@ fruit is now: cherry</span></div>
   <!-- 5. ValueError -->
   <div class="error-card">
     <h4>5. ValueError</h4>
-    <p class="error-desc">The type is right but the value is wrong — like trying to convert non-numeric text to a number.</p>
+    <p class="error-desc">The type is right but the value is wrong, like trying to convert non-numeric text to a number.</p>
   </div>
   <div class="debug-box">
     <div class="debug-label">🐛 Debug E5</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e5.py</span></div><div class="code-body"><span class="var">num</span> <span class="op">=</span> <span class="fn">int</span>(<span class="str">"hello"</span>)
 <span class="fn">print</span>(<span class="var">num</span>)</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
-    <div class="answer-content"><code>int("hello")</code> fails because "hello" isn't a number. <code>int()</code> only works on numeric strings like <code>int("42")</code>. Fix depends on intent — if you want 0, use a try/except or check the value first.</div>
+    <div class="answer-content"><code>int("hello")</code> fails because "hello" isn't a number. <code>int()</code> only works on numeric strings like <code>int("42")</code>. Fix depends on intent, if you want 0, use a try/except or check the value first.</div>
   </div>
 
   <!-- 6. IndexError -->
@@ -658,7 +658,7 @@ fruit is now: cherry</span></div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e8.py</span></div><div class="code-body"><span class="var">x</span> <span class="op">=</span> <span class="num">42</span>
 <span class="fn">print</span>(<span class="var">x</span>.<span class="fn">append</span>(<span class="num">5</span>))</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
-    <div class="answer-content"><code>.append()</code> is a list method. <code>x</code> is an integer — integers don't have <code>.append()</code>. Fix: if you want a list, use <code>x = [42]</code> then <code>x.append(5)</code>.</div>
+    <div class="answer-content"><code>.append()</code> is a list method. <code>x</code> is an integer, integers don't have <code>.append()</code>. Fix: if you want a list, use <code>x = [42]</code> then <code>x.append(5)</code>.</div>
   </div>
 
   <!-- 9. Logical Error -->
@@ -667,7 +667,7 @@ fruit is now: cherry</span></div>
     <p class="error-desc">The code runs fine but gives the WRONG answer. The hardest type to find.</p>
   </div>
   <div class="debug-box">
-    <div class="debug-label">🐛 Debug E9 — Expected: average of 10, 20, 30 = 20.0</div>
+    <div class="debug-label">🐛 Debug E9, Expected: average of 10, 20, 30 = 20.0</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e9.py</span></div><div class="code-body"><span class="var">avg</span> <span class="op">=</span> <span class="num">10</span> <span class="op">+</span> <span class="num">20</span> <span class="op">+</span> <span class="num">30</span> <span class="op">/</span> <span class="num">3</span>
 <span class="fn">print</span>(<span class="str">"Average:"</span>, <span class="var">avg</span>)</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
@@ -680,7 +680,7 @@ fruit is now: cherry</span></div>
     <p class="error-desc"><code>input()</code> ALWAYS returns a string. If you do math on it without converting, you get wrong results or errors.</p>
   </div>
   <div class="debug-box">
-    <div class="debug-label">🐛 Debug E10 — Enter 5, expect 10, but get "55"</div>
+    <div class="debug-label">🐛 Debug E10, Enter 5, expect 10, but get "55"</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e10.py</span></div><div class="code-body"><span class="var">num</span> <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Number: "</span>)
 <span class="var">doubled</span> <span class="op">=</span> <span class="var">num</span> <span class="op">*</span> <span class="num">2</span>
 <span class="fn">print</span>(<span class="var">doubled</span>)</div></div>
@@ -711,7 +711,7 @@ fruit is now: cherry</span></div>
     <div class="debug-label">🐛 Debug E12</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">e12.py</span></div><div class="code-body"><span class="fn">print</span> <span class="str">"Hello"</span></div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
-    <div class="answer-content">SyntaxError. In Python 3, <code>print</code> is a function — parentheses are required. Fix: <code>print("Hello")</code></div>
+    <div class="answer-content">SyntaxError. In Python 3, <code>print</code> is a function, parentheses are required. Fix: <code>print("Hello")</code></div>
   </div>
 
   <!-- 13. Overwriting Built-ins -->
@@ -736,11 +736,11 @@ fruit is now: cherry</span></div>
 <!-- ╚═════════════════════════════════════════════════════════════╝ -->
 <section class="lab-section" id="mod7">
   <div class="section-label">Module 07</div>
-  <h2>Pattern Printing — Thinking Like a Programmer</h2>
+  <h2>Pattern Printing, Thinking Like a Programmer</h2>
   <p class="section-intro">Patterns teach you to see the <strong>math hidden inside repetition</strong>. This is how programmers think: find the pattern, express it as a formula, and let a loop do the work.</p>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 7.1</span><span class="task-title">Step 1 — Print It the Hard Way First</span></div>
+    <div class="task-header"><span class="task-badge">TASK 7.1</span><span class="task-title">Step 1, Print It the Hard Way First</span></div>
     <p>Let's print this pattern. First, do it with individual print statements:</p>
     <div class="pattern-box">*
 **
@@ -759,7 +759,7 @@ fruit is now: cherry</span></div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 7.2</span><span class="task-title">Step 2 — Find the Pattern</span></div>
+    <div class="task-header"><span class="task-badge">TASK 7.2</span><span class="task-title">Step 2, Find the Pattern</span></div>
     <p>Look at each row and count the stars:</p>
     <div class="concept">
       <h3>📖 The Pattern Table</h3>
@@ -776,7 +776,7 @@ fruit is now: cherry</span></div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 7.3</span><span class="task-title">Step 3 — Use a Loop + Formula</span></div>
+    <div class="task-header"><span class="task-badge">TASK 7.3</span><span class="task-title">Step 3, Use a Loop + Formula</span></div>
     <div class="code-block">
       <div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">pattern_loop.py</span></div>
       <div class="code-body"><span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
@@ -786,7 +786,7 @@ fruit is now: cherry</span></div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 7.4</span><span class="task-title">Solved Example — Right-Aligned Triangle</span></div>
+    <div class="task-header"><span class="task-badge">TASK 7.4</span><span class="task-title">Solved Example, Right-Aligned Triangle</span></div>
     <p>Now let's do a harder pattern with spaces:</p>
     <div class="pattern-box">    *
    **
@@ -816,7 +816,7 @@ fruit is now: cherry</span></div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 7.5</span><span class="task-title">Your Turn — Print This Pyramid</span></div>
+    <div class="task-header"><span class="task-badge">TASK 7.5</span><span class="task-title">Your Turn, Print This Pyramid</span></div>
     <div class="pattern-box">    *
    ***
   *****
@@ -830,7 +830,7 @@ fruit is now: cherry</span></div>
   <div class="celebrate">
     <div class="emoji">🧠</div>
     <h3>This Is How Programmers Think</h3>
-    <p>The process is always the same: <strong>see the pattern → find the formula → write the loop</strong>. This skill transfers to everything in programming — not just star patterns.</p>
+    <p>The process is always the same: <strong>see the pattern → find the formula → write the loop</strong>. This skill transfers to everything in programming, not just star patterns.</p>
   </div>
 </section>
 

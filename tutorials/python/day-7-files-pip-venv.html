@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Day 7 — Files, Modules, Pip &amp; Virtual Environments</title>
+<title>Day 7, Files, Modules, Pip &amp; Virtual Environments</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0f1117;--surface:#181b24;--surface2:#1e222e;--border:#2a2f3e;--text:#e0e4ef;--text-muted:#8891a8;--accent:#6ee7b7;--accent-dim:#2d6a52;--warn:#fbbf24;--blue:#60a5fa;--pink:#f472b6;--orange:#fb923c;--red:#f87171;--purple:#a78bfa;--terminal-bg:#0a0c10;--terminal-green:#4ade80;--terminal-prompt:#6ee7b7;--lab-bg:#141820;--lab-border:#2a4a3a;--check:#22c55e;--correct:#22c55e;--wrong:#ef4444}
@@ -33,7 +33,7 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <div class="page-wrapper">
 
 <div class="hero">
-  <div class="hero-tag">Python Course — Day 7</div>
+  <div class="hero-tag">Python Course, Day 7</div>
   <h1>Files, Modules &amp; <span>The Real World</span></h1>
   <p class="hero-sub">Today you'll learn to read and write files, organize code into multiple files, install packages other developers wrote, and manage project environments like a professional.</p>
 </div>
@@ -41,12 +41,12 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <div class="toc">
   <h2>Lab Modules</h2>
   <ul class="toc-list">
-    <li><a href="#mod1"><span class="toc-num">01</span> Deep Recap — Functions, Dicts &amp; Looping Patterns</a></li>
+    <li><a href="#mod1"><span class="toc-num">01</span> Deep Recap, Functions, Dicts &amp; Looping Patterns</a></li>
     <li><a href="#mod2"><span class="toc-num">02</span> Understanding File Types</a></li>
     <li><a href="#mod3"><span class="toc-num">03</span> Reading &amp; Writing Text Files and CSVs</a></li>
-    <li><a href="#mod4"><span class="toc-num">04</span> Modules &amp; Imports — Splitting Code Into Files</a></li>
-    <li><a href="#mod5"><span class="toc-num">05</span> Pip — Installing Packages</a></li>
-    <li><a href="#mod6"><span class="toc-num">06</span> Virtual Environments — Project Isolation</a></li>
+    <li><a href="#mod4"><span class="toc-num">04</span> Modules &amp; Imports, Splitting Code Into Files</a></li>
+    <li><a href="#mod5"><span class="toc-num">05</span> Pip, Installing Packages</a></li>
+    <li><a href="#mod6"><span class="toc-num">06</span> Virtual Environments, Project Isolation</a></li>
   </ul>
 </div>
 
@@ -58,27 +58,27 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <!-- ═══════════════════ MODULE 1: DEEP RECAP ═══════════════════ -->
 <section class="lab-section" id="mod1">
   <div class="section-label">Module 01</div>
-  <h2>Deep Recap — Functions &amp; Dicts</h2>
+  <h2>Deep Recap, Functions &amp; Dicts</h2>
   <p class="section-intro">Before we move forward, let's make two of the most important concepts rock-solid.</p>
 
   <div class="concept">
     <h3>💡 Functions Have Two Parts: Definition and Call</h3>
     <div>
-      <strong>1. Definition</strong> — creating the recipe (<code>def</code>). This does NOT run the code inside.<br>
-      <strong>2. Call</strong> — using the recipe (writing the function name with parentheses). This RUNS the code.<br><br>
+      <strong>1. Definition</strong>, creating the recipe (<code>def</code>). This does NOT run the code inside.<br>
+      <strong>2. Call</strong>, using the recipe (writing the function name with parentheses). This RUNS the code.<br><br>
       A function is a <strong>mini-program inside your program</strong>. It takes <strong>input</strong> (parameters), does <strong>processing</strong> (the body), and gives <strong>output</strong> (<code>return</code>). Just like your whole program follows Input → Process → Output, each function does the same thing on a smaller scale.
     </div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 1.1</span><span class="task-title">Function Recap — Definition vs Call</span></div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_recap.py</span></div><div class="code-body"><span class="com"># DEFINITION — this creates the function, does NOT run it yet</span>
+    <div class="task-header"><span class="task-badge">TASK 1.1</span><span class="task-title">Function Recap, Definition vs Call</span></div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">func_recap.py</span></div><div class="code-body"><span class="com"># DEFINITION, this creates the function, does NOT run it yet</span>
 <span class="kw">def</span> <span class="fn">calculate_tax</span>(<span class="var">price</span>, <span class="var">rate</span><span class="op">=</span><span class="num">0.1</span>):
     <span class="var">tax</span> <span class="op">=</span> <span class="var">price</span> <span class="op">*</span> <span class="var">rate</span>
     <span class="var">total</span> <span class="op">=</span> <span class="var">price</span> <span class="op">+</span> <span class="var">tax</span>
     <span class="kw">return</span> <span class="var">total</span>
 
-<span class="com"># CALL — this runs the function and gets the result</span>
+<span class="com"># CALL, this runs the function and gets the result</span>
 <span class="var">result</span> <span class="op">=</span> <span class="fn">calculate_tax</span>(<span class="num">100</span>)       <span class="com"># uses default rate 0.1</span>
 <span class="fn">print</span>(<span class="str">"Total:"</span>, <span class="var">result</span>)            <span class="com"># 110.0</span>
 
@@ -87,22 +87,22 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
   </div>
 
   <div class="concept">
-    <h3>💡 Variable Scope — Where Does a Variable Live?</h3>
+    <h3>💡 Variable Scope, Where Does a Variable Live?</h3>
     <div>Not all variables are the same. Where you create a variable determines <strong>where it can be used</strong>. This is called <strong>scope</strong>. There are two kinds of variables based on where they are created:</div>
   </div>
 
   <div class="analogy">
     <div class="analogy-label">🏠 Real-World Analogy</div>
-    <p>Think of a <strong>house with rooms</strong>. Items placed in the <strong>living room</strong> (the main area) can be seen by everyone — that's a <strong>global variable</strong>. Items placed <strong>inside a bedroom</strong> (a function) are private to that room — those are <strong>local variables</strong>. When you leave the bedroom (the function finishes), everything in that room disappears. But the living room items stay.</p>
+    <p>Think of a <strong>house with rooms</strong>. Items placed in the <strong>living room</strong> (the main area) can be seen by everyone, that's a <strong>global variable</strong>. Items placed <strong>inside a bedroom</strong> (a function) are private to that room, those are <strong>local variables</strong>. When you leave the bedroom (the function finishes), everything in that room disappears. But the living room items stay.</p>
   </div>
 
   <div class="concept">
-    <h3>💡 Local Variables — Created Inside a Function</h3>
-    <div>A variable created <strong>inside</strong> a function is called a <strong>local variable</strong>. It only exists while the function is running. Once the function finishes, the variable is gone — destroyed. No code outside the function can see it or use it. Parameters (the inputs in the parentheses) are also local variables.</div>
+    <h3>💡 Local Variables, Created Inside a Function</h3>
+    <div>A variable created <strong>inside</strong> a function is called a <strong>local variable</strong>. It only exists while the function is running. Once the function finishes, the variable is gone, destroyed. No code outside the function can see it or use it. Parameters (the inputs in the parentheses) are also local variables.</div>
   </div>
 
   <div class="concept">
-    <h3>💡 Global Variables — Created Outside All Functions</h3>
+    <h3>💡 Global Variables, Created Outside All Functions</h3>
     <div>A variable created <strong>outside</strong> any function (at the "top level" of your file) is called a <strong>global variable</strong>. It exists for the entire lifetime of the program. Functions CAN <strong>read</strong> global variables (look at them), but they <strong>cannot change</strong> them by default.</div>
   </div>
 
@@ -115,13 +115,13 @@ code{font-family:'JetBrains Mono',monospace;background:var(--surface2);padding:.
 <span class="kw">def</span> <span class="fn">my_function</span>():
     <span class="com"># --- LOCAL VARIABLE (created inside a function) ---</span>
     <span class="var">secret</span> <span class="op">=</span> <span class="str">"I am local"</span>   <span class="com"># only exists inside this function</span>
-    <span class="fn">print</span>(<span class="var">greeting</span>)          <span class="com"># CAN read global variable — OK</span>
-    <span class="fn">print</span>(<span class="var">secret</span>)            <span class="com"># CAN use local variable — OK</span>
+    <span class="fn">print</span>(<span class="var">greeting</span>)          <span class="com"># CAN read global variable, OK</span>
+    <span class="fn">print</span>(<span class="var">secret</span>)            <span class="com"># CAN use local variable, OK</span>
 
 <span class="fn">my_function</span>()
 
-<span class="fn">print</span>(<span class="var">greeting</span>)              <span class="com"># CAN use global — OK</span>
-<span class="com"># print(secret)             # CANNOT use local from outside — NameError!</span>
+<span class="fn">print</span>(<span class="var">greeting</span>)              <span class="com"># CAN use global, OK</span>
+<span class="com"># print(secret)             # CANNOT use local from outside, NameError!</span>
 <span class="com"># Uncomment the line above to see the error yourself.</span></div></div>
     <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span><span class="terminal-title">Output</span></div><div class="terminal-body"><span class="output">Hello
 I am local
@@ -142,20 +142,20 @@ Hello</span></div></div>
     <span class="kw">return</span> <span class="var">result</span>
 
 <span class="var">answer</span> <span class="op">=</span> <span class="fn">double</span>(<span class="num">5</span>)       <span class="com"># answer = 10, this is global</span>
-<span class="fn">print</span>(<span class="var">answer</span>)               <span class="com"># 10 — works fine, 'answer' is global</span>
+<span class="fn">print</span>(<span class="var">answer</span>)               <span class="com"># 10, works fine, 'answer' is global</span>
 
-<span class="com"># print(number)            # NameError — 'number' was local to double()</span>
-<span class="com"># print(result)            # NameError — 'result' was local to double()</span></div></div>
+<span class="com"># print(number)            # NameError, 'number' was local to double()</span>
+<span class="com"># print(result)            # NameError, 'result' was local to double()</span></div></div>
     <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);">The parameter <code>number</code> and the variable <code>result</code> inside <code>double()</code> are both local. They're born when the function starts, and they die when the function ends. But the <strong>return value</strong> gets sent back and stored in <code>answer</code>, which is global.</p>
   </div>
 
   <div class="mcq" data-correct="C">
-    <div class="mcq-label">📝 Quiz — Scope</div>
+    <div class="mcq-label">📝 Quiz, Scope</div>
     <p class="mcq-q">What happens when you try to use a local variable outside its function?</p>
     <div class="mcq-options">
       <div class="mcq-opt" data-value="A" onclick="checkMCQ(this)"><span class="letter">A</span> It prints None</div>
       <div class="mcq-opt" data-value="B" onclick="checkMCQ(this)"><span class="letter">B</span> It prints 0</div>
-      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> NameError — Python doesn't know that variable exists</div>
+      <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> NameError, Python doesn't know that variable exists</div>
       <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> It works normally</div>
     </div>
     <div class="mcq-explain">Local variables are destroyed when the function finishes. Trying to access them outside gives <strong>NameError</strong> because Python has no record of that name anymore.</div>
@@ -164,13 +164,13 @@ Hello</span></div></div>
   <div class="concept">
     <h3>💡 Can a Function Modify a Global Variable?</h3>
     <div>
-      By default, <strong>no</strong>. A function can <em>read</em> a global variable but cannot <em>change</em> it. If you try to assign to a global name inside a function, Python creates a <strong>new local variable</strong> with the same name instead — it doesn't touch the global one.<br><br>
+      By default, <strong>no</strong>. A function can <em>read</em> a global variable but cannot <em>change</em> it. If you try to assign to a global name inside a function, Python creates a <strong>new local variable</strong> with the same name instead, it doesn't touch the global one.<br><br>
       Python does have a <code>global</code> keyword that lets you override this and modify the global variable from inside a function. <strong>But this is considered bad practice.</strong> Let's see both approaches:
     </div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 1.4</span><span class="task-title">Modifying Global — Bad vs Good Approach</span></div>
+    <div class="task-header"><span class="task-badge">TASK 1.4</span><span class="task-title">Modifying Global, Bad vs Good Approach</span></div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">global_vs_return.py</span></div><div class="code-body"><span class="com"># ===== BAD APPROACH: using 'global' keyword =====</span>
 <span class="var">counter</span> <span class="op">=</span> <span class="num">0</span>
 
@@ -179,7 +179,7 @@ Hello</span></div></div>
     <span class="var">counter</span> <span class="op">=</span> <span class="var">counter</span> <span class="op">+</span> <span class="num">1</span>
 
 <span class="fn">increment_bad</span>()
-<span class="fn">print</span>(<span class="var">counter</span>)  <span class="com"># 1 — it works, but HOW did counter change? Not obvious!</span>
+<span class="fn">print</span>(<span class="var">counter</span>)  <span class="com"># 1, it works, but HOW did counter change? Not obvious!</span>
 
 <span class="com"># The problem: if you have 10 functions all using 'global counter',</span>
 <span class="com"># any one of them could change it at any time. Finding bugs = nightmare.</span>
@@ -192,13 +192,13 @@ Hello</span></div></div>
 
 <span class="var">counter</span> <span class="op">=</span> <span class="num">0</span>
 <span class="var">counter</span> <span class="op">=</span> <span class="fn">increment_good</span>(<span class="var">counter</span>)   <span class="com"># CLEAR: counter goes in, new value comes out</span>
-<span class="fn">print</span>(<span class="var">counter</span>)  <span class="com"># 1 — same result, but you can SEE exactly what's happening</span>
+<span class="fn">print</span>(<span class="var">counter</span>)  <span class="com"># 1, same result, but you can SEE exactly what's happening</span>
 <span class="com"># Reading this line, you KNOW counter is being updated. No mystery.</span></div></div>
   </div>
 
   <div class="warning">
     <div class="warning-label">⚠️ Rule of Thumb</div>
-    <p><strong>Functions should get data IN through parameters and send data OUT through return.</strong> Avoid using the <code>global</code> keyword. If you see yourself needing it, rethink your design — almost always there's a cleaner way using parameters and return values. Professional programmers avoid <code>global</code> in nearly all cases.</p>
+    <p><strong>Functions should get data IN through parameters and send data OUT through return.</strong> Avoid using the <code>global</code> keyword. If you see yourself needing it, rethink your design, almost always there's a cleaner way using parameters and return values. Professional programmers avoid <code>global</code> in nearly all cases.</p>
   </div>
 
   <div class="mcq" data-correct="B">
@@ -210,11 +210,11 @@ Hello</span></div></div>
       <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> It makes the program slower</div>
       <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Python doesn't support global variables</div>
     </div>
-    <div class="mcq-explain">It works, but when any function can secretly modify a variable, tracing bugs becomes a nightmare. The good approach: pass values in through parameters and return values out — explicit and predictable.</div>
+    <div class="mcq-explain">It works, but when any function can secretly modify a variable, tracing bugs becomes a nightmare. The good approach: pass values in through parameters and return values out, explicit and predictable.</div>
   </div>
 
   <div class="concept">
-    <h3>💡 Dictionary Recap — A Realistic Example</h3>
+    <h3>💡 Dictionary Recap, A Realistic Example</h3>
     <div>Think of a car listing website. Each car has properties: brand, model, year, price. A dictionary is perfect for this:</div>
   </div>
 
@@ -241,11 +241,11 @@ Hello</span></div></div>
     [<span class="str">"Honda"</span>,  <span class="str">"Civic"</span>,   <span class="num">18000</span>],
 ]
 <span class="com"># cars_list[0][2] = 15000... but WHAT is index 2? Price? Year?</span>
-<span class="com"># With dicts: cars[0]["price"] = 15000 — much clearer!</span></div></div>
+<span class="com"># With dicts: cars[0]["price"] = 15000, much clearer!</span></div></div>
   </div>
 
   <div class="concept">
-    <h3>💡 Looping Patterns — List vs Dict</h3>
+    <h3>💡 Looping Patterns, List vs Dict</h3>
     <div>These are the patterns you'll use hundreds of times:</div>
   </div>
 
@@ -289,7 +289,7 @@ Hello</span></div></div>
       <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> It makes the program slower</div>
       <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> Python doesn't support global variables</div>
     </div>
-    <div class="mcq-explain">It works, but when any function can secretly modify a variable, tracing bugs becomes a nightmare. Better to pass values in and return values out — explicit and predictable.</div>
+    <div class="mcq-explain">It works, but when any function can secretly modify a variable, tracing bugs becomes a nightmare. Better to pass values in and return values out, explicit and predictable.</div>
   </div>
 </section>
 
@@ -299,13 +299,13 @@ Hello</span></div></div>
 <section class="lab-section" id="mod2">
   <div class="section-label">Module 02</div>
   <h2>Understanding File Types</h2>
-  <p class="section-intro">Programs don't just live in the terminal — they read and write files. Let's understand what kinds of files exist and how Python can work with them.</p>
+  <p class="section-intro">Programs don't just live in the terminal, they read and write files. Let's understand what kinds of files exist and how Python can work with them.</p>
 
   <div class="concept">
     <h3>💡 Two Categories of Files</h3>
     <div>
-      <strong>Text files</strong> — contain human-readable text. You can open them in Notepad and see the content. Examples: <code>.txt</code>, <code>.csv</code>, <code>.py</code>, <code>.html</code>, <code>.json</code>. Python can read these directly.<br><br>
-      <strong>Binary files</strong> — contain data encoded in a way only specific programs understand. Opening them in Notepad shows gibberish. Examples: <code>.jpg</code>, <code>.mp3</code>, <code>.mp4</code>, <code>.pdf</code>, <code>.xlsx</code>. Python needs special libraries (third-party code) to work with these.<br><br>
+      <strong>Text files</strong>, contain human-readable text. You can open them in Notepad and see the content. Examples: <code>.txt</code>, <code>.csv</code>, <code>.py</code>, <code>.html</code>, <code>.json</code>. Python can read these directly.<br><br>
+      <strong>Binary files</strong>, contain data encoded in a way only specific programs understand. Opening them in Notepad shows gibberish. Examples: <code>.jpg</code>, <code>.mp3</code>, <code>.mp4</code>, <code>.pdf</code>, <code>.xlsx</code>. Python needs special libraries (third-party code) to work with these.<br><br>
       The key idea: <strong>all files can be read and written by Python</strong>. For text files, Python handles it natively. For binary files, you install a package (someone else's code) that knows how to interpret that format. We'll learn about packages in Module 5.
     </div>
   </div>
@@ -337,7 +337,7 @@ Hello</span></div></div>
     1. <strong>Open</strong> the notebook (<code>open()</code>)<br>
     2. <strong>Read</strong> from it or <strong>Write</strong> to it<br>
     3. <strong>Close</strong> the notebook when done<br><br>
-    Python uses the <code>with open()</code> pattern, which automatically closes the file for you — like a bookmark that closes the notebook when you walk away.</p>
+    Python uses the <code>with open()</code> pattern, which automatically closes the file for you, like a bookmark that closes the notebook when you walk away.</p>
   </div>
 
   <div class="lab-task">
@@ -352,19 +352,19 @@ Hello</span></div></div>
     <div class="concept">
       <h3>📖 Breaking Down Every Part</h3>
       <div>
-        <code>with</code> — starts a "managed block" that auto-closes the file when done<br>
-        <code>open("notes.txt", "w")</code> — opens (or creates) a file named "notes.txt" in <strong>write</strong> mode<br>
-        <code>as file</code> — gives the opened file a variable name <code>file</code> (you choose this name)<br>
-        <code>:</code> — starts the indented block (just like <code>if</code> and <code>for</code>)<br>
-        <code>file.write("text")</code> — writes text to the file<br>
-        <code>\n</code> — a special character meaning "new line" (like pressing Enter)
+        <code>with</code>, starts a "managed block" that auto-closes the file when done<br>
+        <code>open("notes.txt", "w")</code>, opens (or creates) a file named "notes.txt" in <strong>write</strong> mode<br>
+        <code>as file</code>, gives the opened file a variable name <code>file</code> (you choose this name)<br>
+        <code>:</code>, starts the indented block (just like <code>if</code> and <code>for</code>)<br>
+        <code>file.write("text")</code>, writes text to the file<br>
+        <code>\n</code>, a special character meaning "new line" (like pressing Enter)
       </div>
     </div>
   </div>
 
   <div class="lab-task">
     <div class="task-header"><span class="task-badge">TASK 3.2</span><span class="task-title">Reading a Text File</span></div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">read_file.py</span></div><div class="code-body"><span class="com"># "r" = read mode (default — just reads, doesn't change the file)</span>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">read_file.py</span></div><div class="code-body"><span class="com"># "r" = read mode (default, just reads, doesn't change the file)</span>
 <span class="kw">with</span> <span class="fn">open</span>(<span class="str">"notes.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">file</span>:
     <span class="var">content</span> <span class="op">=</span> <span class="var">file</span>.<span class="fn">read</span>()    <span class="com"># reads the ENTIRE file as one string</span>
 
@@ -380,7 +380,7 @@ Hello</span></div></div>
   </div>
 
   <div class="lab-task">
-    <div class="task-header"><span class="task-badge">TASK 3.3</span><span class="task-title">Useful Example — Word Counter</span></div>
+    <div class="task-header"><span class="task-badge">TASK 3.3</span><span class="task-title">Useful Example, Word Counter</span></div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">word_count.py</span></div><div class="code-body"><span class="kw">with</span> <span class="fn">open</span>(<span class="str">"notes.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">file</span>:
     <span class="var">text</span> <span class="op">=</span> <span class="var">file</span>.<span class="fn">read</span>()
 
@@ -417,7 +417,7 @@ Hello</span></div></div>
   </div>
 
   <div class="debug-box">
-    <div class="debug-label">🐛 Debug — FileNotFoundError</div>
+    <div class="debug-label">🐛 Debug, FileNotFoundError</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">debug_file.py</span></div><div class="code-body"><span class="kw">with</span> <span class="fn">open</span>(<span class="str">"data.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
     <span class="fn">print</span>(<span class="var">f</span>.<span class="fn">read</span>())</div></div>
     <button class="answer-toggle" onclick="toggleAnswer(this)">Reveal Fix</button>
@@ -430,18 +430,18 @@ Hello</span></div></div>
 <!-- ═══════════════════ MODULE 4: MODULES & IMPORTS ═══════════════════ -->
 <section class="lab-section" id="mod4">
   <div class="section-label">Module 04</div>
-  <h2>Modules &amp; Imports — Splitting Code</h2>
+  <h2>Modules &amp; Imports, Splitting Code</h2>
   <p class="section-intro">As programs grow, putting everything in one file becomes messy. Modules let you <strong>split code into multiple files</strong> and reuse it.</p>
 
   <div class="concept">
     <h3>💡 What Is a Module?</h3>
-    <div>A <strong>module</strong> is just a <code>.py</code> file that contains functions, variables, or classes. When you write <code>import csv</code>, you're importing a module (a file called <code>csv.py</code>) that someone wrote. You can create your own modules too — any <code>.py</code> file can be imported by another <code>.py</code> file.</div>
+    <div>A <strong>module</strong> is just a <code>.py</code> file that contains functions, variables, or classes. When you write <code>import csv</code>, you're importing a module (a file called <code>csv.py</code>) that someone wrote. You can create your own modules too, any <code>.py</code> file can be imported by another <code>.py</code> file.</div>
   </div>
 
   <div class="lab-task">
     <div class="task-header"><span class="task-badge">TASK 4.1</span><span class="task-title">Create Your Own Module</span></div>
     <p>Create <strong>two files</strong> in your <code>day7</code> folder:</p>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">my_helpers.py — file #1</span></div><div class="code-body"><span class="com"># This file is a MODULE — it contains reusable functions</span>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">my_helpers.py, file #1</span></div><div class="code-body"><span class="com"># This file is a MODULE, it contains reusable functions</span>
 
 <span class="kw">def</span> <span class="fn">greet</span>(<span class="var">name</span>):
     <span class="kw">return</span> <span class="str">"Hello, "</span> <span class="op">+</span> <span class="var">name</span> <span class="op">+</span> <span class="str">"!"</span>
@@ -450,7 +450,7 @@ Hello</span></div></div>
     <span class="kw">return</span> <span class="var">a</span> <span class="op">+</span> <span class="var">b</span>
 
 <span class="var">PI</span> <span class="op">=</span> <span class="num">3.14159</span></div></div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">main.py — file #2</span></div><div class="code-body"><span class="com"># This file USES the module</span>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON</span><span class="code-filename">main.py, file #2</span></div><div class="code-body"><span class="com"># This file USES the module</span>
 <span class="kw">import</span> my_helpers
 
 <span class="fn">print</span>(my_helpers.<span class="fn">greet</span>(<span class="str">"Pooja"</span>))   <span class="com"># Hello, Pooja!</span>
@@ -478,7 +478,7 @@ Hello</span></div></div>
 <span class="kw">import</span> my_helpers <span class="kw">as</span> mh
 <span class="fn">print</span>(mh.<span class="fn">greet</span>(<span class="str">"C"</span>))
 
-<span class="com"># Style 4: import everything (not recommended — pollutes namespace)</span>
+<span class="com"># Style 4: import everything (not recommended, pollutes namespace)</span>
 <span class="kw">from</span> my_helpers <span class="kw">import</span> <span class="op">*</span>
 <span class="fn">print</span>(<span class="fn">greet</span>(<span class="str">"D"</span>))</div></div>
   </div>
@@ -486,10 +486,10 @@ Hello</span></div></div>
   <div class="concept">
     <h3>💡 Why Split Into Multiple Files?</h3>
     <div>
-      <strong>1. Organization</strong> — keep related functions together (e.g., <code>math_helpers.py</code>, <code>file_helpers.py</code>)<br>
-      <strong>2. Reusability</strong> — import the same module in many programs<br>
-      <strong>3. Collaboration</strong> — different people can work on different files<br>
-      <strong>4. Readability</strong> — smaller files are easier to understand
+      <strong>1. Organization</strong>, keep related functions together (e.g., <code>math_helpers.py</code>, <code>file_helpers.py</code>)<br>
+      <strong>2. Reusability</strong>, import the same module in many programs<br>
+      <strong>3. Collaboration</strong>, different people can work on different files<br>
+      <strong>4. Readability</strong>, smaller files are easier to understand
     </div>
   </div>
 
@@ -511,13 +511,13 @@ Hello</span></div></div>
 <!-- ═══════════════════ MODULE 5: PIP ═══════════════════ -->
 <section class="lab-section" id="mod5">
   <div class="section-label">Module 05</div>
-  <h2>Pip — Installing Packages</h2>
+  <h2>Pip, Installing Packages</h2>
   <p class="section-intro">You've been using Python's built-in modules (<code>random</code>, <code>csv</code>). But there are <strong>hundreds of thousands</strong> of packages written by other programmers that you can download and use for free.</p>
 
   <div class="concept">
     <h3>💡 What Is a Package?</h3>
     <div>
-      A <strong>package</strong> is a collection of code that someone else wrote, tested, and shared for anyone to use. Instead of writing code to handle image processing from scratch, you install a package like <code>Pillow</code> that already does it. Packages are stored on <strong>PyPI</strong> (Python Package Index) — a website at <code>pypi.org</code> — like an app store for Python code.<br><br>
+      A <strong>package</strong> is a collection of code that someone else wrote, tested, and shared for anyone to use. Instead of writing code to handle image processing from scratch, you install a package like <code>Pillow</code> that already does it. Packages are stored on <strong>PyPI</strong> (Python Package Index), a website at <code>pypi.org</code>, like an app store for Python code.<br><br>
       <strong>pip</strong> is the command-line tool that downloads and installs packages from PyPI to your computer. It's like an app store you use from the terminal.
     </div>
   </div>
@@ -528,7 +528,7 @@ Hello</span></div></div>
 <span class="prompt">PS&gt;</span> <span class="cmd">pip --version</span>
 <span class="output">pip 24.0 from ... (python 3.12)</span>
 
-<span class="com"># Install a package (example: requests — for making web requests)</span>
+<span class="com"># Install a package (example: requests, for making web requests)</span>
 <span class="prompt">PS&gt;</span> <span class="cmd">pip install requests</span>
 <span class="output">Downloading requests-2.31.0 ...
 Successfully installed requests-2.31.0</span>
@@ -573,8 +573,8 @@ cowsay.<span class="fn">cow</span>(<span class="str">"I was installed with pip!"
     <h3>💡 How to Find the Right Package</h3>
     <div>
       1. Go to <strong>pypi.org</strong> and search for what you need (e.g., "excel", "email", "image resize")<br>
-      2. Look at the download count — popular packages are usually more reliable<br>
-      3. Check the documentation — good packages have clear instructions<br>
+      2. Look at the download count, popular packages are usually more reliable<br>
+      3. Check the documentation, good packages have clear instructions<br>
       4. Install it with <code>pip install package-name</code><br>
       5. Import it in your code and use it
     </div>
@@ -598,12 +598,12 @@ cowsay.<span class="fn">cow</span>(<span class="str">"I was installed with pip!"
 <!-- ═══════════════════ MODULE 6: VIRTUAL ENVIRONMENTS ═══════════════════ -->
 <section class="lab-section" id="mod6">
   <div class="section-label">Module 06</div>
-  <h2>Virtual Environments — Project Isolation</h2>
+  <h2>Virtual Environments, Project Isolation</h2>
   <p class="section-intro">As a programmer, you'll work on multiple projects. Each project may need different packages or different versions. Virtual environments keep them separate so they don't conflict.</p>
 
   <div class="analogy">
     <div class="analogy-label">🏠 Real-World Analogy</div>
-    <p>Imagine you have three art projects. One needs oil paints, one needs watercolors, one needs colored pencils. If you dump all supplies into one box, it's chaos — and oil paint might ruin the watercolors. So you give each project its <strong>own supply box</strong>. That's a virtual environment — a <strong>separate, isolated set of packages for each project</strong>.</p>
+    <p>Imagine you have three art projects. One needs oil paints, one needs watercolors, one needs colored pencils. If you dump all supplies into one box, it's chaos, and oil paint might ruin the watercolors. So you give each project its <strong>own supply box</strong>. That's a virtual environment, a <strong>separate, isolated set of packages for each project</strong>.</p>
   </div>
 
   <div class="concept">
@@ -624,7 +624,7 @@ cowsay.<span class="fn">cow</span>(<span class="str">"I was installed with pip!"
 <span class="com"># This creates a folder called "venv" with its own Python + pip inside</span>
 <span class="com"># Wait a few seconds...</span>
 
-<span class="com"># Step 3: Check — a new "venv" folder appeared</span>
+<span class="com"># Step 3: Check, a new "venv" folder appeared</span>
 <span class="prompt">PS H:\Pooja\day7&gt;</span> <span class="cmd">ls venv</span>
 <span class="output">Include  Lib  Scripts  pyvenv.cfg</span></div></div>
     <p style="margin-top:.75rem;font-size:.92rem;color:var(--text-muted);"><code>python -m venv venv</code> means: "Python, run the <code>venv</code> module to create a virtual environment in a folder called <code>venv</code>." The folder name can be anything, but <code>venv</code> is the convention.</p>
@@ -714,7 +714,7 @@ pip      24.0</span></div></div>
       <div class="mcq-opt" data-value="C" onclick="checkMCQ(this)"><span class="letter">C</span> The prompt shows (venv) at the beginning</div>
       <div class="mcq-opt" data-value="D" onclick="checkMCQ(this)"><span class="letter">D</span> A notification pops up</div>
     </div>
-    <div class="mcq-explain">When activated, the terminal prompt starts with <code>(venv)</code> — that's your visual indicator that you're working inside the virtual environment.</div>
+    <div class="mcq-explain">When activated, the terminal prompt starts with <code>(venv)</code>, that's your visual indicator that you're working inside the virtual environment.</div>
   </div>
 </section>
 
@@ -744,7 +744,7 @@ pip      24.0</span></div></div>
   <div class="celebrate">
     <div class="emoji">🏆</div>
     <h3>You're Thinking Like a Professional!</h3>
-    <p>You can now read files, organize code, install other people's code, and manage project environments. These aren't just "beginner" skills — this is the exact workflow professional developers use daily. You're building real-world capabilities.</p>
+    <p>You can now read files, organize code, install other people's code, and manage project environments. These aren't just "beginner" skills, this is the exact workflow professional developers use daily. You're building real-world capabilities.</p>
   </div>
 </section>
 

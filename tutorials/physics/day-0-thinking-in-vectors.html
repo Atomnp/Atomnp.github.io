@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vectors in Physics — A Visual Tutorial</title>
+<title>Vectors in Physics, A Visual Tutorial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Newsreader:ital,opsz@0,6..72;1,6..72&family=Caveat:wght@500;700&family=Spline+Sans+Mono:wght@500&display=swap" rel="stylesheet">
@@ -158,46 +158,46 @@
       <div class="k"><span class="sw" style="background:var(--acc)"></span>acceleration</div>
       <div class="k"><span class="sw" style="background:var(--force)"></span>force</div>
     </div>
-    <p class="hint" style="text-align:center">Keep this color code in mind — it's used everywhere below.</p>
+    <p class="hint" style="text-align:center">Keep this color code in mind, it's used everywhere below.</p>
   </header>
 
   <!-- ===================== 1. SCALAR vs VECTOR ===================== -->
   <section class="reveal">
     <div class="step-no">Step 1 · The idea</div>
     <h2>Some numbers need a direction. Some don't.</h2>
-    <p class="lead">Suppose I tell you the temperature is <b>25°C</b>. That's the whole story — one number. But if I say
+    <p class="lead">Suppose I tell you the temperature is <b>25°C</b>. That's the whole story, one number. But if I say
        "there's a wind of <b>30 km/h</b>," your next question is <em>"which way?"</em> A number alone isn't enough;
        wind has a <b>direction</b>.</p>
     <p>That little difference splits all of physics into two families:</p>
 
     <div class="two-col">
       <div class="minicard s">
-        <h4>Scalars — just a size</h4>
+        <h4>Scalars, just a size</h4>
         <p style="margin:.2em 0">A single number (with a unit). No direction.</p>
         <ul class="clean" style="font-size:.95rem">
-          <li>temperature — 25 °C</li>
-          <li>mass — 5 kg</li>
-          <li>time — 10 s</li>
-          <li>speed — 60 km/h</li>
-          <li>distance — 5 km</li>
+          <li>temperature, 25 °C</li>
+          <li>mass, 5 kg</li>
+          <li>time, 10 s</li>
+          <li>speed, 60 km/h</li>
+          <li>distance, 5 km</li>
         </ul>
       </div>
       <div class="minicard v">
-        <h4>Vectors — size <em>and</em> direction</h4>
+        <h4>Vectors, size <em>and</em> direction</h4>
         <p style="margin:.2em 0">A number <em>plus</em> a "which way."</p>
         <ul class="clean" style="font-size:.95rem">
-          <li>displacement — 5 km <b>north-east</b></li>
-          <li>velocity — 60 km/h <b>heading north</b></li>
-          <li>acceleration — gaining speed <b>downhill</b></li>
-          <li>force — a 10 N push <b>to the right</b></li>
-          <li>weight — pull of gravity <b>straight down</b></li>
+          <li>displacement, 5 km <b>north-east</b></li>
+          <li>velocity, 60 km/h <b>heading north</b></li>
+          <li>acceleration, gaining speed <b>downhill</b></li>
+          <li>force, a 10 N push <b>to the right</b></li>
+          <li>weight, pull of gravity <b>straight down</b></li>
         </ul>
       </div>
     </div>
 
     <p>Notice the pairs: <b>distance</b> vs <b>displacement</b>, <b>speed</b> vs <b>velocity</b>. The first of each is a scalar
        (just "how much"), the second is a vector ("how much, and which way"). Walk 5 km in a circle and your <em>distance</em>
-       is 5 km but your <em>displacement</em> is zero — you ended up where you started.</p>
+       is 5 km but your <em>displacement</em> is zero, you ended up where you started.</p>
 
     <div class="card big-idea">
       <div class="label">the one big idea ✦</div>
@@ -209,7 +209,7 @@
 
     <div class="def">
       <div class="term">Scalar</div>
-      <p>A quantity that is fully described by a single number together with a unit — nothing else is needed.
+      <p>A quantity that is fully described by a single number together with a unit, nothing else is needed.
          "The bag has a mass of 5 kg" or "the trip took 10 s" tells you everything. Scalars can be compared, added,
          and multiplied just like ordinary numbers: 3 kg + 2 kg = 5 kg, no questions asked.</p>
     </div>
@@ -217,14 +217,14 @@
     <div class="def">
       <div class="term">Vector</div>
       <p>A quantity that needs <b>two</b> pieces of information to be complete: a <b>magnitude</b> (how much) <em>and</em>
-         a <b>direction</b> (which way). "A force of 10 N" is unfinished — 10 N <em>in what direction?</em> Until you say
+         a <b>direction</b> (which way). "A force of 10 N" is unfinished, 10 N <em>in what direction?</em> Until you say
          "10 N to the right," you haven't named the vector. Because of that extra direction, vectors do <em>not</em> add
          like plain numbers (we'll see exactly how they add in Steps 3–4).</p>
     </div>
 
     <div class="def">
       <div class="term">Magnitude</div>
-      <p>The "size" or "amount" of a vector, always a non-negative number with a unit — for a velocity it's the speed,
+      <p>The "size" or "amount" of a vector, always a non-negative number with a unit, for a velocity it's the speed,
          for a force it's how hard the push is. We write the magnitude of a vector <span class="sym">v</span> as
          <span class="sym">|v|</span> or just plain <span class="sym">v</span>. The direction is the other half of the
          story and is usually given as an angle.</p>
@@ -250,7 +250,7 @@
         <div class="pill vec big">magnitude (length) = <b id="ar-mag">5.0</b></div>
         <div class="pill vec">direction (angle) = <b id="ar-ang">37°</b></div>
       </div>
-      <p class="hint">↑ Drag the orange tip. Two arrows are equal if they have the same length and point the same way — it doesn't matter where you draw them.</p>
+      <p class="hint">↑ Drag the orange tip. Two arrows are equal if they have the same length and point the same way, it doesn't matter where you draw them.</p>
     </div>
 
     <p>An important habit: a vector doesn't care <em>where</em> it sits. A 5 N push to the right is the same vector whether
@@ -259,7 +259,7 @@
     <div class="def">
       <div class="term">The anatomy of an arrow</div>
       <p>Every vector-arrow has a <b>tail</b> (where it starts) and a <b>head</b> (the pointed end). The
-         <b>length</b> from tail to head represents the magnitude — drawn to scale, so an arrow twice as long means
+         <b>length</b> from tail to head represents the magnitude, drawn to scale, so an arrow twice as long means
          twice the magnitude. The way the arrow <b>points</b> is the direction.</p>
     </div>
 
@@ -269,7 +269,7 @@
 
     <div class="def">
       <div class="term">Equal vectors &amp; the negative of a vector</div>
-      <p>Two vectors are <b>equal</b> when they have the same magnitude <em>and</em> the same direction — even if they're
+      <p>Two vectors are <b>equal</b> when they have the same magnitude <em>and</em> the same direction, even if they're
          drawn in different places on the page. Reverse a vector's direction (turn it 180°) while keeping its length and
          you get its <b>negative</b>, written <span class="sym">−v</span>: same size, opposite way. "5 m/s east" and
          "5 m/s west" are negatives of each other.</p>
@@ -283,7 +283,7 @@
     <p class="lead">Here's the trick that makes vectors easy to actually calculate with. Instead of dealing with a slanted arrow,
        we replace it with <b>two</b> arrows at right angles: one purely <span class="vx">horizontal (the x-part)</span> and one
        purely <span class="vy">vertical (the y-part)</span>.</p>
-    <p>Think of giving directions in a city with a grid of streets. You could say "walk 500 m at 53° north of east" — or you
+    <p>Think of giving directions in a city with a grid of streets. You could say "walk 500 m at 53° north of east", or you
        could just say <span class="vx">"3 blocks east"</span> and <span class="vy">"4 blocks north."</span> Same destination,
        but the second version is way easier to follow. Breaking a vector into x and y is exactly this.</p>
 
@@ -309,7 +309,7 @@
       <div class="term">Component</div>
       <p>A <b>component</b> of a vector is how much of it points along one chosen axis. The
          <span class="vx">x-component</span> is the part along the horizontal axis; the <span class="vy">y-component</span>
-         is the part along the vertical axis. Each component is itself just a number (with a sign and unit) — it tells you
+         is the part along the vertical axis. Each component is itself just a number (with a sign and unit), it tells you
          "this much of the vector goes this way."</p>
     </div>
 
@@ -324,7 +324,7 @@
 
     <p class="note">Components carry a <b>sign</b>. If the vector points left, its <span class="vx">x-component is
        negative</span>; if it points down, its <span class="vy">y-component is negative</span>. The sign <em>is</em> the
-       direction along that axis — so once you've resolved a vector, each axis becomes a simple "positive or negative
+       direction along that axis, so once you've resolved a vector, each axis becomes a simple "positive or negative
        number line," which is exactly why components make problems easy.</p>
 
     <div class="card">
@@ -343,7 +343,7 @@
   <section class="reveal">
     <div class="step-no">Step 4 · The mind-bender</div>
     <h2>The x and y parts don't talk to each other</h2>
-    <p class="lead">This is the single most useful — and most surprising — fact about vectors. The horizontal and vertical
+    <p class="lead">This is the single most useful, and most surprising, fact about vectors. The horizontal and vertical
        directions are <strong>independent</strong>. What happens sideways has <em>zero</em> effect on what happens up-and-down,
        and vice-versa.</p>
 
@@ -366,10 +366,10 @@
         <div class="pill vy">both balls' height (y) = <b id="indep-y">always identical</b></div>
         <div class="pill vx">thrown ball's sideways speed = <b id="indep-vxval">8.0</b> m/s</div>
       </div>
-      <p class="hint">The dashed magenta line connects the two balls — it stays perfectly horizontal, proving they fall together. Change the sideways push; they <em>still</em> land at the same time.</p>
+      <p class="hint">The dashed magenta line connects the two balls, it stays perfectly horizontal, proving they fall together. Change the sideways push; they <em>still</em> land at the same time.</p>
     </div>
 
-    <p>Why does this work? Gravity is a force that points <span class="vy">straight down</span> — it only changes the
+    <p>Why does this work? Gravity is a force that points <span class="vy">straight down</span>, it only changes the
        <span class="vy">vertical part</span> of the motion. There is nothing pushing the coins sideways once they leave your
        hand, so the <span class="vx">horizontal part</span> just coasts along unchanged. The two stories run in parallel and
        never interfere.</p>
@@ -382,19 +382,19 @@
          downward motion.</p>
     </div>
 
-    <p>This is more than a fun fact — it's the <b>working method</b> of 2-D physics. Whenever a problem looks
+    <p>This is more than a fun fact, it's the <b>working method</b> of 2-D physics. Whenever a problem looks
        complicated because things move diagonally, you <b>split every vector into x and y, solve two ordinary 1-D
        problems, and then recombine</b> the answers at the end. Two easy problems instead of one hard one.</p>
 
     <p class="note"><b>Why "same clock" matters:</b> the only link between the horizontal and vertical stories is
        <b>time</b>. In the coin demo, both coins fall for the <em>same</em> number of seconds, so they hit the floor
-       together — but during those seconds the thrown coin also travels sideways, which the dropped coin doesn't. Same
+       together, but during those seconds the thrown coin also travels sideways, which the dropped coin doesn't. Same
        vertical story, different horizontal story, one shared timer.</p>
 
     <div class="card">
       <h3 style="margin-top:0">More everyday versions of the same idea</h3>
       <ul class="clean">
-        <li>Walking straight across the deck of a moving boat — your across-deck steps are unaffected by how fast the boat moves forward.</li>
+        <li>Walking straight across the deck of a moving boat, your across-deck steps are unaffected by how fast the boat moves forward.</li>
         <li>A bullet fired horizontally and a bullet dropped from the same height hit the ground together (the famous "shoot &amp; drop" demo).</li>
         <li>Pouring water from a moving train: it falls in a clean arc because its forward speed and its downward fall are separate.</li>
       </ul>
@@ -410,7 +410,7 @@
        position is changing: its length is your <b>speed</b>, and it <b>points in the direction you're moving</b>.</p>
     <p>If something moves diagonally, it has both a sideways speed <span class="vx">vₓ</span> and an up/down speed
        <span class="vy">v_y</span> at the same time. Set the two parts, then press <b>Run</b>. Watch the object's
-       <span class="vx">horizontal progress</span> and <span class="vy">vertical progress</span> grow into a right triangle —
+       <span class="vx">horizontal progress</span> and <span class="vy">vertical progress</span> grow into a right triangle,
        the slanted path is just those two added together.</p>
 
     <div class="widget">
@@ -428,7 +428,7 @@
         <div class="pill vy">v_y = <b id="vel-yv">3.0</b></div>
         <div class="pill vel big">speed = √(vₓ²+v_y²) = <b id="vel-spd">5.0</b></div>
       </div>
-      <p class="hint">Press Run. The blue leg is how far it has gone sideways, the magenta leg how far up/down — the object rides the corner. It returns to the start when it reaches an edge.</p>
+      <p class="hint">Press Run. The blue leg is how far it has gone sideways, the magenta leg how far up/down, the object rides the corner. It returns to the start when it reaches an edge.</p>
     </div>
     <p>So "moving in 2D" is really just "having an x-velocity and a y-velocity at the same time." The familiar
        <b>x</b> and <b>y</b> on a graph are simply the two directions we split everything into.</p>
@@ -436,14 +436,14 @@
     <div class="def">
       <div class="term">Position &amp; displacement</div>
       <p><b>Position</b> is where an object is, given as coordinates <span class="sym">(x, y)</span> measured from some
-         agreed origin. <b>Displacement</b> is the vector from a starting position to an ending position — a straight
+         agreed origin. <b>Displacement</b> is the vector from a starting position to an ending position, a straight
          arrow "from here to there." It's different from <b>distance</b> (a scalar): displacement cares only about start
          and end points, not the path taken.</p>
     </div>
 
     <div class="def">
       <div class="term">Velocity</div>
-      <p>A vector equal to the <b>rate of change of position</b> — how much displacement happens each second, and in
+      <p>A vector equal to the <b>rate of change of position</b>, how much displacement happens each second, and in
          which direction. Its unit is metres per second <span class="sym">(m/s)</span>. Its
          <span class="vx">x-component vₓ</span> is how fast the position's x changes; its
          <span class="vy">y-component v_y</span> is how fast y changes.</p>
@@ -451,7 +451,7 @@
 
     <div class="def">
       <div class="term">Speed (the scalar partner)</div>
-      <p><b>Speed</b> is just the <b>magnitude</b> of velocity — the bare number on the speedometer, with no direction
+      <p><b>Speed</b> is just the <b>magnitude</b> of velocity, the bare number on the speedometer, with no direction
          attached: <span class="sym">speed = |v| = √(vₓ² + v_y²)</span>. A car going round a roundabout at a steady
          50 km/h has <em>constant speed</em> but <em>changing velocity</em>, because its direction keeps changing.</p>
     </div>
@@ -467,7 +467,7 @@
     <h2>Acceleration is not the same as velocity</h2>
     <p class="lead">Velocity tells you how <b>position</b> changes. <span class="acc">Acceleration</span> tells you how
        <b>velocity</b> changes. It's a "change of a change." And here's the part most students miss:
-       <strong>any</strong> change in velocity is an acceleration — getting faster, getting slower, <em>or turning.</em></p>
+       <strong>any</strong> change in velocity is an acceleration, getting faster, getting slower, <em>or turning.</em></p>
 
     <p>Watch the three cases below. The <span class="vel">teal arrow</span> is velocity (where you're going); the
        <span class="acc">amber arrow</span> is acceleration (how the velocity is changing right now).</p>
@@ -491,24 +491,24 @@
       <p style="margin:.3em 0"><span class="acc">a opposite v</span> → slowing down (braking).</p>
       <p style="margin:.3em 0"><span class="acc">a sideways to v</span> → turning. In a steady circle the speed never changes,
          yet the object is <em>always</em> accelerating, because its <b>direction</b> keeps changing. The amber arrow points
-         to the center — that's "centripetal" acceleration, and it's why you feel pushed outward on a merry-go-round.</p>
+         to the center, that's "centripetal" acceleration, and it's why you feel pushed outward on a merry-go-round.</p>
     </div>
     <p class="takeaway">Velocity = where you head. Acceleration = how that heading is being changed.</p>
 
     <div class="def">
       <div class="term">Acceleration</div>
-      <p>A vector equal to the <b>rate of change of velocity</b> — how much the velocity vector changes each second, and
+      <p>A vector equal to the <b>rate of change of velocity</b>, how much the velocity vector changes each second, and
          in which direction. Its unit is metres per second per second <span class="sym">(m/s²)</span>. Crucially, it
          responds to <em>any</em> change in the velocity vector, whether that's a change in length (speed) or a change in
          where it points (direction).</p>
     </div>
 
-    <p>Because velocity is a vector, there are exactly <b>three</b> ways it can change — and each one is an acceleration:</p>
+    <p>Because velocity is a vector, there are exactly <b>three</b> ways it can change, and each one is an acceleration:</p>
     <ul class="clean">
-      <li><b>Speed increases</b> (arrow gets longer) — acceleration points <em>along</em> the velocity.</li>
-      <li><b>Speed decreases</b> (arrow gets shorter) — acceleration points <em>opposite</em> the velocity. This is what
+      <li><b>Speed increases</b> (arrow gets longer), acceleration points <em>along</em> the velocity.</li>
+      <li><b>Speed decreases</b> (arrow gets shorter), acceleration points <em>opposite</em> the velocity. This is what
           everyday language calls "deceleration," but in physics it's simply acceleration in the backward direction.</li>
-      <li><b>Direction changes</b> (arrow turns) — acceleration points <em>sideways</em> to the velocity, even if the
+      <li><b>Direction changes</b> (arrow turns), acceleration points <em>sideways</em> to the velocity, even if the
           speed never changes at all.</li>
     </ul>
 
@@ -523,7 +523,7 @@
   <!-- ===================== 7. FORCE ORDER ===================== -->
   <section class="reveal">
     <div class="step-no">Step 7 · What causes what</div>
-    <h2>Force, acceleration, velocity — which comes first?</h2>
+    <h2>Force, acceleration, velocity, which comes first?</h2>
     <p class="lead">Students often think "if it's moving, something must be pushing it." Not true. The real chain of cause and
        effect goes like this:</p>
 
@@ -538,13 +538,13 @@
        <span class="acc">acceleration</span> in the same direction, following Newton's famous rule:</p>
     <p class="formula"><span class="force">F</span> = m · <span class="acc">a</span> &nbsp;&nbsp;⟺&nbsp;&nbsp; <span class="acc">a</span> = <span class="force">F</span> / m</p>
     <p>The acceleration then gradually changes the <span class="vel">velocity</span>, and the velocity moves the
-       <span class="vecw">position</span>. So force comes <b>first</b> in the causal chain — but notice it doesn't directly
+       <span class="vecw">position</span>. So force comes <b>first</b> in the causal chain, but notice it doesn't directly
        set the velocity. That's why a moving object with <em>no</em> force keeps gliding at constant velocity forever
        (Newton's first law): nothing is there to change it.</p>
 
     <div class="def">
       <div class="term">Force</div>
-      <p>A <b>push or a pull</b> on an object — an interaction that, if unopposed, changes the object's motion. Force is
+      <p>A <b>push or a pull</b> on an object, an interaction that, if unopposed, changes the object's motion. Force is
          a vector (it has a direction), and its unit is the <b>newton</b> <span class="sym">(N)</span>. Examples: gravity
          pulling down, a hand pushing a door, friction dragging backward, a magnet attracting iron.</p>
     </div>
@@ -559,13 +559,13 @@
     <div class="def">
       <div class="term">Mass (and inertia)</div>
       <p><b>Mass</b> is a scalar, measured in kilograms <span class="sym">(kg)</span>, that measures how much an object
-         <b>resists</b> being accelerated — its <b>inertia</b>. The same force gives a small mass a big acceleration and a
+         <b>resists</b> being accelerated, its <b>inertia</b>. The same force gives a small mass a big acceleration and a
          large mass a small one, because <span class="sym">a = F/m</span>.</p>
     </div>
 
     <div class="def">
       <div class="term">Newton's first two laws</div>
-      <p><b>First law (inertia):</b> with zero net force, an object keeps doing what it was doing — at rest stays at rest,
+      <p><b>First law (inertia):</b> with zero net force, an object keeps doing what it was doing, at rest stays at rest,
          and moving keeps moving at constant velocity in a straight line. Motion needs no force to <em>continue</em>, only
          to <em>change</em>.</p>
       <p><b>Second law:</b> net force equals mass times acceleration, <span class="sym">F = m·a</span>. The acceleration
@@ -573,11 +573,11 @@
     </div>
 
     <p class="note"><b>The key subtlety:</b> force sets the <em>acceleration</em>, not the velocity. So a force can point
-       in a completely different direction from the motion — and when it does, it gradually <b>bends</b> the velocity
+       in a completely different direction from the motion, and when it does, it gradually <b>bends</b> the velocity
        rather than instantly redirecting it. That's exactly what scenario ② below shows.</p>
 
     <p>Let's watch the chain happen. Pick a situation and press <b>Run</b>. The <span class="force">force</span> (violet)
-       stays constant; keep your eye on the <span class="vel">velocity</span> (teal) — every moment, the force nudges it a
+       stays constant; keep your eye on the <span class="vel">velocity</span> (teal), every moment, the force nudges it a
        little, and the faint teal arrows left behind show how the velocity is changing over time.</p>
 
     <div class="widget">
@@ -593,7 +593,7 @@
         <div class="pill acc">acceleration a = F/m = <b id="force-acc">5.5</b></div>
         <div class="pill vel">speed = <b id="force-spd">0.0</b></div>
       </div>
-      <p class="hint" id="force-hint">Scenario ①: the object starts still. The push makes it speed up straight along the force — velocity grows from zero.</p>
+      <p class="hint" id="force-hint">Scenario ①: the object starts still. The push makes it speed up straight along the force, velocity grows from zero.</p>
     </div>
   </section>
 
@@ -603,12 +603,12 @@
     <h2>Gravity in action: the projectile</h2>
     <p class="lead">Near Earth, gravity pulls every object with the same downward <span class="acc">acceleration</span>,
        about <b>g = 9.8 m/s²</b>. (Weight is just the force version: <span class="force">F = m·g</span> downward.) Because
-       this force is purely vertical, it only touches the <span class="vy">y-part</span> of the motion — exactly the
+       this force is purely vertical, it only touches the <span class="vy">y-part</span> of the motion, exactly the
        independence idea from Step 4.</p>
 
     <p>Launch a ball below. Watch the truth of it: the <span class="vx">horizontal speed stays constant</span> the whole
        flight (no sideways force), while the <span class="vy">vertical speed</span> steadily shrinks, stops at the top,
-       then grows downward. Add those two parts at every instant and you get the smooth curved path — a parabola.</p>
+       then grows downward. Add those two parts at every instant and you get the smooth curved path, a parabola.</p>
 
     <div class="widget">
       <canvas id="cv-proj" data-w="760" data-h="450"></canvas>
@@ -620,8 +620,8 @@
         <button class="btn alt" id="proj-launch">▶ Launch</button>
       </div>
       <div class="readouts">
-        <div class="pill vx">vₓ (sideways) = <b id="proj-vx">11.5</b> — constant!</div>
-        <div class="pill vy">v_y (up/down) = <b id="proj-vy">16.4</b> — keeps changing</div>
+        <div class="pill vx">vₓ (sideways) = <b id="proj-vx">11.5</b>, constant!</div>
+        <div class="pill vy">v_y (up/down) = <b id="proj-vy">16.4</b>, keeps changing</div>
         <div class="pill acc">a = g = 9.8 m/s² down</div>
       </div>
       <p class="hint">See it? Blue never changes length; magenta shrinks, flips, and grows. Gravity touches only the vertical.</p>
@@ -631,13 +631,13 @@
       <div class="term">Acceleration due to gravity (g)</div>
       <p>Near Earth's surface every freely-falling object speeds up downward at the same rate,
          <span class="sym">g ≈ 9.8 m/s²</span>, regardless of its mass (ignoring air resistance). A heavy stone and a
-         light pebble dropped together land together — a direct consequence of <span class="sym">a = F/m</span>, since a
+         light pebble dropped together land together, a direct consequence of <span class="sym">a = F/m</span>, since a
          heavier object feels a proportionally bigger gravitational pull.</p>
     </div>
 
     <div class="def">
       <div class="term">Mass vs weight</div>
-      <p><b>Mass</b> (kg) is how much matter is in an object — the same everywhere in the universe. <b>Weight</b> is the
+      <p><b>Mass</b> (kg) is how much matter is in an object, the same everywhere in the universe. <b>Weight</b> is the
          <em>force</em> of gravity on that mass, <span class="sym">W = m·g</span>, measured in newtons and pointing
          downward. On the Moon your mass is unchanged but your weight is about one-sixth, because the Moon's g is smaller.</p>
     </div>
@@ -647,7 +647,7 @@
       <p>A <b>projectile</b> is any object moving under gravity alone after launch. Its motion is the sum of two simple
          pieces: <span class="vx">constant-velocity horizontal motion</span> (no sideways force) and
          <span class="vy">constant-acceleration vertical motion</span> (gravity). Combine a steady horizontal advance with
-         an evenly-changing vertical position and the resulting curve is a <b>parabola</b> — the smooth arch you see in a
+         an evenly-changing vertical position and the resulting curve is a <b>parabola</b>, the smooth arch you see in a
          thrown ball, a water fountain, or a basketball shot.</p>
     </div>
   </section>
@@ -659,7 +659,7 @@
     <p class="lead">This is the classic textbook setup. An <b>electron</b> is fired horizontally into the gap between two
        parallel charged plates. Between the plates there is a uniform electric field <b>E</b> (drawn as the faint vertical
        lines) pointing from the <b>+</b> plate to the <b>−</b> plate. The field pushes the charge with a constant
-       <span class="force">force F = qE</span> — so, exactly like gravity on a thrown ball, the path is a <b>parabola</b>.</p>
+       <span class="force">force F = qE</span>, so, exactly like gravity on a thrown ball, the path is a <b>parabola</b>.</p>
 
     <p>Because that force is purely vertical, the <span class="vx">horizontal speed vₓ never changes</span>; only the
        <span class="vy">vertical speed v_y</span> grows. Launch it below, and flip between an <b>electron (−)</b> and a
@@ -673,11 +673,11 @@
         <button class="btn ghost" id="ef-pos">Positive charge (+)</button>
       </div>
       <div class="readouts">
-        <div class="pill vx">vₓ = <b id="ef-vx">14.0</b> — constant</div>
-        <div class="pill vy">v_y = <b id="ef-vy">0.0</b> — built up by the field</div>
+        <div class="pill vx">vₓ = <b id="ef-vx">14.0</b>, constant</div>
+        <div class="pill vy">v_y = <b id="ef-vy">0.0</b>, built up by the field</div>
         <div class="pill vel big">exit angle θ = <b id="ef-angle">0°</b></div>
       </div>
-      <p class="hint" id="ef-note">Same picture as the projectile — a constant force gives a parabola. Watch v_y grow while vₓ stays fixed.</p>
+      <p class="hint" id="ef-note">Same picture as the projectile, a constant force gives a parabola. Watch v_y grow while vₓ stays fixed.</p>
     </div>
 
     <div class="def">
@@ -691,7 +691,7 @@
       <div class="term">Electric field (E)</div>
       <p>A region of space where a charge feels a force. The <b>electric field</b> is a vector defined as the force per
          unit positive charge, with unit newtons per coulomb <span class="sym">(N/C)</span>. A <b>uniform</b> field has
-         the same strength and direction everywhere — like the field in the gap between two parallel charged plates — which
+         the same strength and direction everywhere, like the field in the gap between two parallel charged plates, which
          is why it produces a <em>constant</em> force, just like gravity.</p>
     </div>
 
@@ -700,12 +700,12 @@
       <p>A charge <span class="sym">q</span> sitting in a field <span class="sym">E</span> feels a force
          <span class="force">F = qE</span>. For a <b>positive</b> charge the force points <em>along</em> the field; for a
          <b>negative</b> charge (like the electron) it points <em>opposite</em> the field. Either way the force is constant,
-         giving a constant acceleration <span class="sym">a = qE/m</span> and therefore a parabolic path — identical maths
+         giving a constant acceleration <span class="sym">a = qE/m</span> and therefore a parabolic path, identical maths
          to a projectile under gravity.</p>
     </div>
 
     <div class="card">
-      <h3 style="margin-top:0">The exit angle — the textbook derivation</h3>
+      <h3 style="margin-top:0">The exit angle, the textbook derivation</h3>
       <p style="margin:.3em 0">It's nothing more than "resolve into x and y, and the two are independent." Say the plates have
          length <b>L</b> and the charge enters with horizontal speed <span class="vx">vₓ</span>.</p>
       <ul class="clean">
@@ -724,7 +724,7 @@
 
     <div class="card big-idea">
       <div class="label">why this matters ✦</div>
-      <p>You just used <em>one</em> set of ideas — vectors, components, and F = m·a — to describe a thrown ball <b>and</b>
+      <p>You just used <em>one</em> set of ideas, vectors, components, and F = m·a, to describe a thrown ball <b>and</b>
          an electron. The arrows don't care whether the push comes from gravity or an electric field; the math is identical.</p>
     </div>
   </section>
@@ -750,16 +750,16 @@
       </ul>
     </div>
 
-    <h3>Glossary — every term in one place</h3>
+    <h3>Glossary, every term in one place</h3>
     <div class="card">
       <table class="simple">
         <tr><th>Term</th><th>Meaning</th><th>Vector?</th><th>Unit</th></tr>
         <tr><td>Scalar</td><td>quantity with size only</td><td>no</td><td>varies</td></tr>
         <tr><td>Vector</td><td>quantity with size <em>and</em> direction</td><td>yes</td><td>varies</td></tr>
         <tr><td>Magnitude</td><td>the "size" of a vector, |v|</td><td>no</td><td>varies</td></tr>
-        <tr><td>Direction</td><td>which way a vector points (an angle)</td><td>—</td><td>degrees</td></tr>
+        <tr><td>Direction</td><td>which way a vector points (an angle)</td><td>–</td><td>degrees</td></tr>
         <tr><td>Component</td><td>part of a vector along one axis (Vₓ, V_y)</td><td>no (signed)</td><td>varies</td></tr>
-        <tr><td>Resolving</td><td>splitting a vector into perpendicular parts</td><td>—</td><td>—</td></tr>
+        <tr><td>Resolving</td><td>splitting a vector into perpendicular parts</td><td>–</td><td>–</td></tr>
         <tr><td>Resultant</td><td>the single vector that several parts add up to</td><td>yes</td><td>varies</td></tr>
         <tr><td>Position</td><td>where an object is, (x, y)</td><td>yes</td><td>m</td></tr>
         <tr><td>Distance</td><td>length of the path travelled</td><td>no</td><td>m</td></tr>
@@ -773,8 +773,8 @@
         <tr><td>Mass</td><td>amount of matter; resistance to acceleration</td><td>no</td><td>kg</td></tr>
         <tr><td>Weight</td><td>force of gravity on a mass, m·g</td><td>yes</td><td>N</td></tr>
         <tr><td>g</td><td>acceleration due to gravity (≈9.8)</td><td>yes</td><td>m/s²</td></tr>
-        <tr><td>Projectile</td><td>object moving under gravity alone</td><td>—</td><td>—</td></tr>
-        <tr><td>Parabola</td><td>the curved path of a projectile</td><td>—</td><td>—</td></tr>
+        <tr><td>Projectile</td><td>object moving under gravity alone</td><td>–</td><td>–</td></tr>
+        <tr><td>Parabola</td><td>the curved path of a projectile</td><td>–</td><td>–</td></tr>
         <tr><td>Electric charge</td><td>property causing electric force (q)</td><td>no</td><td>C</td></tr>
         <tr><td>Electric field</td><td>force per unit positive charge (E)</td><td>yes</td><td>N/C</td></tr>
       </table>
@@ -946,7 +946,7 @@ function dragWorld(canvas,getView,onMove){
     plabel(ctx,v.X(dropped.x)-6,v.Y(H0)-14,"dropped",css('--ink-soft'),12);
     plabel(ctx,v.X(X0+0.4),v.Y(H0)-30,"thrown →",css('--vec'),12);
     vxlabel.textContent=vx.toFixed(1);
-    ylabel.textContent = (Math.abs(dropped.y-thrown.y)<0.001)?"always identical":"—";
+    ylabel.textContent = (Math.abs(dropped.y-thrown.y)<0.001)?"always identical":"–";
   }
   registerAnim(c,dt=>{ if(running){ t+=dt; if(H0-0.5*g*t*t<=0){t=Math.sqrt(2*H0/g);running=false;} } draw(); });
   dropBtn.addEventListener('click',()=>{t=0;running=true;});
@@ -1026,7 +1026,7 @@ function dragWorld(canvas,getView,onMove){
     onb.classList.add('on'); onb.classList.remove('ghost');
     if(m==='speed'){x=-5;vx=1.5;desc.innerHTML='Acceleration points the <b>same way</b> as velocity → you gain speed.';hint.textContent='Same direction as velocity = speed up.';}
     if(m==='slow'){x=-5;vx=6;desc.innerHTML='Acceleration points <b>opposite</b> the velocity → you slow down.';hint.textContent='Opposite to velocity = braking.';}
-    if(m==='circle'){ang=0;desc.innerHTML='Speed is <b>constant</b>, yet it\u2019s always accelerating — direction keeps changing.';hint.textContent='Acceleration points to the center the whole time.';}
+    if(m==='circle'){ang=0;desc.innerHTML='Speed is <b>constant</b>, yet it\u2019s always accelerating, direction keeps changing.';hint.textContent='Acceleration points to the center the whole time.';}
   }
   function draw(){
     const {ctx,W,H}=setup(c); ctx.clearRect(0,0,W,H);
@@ -1088,9 +1088,9 @@ function dragWorld(canvas,getView,onMove){
     bRest.classList.toggle('on',s==='rest'); bRest.classList.toggle('ghost',s!=='rest');
     bMove.classList.toggle('on',s==='move'); bMove.classList.toggle('ghost',s!=='move');
     if(s==='rest'){ start={x:-5,y:0}; vel0={x:0,y:0}; force={x:5.5,y:0};
-      baseHint='Scenario ①: the object starts still. The push makes it speed up straight along the force — the velocity (teal) grows from zero.'; }
+      baseHint='Scenario ①: the object starts still. The push makes it speed up straight along the force, the velocity (teal) grows from zero.'; }
     else { start={x:-5.5,y:3.2}; vel0={x:6,y:0}; force={x:0,y:-5};
-      baseHint='Scenario ②: the object is already moving right. The downward push bends its velocity — the path curves, even though the push is sideways to the motion.'; }
+      baseHint='Scenario ②: the object is already moving right. The downward push bends its velocity, the path curves, even though the push is sideways to the motion.'; }
     reset();
   }
   function reset(){ pos={x:start.x,y:start.y}; vel={x:vel0.x,y:vel0.y}; running=false; trail=[{x:pos.x,y:pos.y}]; ghosts=[]; sinceStamp=0; hint.innerHTML=baseHint; draw(); }
@@ -1120,7 +1120,7 @@ function dragWorld(canvas,getView,onMove){
     if(running){
       vel.x+=(force.x/m)*dt*SLOW; vel.y+=(force.y/m)*dt*SLOW;
       const nx=pos.x+vel.x*dt*SLOW, ny=pos.y+vel.y*dt*SLOW;
-      if(nx<XMIN||nx>XMAX||ny<YMIN||ny>YMAX){ running=false; hint.innerHTML=baseHint+' <b>Reached the edge — press Run to replay.</b>'; }
+      if(nx<XMIN||nx>XMAX||ny<YMIN||ny>YMAX){ running=false; hint.innerHTML=baseHint+' <b>Reached the edge, press Run to replay.</b>'; }
       else {
         pos.x=nx; pos.y=ny; trail.push({x:nx,y:ny}); if(trail.length>700)trail.shift();
         sinceStamp+=dt;
@@ -1136,7 +1136,7 @@ function dragWorld(canvas,getView,onMove){
 })();
 
 /* =========================================================
-   8. projectile (gravity)  — stops on landing
+   8. projectile (gravity), stops on landing
    ========================================================= */
 (function(){
   const c=document.getElementById('cv-proj');
@@ -1242,9 +1242,9 @@ function dragWorld(canvas,getView,onMove){
     }
     draw();
     note.textContent = hitPlate
-      ? "It struck a plate — lower the deflection by imagining a faster entry or weaker field."
+      ? "It struck a plate, lower the deflection by imagining a faster entry or weaker field."
       : (x>xR && !running ? "Outside the plates there is no force, so it now travels in a straight line at the exit angle."
-                          : "Same picture as the projectile — a constant force gives a parabola. Watch v_y grow while vₓ stays fixed.");
+                          : "Same picture as the projectile, a constant force gives a parabola. Watch v_y grow while vₓ stays fixed.");
   });
   function setSign(s){ sign=s; bNeg.classList.toggle('on',s<0); bNeg.classList.toggle('ghost',s>=0);
     bPos.classList.toggle('on',s>0); bPos.classList.toggle('ghost',s<=0); reset(); draw(); }
