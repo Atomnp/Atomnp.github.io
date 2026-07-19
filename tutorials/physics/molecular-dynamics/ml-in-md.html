@@ -9,7 +9,7 @@
 <link rel="canonical" href="https://neupaneaayush.com.np/tutorials/physics/molecular-dynamics/ml-in-md.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Where machine learning comes into molecular dynamics">
-<meta property="og:description" content="Why you cannot feed raw coordinates to a network, and a real trained potential that breaks a bond a pair potential never could.">
+<meta property="og:description" content="Why we cannot feed raw coordinates to a network, and a real trained potential that breaks a bond a pair potential never could.">
 <meta property="og:url" content="https://neupaneaayush.com.np/tutorials/physics/molecular-dynamics/ml-in-md.html">
 <link rel="icon" href="/assets/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/assets/icon.png">
@@ -48,8 +48,8 @@
   </header>
 
   <p class="note">
-    If you have not read <a href="./md-basics.html">Part 1</a>, start there. This
-    page assumes you know that force is the slope of the energy, and that a pair
+    Start with <a href="./md-basics.html">Part 1</a> if it is still unread. This
+    page assumes force is the slope of the energy, and that a pair
     potential adds up every pair of atoms.
   </p>
 
@@ -75,9 +75,9 @@
   </table>
 
   <p>
-    2.6 seconds does not sound slow. But remember the loop: you need this
+    2.6 seconds does not sound slow. But remember the loop: we need this
     <em>every single step</em>, and a step is one femtosecond. To simulate one
-    nanosecond, still a very short time in biology, you need a million steps.
+    nanosecond, still a very short time in biology, we need a million steps.
   </p>
   <div class="eq">1,000,000 steps × 2.6 s ≈ <span class="an2">one month of computing</span></div>
   <p>
@@ -99,10 +99,10 @@
     Here is the trick, and it is simpler than it sounds.
   </p>
   <p>
-    You cannot afford to run quantum mechanics a million times. But you
+    We cannot afford to run quantum mechanics a million times. But we
     <em>can</em> afford to run it a few thousand times. So do that: pick a few
     thousand arrangements of the atoms, and compute the exact energy for each
-    one. That is your set of examples.
+    one. That is our set of examples.
   </p>
   <p>
     Then fit a flexible mathematical function to those examples, one with enough
@@ -115,7 +115,7 @@
   </div>
   <p>
     The widget below shows this happening. The grey curve is the truth, which in
-    real life you never get to see. The dots are the expensive calculations you
+    real life we never get to see. The dots are the expensive calculations we
     chose to run. The blue curve is what a machine learning model builds from
     only those dots.
   </p>
@@ -150,7 +150,7 @@
     </div>
   </div>
 
-  <h2>3. The catch: you cannot just feed in the coordinates</h2>
+  <h2>3. The catch: we cannot just feed in the coordinates</h2>
   <p>
     So we need a function that takes atom positions and returns energy. The
     obvious thing is to feed the raw numbers, x, y, z for every atom, straight
@@ -159,7 +159,7 @@
   <p>
     A molecule sitting in empty space has the same energy no matter
     <strong>where</strong> it is, no matter <strong>which way it is turned</strong>,
-    and no matter <strong>what order you happen to list identical atoms in</strong>.
+    and no matter <strong>what order we happen to list identical atoms in</strong>.
     Physics does not care about any of those. But the raw numbers change
     completely.
   </p>
@@ -188,7 +188,7 @@
   </div>
 
   <p>
-    If you trained a network on raw coordinates, it would waste all its effort
+    If we trained a network on raw coordinates, it would waste all its effort
     learning that turning a molecule does nothing, and it would still get it
     wrong for angles it had never seen. Worse, it would give two different
     answers for the same molecule described two different ways.
@@ -203,7 +203,7 @@
   <p>
     Think of it as a fingerprint of the neighbourhood. "There are two atoms about
     1.1 Å away, one at 1.8 Å, nothing else nearby, and the angle between the
-    first two is 109°." That description is unchanged if you move the molecule,
+    first two is 109°." That description is unchanged if we move the molecule,
     turn it, or relabel identical atoms, because it never mentions where
     anything is in absolute terms.
   </p>
@@ -254,7 +254,7 @@
     The per-atom numbers are the network's own invention. It is free to divide
     the total between the atoms however it likes, as long as the total comes out
     right. Two differently trained networks will split it differently and both
-    be equally correct. So you should not read a single atom's number as "how
+    be equally correct. So we should not read a single atom's number as "how
     much energy this atom has": that quantity does not exist, because an atom's
     energy only means anything in relation to its neighbours.
   </p>
@@ -263,8 +263,8 @@
     <li><strong>It works for any number of atoms.</strong> Train on molecules
       with 5 atoms, then run on 500. There is no fixed-size input, just one
       network applied once per atom.</li>
-    <li><strong>It builds in the physics you want for free.</strong> Adding up
-      per-atom terms makes the energy automatically unchanged when you relabel
+    <li><strong>It builds in the physics we want for free.</strong> Adding up
+      per-atom terms makes the energy automatically unchanged when we relabel
       identical atoms, and it makes a system of two far-apart molecules come out
       to exactly the sum of their separate energies.</li>
   </ul>
@@ -304,7 +304,7 @@
     </div>
   </div>
 
-  <h2>6. Two more pieces, and you have a real model</h2>
+  <h2>6. Two more pieces, and we have a real model</h2>
 
   <h3>The sum is many-body, even though it looks like the pair sum</h3>
   <p>
@@ -317,25 +317,25 @@
     should be.
   </p>
   <p>
-    It also means the model does not care how big your system is. Every hydrogen
+    It also means the model does not care how big the system is. Every hydrogen
     atom shares the same small network. Train on small molecules, run on large
     ones.
   </p>
 
   <h3>Learn from forces, not just energies</h3>
   <p>
-    Every quantum calculation gives you the energy, one number. But it also
-    gives you the force on every atom, almost for free. For a molecule of N
+    Every quantum calculation gives us the energy, one number. But it also
+    gives us the force on every atom, almost for free. For a molecule of N
     atoms, that is 3N more numbers, all from the same expensive calculation.
   </p>
 
   <div class="widget" id="w-forces">
-    <div class="widget-head"><span class="tag">why it matters</span> What one expensive calculation gives you</div>
+    <div class="widget-head"><span class="tag">why it matters</span> What one expensive calculation gives us</div>
     <canvas id="c-forces"></canvas>
     <div class="widget-note">
-      Energies tell you how high the surface is at one point. Forces tell you
+      Energies tell us how high the surface is at one point. Forces tell us
       which way it tilts and how steeply, the shape, not just the height. Three
-      slopes still do not pin the curve perfectly, but they get you far closer
+      slopes still do not pin the curve perfectly, but they get us far closer
       than three heights alone, from the very same calculations. That is why a
       few thousand are enough instead of a few hundred thousand.
     </div>
@@ -344,22 +344,22 @@
   <h2>7. Putting it together</h2>
   <p>Here is the whole recipe, in order:</p>
   <ol>
-    <li>Choose a few thousand arrangements of your atoms.</li>
+    <li>Choose a few thousand arrangements of the atoms.</li>
     <li>Run the slow, accurate quantum calculation on each one. Keep the energy
       <em>and</em> the forces.</li>
     <li>Turn each atom's surroundings into a fingerprint of distances and angles.</li>
     <li>Train a small network: fingerprint in, that atom's energy out.</li>
     <li>Add up the atoms to get the total energy. Take its slope to get forces.</li>
-    <li>Put those forces into the loop from Part 1 and run your simulation.</li>
+    <li>Put those forces into the loop from Part 1 and run the simulation.</li>
   </ol>
   <p>
     That is a machine-learned interatomic potential. It is not magic and it is
     not a black box replacing physics; it is a very good curve fit to a physics
-    calculation you could not afford to keep repeating.
+    calculation we could not afford to keep repeating.
   </p>
 
   <div class="keypoint">
-    <p><b>What it buys you.</b> This exact recipe reproduces a quantum
+    <p><b>What it buys us.</b> This exact recipe reproduces a quantum
     dissociation curve to within 0.3 kcal/mol, and runs about
     <b>17,000× faster</b> than the quantum calculation it learned from, fast
     enough to run live in a browser tab.</p>
@@ -372,8 +372,8 @@
       situation unlike anything in its training set and it will answer
       confidently and possibly wrongly. This is the central difficulty in the
       field.</li>
-    <li><strong>It still needs the expensive calculations.</strong> You have not
-      escaped quantum mechanics; you have spread its cost out.</li>
+    <li><strong>It still needs the expensive calculations.</strong> We have not
+      escaped quantum mechanics; we have spread its cost out.</li>
     <li><strong>It is slower than a pair potential.</strong> Roughly a thousand
       times slower, just a hundred thousand times faster than quantum. It sits
       in between, which is exactly why it is useful.</li>

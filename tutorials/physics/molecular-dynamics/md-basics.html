@@ -40,37 +40,37 @@
     </div>
     <h1>How molecular dynamics works</h1>
     <p class="lede">
-      Molecular dynamics is a way of making a movie of atoms. You start by putting
-      atoms somewhere. Then you work out the force on each one, nudge them a tiny
-      step, and repeat. Do that a few million times and you have a movie.
+      Molecular dynamics is a way of making a movie of atoms. We start by putting
+      atoms somewhere. Then we work out the force on each one, nudge them a tiny
+      step, and repeat. Do that a few million times and we have a movie.
     </p>
     <div class="post-rule"></div>
   </header>
 
   <p>
-    This page builds the idea from the beginning. If you know that force makes
-    things accelerate, you know enough to start. Everything below is something
-    you can play with.
+    This page builds the idea from the beginning. Knowing that force makes
+    things accelerate is enough to start. Everything below is something
+    to play with.
   </p>
 
   <h2>1. What is a film of atoms actually for?</h2>
   <p>
-    Making the film is not the point. What you want are answers you cannot get
+    Making the film is not the point. What we want are answers we cannot get
     any other way. They come in two kinds.
   </p>
   <p>
-    <strong>Numbers you can check against experiment.</strong> Nearly every
+    <strong>Numbers we can check against experiment.</strong> Nearly every
     property of a material is really an average over atoms jiggling about. Run
     the film long enough, average over it, and out come real measurable
     quantities: melting and boiling points, density, stiffness, viscosity, how
     tightly a drug molecule holds on to its target, how fast a reaction goes.
-    Those averages are the actual product. The film is just how you get them.
+    Those averages are the actual product. The film is just how we get them.
   </p>
   <p>
-    <strong>Mechanisms nothing can show you.</strong> No instrument watches a
+    <strong>Mechanisms nothing can show us.</strong> No instrument watches a
     protein fold, or lithium ions squeezing through a battery electrode, or a
-    crack starting deep inside a lump of metal. Experiments usually tell you
-    what happened. The film tells you how it happened.
+    crack starting deep inside a lump of metal. Experiments usually tell us
+    what happened. The film tells us how it happened.
   </p>
   <p>Some things this is genuinely used for:</p>
   <ul>
@@ -86,7 +86,7 @@
   </ul>
   <div class="keypoint">
     <p><b>Keep this in mind for the rest of the page.</b> Everything below is
-    machinery for producing those averages. In section 7 you will measure one
+    machinery for producing those averages. In section 7 we will measure one
     yourself, and watch it tell a solid apart from a liquid.</p>
   </div>
 
@@ -103,8 +103,8 @@
   </ol>
   <p>
     That "small slice of time" is usually about one femtosecond, a millionth of
-    a billionth of a second. Atoms vibrate incredibly fast, so if you take bigger
-    steps you miss the motion and the simulation blows up.
+    a billionth of a second. Atoms vibrate incredibly fast, so if we take bigger
+    steps we miss the motion and the simulation blows up.
   </p>
 
   <div class="widget" id="w-loop">
@@ -146,8 +146,8 @@
   </p>
   <div class="eq">force = − (how fast energy changes with position)</div>
   <p>
-    The minus sign just means "downhill". If you know the energy of every
-    arrangement of atoms, you know every force, everywhere. So the real job of a
+    The minus sign just means "downhill". If we know the energy of every
+    arrangement of atoms, we know every force, everywhere. So the real job of a
     molecular simulation is to answer one question:
     <strong>given where the atoms are, what is the energy?</strong>
   </p>
@@ -182,7 +182,7 @@
       violently.</li>
   </ul>
   <p>
-    Add those together and you get a curve with a dip in it. The bottom of the
+    Add those together and we get a curve with a dip in it. The bottom of the
     dip is the comfortable distance, where the atoms would happily sit. This
     is the <strong>Lennard-Jones potential</strong>, and it is the single most
     used model in all of molecular simulation.
@@ -236,14 +236,14 @@
     is real.</p>
     <p>Splitting the total up and saying "this particular atom owns 3 units of
     it" is bookkeeping we invent for convenience. It is useful, and every model
-    on this page does it, but no experiment can hand you one atom's share,
+    on this page does it, but no experiment can hand us one atom's share,
     because an atom's energy only means anything in relation to its neighbours.
     Hold on to that distinction. It comes back in Part 2, where it decides what
     the machine learning model is actually taught.</p>
   </div>
   <p>
     Nobody programmed "become a liquid" or "form a crystal" into this. Those
-    behaviours simply appear once you add up pairs and let the atoms move.
+    behaviours simply appear once we add up pairs and let the atoms move.
   </p>
 
   <div class="widget" id="w-box">
@@ -316,7 +316,7 @@
 
   <h2>7. Getting a real number out of the film</h2>
   <p>
-    Section 1 promised that the point of all this is averages you can compare
+    Section 1 promised that the point of all this is averages we can compare
     with the real world. Here is one of them, done properly.
   </p>
   <p>
@@ -335,7 +335,7 @@
   </ul>
   <p>
     The slope of that climb is the <strong>diffusion coefficient</strong>, a
-    number you can look up in a table and check. This is a measurement, not a
+    number we can look up in a table and check. This is a measurement, not a
     picture.
   </p>
 
@@ -386,8 +386,8 @@
     not on each neighbour separately.
   </p>
   <p>
-    Add a neighbour to a lonely atom and you get a strong new bond. Add a
-    neighbour to an atom that already has eleven and you barely gain anything, the shared electrons are already spread thin. Bonds get weaker as atoms get
+    Add a neighbour to a lonely atom and we get a strong new bond. Add a
+    neighbour to an atom that already has eleven and we barely gain anything, the shared electrons are already spread thin. Bonds get weaker as atoms get
     more crowded.
   </p>
   <p>
@@ -425,7 +425,7 @@
   </div>
 
   <p>
-    You can check which one is right with a real measurement. A
+    We can check which one is right with a real measurement. A
     <strong>vacancy</strong> is a missing atom inside a crystal. The energy
     needed to make one is compared below with the energy needed to boil a single
     atom away entirely (the cohesive energy).
@@ -453,10 +453,10 @@
   <h2>9. So the whole field is one question</h2>
   <p>
     Every model on this page is an attempt to answer the same question: given
-    the positions of the atoms, what is the energy? Once you can answer it, the
+    the positions of the atoms, what is the energy? Once we can answer it, the
     loop in section 2 does the rest.
   </p>
-  <p>The answers get better and more expensive as you go down this list:</p>
+  <p>The answers get better and more expensive as we go down this list:</p>
   <table>
     <thead><tr><th>Model</th><th>Idea</th><th>Trouble</th></tr></thead>
     <tbody>
@@ -469,8 +469,8 @@
   <p>
     Notice the pattern. Every model above is a <em>shape</em> that a human chose,
     with a few numbers fitted to data. Choose the shape well and it works in the
-    situations you designed it for. Step outside those situations and it breaks,
-    and you cannot fix it by adjusting the numbers.
+    situations it was designed for. Step outside those situations and it breaks,
+    and we cannot fix it by adjusting the numbers.
   </p>
   <div class="keypoint">
     <p><b>That is the opening for machine learning.</b> Instead of a human
@@ -482,7 +482,7 @@
   <a class="next" href="./ml-in-md.html">
     <div class="k">Next · Part 2</div>
     <div class="t">Where machine learning comes in →</div>
-    <div class="d">Why you cannot just feed atom coordinates to a neural network,
+    <div class="d">Why we cannot just feed atom coordinates to a neural network,
       and what people do instead.</div>
   </a>
 
