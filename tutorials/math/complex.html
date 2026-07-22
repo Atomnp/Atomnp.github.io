@@ -4,142 +4,141 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Complex Numbers, A Visual Tutorial</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Newsreader:ital,opsz@0,6..72;1,6..72&family=Caveat:wght@500;700&family=Spline+Sans+Mono:wght@500&display=swap" rel="stylesheet">
+<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 <style>
-  :root{
-    --paper:#FBF6EC;
-    --paper-2:#F4ECDD;
-    --ink:#211A14;
-    --ink-soft:#6b5d4e;
-    --line:#d9cdb8;
-
-    --re:#2B5FA8;      /* real part / first number (blue) */
-    --im:#C0398B;      /* imaginary part / second number (magenta) */
-    --z:#E2542F;       /* the number itself / result (coral) */
-    --circ:#1F8A78;    /* unit circle / special points (teal) */
-    --ang:#D98324;     /* angles / arcs (amber) */
-    --vio:#6A4C93;     /* extras (violet) */
-    --shadow: 0 18px 40px -22px rgba(33,26,20,.4);
-  }
+  :root{ --paper:#F6F7F8; --surface:#FFFFFF; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B; --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E; --re:#33409E; --im:#C0479A; --z:#C0503A; --circ:#0F9E77; --ang:#C08A2E; --vio:#6A4CC0; --grid:rgba(20,23,28,.09); --halo:#FFFFFF; --guide:rgba(20,23,28,.34); --shadow:0 10px 30px -18px rgba(20,23,28,.28); --serif:"Charter","Newsreader","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif; --sans:"Inter","Helvetica Neue","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif; --mono:"SF Mono","JetBrains Mono","Fira Code",ui-monospace,Menlo,Consolas,monospace; }
+  @media (prefers-color-scheme:dark){:root{ --paper:#0E1116; --surface:#161A21; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2; --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6; --re:#8FA0FF; --im:#E56DB1; --z:#F0876A; --circ:#38C9A0; --ang:#E3B85A; --vio:#B39CF5; --grid:rgba(231,234,240,.10); --halo:#161A21; --guide:rgba(231,234,240,.30); --shadow:0 14px 34px -18px rgba(0,0,0,.7); }}
+  :root[data-theme="light"]{ --paper:#F6F7F8; --surface:#FFFFFF; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B; --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E; --re:#33409E; --im:#C0479A; --z:#C0503A; --circ:#0F9E77; --ang:#C08A2E; --vio:#6A4CC0; --grid:rgba(20,23,28,.09); --halo:#FFFFFF; --guide:rgba(20,23,28,.34); --shadow:0 10px 30px -18px rgba(20,23,28,.28); }
+  :root[data-theme="dark"]{ --paper:#0E1116; --surface:#161A21; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2; --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6; --re:#8FA0FF; --im:#E56DB1; --z:#F0876A; --circ:#38C9A0; --ang:#E3B85A; --vio:#B39CF5; --grid:rgba(231,234,240,.10); --halo:#161A21; --guide:rgba(231,234,240,.30); --shadow:0 14px 34px -18px rgba(0,0,0,.7); }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
     margin:0;
-    background:
-      radial-gradient(circle at 14% -5%, #fff7e9 0%, transparent 45%),
-      radial-gradient(circle at 92% 8%, #f6ead4 0%, transparent 40%),
-      var(--paper);
+    background:var(--paper);
     color:var(--ink);
-    font-family:"Newsreader", Georgia, serif;
-    font-size:19px; line-height:1.65; -webkit-font-smoothing:antialiased;
-  }
-  body::before{
-    content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
-    background-image:
-      linear-gradient(rgba(180,160,130,.10) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(180,160,130,.10) 1px, transparent 1px);
-    background-size:28px 28px;
+    font-family:var(--serif);
+    font-size:19px; line-height:1.65; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    transition:background .35s,color .35s;
   }
   .wrap{position:relative; z-index:1; max-width:880px; margin:0 auto; padding:0 22px 120px;}
 
-  header.hero{text-align:center; padding:70px 10px 22px;}
-  .kicker{font-family:"Spline Sans Mono",monospace; letter-spacing:.32em; text-transform:uppercase; font-size:.7rem; color:var(--ink-soft);}
-  h1{font-family:"Fraunces",serif; font-weight:900; font-size:clamp(2.4rem,7.6vw,4.4rem); line-height:.98; margin:.25em 0 .15em; letter-spacing:-.02em;}
-  h1 .em{color:var(--z); font-style:italic; font-weight:500;}
+  .backbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--paper) 85%,transparent);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid transparent;transition:border-color .3s;}
+  .backbar.scrolled{border-color:var(--line);}
+  .backbar-in{max-width:880px;margin:0 auto;padding:0 22px;height:56px;display:flex;align-items:center;justify-content:space-between;font-family:var(--sans);}
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:.9rem;font-weight:600;text-decoration:none;}
+  .back:hover{color:var(--accent-ink);}
+  .back svg{width:16px;height:16px;}
+  .toggle{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center;}
+  .toggle:hover{border-color:var(--accent);}
+  .toggle svg{width:17px;height:17px;}
+
+  header.hero{text-align:center; padding:56px 10px 22px;}
+  .kicker{font-family:var(--mono); letter-spacing:.14em; text-transform:uppercase; font-size:.68rem; color:var(--accent-ink);}
+  h1{font-family:var(--sans); font-weight:720; font-size:clamp(2.4rem,7.6vw,4.4rem); line-height:1.0; margin:.28em 0 .15em; letter-spacing:-.025em; color:var(--ink);}
+  h1 .em{font-family:var(--serif); color:var(--accent-ink); font-style:italic; font-weight:500;}
   .sub{font-size:1.15rem; color:var(--ink-soft); max-width:620px; margin:0 auto;}
-  .scroll-hint{margin-top:30px; font-family:"Caveat",cursive; font-size:1.5rem; color:var(--z);}
+  .scroll-hint{margin-top:30px; font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft);}
   .scroll-hint span{display:inline-block; animation:bob 1.8s ease-in-out infinite;}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
 
   section{margin-top:78px;}
-  .step-no{font-family:"Spline Sans Mono",monospace; font-size:.72rem; letter-spacing:.2em; color:var(--z); text-transform:uppercase;}
-  h2{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(1.8rem,4.5vw,2.7rem); line-height:1.05; margin:.1em 0 .5em; letter-spacing:-.01em;}
-  h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.3rem; margin:1.6em 0 .3em;}
-  p{margin:.7em 0;}
-  strong{color:var(--z); font-weight:600;}
-  .lead{font-size:1.18rem;}
+  .step-no{font-family:var(--mono); font-size:.7rem; letter-spacing:.14em; color:var(--accent-ink); text-transform:uppercase;}
+  h2{font-family:var(--sans); font-weight:680; font-size:clamp(1.8rem,4.5vw,2.7rem); line-height:1.08; margin:.12em 0 .5em; letter-spacing:-.02em; color:var(--ink);}
+  h3{font-family:var(--sans); font-weight:660; font-size:1.3rem; margin:1.6em 0 .3em; color:var(--ink); letter-spacing:-.01em;}
+  p{margin:.7em 0; color:var(--ink-2);}
+  strong{color:var(--ink); font-weight:640;}
+  .lead{font-size:1.18rem; color:var(--ink-2);}
   .re{color:var(--re);font-weight:700} .imw{color:var(--im);font-weight:700}
   .zw{color:var(--z);font-weight:700} .circw{color:var(--circ);font-weight:700}
   .angw{color:var(--ang);font-weight:700} .viow{color:var(--vio);font-weight:700}
 
-  .card{background:rgba(255,255,255,.55); border:1px solid var(--line); border-radius:16px; padding:20px 22px; box-shadow:var(--shadow); margin:22px 0;}
-  .big-idea{background:linear-gradient(180deg,#fff8ec,#fdeed4); border:1px solid #e7d4ad; border-left:6px solid var(--z);}
-  .big-idea .label{font-family:"Caveat",cursive; font-size:1.5rem; color:var(--z); line-height:1;}
-  .big-idea p{font-size:1.22rem; margin:.3em 0 0;}
-  .takeaway{font-family:"Caveat",cursive; font-size:1.55rem; color:var(--circ); line-height:1.25; margin-top:6px;}
-  .takeaway::before{content:"✎  "; opacity:.7;}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px 22px; box-shadow:var(--shadow); margin:22px 0;}
+  .big-idea{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:0 12px 12px 0;}
+  .big-idea .label{font-family:var(--mono); font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-ink); line-height:1;}
+  .big-idea p{font-size:1.16rem; margin:.4em 0 0;}
+  .takeaway{font-family:var(--serif); font-style:italic; font-size:1.12rem; color:var(--ink); line-height:1.4; border-left:3px solid var(--circ); padding:2px 0 2px 16px; margin:18px 0;}
+  .takeaway::before{content:"✎  "; opacity:.7; color:var(--circ);}
 
-  .def{background:linear-gradient(180deg,#fefdfa,#f7f1e3); border:1px solid var(--line); border-left:5px solid var(--circ); border-radius:12px; padding:13px 18px; margin:18px 0;}
-  .def .term{font-family:"Fraunces",serif; font-weight:600; font-size:1.12rem; color:var(--ink);}
+  .def{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--circ); border-radius:0 12px 12px 0; padding:13px 18px; margin:18px 0;}
+  .def .term{font-family:var(--sans); font-weight:660; font-size:1.12rem; color:var(--ink);}
   .def .term::before{content:"🧭  ";}
   .def p{margin:.35em 0 0; font-size:1.02rem;}
-  .def .sym{font-family:"Spline Sans Mono",monospace; background:var(--paper-2); border-radius:5px; padding:1px 6px; font-size:.9em;}
-  .sym{font-family:"Spline Sans Mono",monospace; background:var(--paper-2); border-radius:5px; padding:1px 6px; font-size:.9em;}
+  .def .sym{font-family:var(--mono); background:var(--paper); border:1px solid var(--line); border-radius:5px; padding:1px 6px; font-size:.9em; color:var(--ink-2);}
+  .sym{font-family:var(--mono); background:var(--paper); border:1px solid var(--line); border-radius:5px; padding:1px 6px; font-size:.9em; color:var(--ink-2);}
   .note{font-size:.98rem; color:var(--ink-soft);}
   .note b{color:var(--ink);}
 
   ul.clean{list-style:none; padding-left:0; margin:.6em 0;}
   ul.clean li{padding:7px 0 7px 30px; position:relative; border-bottom:1px dashed var(--line);}
-  ul.clean li::before{content:"▸"; position:absolute; left:6px; color:var(--z);}
+  ul.clean li::before{content:"▸"; position:absolute; left:6px; color:var(--accent-ink);}
   ol.timeline{list-style:none; padding-left:0; margin:.6em 0;}
   ol.timeline li{display:flex; gap:14px; padding:8px 0; border-bottom:1px dashed var(--line); align-items:baseline;}
-  ol.timeline .yr{font-family:"Spline Sans Mono",monospace; color:var(--z); min-width:64px; font-weight:600; font-size:.9rem;}
+  ol.timeline .yr{font-family:var(--mono); color:var(--accent-ink); min-width:64px; font-weight:600; font-size:.9rem;}
   .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
   @media(max-width:620px){.two-col{grid-template-columns:1fr;}}
-  .minicard{background:rgba(255,255,255,.5); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
-  .minicard h4{margin:.1em 0 .3em; font-family:"Fraunces",serif; font-size:1.05rem;}
+  .minicard{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+  .minicard h4{margin:.1em 0 .3em; font-family:var(--sans); font-weight:640; font-size:1.05rem; color:var(--ink);}
 
-  .formula{text-align:center; font-family:"Spline Sans Mono",monospace; font-size:1.12rem; color:var(--ink); margin:.6em 0; line-height:2;}
+  .formula{text-align:center; font-family:var(--mono); font-size:1.08rem; color:var(--ink); margin:.6em 0; line-height:2;}
 
-  .widget{background:#fffdf8; border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:var(--shadow); margin:26px 0;}
+  .widget{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px; box-shadow:var(--shadow); margin:26px 0;}
   .widget canvas{display:block; width:100%; height:auto; border-radius:10px; cursor:grab; touch-action:none;}
   .widget canvas.dragging{cursor:grabbing;}
   .widget canvas.click{cursor:zoom-in;}
   .controls{display:flex; flex-wrap:wrap; gap:16px 26px; align-items:center; margin-top:16px;}
   .ctrl{flex:1 1 200px; min-width:180px;}
-  .ctrl label{font-size:.82rem; color:var(--ink-soft); font-family:"Spline Sans Mono",monospace; display:block; margin-bottom:4px;}
-  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:3px; background:var(--line); outline:none;}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--z); cursor:pointer; border:3px solid #fffdf8; box-shadow:0 2px 6px rgba(0,0,0,.25);}
-  input[type=range]::-moz-range-thumb{width:22px; height:22px; border-radius:50%; background:var(--z); cursor:pointer; border:3px solid #fffdf8;}
+  .ctrl label{font-size:.72rem; color:var(--ink-soft); font-family:var(--mono); letter-spacing:.06em; text-transform:uppercase; display:block; margin-bottom:6px;}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:5px; border-radius:3px; background:var(--line); outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:var(--accent); cursor:pointer; border:3px solid var(--surface); box-shadow:0 1px 4px rgba(0,0,0,.25);}
+  input[type=range]::-moz-range-thumb{width:20px; height:20px; border-radius:50%; background:var(--accent); cursor:pointer; border:3px solid var(--surface);}
   .readouts{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;}
-  .pill{font-family:"Spline Sans Mono",monospace; font-size:.95rem; background:var(--paper-2); border:1px solid var(--line); border-radius:10px; padding:8px 14px; color:var(--ink);}
+  .pill{font-family:var(--mono); font-size:.92rem; background:var(--paper); border:1px solid var(--line); border-radius:9px; padding:8px 14px; color:var(--ink-2);}
   .pill b{color:var(--ink);}
-  .pill.big{font-size:1.15rem; padding:10px 18px;}
-  .pill.re{border-color:var(--re);color:var(--re)} .pill.im{border-color:var(--im);color:var(--im)}
-  .pill.z{border-color:var(--z);color:var(--z)} .pill.circ{border-color:var(--circ);color:var(--circ)}
-  .pill.ang{border-color:var(--ang);color:var(--ang)} .pill.vio{border-color:var(--vio);color:var(--vio)}
-  .hint{font-family:"Caveat",cursive; font-size:1.25rem; color:var(--ink-soft); margin-top:10px;}
-  .btn{font-family:"Spline Sans Mono",monospace; font-size:.85rem; background:var(--ink); color:var(--paper); border:none; border-radius:10px; padding:9px 16px; cursor:pointer; transition:transform .1s;}
+  .pill.big{font-size:1.12rem; padding:10px 18px;}
+  .pill.re{border-color:color-mix(in srgb,var(--re) 55%,var(--line));color:var(--re)} .pill.im{border-color:color-mix(in srgb,var(--im) 55%,var(--line));color:var(--im)}
+  .pill.z{border-color:color-mix(in srgb,var(--z) 55%,var(--line));color:var(--z)} .pill.circ{border-color:color-mix(in srgb,var(--circ) 55%,var(--line));color:var(--circ)}
+  .pill.ang{border-color:color-mix(in srgb,var(--ang) 55%,var(--line));color:var(--ang)} .pill.vio{border-color:color-mix(in srgb,var(--vio) 55%,var(--line));color:var(--vio)}
+  .hint{font-family:var(--sans); font-style:italic; font-size:.88rem; color:var(--ink-soft); margin-top:12px;}
+  .btn{font-family:var(--sans); font-size:.85rem; font-weight:600; background:var(--accent); color:#fff; border:none; border-radius:9px; padding:9px 16px; cursor:pointer; transition:transform .12s;}
   .btn:hover{transform:translateY(-1px);}
   .btn.alt{background:var(--circ);}
-  .btn.ghost{background:var(--paper-2); color:var(--ink-soft); border:1px solid var(--line);}
-  .btn.on{background:var(--z); color:#fff;}
+  .btn.ghost{background:var(--paper); color:var(--ink-2); border:1px solid var(--line);}
+  .btn.on{background:var(--accent); color:#fff;}
+  :root[data-theme="dark"] .btn{color:#0E1116;}
+  @media(prefers-color-scheme:dark){.btn{color:#0E1116;}}
+  :root[data-theme="dark"] .btn.ghost{color:var(--ink-2);}
+  @media(prefers-color-scheme:dark){.btn.ghost{color:var(--ink-2);}}
   .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
 
   .legend{display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:center; margin:14px 0 0;}
-  .legend .k{display:flex; align-items:center; gap:7px; font-family:"Spline Sans Mono",monospace; font-size:.74rem; color:var(--ink-soft);}
+  .legend .k{display:flex; align-items:center; gap:7px; font-family:var(--mono); font-size:.74rem; color:var(--ink-soft);}
   .legend .sw{width:24px; height:5px; border-radius:3px;}
 
-  table.simple{width:100%; border-collapse:collapse; font-family:"Spline Sans Mono",monospace; font-size:.86rem; margin:8px 0;}
-  table.simple th,table.simple td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top;}
-  table.simple th{background:var(--paper-2);}
+  table.simple{width:100%; border-collapse:collapse; font-family:var(--mono); font-size:.86rem; margin:8px 0;}
+  table.simple th,table.simple td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; color:var(--ink-2);}
+  table.simple th{background:var(--paper); color:var(--ink);}
   table.simple td.yes{color:var(--circ); font-weight:700;}
   table.simple td.no{color:var(--z);}
 
   .footer{text-align:center; margin-top:90px; color:var(--ink-soft); font-size:.95rem;}
-  .footer .big{font-family:"Fraunces",serif; font-size:1.6rem; color:var(--ink); font-weight:600; font-style:italic;}
-  .divider{height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); margin:6px 0;}
+  .footer .big{font-family:var(--serif); font-size:1.6rem; color:var(--ink); font-weight:500; font-style:italic;}
+  .divider{height:1px; background:var(--line); margin:6px 0;}
   .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s, transform .7s;}
   .reveal.in{opacity:1; transform:none;}
   @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
     .reveal{opacity:1; transform:none; transition:none;}
     .scroll-hint span{animation:none;}
   }
 </style>
 </head>
 <body>
+<div class="backbar" id="backbar">
+  <div class="backbar-in">
+    <a class="back" href="/tutorials/math/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Math</a>
+    <button class="toggle" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
+  </div>
+</div>
 <div class="wrap">
 
   <!-- ===================== HERO ===================== -->
@@ -1063,7 +1062,7 @@ function niceStep(span){
 function fmtTick(n){ return (Math.abs(n)>=1&&Math.abs(n%1)<1e-9)? String(Math.round(n)) : String(+n.toFixed(2)); }
 function grid(ctx,v,step){
   step=step||1;
-  ctx.save(); ctx.lineWidth=1; ctx.strokeStyle="rgba(180,160,130,.30)";
+  ctx.save(); ctx.lineWidth=1; ctx.strokeStyle=css('--grid');
   ctx.font='10px "Spline Sans Mono", monospace';
   for(let k=Math.ceil(v.xmin/step); k<=Math.floor(v.xmax/step); k++){
     const px=v.X(k*step);
@@ -1073,10 +1072,10 @@ function grid(ctx,v,step){
     const py=v.Y(k*step);
     ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();
   }
-  ctx.strokeStyle="rgba(33,26,20,.50)"; ctx.lineWidth=1.5;
+  ctx.strokeStyle=css('--ink'); ctx.lineWidth=1.5;
   if(v.ymin<=0&&v.ymax>=0){const py=v.Y(0);ctx.beginPath();ctx.moveTo(v.px0,py);ctx.lineTo(v.px1,py);ctx.stroke();}
   if(v.xmin<=0&&v.xmax>=0){const px=v.X(0);ctx.beginPath();ctx.moveTo(px,v.py0);ctx.lineTo(px,v.py1);ctx.stroke();}
-  ctx.fillStyle="rgba(107,93,78,.85)";
+  ctx.fillStyle=css('--ink-soft');
   if(v.ymin<=0&&v.ymax>=0){
     for(let k=Math.ceil(v.xmin/step); k<=Math.floor(v.xmax/step); k++){
       const x=k*step; if(Math.abs(x)<1e-9)continue;
@@ -1111,7 +1110,7 @@ function parrow(ctx,x0,y0,x1,y1,color,w){
 function warrow(ctx,v,x0,y0,x1,y1,color,w){parrow(ctx,v.X(x0),v.Y(y0),v.X(x1),v.Y(y1),color,w);}
 function pdot(ctx,px,py,color,r){
   ctx.save();
-  ctx.beginPath();ctx.arc(px,py,(r||7)+3,0,7);ctx.fillStyle="#fffdf8";ctx.fill();
+  ctx.beginPath();ctx.arc(px,py,(r||7)+3,0,7);ctx.fillStyle=css('--halo');ctx.fill();
   ctx.beginPath();ctx.arc(px,py,r||7,0,7);ctx.fillStyle=color;ctx.fill();
   ctx.restore();
 }
@@ -1124,7 +1123,7 @@ function dashed(ctx,x0,y0,x1,y1,color,w){
 }
 function unitCircle(ctx,v,color){
   const r=v.X(1)-v.X(0);
-  ctx.save();ctx.strokeStyle=color||"rgba(31,138,120,.55)";ctx.lineWidth=1.8;
+  ctx.save();ctx.strokeStyle=color||css('--circ');ctx.lineWidth=1.8;
   ctx.beginPath();ctx.arc(v.X(0),v.Y(0),r,0,7);ctx.stroke();ctx.restore();
 }
 /* arc from world-angle 0 to theta (radians, CCW positive), radius in px */
@@ -1195,7 +1194,7 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     // the four home positions
     const anchors=[[1,0,'1',10,-12],[0,1,'i',12,-10],[-1,0,'−1',-30,-12],[0,-1,'−i',12,20]];
     anchors.forEach(a=>{
-      pdot(ctx,v.X(a[0]),v.Y(a[1]),"rgba(31,138,120,.8)",4);
+      pdot(ctx,v.X(a[0]),v.Y(a[1]),css('--circ'),4);
       plabel(ctx,v.X(a[0])+a[3],v.Y(a[1])+a[4],a[2],css('--circ'),15);
     });
     // the animated arrow
@@ -1204,7 +1203,7 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     pdot(ctx,v.X(Math.cos(th)),v.Y(Math.sin(th)),css('--z'),8);
     // swept arc showing total rotation so far (last full turn only)
     const sweep=Math.min(disp,360)*Math.PI/180;
-    angleArc(ctx,v,sweep,34,"rgba(217,131,36,.8)");
+    angleArc(ctx,v,sweep,34,css('--ang'));
     plabel(ctx,v.px0+4,v.py1-6,"each ×i = one quarter-turn counter-clockwise",css('--ink-soft'),12);
   }
   registerAnim(c,dt=>{
@@ -1237,8 +1236,8 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     // component arrows along the axes (same picture as the vectors tutorial)
     warrow(ctx,v,0,0,z.x,0,css('--re'),4);
     warrow(ctx,v,0,0,0,z.y,css('--im'),4);
-    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(z.x),v.Y(0),"rgba(192,57,139,.55)",1.5);
-    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(0),v.Y(z.y),"rgba(43,95,168,.55)",1.5);
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(z.x),v.Y(0),css('--im'),1.5);
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(0),v.Y(z.y),css('--re'),1.5);
     warrow(ctx,v,0,0,z.x,z.y,css('--z'),4);
     pdot(ctx,v.X(0),v.Y(0),css('--ink'),4);
     pdot(ctx,v.X(z.x),v.Y(z.y),css('--z'),9);
@@ -1266,8 +1265,8 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     grid(ctx,v,1); axisNames(ctx,v);
     const s={x:z.x+w.x, y:z.y+w.y};
     // parallelogram: a dashed copy of w starting at z's tip, and of z at w's tip
-    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(s.x),v.Y(s.y),"rgba(192,57,139,.6)",1.6);
-    dashed(ctx,v.X(w.x),v.Y(w.y),v.X(s.x),v.Y(s.y),"rgba(43,95,168,.6)",1.6);
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(s.x),v.Y(s.y),css('--im'),1.6);
+    dashed(ctx,v.X(w.x),v.Y(w.y),v.X(s.x),v.Y(s.y),css('--re'),1.6);
     warrow(ctx,v,0,0,z.x,z.y,css('--re'),4);
     warrow(ctx,v,0,0,w.x,w.y,css('--im'),4);
     warrow(ctx,v,0,0,s.x,s.y,css('--z'),4.5);
@@ -1301,8 +1300,8 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     unitCircle(ctx,v);
     const r=Math.hypot(z.x,z.y), th=Math.atan2(z.y,z.x);
     // light projections (street address)
-    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(z.x),v.Y(0),"rgba(192,57,139,.45)",1.3);
-    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(0),v.Y(z.y),"rgba(43,95,168,.45)",1.3);
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(z.x),v.Y(0),css('--im'),1.3);
+    dashed(ctx,v.X(z.x),v.Y(z.y),v.X(0),v.Y(z.y),css('--re'),1.3);
     // crow's flight: r line + theta arc
     angleArc(ctx,v,th,40,css('--ang'),"θ");
     ctx.save();ctx.strokeStyle=css('--z');ctx.lineWidth=4;ctx.lineCap="round";
@@ -1391,14 +1390,14 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     grid(ctx,v,niceStep(2*half)); axisNames(ctx,v);
     unitCircle(ctx,v);
     // connect the staircase
-    ctx.save();ctx.strokeStyle="rgba(106,76,147,.5)";ctx.lineWidth=2;ctx.beginPath();
+    ctx.save();ctx.strokeStyle=css('--vio');ctx.lineWidth=2;ctx.beginPath();
     ctx.moveTo(v.X(pts[0].x),v.Y(pts[0].y));
     for(let k=1;k<pts.length;k++)ctx.lineTo(v.X(pts[k].x),v.Y(pts[k].y));
     ctx.stroke();ctx.restore();
     // dots for each power
     pts.forEach((p,idx)=>{
       const last=idx===pts.length-1;
-      pdot(ctx,v.X(p.x),v.Y(p.y), last?css('--vio'):"rgba(31,138,120,.9)", last?8:5);
+      pdot(ctx,v.X(p.x),v.Y(p.y), last?css('--vio'):css('--circ'), last?8:5);
       if(idx===0||last||idx===1)
         plabel(ctx,v.X(p.x)+9,v.Y(p.y)-7, "z"+(idx===0?"":"^"+(idx+1)), last?css('--vio'):css('--circ'),12);
     });
@@ -1436,7 +1435,7 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     const roots=[];
     for(let k=0;k<n;k++){ const a=(TH+2*Math.PI*k)/n; roots.push({x:rr*Math.cos(a), y:rr*Math.sin(a)}); }
     // polygon connecting the roots
-    ctx.save();ctx.strokeStyle="rgba(106,76,147,.55)";ctx.lineWidth=2;ctx.beginPath();
+    ctx.save();ctx.strokeStyle=css('--vio');ctx.lineWidth=2;ctx.beginPath();
     roots.forEach((p,idx)=>{ idx? ctx.lineTo(v.X(p.x),v.Y(p.y)) : ctx.moveTo(v.X(p.x),v.Y(p.y)); });
     ctx.closePath();ctx.stroke();ctx.restore();
     roots.forEach((p,idx)=>{
@@ -1472,11 +1471,11 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     const R=Math.min(H*0.36,W*0.20), cx=R+58, cy=H*0.52;
     const tx0=cx+R+44, step=2, count=Math.max(10,Math.floor((W-16-tx0)/step));
     // axes
-    ctx.save();ctx.strokeStyle="rgba(33,26,20,.30)";ctx.lineWidth=1.3;
+    ctx.save();ctx.strokeStyle=css('--guide');ctx.lineWidth=1.3;
     ctx.beginPath();ctx.moveTo(cx-R-20,cy);ctx.lineTo(W-14,cy);ctx.stroke();
     ctx.beginPath();ctx.moveTo(cx,cy-R-16);ctx.lineTo(cx,cy+R+16);ctx.stroke();ctx.restore();
     // unit circle
-    ctx.save();ctx.strokeStyle="rgba(31,138,120,.6)";ctx.lineWidth=2;
+    ctx.save();ctx.strokeStyle=css('--circ');ctx.lineWidth=2;
     ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();ctx.restore();
     const cs=Math.cos(th), sn=Math.sin(th);
     const Px=cx+R*cs, Py=cy-R*sn;
@@ -1491,8 +1490,8 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     ctx.strokeStyle=css('--im');ctx.lineWidth=4.5;
     ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx,Py);ctx.stroke();
     ctx.restore();
-    dashed(ctx,Px,Py,Px,cy,"rgba(43,95,168,.5)",1.3);
-    dashed(ctx,Px,Py,cx,Py,"rgba(192,57,139,.5)",1.3);
+    dashed(ctx,Px,Py,Px,cy,css('--re'),1.3);
+    dashed(ctx,Px,Py,cx,Py,css('--im'),1.3);
     // radius + point
     ctx.save();ctx.strokeStyle=css('--z');ctx.lineWidth=3.4;ctx.lineCap="round";
     ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(Px,Py);ctx.stroke();ctx.restore();
@@ -1501,13 +1500,13 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     plabel(ctx,cx+8,cy-R*0.5*sn,"sin θ",css('--im'),12);
     plabel(ctx,Px+10,Py-10,"e^(iθ)",css('--z'),13);
     // sine wave streaming right
-    ctx.save();ctx.strokeStyle="rgba(192,57,139,.65)";ctx.lineWidth=2.4;ctx.beginPath();
+    ctx.save();ctx.strokeStyle=css('--im');ctx.lineWidth=2.4;ctx.beginPath();
     for(let k=0;k<Math.min(count,hist.length);k++){
       const x=tx0+k*step, y=cy-R*hist[k];
       k? ctx.lineTo(x,y) : ctx.moveTo(x,y);
     }
     ctx.stroke();ctx.restore();
-    if(hist.length) dashed(ctx,Px,Py,tx0,cy-R*hist[0],"rgba(107,93,78,.5)",1.3);
+    if(hist.length) dashed(ctx,Px,Py,tx0,cy-R*hist[0],css('--guide'),1.3);
     plabel(ctx,tx0+8,cy+R+14,"time →  (the sine wave, streamed)",css('--ink-soft'),12);
     // readouts
     const deg=(a*180/Math.PI);
@@ -1597,7 +1596,7 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
     const half=Math.max(3.4, 1.18*Math.max(Math.hypot(p.x,p.y),Math.hypot(u.x,u.y),Math.hypot(w.x,w.y)));
     const v=sqView(W,H,-half,half,0,{l:16,r:16,t:14,b:14}); view=v;
     grid(ctx,v,niceStep(2*half)); axisNames(ctx,v);
-    unitCircle(ctx,v,"rgba(31,138,120,.35)");
+    unitCircle(ctx,v,css('--circ'));
     warrow(ctx,v,0,0,u.x,u.y,css('--re'),4);
     warrow(ctx,v,0,0,w.x,w.y,css('--im'),4);
     warrow(ctx,v,0,0,p.x,p.y,css('--z'),4.5);
@@ -1620,6 +1619,26 @@ const clampMod=(p,maxR,minR)=>{ // clamp a point's distance from 0
 /* reveal on scroll */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  var SUN='<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>';
+  var MOON='<path d="M20 14.5A8 8 0 0 1 9.5 4 8.2 8.2 0 1 0 20 14.5Z"/>';
+  function cur(){return root.getAttribute('data-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}
+  function paint(){btn.querySelector('svg').innerHTML=cur()==='dark'?SUN:MOON;}
+  paint();
+  btn.addEventListener('click',function(){
+    var n=cur()==='dark'?'light':'dark';
+    root.setAttribute('data-theme',n);
+    try{localStorage.setItem('theme',n);}catch(e){}
+    paint();
+    window.dispatchEvent(new Event('resize'));  /* redraw every canvas in the new theme colours */
+  });
+  var bar=document.getElementById('backbar');
+  function onScroll(){bar.classList.toggle('scrolled',window.scrollY>8);}
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+})();
 </script>
 </body>
 </html>
