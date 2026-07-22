@@ -57,6 +57,8 @@
   .def .term::before{content:"\1F3F9  ";}
   .def p{margin:.35em 0 0;font-size:1rem;color:var(--ink-2);}
   .sym{font-family:var(--mono);background:var(--code-bg);color:var(--code-ink);border-radius:5px;padding:1px 6px;font-size:.86em;}
+  .ov{position:relative;display:inline-block;line-height:1;}
+  .ov::after{content:"\2192";position:absolute;left:-0.06em;right:-0.06em;top:-0.66em;text-align:center;font-size:.62em;font-weight:400;pointer-events:none;}
   .note{font-size:.96rem;color:var(--ink-soft);}
   .note b{color:var(--ink);}
 
@@ -194,10 +196,10 @@
     <div class="def">
       <div class="term">Notation you'll meet</div>
       <p>In books, vectors are written in bold (<b>a</b>) or with a small arrow on top
-         (<span class="sym">a&#8407;</span>). An arrow from point A to point B is written
-         <span class="sym">AB&#8407;</span>, A is the <b>tail</b> (start), B is the <b>head</b> or <b>tip</b> (the
-         pointed end). The magnitude of <span class="sym">a&#8407;</span> is written
-         <span class="sym">|a&#8407;|</span> or just <span class="sym">a</span> (plain, not bold).</p>
+         (<span class="sym"><span class="ov">a</span></span>). An arrow from point A to point B is written
+         <span class="sym">A<span class="ov">B</span></span>, A is the <b>tail</b> (start), B is the <b>head</b> or <b>tip</b> (the
+         pointed end). The magnitude of <span class="sym"><span class="ov">a</span></span> is written
+         <span class="sym">|<span class="ov">a</span>|</span> or just <span class="sym">a</span> (plain, not bold).</p>
     </div>
 
     <p>Drag the arrow's tip below and get a feel for the two ingredients, length and direction:</p>
@@ -277,10 +279,10 @@
     <p>Now the rest of the family, small definitions you'll use constantly:</p>
 
     <div class="def">
-      <div class="term">Zero vector <span class="sym">0&#8407;</span></div>
+      <div class="term">Zero vector <span class="sym"><span class="ov">0</span></span></div>
       <p>The vector with magnitude 0, the "instruction" to not move at all. It's the only vector with <b>no
          direction</b> (an arrow of zero length points nowhere). It plays the same role as the number 0:
-         <span class="sym">a&#8407; + 0&#8407; = a&#8407;</span>.</p>
+         <span class="sym"><span class="ov">a</span> + <span class="ov">0</span> = <span class="ov">a</span></span>.</p>
     </div>
     <div class="ask">
       <div class="q">"A vector with no direction? Isn't that against the definition? Why do we even need it?"</div>
@@ -290,16 +292,16 @@
     </div>
 
     <div class="def">
-      <div class="term">Negative of a vector <span class="sym">−a&#8407;</span></div>
-      <p>Same magnitude, exactly <b>opposite</b> direction. If <span class="sym">a&#8407;</span> is "5 km toward
-         Bhaktapur," then <span class="sym">−a&#8407;</span> is "5 km away from Bhaktapur." Adding them gives the zero
+      <div class="term">Negative of a vector <span class="sym">−<span class="ov">a</span></span></div>
+      <p>Same magnitude, exactly <b>opposite</b> direction. If <span class="sym"><span class="ov">a</span></span> is "5 km toward
+         Bhaktapur," then <span class="sym">−<span class="ov">a</span></span> is "5 km away from Bhaktapur." Adding them gives the zero
          vector: you go and come back, net movement zero.</p>
     </div>
 
     <div class="def">
       <div class="term">Unit vector</div>
       <p>Any vector whose magnitude is exactly <b>1</b>. It carries pure direction with no size information, a
-         "direction-only" vector. The unit vector along <span class="sym">a&#8407;</span> is written
+         "direction-only" vector. The unit vector along <span class="sym"><span class="ov">a</span></span> is written
          <span class="sym">â</span> (read "a-hat"). Step 3 shows how to make one.</p>
     </div>
     <div class="ask">
@@ -311,7 +313,7 @@
     <div class="def">
       <div class="term">Parallel (collinear) vectors</div>
       <p>Vectors that point along the <b>same line</b>, either the same direction or exactly opposite. One is always a
-         stretched/flipped copy of the other: <span class="sym">b&#8407; = k·a&#8407;</span> for some number k. (Same
+         stretched/flipped copy of the other: <span class="sym"><span class="ov">b</span> = k·<span class="ov">a</span></span> for some number k. (Same
          direction if k &gt; 0, opposite if k &lt; 0.)</p>
     </div>
     <p class="takeaway">A vector has no home. Same length + same direction = same vector, wherever it's drawn.</p>
@@ -330,7 +332,7 @@
       <p><span class="sym">î</span> ("i-hat") is the unit vector pointing along the positive x-axis (east).
          <span class="sym">ĵ</span> ("j-hat") points along the positive y-axis (north). They are the official
          "one step east" and "one step north." Any 2-D vector can be built from them:</p>
-      <p class="formula" style="margin:.4em 0">a&#8407; = a₁î + a₂ĵ &nbsp;&nbsp; means &nbsp;&nbsp; "a₁ steps east, then a₂ steps north"</p>
+      <p class="formula" style="margin:.4em 0"><span class="ov">a</span> = a₁î + a₂ĵ &nbsp;&nbsp; means &nbsp;&nbsp; "a₁ steps east, then a₂ steps north"</p>
       <p>The numbers a₁ and a₂ are the <b>components</b> of the vector. (In 3-D there's a third friend,
          <span class="sym">k̂</span>, pointing up out of the page, and vectors become a₁î + a₂ĵ + a₃k̂, everything in
          this tutorial extends by simply carrying one more component along.)</p>
@@ -339,22 +341,22 @@
     <div class="def">
       <div class="term">Magnitude from components</div>
       <p>The vector, its east-part and its north-part form a right triangle, so Pythagoras gives the length:</p>
-      <p class="formula" style="margin:.4em 0">|a&#8407;| = √(a₁² + a₂²)</p>
+      <p class="formula" style="margin:.4em 0">|<span class="ov">a</span>| = √(a₁² + a₂²)</p>
     </div>
 
     <div class="def">
       <div class="term">Making a unit vector (normalising)</div>
-      <p>To get the pure direction of <span class="sym">a&#8407;</span>, divide the vector by its own length:</p>
-      <p class="formula" style="margin:.4em 0">â = a&#8407; / |a&#8407;|</p>
-      <p>Same direction, length shrunk (or grown) to exactly 1. Example: a&#8407; = 3î + 4ĵ has |a&#8407;| = 5, so
+      <p>To get the pure direction of <span class="sym"><span class="ov">a</span></span>, divide the vector by its own length:</p>
+      <p class="formula" style="margin:.4em 0">â = <span class="ov">a</span> / |<span class="ov">a</span>|</p>
+      <p>Same direction, length shrunk (or grown) to exactly 1. Example: <span class="ov">a</span> = 3î + 4ĵ has |<span class="ov">a</span>| = 5, so
          â = (3/5)î + (4/5)ĵ = 0.6î + 0.8ĵ. Check: √(0.36 + 0.64) = √1 = 1 ✓.</p>
     </div>
 
     <div class="widget">
       <canvas id="cv-comp" data-w="760" data-h="440"></canvas>
       <div class="readouts">
-        <div class="pill res big">a&#8407; = <b id="cp-vec">3.0î + 2.0ĵ</b></div>
-        <div class="pill">|a&#8407;| = <b id="cp-mag">3.6</b></div>
+        <div class="pill res big"><span class="ov">a</span> = <b id="cp-vec">3.0î + 2.0ĵ</b></div>
+        <div class="pill">|<span class="ov">a</span>| = <b id="cp-mag">3.6</b></div>
         <div class="pill teal">â = <b id="cp-unit">0.83î + 0.55ĵ</b> (length 1)</div>
       </div>
       <p class="hint">↑ Drag the tip. Blue = east-part, magenta = north-part, and the little teal arrow is â, it hugs
@@ -395,7 +397,7 @@
 
     <div class="def">
       <div class="term">Triangle law (tip-to-tail) &amp; parallelogram law</div>
-      <p>Place b's tail on a's tip; then <span class="sym">a&#8407; + b&#8407;</span> runs from a's tail to b's tip,
+      <p>Place b's tail on a's tip; then <span class="sym"><span class="ov">a</span> + <span class="ov">b</span></span> runs from a's tail to b's tip,
          that's the <b>triangle law</b>. Do it in the other order (a after b) and you trace the other half of a
          parallelogram, landing at the same spot, the <b>parallelogram law</b>. Both are the same idea drawn twice.
          In components it's beautifully boring: <b>add the east-parts, add the north-parts.</b></p>
@@ -404,9 +406,9 @@
 
     <div class="def">
       <div class="term">Subtraction</div>
-      <p>Subtracting is adding the reverse: <span class="sym">a&#8407; − b&#8407; = a&#8407; + (−b&#8407;)</span>, walk
+      <p>Subtracting is adding the reverse: <span class="sym"><span class="ov">a</span> − <span class="ov">b</span> = <span class="ov">a</span> + (−<span class="ov">b</span>)</span>, walk
          a, then walk b <em>backwards</em>. Handy picture: if a and b start from the same point,
-         <span class="sym">a&#8407; − b&#8407;</span> is the arrow <b>from b's tip to a's tip</b>.</p>
+         <span class="sym"><span class="ov">a</span> − <span class="ov">b</span></span> is the arrow <b>from b's tip to a's tip</b>.</p>
     </div>
 
     <div class="widget">
@@ -475,31 +477,31 @@
     <div class="def">
       <div class="term">Position vector</div>
       <p>Fix an origin O (any agreed reference point, the city centre, say). The <b>position vector</b> of a point A is
-         the arrow <span class="sym">OA&#8407;</span> from the origin to A, usually written
-         <span class="sym">a&#8407;</span>. It's the movement instruction "how to get to A from O." Every point now has
+         the arrow <span class="sym">O<span class="ov">A</span></span> from the origin to A, usually written
+         <span class="sym"><span class="ov">a</span></span>. It's the movement instruction "how to get to A from O." Every point now has
          its own personal vector, and vice versa.</p>
     </div>
 
     <div class="def">
-      <div class="term">The most useful little formula: <span class="sym">AB&#8407; = b&#8407; − a&#8407;</span></div>
+      <div class="term">The most useful little formula: <span class="sym">A<span class="ov">B</span> = <span class="ov">b</span> − <span class="ov">a</span></span></div>
       <p>The arrow from point A to point B is <b>destination minus start</b>. Why? To travel O→A→B along vectors:
          going backwards along a then forwards along b takes you from A to B, so
-         <span class="sym">AB&#8407; = −a&#8407; + b&#8407; = b&#8407; − a&#8407;</span>.</p>
+         <span class="sym">A<span class="ov">B</span> = −<span class="ov">a</span> + <span class="ov">b</span> = <span class="ov">b</span> − <span class="ov">a</span></span>.</p>
     </div>
 
     <div class="def">
       <div class="term">Midpoint</div>
-      <p>The midpoint M of A and B has position vector <span class="sym">m&#8407; = (a&#8407; + b&#8407;)/2</span>,
+      <p>The midpoint M of A and B has position vector <span class="sym"><span class="ov">m</span> = (<span class="ov">a</span> + <span class="ov">b</span>)/2</span>,
          the average of the two position vectors, component by component. (Halfway between the two addresses.)</p>
     </div>
 
     <div class="widget">
       <canvas id="cv-pos" data-w="760" data-h="440"></canvas>
       <div class="readouts">
-        <div class="pill va">a&#8407; (to A) = <b id="po-a">–</b></div>
-        <div class="pill vb">b&#8407; (to B) = <b id="po-b">–</b></div>
-        <div class="pill res big">AB&#8407; = b&#8407; − a&#8407; = <b id="po-ab">–</b></div>
-        <div class="pill teal">midpoint m&#8407; = <b id="po-m">–</b></div>
+        <div class="pill va"><span class="ov">a</span> (to A) = <b id="po-a">–</b></div>
+        <div class="pill vb"><span class="ov">b</span> (to B) = <b id="po-b">–</b></div>
+        <div class="pill res big">A<span class="ov">B</span> = <span class="ov">b</span> − <span class="ov">a</span> = <b id="po-ab">–</b></div>
+        <div class="pill teal">midpoint <span class="ov">m</span> = <b id="po-m">–</b></div>
       </div>
       <p class="hint">↑ Drag points A and B. The coral arrow always equals "b minus a", check the components yourself.
          The teal dot faithfully stays halfway.</p>
@@ -516,13 +518,13 @@
       <div class="q">"Why b − a and not a − b? I always mix them up."</div>
       <p>Remember it on the number line first. From 2 to 5, how far do you move? 5 − 2 = 3, forwards. From 5 to 2?
          2 − 5 = −3, backwards. It's always <b>destination minus start</b>, vectors just do this in two directions at
-         once. And a − b would be the reverse arrow, BA&#8407;.</p>
+         once. And a − b would be the reverse arrow, B<span class="ov">A</span>.</p>
     </div>
 
     <div class="ask">
       <div class="q">"What if someone picks a different origin? Does everything break?"</div>
       <p>Beautiful question. Position vectors <em>do</em> change (the trip to A from Patan differs from the trip from
-         Thamel). But look at AB&#8407; = b&#8407; − a&#8407;: shifting the origin adds the same extra trip to both a and
+         Thamel). But look at A<span class="ov">B</span> = <span class="ov">b</span> − <span class="ov">a</span>: shifting the origin adds the same extra trip to both a and
          b, and the subtraction <b>cancels it out</b>. Arrows between actual points don't care where the origin is.
          The physics-flavoured facts survive; only the bookkeeping changes.</p>
     </div>
@@ -541,7 +543,7 @@
     <div class="def">
       <div class="term">Dot product (scalar product)</div>
       <p>Two equivalent formulas, one geometric, one for computing:</p>
-      <p class="formula" style="margin:.4em 0">a&#8407; · b&#8407; = |a&#8407;| |b&#8407;| cos θ &nbsp;&nbsp;=&nbsp;&nbsp; a₁b₁ + a₂b₂</p>
+      <p class="formula" style="margin:.4em 0"><span class="ov">a</span> · <span class="ov">b</span> = |<span class="ov">a</span>| |<span class="ov">b</span>| cos θ &nbsp;&nbsp;=&nbsp;&nbsp; a₁b₁ + a₂b₂</p>
       <p>where θ is the angle between them (tails together). The answer is a plain <b>number</b> (a scalar, hence the
          name). Read it as: (length of a) × (length of b's shadow on a). The cos θ is the "agreement factor": 1 when
          aligned, 0 when perpendicular, −1 when opposite.</p>
@@ -572,7 +574,7 @@
     <div class="card">
       <h3 style="margin-top:0">The dot product's best trick: finding angles</h3>
       <p style="margin:.3em 0">Flip the geometric formula around and the angle between any two vectors pops out:</p>
-      <p class="formula">cos θ = (a&#8407; · b&#8407;) / (|a&#8407;| |b&#8407;|)</p>
+      <p class="formula">cos θ = (<span class="ov">a</span> · <span class="ov">b</span>) / (|<span class="ov">a</span>| |<span class="ov">b</span>|)</p>
       <p style="margin:.3em 0">Example: a = 3î + ĵ and b = î + 2ĵ. Dot: 3·1 + 1·2 = 5. Lengths: √10 and √5. So
          cos θ = 5/√50 = 1/√2, giving θ = <b>45°</b>. No protractor, no drawing, the components knew the angle all
          along. (Set the widget to roughly these vectors and check!)</p>
@@ -588,7 +590,7 @@
 
     <div class="ask">
       <div class="q">"What is a vector dotted with itself?"</div>
-      <p>The angle with itself is 0°, cos 0 = 1, so a&#8407;·a&#8407; = |a&#8407;|², the length squared. In components:
+      <p>The angle with itself is 0°, cos 0 = 1, so <span class="ov">a</span>·<span class="ov">a</span> = |<span class="ov">a</span>|², the length squared. In components:
          a₁² + a₂², which is Pythagoras again. A tidy freebie: dot any vector with itself to find its length.</p>
     </div>
 
@@ -611,11 +613,11 @@
 
     <div class="def">
       <div class="term">Cross product (vector product)</div>
-      <p class="formula" style="margin:.4em 0">|a&#8407; × b&#8407;| = |a&#8407;| |b&#8407;| sin θ &nbsp; = &nbsp; area of the parallelogram</p>
+      <p class="formula" style="margin:.4em 0">|<span class="ov">a</span> × <span class="ov">b</span>| = |<span class="ov">a</span>| |<span class="ov">b</span>| sin θ &nbsp; = &nbsp; area of the parallelogram</p>
       <p>In 2-D components this area computes as <span class="sym">a₁b₂ − a₂b₁</span> (up to sign). The result of a
          cross product is a <b>vector</b>: its magnitude is the area, and its direction is <b>perpendicular to both</b>
          a and b, in 2-D, straight out of (or into) the page, given by the right-hand rule below. The triangle with
-         sides a and b has half that area: ½|a&#8407; × b&#8407;|.</p>
+         sides a and b has half that area: ½|<span class="ov">a</span> × <span class="ov">b</span>|.</p>
     </div>
 
     <div class="widget">
@@ -705,8 +707,8 @@
     <div class="card">
       <h3 style="margin-top:0">3 · The area of a triangle from its corners</h3>
       <p style="margin:.3em 0"><b>Question:</b> a triangle has corners A(0, 0), B(4, 1), C(1, 3). Its area?</p>
-      <p style="margin:.3em 0"><b>Walkthrough:</b> make two side vectors from A (Step 5!): AB&#8407; = 4î + ĵ and
-         AC&#8407; = î + 3ĵ. Cross product size: |4·3 − 1·1| = 11, that's the parallelogram; the triangle is half:
+      <p style="margin:.3em 0"><b>Walkthrough:</b> make two side vectors from A (Step 5!): A<span class="ov">B</span> = 4î + ĵ and
+         A<span class="ov">C</span> = î + 3ĵ. Cross product size: |4·3 − 1·1| = 11, that's the parallelogram; the triangle is half:
          area = <b>5.5</b>. Geometry became two multiplications and a subtraction. That's the whole point of vectors.</p>
     </div>
   </section>
@@ -720,7 +722,7 @@
         <li><strong>Vector</strong> = magnitude + direction, drawn as an arrow; location is not part of it.</li>
         <li><strong>Components:</strong> every vector = a₁î + a₂ĵ; length by Pythagoras; â = a/|a| for pure direction.</li>
         <li><strong>Add</strong> tip-to-tail (components just add); subtract = add the reverse; k·a stretches (negative k flips).</li>
-        <li><strong>Position vectors</strong> turn points into arrows; AB&#8407; = b − a; midpoint = average.</li>
+        <li><strong>Position vectors</strong> turn points into arrows; A<span class="ov">B</span> = b − a; midpoint = average.</li>
         <li><strong>Dot product</strong> a·b = |a||b|cos θ = a₁b₁ + a₂b₂, agreement; zero ⟺ perpendicular; finds angles.</li>
         <li><strong>Cross product</strong> |a×b| = |a||b|sin θ, the parallelogram's area; zero ⟺ parallel; direction by right hand.</li>
       </ul>
@@ -732,23 +734,23 @@
         <tr><th>Term</th><th>Meaning</th></tr>
         <tr><td>scalar</td><td>quantity with size only (mass, time, temperature, speed, distance)</td></tr>
         <tr><td>vector</td><td>quantity with size and direction (displacement, velocity, force)</td></tr>
-        <tr><td>magnitude |a&#8407;|</td><td>the vector's length; never negative; √(a₁² + a₂²)</td></tr>
+        <tr><td>magnitude |<span class="ov">a</span>|</td><td>the vector's length; never negative; √(a₁² + a₂²)</td></tr>
         <tr><td>tail / head (tip)</td><td>where the arrow starts / the pointed end where it ends</td></tr>
         <tr><td>equal vectors</td><td>same magnitude and same direction, location irrelevant</td></tr>
-        <tr><td>zero vector 0&#8407;</td><td>magnitude 0, no direction; the "don't move" instruction</td></tr>
-        <tr><td>negative −a&#8407;</td><td>same magnitude, opposite direction</td></tr>
-        <tr><td>unit vector â</td><td>any vector of length exactly 1; â = a&#8407;/|a&#8407;|</td></tr>
+        <tr><td>zero vector <span class="ov">0</span></td><td>magnitude 0, no direction; the "don't move" instruction</td></tr>
+        <tr><td>negative −<span class="ov">a</span></td><td>same magnitude, opposite direction</td></tr>
+        <tr><td>unit vector â</td><td>any vector of length exactly 1; â = <span class="ov">a</span>/|<span class="ov">a</span>|</td></tr>
         <tr><td>î, ĵ, k̂</td><td>unit vectors along the x, y, z axes ("one step east / north / up")</td></tr>
         <tr><td>components a₁, a₂</td><td>the east-part and north-part; signs carry direction along each axis</td></tr>
-        <tr><td>parallel / collinear</td><td>along one line; b&#8407; = k·a&#8407; for some number k</td></tr>
+        <tr><td>parallel / collinear</td><td>along one line; <span class="ov">b</span> = k·<span class="ov">a</span> for some number k</td></tr>
         <tr><td>triangle law</td><td>tip-to-tail addition: a then b, sum from start to finish</td></tr>
         <tr><td>parallelogram law</td><td>same addition drawn both orders, same destination</td></tr>
-        <tr><td>scalar multiplication</td><td>k·a&#8407;: stretch by |k|, flip if k &lt; 0</td></tr>
+        <tr><td>scalar multiplication</td><td>k·<span class="ov">a</span>: stretch by |k|, flip if k &lt; 0</td></tr>
         <tr><td>position vector</td><td>arrow from the origin to a point; the "trip to" the point</td></tr>
-        <tr><td>AB&#8407; = b&#8407; − a&#8407;</td><td>arrow between points: destination minus start</td></tr>
-        <tr><td>midpoint</td><td>position vector (a&#8407; + b&#8407;)/2, the average</td></tr>
+        <tr><td>A<span class="ov">B</span> = <span class="ov">b</span> − <span class="ov">a</span></td><td>arrow between points: destination minus start</td></tr>
+        <tr><td>midpoint</td><td>position vector (<span class="ov">a</span> + <span class="ov">b</span>)/2, the average</td></tr>
         <tr><td>dot (scalar) product</td><td>a·b = |a||b|cos θ = a₁b₁ + a₂b₂; a number; 0 ⟺ perpendicular</td></tr>
-        <tr><td>projection (shadow)</td><td>the part of b lying along a; length |b&#8407;| cos θ</td></tr>
+        <tr><td>projection (shadow)</td><td>the part of b lying along a; length |<span class="ov">b</span>| cos θ</td></tr>
         <tr><td>cross (vector) product</td><td>|a×b| = |a||b|sin θ = parallelogram area; 0 ⟺ parallel</td></tr>
         <tr><td>right-hand rule</td><td>curl fingers a→b; thumb gives a×b's direction (⊙ out / ⊗ in)</td></tr>
       </table>
