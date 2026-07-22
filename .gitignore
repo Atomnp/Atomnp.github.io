@@ -6,3 +6,9 @@ Thumbs.db
 
 # Node (only if you ever add tooling)
 node_modules/
+
+# Private research notes (not for publishing)
+research/
+
+# Benchmark harness for the Bloom filter post: kept locally, not published
+projects/bloom_filter/bench/

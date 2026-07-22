@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bloom Filters, and Where the Bits Actually Go</title>
+<meta name="description" content="An interactive, benchmarked walk through Bloom filters: how they work, the math, and what three C implementations actually cost in nanoseconds and bytes.">
+<meta name="author" content="Aayush Neupane">
+<link rel="canonical" href="https://neupaneaayush.com.np/projects/bloom_filter/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bloom Filters, and Where the Bits Actually Go">
+<meta property="og:description" content="Interactive explanations plus real C benchmarks: false positive rates measured against theory, and where the nanoseconds go.">
+<meta property="og:url" content="https://neupaneaayush.com.np/projects/bloom_filter/">
+<link rel="icon" href="../../assets/favicon.ico" sizes="any">
+<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<style>
+  :root{
+    --paper:#F6F7F8; --surface:#FFFFFF; --raise:#FBFBFC; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B;
+    --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E;
+    --good:#0F9E77; --warn:#C08A2E; --hot:#C0479A; --bad:#C2413C;
+    --cell-off:#E9EBEF; --cell-edge:#D8DBE1;
+    --grid:rgba(20,23,28,.09); --halo:#FFFFFF;
+    --code-bg:#F1F2F6; --code-ink:#2B3350; --tag:#EDEFF6;
+    --shadow:0 10px 30px -18px rgba(20,23,28,.28);
+    --serif:"Charter","Newsreader","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:"Inter","Helvetica Neue","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+    --mono:"SF Mono","JetBrains Mono","Fira Code",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --paper:#0E1116; --surface:#161A21; --raise:#1B202A; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2;
+    --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6;
+    --good:#38C9A0; --warn:#E3B85A; --hot:#E56DB1; --bad:#E4736E;
+    --cell-off:#20252F; --cell-edge:#2A303C;
+    --grid:rgba(231,234,240,.10); --halo:#161A21;
+    --code-bg:#171C26; --code-ink:#C4CCE6; --tag:#1B2130;
+    --shadow:0 14px 34px -18px rgba(0,0,0,.7);
+  }}
+  :root[data-theme="light"]{
+    --paper:#F6F7F8; --surface:#FFFFFF; --raise:#FBFBFC; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B;
+    --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E;
+    --good:#0F9E77; --warn:#C08A2E; --hot:#C0479A; --bad:#C2413C;
+    --cell-off:#E9EBEF; --cell-edge:#D8DBE1;
+    --grid:rgba(20,23,28,.09); --halo:#FFFFFF;
+    --code-bg:#F1F2F6; --code-ink:#2B3350; --tag:#EDEFF6;
+    --shadow:0 10px 30px -18px rgba(20,23,28,.28);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1116; --surface:#161A21; --raise:#1B202A; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2;
+    --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6;
+    --good:#38C9A0; --warn:#E3B85A; --hot:#E56DB1; --bad:#E4736E;
+    --cell-off:#20252F; --cell-edge:#2A303C;
+    --grid:rgba(231,234,240,.10); --halo:#161A21;
+    --code-bg:#171C26; --code-ink:#C4CCE6; --tag:#1B2130;
+    --shadow:0 14px 34px -18px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);
+    font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    transition:background .35s,color .35s;}
+  .wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 22px 120px;}
+
+  /* ---------- backbar ---------- */
+  .backbar{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--paper) 85%,transparent);
+    backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);
+    border-bottom:1px solid transparent;transition:border-color .3s;}
+  .backbar.scrolled{border-color:var(--line);}
+  .backbar-in{max-width:780px;margin:0 auto;padding:0 22px;height:56px;display:flex;align-items:center;
+    justify-content:space-between;font-family:var(--sans);}
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:.9rem;font-weight:600;text-decoration:none;}
+  .back:hover{color:var(--accent-ink);}
+  .back svg{width:16px;height:16px;}
+  .toggle{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink);cursor:pointer;display:grid;place-items:center;flex:0 0 auto;}
+  .toggle:hover{border-color:var(--accent);}
+  .toggle svg{width:17px;height:17px;}
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0;z-index:70;transition:width .1s linear;}
+
+  /* ---------- post header: mirrors post.html so this reads as one of the essays ---------- */
+  header.hero{padding:48px 0 8px;}
+  .eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--sans);margin-bottom:20px;flex-wrap:wrap;}
+  .eyebrow .cat{font-size:.72rem;font-weight:700;color:var(--accent-ink);
+    background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:100px;padding:4px 12px;}
+  .eyebrow .meta{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+  h1.post{font-family:var(--sans);font-size:clamp(2rem,5vw,2.85rem);line-height:1.1;letter-spacing:-.025em;
+    font-weight:720;margin:0 0 18px;text-wrap:balance;color:var(--ink);}
+  h1.post .em{font-family:var(--serif);color:var(--accent-ink);font-style:italic;font-weight:500;}
+  .sub{font-size:1.1rem;color:var(--ink-soft);max-width:62ch;margin:0;}
+  .post-rule{height:1px;background:var(--line);margin:30px 0 26px;}
+  .herocanvas{margin:30px 0 0;border:1px solid var(--line);border-radius:14px;background:var(--surface);
+    overflow:hidden;box-shadow:var(--shadow);}
+  .herocanvas canvas{display:block;width:100%;height:auto;}
+
+  /* ---------- typography ---------- */
+  section{margin-top:66px;scroll-margin-top:70px;}
+  .step-no{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--accent-ink);text-transform:uppercase;}
+  h2{font-family:var(--sans);font-weight:680;font-size:clamp(1.55rem,4vw,2.1rem);line-height:1.14;
+    margin:.16em 0 .5em;letter-spacing:-.022em;color:var(--ink);}
+  h3{font-family:var(--sans);font-weight:660;font-size:1.15rem;margin:1.7em 0 .3em;color:var(--ink);letter-spacing:-.01em;}
+  p{margin:.8em 0;color:var(--ink-2);}
+  .lead{font-size:1.12rem;color:var(--ink-2);}
+  strong,b{color:var(--ink);font-weight:640;}
+  a{color:var(--accent-ink);}
+  ul,ol{color:var(--ink-2);padding-left:1.25em;}
+  li{margin:.4em 0;}
+  .fn{font-size:.92rem;color:var(--ink-soft);}
+  .num{font-family:var(--mono);font-size:.94em;color:var(--ink);font-weight:500;}
+  .u-good{color:var(--good);font-weight:600;}
+  .u-hot{color:var(--hot);font-weight:600;}
+  .u-acc{color:var(--accent-ink);font-weight:600;}
+
+  /* ---------- blocks ---------- */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    box-shadow:var(--shadow);margin:24px 0;}
+  .big-idea{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:0 12px 12px 0;padding:16px 20px;margin:24px 0;}
+  .big-idea .label{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);}
+  .big-idea p{font-size:1.06rem;margin:.35em 0 0;}
+  .takeaway{font-family:var(--serif);font-style:italic;font-size:1.06rem;color:var(--ink);
+    border-left:3px solid var(--good);padding:4px 0 4px 16px;margin:22px 0;}
+  .aside{border:1px dashed var(--line);border-radius:12px;padding:14px 18px;margin:22px 0;background:var(--raise);}
+  .aside .label{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+  .aside p{font-size:.96rem;margin:.3em 0 0;}
+
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto;
+    font-family:var(--mono);font-size:.82rem;line-height:1.65;color:var(--code-ink);margin:20px 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);color:var(--code-ink);
+    padding:1px 5px;border-radius:5px;}
+  pre code{background:none;padding:0;font-size:1em;}
+  pre .c{color:var(--ink-soft);font-style:italic;}
+  pre .kw{color:var(--accent-ink);}
+
+  /* ---------- widgets ---------- */
+  .widget{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;
+    box-shadow:var(--shadow);margin:26px 0;}
+  .widget canvas{display:block;width:100%;height:auto;border-radius:10px;}
+  .wtitle{font-family:var(--sans);font-size:.78rem;font-weight:660;letter-spacing:.02em;color:var(--ink);
+    margin:0 0 2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .wtitle .tagn{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);background:var(--tag);border-radius:5px;padding:2px 7px;font-weight:500;
+    white-space:nowrap;}
+  .wsub{font-family:var(--sans);font-size:.82rem;color:var(--ink-soft);margin:0 0 14px;}
+  .controls{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;margin-top:16px;}
+  .ctrl{flex:1 1 190px;min-width:170px;}
+  .ctrl label{font-size:.68rem;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.07em;
+    text-transform:uppercase;display:flex;justify-content:space-between;margin-bottom:7px;}
+  .ctrl label b{color:var(--ink);font-weight:600;}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;
+    background:var(--line);outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;
+    background:var(--accent);cursor:pointer;border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.22);}
+  input[type=range]::-moz-range-thumb{width:19px;height:19px;border-radius:50%;background:var(--accent);
+    cursor:pointer;border:3px solid var(--surface);}
+  input[type=text]{font-family:var(--mono);font-size:.9rem;background:var(--paper);color:var(--ink);
+    border:1px solid var(--line);border-radius:9px;padding:9px 12px;outline:none;min-width:0;}
+  input[type=text]:focus{border-color:var(--accent);}
+  .btn{font-family:var(--sans);font-size:.82rem;font-weight:620;background:var(--accent);color:#fff;border:none;
+    border-radius:9px;padding:9px 15px;cursor:pointer;transition:transform .12s,opacity .2s;white-space:nowrap;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn:disabled{opacity:.45;cursor:default;transform:none;}
+  .btn.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line);}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent-ink);}
+  .btn.good{background:var(--good);}
+  .btn.hot{background:var(--hot);}
+  :root[data-theme="dark"] .btn{color:#0E1116;}
+  @media(prefers-color-scheme:dark){.btn{color:#0E1116;}}
+  :root[data-theme="dark"] .btn.ghost{color:var(--ink-2);}
+  @media(prefers-color-scheme:dark){.btn.ghost{color:var(--ink-2);}}
+  .btnrow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px;}
+  .readouts{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px;}
+  .pill{font-family:var(--mono);font-size:.82rem;background:var(--paper);border:1px solid var(--line);
+    border-radius:9px;padding:6px 12px;color:var(--ink-soft);}
+  .pill b{color:var(--ink);font-weight:600;}
+  .pill.acc{border-color:color-mix(in srgb,var(--accent) 50%,var(--line));color:var(--accent-ink);}
+  .pill.acc b{color:var(--accent-ink);}
+  .pill.good{border-color:color-mix(in srgb,var(--good) 50%,var(--line));color:var(--good);}
+  .pill.good b{color:var(--good);}
+  .pill.hot{border-color:color-mix(in srgb,var(--hot) 50%,var(--line));color:var(--hot);}
+  .pill.hot b{color:var(--hot);}
+  .hint{font-family:var(--sans);font-style:italic;font-size:.86rem;color:var(--ink-soft);margin-top:12px;}
+  .verdict{font-family:var(--sans);font-weight:660;font-size:1rem;margin-top:14px;min-height:1.6em;
+    display:flex;align-items:center;gap:9px;color:var(--ink-soft);}
+  .verdict .dot{width:9px;height:9px;border-radius:50%;background:var(--ink-soft);flex:0 0 auto;}
+  .verdict.no{color:var(--good);} .verdict.no .dot{background:var(--good);}
+  .verdict.yes{color:var(--accent-ink);} .verdict.yes .dot{background:var(--accent);}
+  .verdict.fp{color:var(--hot);} .verdict.fp .dot{background:var(--hot);}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-family:var(--sans);font-size:.76rem;color:var(--ink-soft);}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px;}
+  .wordbank{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .wordbank button{font-family:var(--mono);font-size:.74rem;background:var(--tag);border:1px solid transparent;
+    color:var(--ink-2);border-radius:6px;padding:3px 9px;cursor:pointer;}
+  .wordbank button:hover{border-color:var(--accent);color:var(--accent-ink);}
+  .wordbank button.in{background:color-mix(in srgb,var(--accent) 16%,var(--surface));color:var(--accent-ink);}
+
+  /* ---------- stats + tables ---------- */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:26px 0;}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+  .stat .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-soft);}
+  .stat .v{font-family:var(--sans);font-weight:700;font-size:1.6rem;letter-spacing:-.02em;color:var(--ink);
+    line-height:1.15;margin-top:5px;}
+  .stat .v small{font-size:.9rem;font-weight:600;color:var(--ink-soft);letter-spacing:0;}
+  .stat .d{font-size:.82rem;color:var(--ink-soft);font-family:var(--sans);margin-top:3px;}
+  .tablewrap{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:12px;background:var(--surface);}
+  table.data{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.8rem;}
+  table.data th,table.data td{padding:9px 11px;text-align:right;color:var(--ink-2);white-space:nowrap;
+    border-bottom:1px solid var(--line-2);}
+  /* the label column carries the long text, so let it wrap rather than
+     pushing the last column off the edge of the card */
+  table.data th:first-child,table.data td:first-child{white-space:normal;min-width:15em;}
+  table.data th{white-space:normal;}
+  table.data th{background:var(--raise);color:var(--ink-soft);font-weight:500;font-size:.66rem;
+    letter-spacing:.09em;text-transform:uppercase;position:sticky;top:0;}
+  table.data td:first-child,table.data th:first-child{text-align:left;}
+  table.data tbody tr:last-child td{border-bottom:0;}
+  table.data tr.hi td{background:color-mix(in srgb,var(--accent) 8%,transparent);color:var(--ink);}
+  table.data td b{color:var(--ink);}
+
+  /* ---------- footer ---------- */
+  .foot{margin-top:80px;padding-top:26px;border-top:1px solid var(--line);
+    font-family:var(--sans);font-size:.9rem;color:var(--ink-soft);}
+  .foot a{font-weight:600;}
+
+  .post-foot{margin-top:90px;}
+  .post-foot .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:20px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow);}
+  .post-foot img{width:52px;height:52px;border-radius:11px;object-fit:cover;border:1px solid var(--line);}
+  .post-foot .n{font-family:var(--sans);}
+  .post-foot .n b{font-weight:680;letter-spacing:-.01em;color:var(--ink);}
+  .post-foot .n span{color:var(--ink-soft);font-size:.88rem;}
+  .post-foot .to-all{margin-left:auto;font-family:var(--sans);font-size:.85rem;font-weight:600;
+    color:var(--accent-ink);text-decoration:none;}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+  @media(max-width:560px){
+    body{font-size:17px}
+    .widget{padding:14px}
+    .stat .v{font-size:1.35rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="backbar" id="backbar">
+  <div class="backbar-in">
+    <a class="back" href="../../blog.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Writing</a>
+    <button class="toggle" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ============================= HERO ============================= -->
+<header class="hero">
+  <div class="eyebrow">
+    <span class="cat">Systems</span>
+    <span class="meta">Jul 27, 2026 · 20 min read</span>
+  </div>
+  <h1 class="post">Bloom filters, and where the bits <span class="em">actually</span> go</h1>
+  <p class="sub">I wrote three of them in C, measured every claim I could find, and drew the pictures
+     that finally made the thing click for me. Everything below runs in your browser, and every number
+     comes from a benchmark you can rerun.</p>
+  <div class="post-rule"></div>
+  <div class="herocanvas"><canvas id="cv-hero" data-w="760" data-h="240"></canvas></div>
+</header>
+
+<!-- ============================= 1. PROBLEM ============================= -->
+<section class="reveal" id="problem">
+  <div class="step-no">The problem</div>
+  <h2>Most of the time, the answer is no</h2>
+
+  <p class="lead">At work I maintain a retrieval system over a knowledge graph with about fifteen thousand
+     entities in it. A big part of what it does all day is ask a very boring question: <em>have I already
+     processed this thing?</em> And the honest answer, almost always, is no.</p>
+
+  <p>That asymmetry is everywhere once you start noticing it. A web crawler asking whether it has seen a
+     URL. A storage engine asking whether a key might live in some file on disk. A password service asking
+     whether a string appears in a breach list. Each one is a membership test where the overwhelming
+     majority of answers are <em>no</em>, and where the cost of finding that out is dominated by a data
+     structure you had to keep in memory.</p>
+
+  <p>The obvious fix is a hash set. It works, and it is exact, and for a long time that is what I reached
+     for without thinking. Then I actually measured what it costs. Storing ten million 16-byte keys means
+     writing down 160 MB of keys before you have added a single byte of structure, and my open-addressed
+     implementation actually allocates <b class="num" data-fig="setMB"></b> once the capacity rounds up to
+     a power of two. Every lookup that misses still has to touch a random cache line somewhere in that,
+     which on my laptop costs <b class="num" data-fig="bigSetNs"></b> once the table stops fitting in cache.</p>
+
+  <p>A Bloom filter answers the same question for the same ten million keys in
+     <b class="num" data-fig="bloom10MB"></b>. That is
+     <b class="num" data-fig="memRatio"></b> less memory than my hash set, and still
+     <b class="num" data-fig="keysRatio"></b> less than the theoretical floor for anything exact. The catch
+     is that it sometimes says yes when it means no. How often is a number you get to choose, and the whole
+     design is about buying that number as cheaply as possible.</p>
+
+  <div class="big-idea">
+    <div class="label">The deal</div>
+    <p>A Bloom filter never misses something you inserted. It occasionally claims to have something you
+       did not insert. You trade a controllable error rate in one direction for an enormous amount of memory.</p>
+  </div>
+
+  <p>What follows is the version of this I wish I had read first. The pictures are interactive, the math
+     is derived rather than asserted, and the performance section is measured on real hardware rather than
+     reasoned about. Where my measurements disagreed with what I expected, I kept the measurement.</p>
+</section>
+
+<!-- ============================= 2. THE TRICK ============================= -->
+<section class="reveal" id="try">
+  <div class="step-no">The trick</div>
+  <h2>An array of bits and a few hash functions</h2>
+
+  <p class="lead">Here is the entire idea. Take an array of <span class="num">m</span> bits, all zero.
+     Pick <span class="num">k</span> hash functions. To insert a key, hash it <span class="num">k</span>
+     times, and set those <span class="num">k</span> bits to 1. To ask whether a key is present, hash it
+     the same <span class="num">k</span> ways and look. If <em>any</em> of those bits is 0, the key was
+     definitely never inserted. If all of them are 1, it probably was.</p>
+
+  <p>That is the whole data structure. There is no bucket, no chain, no key storage, no resizing. The keys
+     themselves are never written down anywhere, which is why the memory does not grow with how long your
+     keys are.</p>
+
+  <p>Type something into the box below and insert it. Watch where the bits land.</p>
+
+  <div class="widget" id="w-filter">
+    <div class="wtitle">A Bloom filter you can poke at <span class="tagn">m = 96 bits · k = 3</span></div>
+    <p class="wsub">Insert sets three bits. Query checks the same three. Nothing is ever unset.</p>
+    <canvas id="cv-filter" data-w="740" data-h="300"></canvas>
+    <div class="btnrow">
+      <input type="text" id="f-input" value="strawberry" spellcheck="false" autocomplete="off" style="flex:1 1 180px">
+      <button class="btn" id="f-insert">Insert</button>
+      <button class="btn ghost" id="f-query">Query</button>
+      <button class="btn ghost" id="f-reset">Reset</button>
+    </div>
+    <div class="verdict" id="f-verdict"><span class="dot"></span><span id="f-verdict-t">Insert a few words, then query one you did not insert.</span></div>
+    <div class="readouts">
+      <div class="pill">inserted <b id="f-n">0</b></div>
+      <div class="pill acc">bits set <b id="f-bits">0</b> / 96</div>
+      <div class="pill">fill <b id="f-fill">0%</b></div>
+      <div class="pill hot">false positive rate <b id="f-fpr">0%</b></div>
+    </div>
+    <div class="wordbank" id="f-bank"></div>
+    <div class="btnrow">
+      <button class="btn hot" id="f-findfp">Find me a false positive</button>
+    </div>
+    <p class="hint">The last button brute-forces a dictionary looking for a word that was never inserted but
+       whose three bits all happen to be set already. On a filter this small it usually does not take long.</p>
+  </div>
+
+  <p>If you clicked that last button and it found something, you just watched the only failure mode this
+     structure has. The word was never inserted. Other words set its bits as collateral damage. The filter
+     has no way to tell the difference, because it never stored the words.</p>
+</section>
+
+<!-- ============================= 3. THE GUARANTEE ============================= -->
+<section class="reveal" id="guarantee">
+  <div class="step-no">The guarantee</div>
+  <h2>Why it can be wrong in only one direction</h2>
+
+  <p class="lead">This part took me embarrassingly long to internalise, and it comes down to one property:
+     bits only ever go from 0 to 1. Nothing in the insert path ever clears a bit.</p>
+
+  <p>So if I inserted a key, I set its <span class="num">k</span> bits, and from that moment on those bits
+     are 1 forever. When I later query that key, I look at exactly those same <span class="num">k</span>
+     positions, and they cannot have changed back. The filter must say yes. <b>A false negative is not
+     unlikely, it is impossible.</b></p>
+
+  <p>The reverse has no such protection. A key I never inserted hashes to <span class="num">k</span>
+     positions that other keys may have set for their own reasons. If all <span class="num">k</span>
+     of them happen to be occupied, the filter says yes and it is wrong.</p>
+
+  <div class="widget" id="w-proof">
+    <div class="wtitle">Why one direction is safe <span class="tagn">monotone</span></div>
+    <p class="wsub">Every insert only ever turns bits on. Drag the slider to add keys and watch the array
+       fill. Nothing ever goes back.</p>
+    <canvas id="cv-proof" data-w="740" data-h="200"></canvas>
+    <div class="controls">
+      <div class="ctrl">
+        <label>keys inserted <b id="p-n-l">0</b></label>
+        <input id="p-n" type="range" min="0" max="40" step="1" value="0">
+      </div>
+    </div>
+    <div class="readouts">
+      <div class="pill good">tracked key still found <b id="p-hit">yes</b></div>
+      <div class="pill hot">unrelated key now claimed <b id="p-fp">no</b></div>
+    </div>
+    <p class="hint">Green is the key I inserted first and keep re-querying. Pink is a key I never inserted.
+       As the array fills, the pink key eventually gets swallowed. The green one never stops working.</p>
+  </div>
+
+  <div class="takeaway">A yes means "maybe". A no means "definitely not". Every correct use of a Bloom
+     filter is built on trusting the no and verifying the yes.</div>
+
+  <p>That last sentence is the practical shape of every real deployment. You put the filter in front of
+     something expensive. When it says no, you skip the expensive thing, and you are always right to.
+     When it says yes, you do the expensive thing, and occasionally you did it for nothing.</p>
+</section>
+
+<!-- ============================= 4. THE MATH ============================= -->
+<section class="reveal" id="math">
+  <div class="step-no">The math</div>
+  <h2>Three knobs, one number</h2>
+
+  <p class="lead">There are only three things to choose: how many keys you expect (<span class="num">n</span>),
+     how many bits you are willing to spend (<span class="num">m</span>), and how many hash functions you use
+     (<span class="num">k</span>). Everything else follows.</p>
+
+  <h3>Step one: how full does the array get?</h3>
+
+  <p>Inserting one key sets <span class="num">k</span> bits. Pick any single bit in the array. The chance
+     that one particular hash misses it is <span class="num">1 - 1/m</span>. Across
+     <span class="num">k</span> hashes for <span class="num">n</span> keys, that is
+     <span class="num">kn</span> independent chances to miss, so the probability that our bit is still 0 is</p>
+
+  <pre>P(bit is still 0) = (1 - 1/m)^(kn)  ≈  e^(-kn/m)</pre>
+
+  <p>The approximation is the usual one, and it is extremely good for any <span class="num">m</span> you
+     would actually use. So the fraction of the array that ends up set is
+     <span class="num">1 - e^(-kn/m)</span>. My implementation counts the set bits after loading two million
+     keys, and it lands on that curve to three decimal places every time.</p>
+
+  <h3>Step two: how often do all k bits collide?</h3>
+
+  <p>For a key that was never inserted, a false positive means all <span class="num">k</span> of its
+     positions happen to be set. Treating those as independent gives the formula you will find everywhere:</p>
+
+  <pre>false positive rate  ≈  (1 - e^(-kn/m))^k</pre>
+
+  <p>Play with it. The panel below draws the real curve, marks where you are sitting, and shows the bit
+     array at the density your settings imply.</p>
+
+  <div class="widget" id="w-math">
+    <div class="wtitle">The three knobs <span class="tagn">live</span></div>
+    <p class="wsub">Move the sliders. The left panel is the false positive rate as a function of k at your
+       current bits-per-key. The right panel is what the array looks like at that fill.</p>
+    <canvas id="cv-math" data-w="740" data-h="330"></canvas>
+    <div class="controls">
+      <div class="ctrl">
+        <label>bits per key, m/n <b id="m-bpk-l">10</b></label>
+        <input id="m-bpk" type="range" min="2" max="32" step="1" value="10">
+      </div>
+      <div class="ctrl">
+        <label>hash functions, k <b id="m-k-l">7</b></label>
+        <input id="m-k" type="range" min="1" max="20" step="1" value="7">
+      </div>
+      <div class="ctrl">
+        <label>keys, n <b id="m-n-l">10M</b></label>
+        <input id="m-n" type="range" min="0" max="6" step="1" value="4">
+      </div>
+    </div>
+    <div class="readouts">
+      <div class="pill">memory <b id="m-mem">11.9 MB</b></div>
+      <div class="pill">fill <b id="m-fill">50.0%</b></div>
+      <div class="pill hot">false positive rate <b id="m-fpr">0.82%</b></div>
+      <div class="pill acc">best k here is <b id="m-kopt">7</b></div>
+      <div class="pill">1 in <b id="m-oneIn">122</b></div>
+    </div>
+    <p class="hint">Notice that the curve has a floor. Past a certain k you are setting so many bits that
+       adding more hashes makes things worse.</p>
+  </div>
+
+  <h3>Step three: the best k</h3>
+
+  <p>Two forces pull against each other. More hash functions means more bits a false positive has to get
+     lucky on, which helps. More hash functions also means every insert sets more bits, so the array fills
+     faster, which hurts. Somewhere in the middle is a minimum.</p>
+
+  <p>Differentiate and the answer is clean:</p>
+
+  <pre>k* = (m/n) · ln 2  ≈  0.693 · bits per key</pre>
+
+  <p>At that point the array is exactly half full, which is a nice thing to remember. Half the bits are 1,
+     half are 0, and the false positive rate is <span class="num">0.5^k</span>, or equivalently
+     <span class="num">0.6185^(m/n)</span>.</p>
+
+  <div class="widget" id="w-tug">
+    <div class="wtitle">The tug of war <span class="tagn">why k has an optimum</span></div>
+    <p class="wsub">Blue: more hashes make a lucky collision harder. Amber: more hashes fill the array
+       faster. Pink is their product, the actual false positive rate.</p>
+    <canvas id="cv-tug" data-w="740" data-h="300"></canvas>
+    <div class="controls">
+      <div class="ctrl">
+        <label>bits per key <b id="t-bpk-l">10</b></label>
+        <input id="t-bpk" type="range" min="4" max="24" step="1" value="10">
+      </div>
+      <div class="ctrl">
+        <label>k <b id="t-k-l">7</b></label>
+        <input id="t-k" type="range" min="1" max="20" step="1" value="7">
+      </div>
+    </div>
+    <p class="hint">The minimum sits where the two effects balance, at k = 0.693 × bits per key.</p>
+  </div>
+
+  <p>I measured this rather than trusting it. At 10 bits per key I built a filter for every
+     <span class="num">k</span> from 1 to 14 and threw twenty million never-inserted keys at each one.
+     The minimum landed exactly where the formula says it should.</p>
+
+  <div class="widget">
+    <div class="wtitle">Measured false positive rate against k <span class="tagn">real data</span></div>
+    <p class="wsub">10 bits per key, 2,000,000 inserted, 20,000,000 probes per point. The grey band is
+       the textbook formula and the blue line is what I measured. They sit on top of each other, which is
+       the point. Hover for numbers.</p>
+    <canvas id="cv-chart-k" data-w="740" data-h="330"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--accent)"></i>measured</span>
+      <span><i style="background:var(--ink-soft)"></i>formula</span>
+      <span><i style="background:var(--warn)"></i>nanoseconds per lookup</span>
+    </div>
+  </div>
+
+  <p>The interesting part of that chart is not the agreement, it is the amber line. Going from
+     <span class="num">k=4</span> to the optimal <span class="num">k=7</span> improves the false positive
+     rate from <b class="num" data-fig="fprK4"></b> to
+     <b class="num" data-fig="fprK7"></b>, which sounds nice, but it also costs
+     <b class="num" data-fig="kTimeCost"></b>
+     more time per lookup. If your workload is latency-sensitive and you can afford a slightly worse error
+     rate, the textbook optimum is not your optimum.</p>
+
+  <div class="takeaway">Optimal k minimises false positives, not time. Those are different objectives, and
+     nothing forces you to pick the first one.</div>
+</section>
+
+<!-- ============================= 5. THE LOWER BOUND ============================= -->
+<section class="reveal" id="bound">
+  <div class="step-no">A correction</div>
+  <h2>The formula everyone quotes is a lower bound</h2>
+
+  <p class="lead">While I was checking my implementation against theory I kept finding my measured rates
+     a hair <em>above</em> the formula, at every size, in a way that did not look like noise. It turns out
+     this is a known result, and the formula in every tutorial is subtly wrong.</p>
+
+  <p>Here is the problem. The derivation computes the <em>expected</em> number of set bits, then plugs
+     that expectation into <span class="num">(fill)^k</span>. But the number of set bits is a random
+     variable, and raising it to a power is a convex operation. By Jensen's inequality, the expectation
+     of the power is at least the power of the expectation. So the real rate is always at least what the
+     formula says.</p>
+
+  <p>Bose and colleagues proved this properly in 2008. The gap shrinks like <span class="num">1/m</span>,
+     so on any filter big enough to be useful it is invisible. On small filters it is not. To see it I
+     computed the exact rate with a little dynamic program over the distribution of set bits, then built
+     three hundred thousand independent tiny filters at each size and measured what actually happened.</p>
+
+  <div class="widget">
+    <div class="wtitle">Textbook, exact, and measured <span class="tagn">real data</span></div>
+    <p class="wsub">k = 7, 10 bits per key, 300,000 independent filters per point. The textbook curve sits
+       below the truth, and the gap closes as m grows.</p>
+    <canvas id="cv-chart-bound" data-w="740" data-h="320"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--hot)"></i>measured</span>
+      <span><i style="background:var(--accent)"></i>exact</span>
+      <span><i style="background:var(--ink-soft)"></i>textbook formula</span>
+    </div>
+  </div>
+
+  <p>At <span class="num">m = 128</span> bits the textbook value is
+     <b class="num" data-fig="gapSmall"></b> below the true rate. By
+     <span class="num">m = 4096</span> the gap is under half a percent, and by the time you get to a
+     real filter it is far below anything you could measure.</p>
+
+  <div class="aside">
+    <div class="label">Why I am telling you this</div>
+    <p>Not because it will change your capacity planning. It will not. I am telling you because I spent an
+       afternoon convinced I had a bug, and the bug was in the formula I was checking against. If your
+       measured rate is a fraction of a percent above theory, that is not your hash function.</p>
+  </div>
+</section>
+
+<!-- ============================= 6. TWO HASHES ============================= -->
+<section class="reveal" id="hashes">
+  <div class="step-no">An implementation detail that matters</div>
+  <h2>You do not need k hash functions</h2>
+
+  <p class="lead">The description says "pick k independent hash functions", and if you take that literally
+     you will hash every key seven times, which is seven times the work for no reason.</p>
+
+  <p>Kirsch and Mitzenmacher showed in 2006 that two are enough. Compute
+     <span class="num">h1</span> and <span class="num">h2</span> once, then generate the rest arithmetically:</p>
+
+  <pre><span class="c">// two hashes, k positions, no extra hashing in the loop</span>
+uint64_t h1 = hash(key, len, seed);
+uint64_t h2 = mix(h1) | 1;           <span class="c">// forced odd so it cycles fully</span>
+for (int i = 0; i &lt; k; i++) {
+    uint64_t bit = fastrange(h1, m); <span class="c">// multiply, not modulo</span>
+    bits[bit &gt;&gt; 6] |= 1ull &lt;&lt; (bit &amp; 63);
+    h1 += h2;
+}</pre>
+
+  <p>The claim is that this costs you nothing in accuracy. I did not want to take that on faith, so I built
+     both versions and measured them side by side at five different densities, each with enough probes to
+     resolve the rate to a fraction of a percent.</p>
+
+  <div class="tablewrap">
+    <table class="data" id="tbl-double">
+      <thead><tr><th>bits/key</th><th>k</th><th>double hashing</th><th>k real hashes</th><th>difference</th><th>speed</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <p>The false positive rates are indistinguishable. The speed is not: the double-hashing version is
+     meaningfully faster because it does one hash instead of <span class="num">k</span>. This is the rare
+     optimisation that is free.</p>
+
+  <div class="aside">
+    <div class="label">The other detail in that snippet</div>
+    <p><code>fastrange</code> is Lemire's trick for mapping a 64-bit value into a range: take the high half
+       of a 128-bit multiply instead of doing a modulo. A <code>%</code> here is a division, which is
+       roughly twenty cycles, and you are doing k of them per lookup. Replacing it with a multiply was worth
+       more to my benchmark than anything else I changed.</p>
+  </div>
+</section>
+
+<!-- ============================= 7. BENCHMARKS ============================= -->
+<section class="reveal" id="bench">
+  <div class="step-no">Measurements</div>
+  <h2>What it actually costs</h2>
+
+  <p class="lead">Everything up to here is arithmetic. This part is a machine. All of the numbers below
+     come from C compiled with <code>-O3 -march=native</code> on an Apple M5 Pro: seven repetitions with a
+     warmup pass discarded, a volatile sink so nothing gets optimised away, and the <em>fastest</em>
+     repetition reported rather than the median. That last choice is deliberate. Anything else running on
+     the machine can only make a run slower, so the median still drifts upward when something wakes up. It
+     bit me once: a point in my cache sweep came back at 39 ns against an otherwise smooth 17 ns trend.
+     The minimum is the run where the least interference happened, which is the number I am after.</p>
+
+  <p>I implemented four things: a classic Bloom filter, a cache-blocked one, a register-blocked one, and
+     an exact open-addressed hash set to compare against. The hash set stores the full 16-byte key, because
+     a set that only stores a fingerprint is not exact either, it just has a very small error rate of its
+     own. If you want a real zero, you pay for the bytes.</p>
+
+  <div class="stats" id="stats-headline"></div>
+
+  <h3>Accuracy against theory</h3>
+
+  <p>First, does it work. Two million keys, ten different densities, and enough never-inserted probes at
+     each point to expect at least three thousand false positives.</p>
+
+  <div class="widget">
+    <div class="wtitle">Measured false positive rate against bits per key <span class="tagn">real data</span></div>
+    <p class="wsub">Log scale. Each variant at its optimal k. The grey band underneath is the textbook
+       formula, which the classic filter tracks so closely you can barely see it.</p>
+    <canvas id="cv-chart-fpr" data-w="740" data-h="360"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--accent)"></i>classic</span>
+      <span><i style="background:var(--good)"></i>blocked (512-bit)</span>
+      <span><i style="background:var(--warn)"></i>register-blocked (64-bit)</span>
+      <span><i style="background:var(--ink-soft)"></i>textbook formula</span>
+    </div>
+  </div>
+
+  <p>The classic filter tracks theory across four orders of magnitude. The other two do not, and the
+     reason is the whole point of the next section: they deliberately give up accuracy to touch less memory.
+     At 10 bits per key the classic filter measures
+     <b class="num" data-fig="fpr10"></b>, the blocked one
+     <b class="num" data-fig="fprBlocked10"></b>, and the register-blocked one
+     <b class="num" data-fig="fprReg10"></b>.</p>
+
+  <h3>Memory</h3>
+
+  <p>This is the argument for the whole structure, so it is worth being concrete. Ten million keys:</p>
+
+  <div class="tablewrap">
+    <table class="data" id="tbl-mem">
+      <thead><tr><th>structure</th><th>bits per key</th><th>total</th><th>false positives</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <p>Read that table from the bottom up. My hash set spends <b class="num" data-fig="setBits"></b> per key,
+     most of which is empty slots, because open addressing wants headroom and a power-of-two capacity
+     rounds it up further. A perfect exact structure with no overhead at all would still spend 128 bits per
+     key, because the keys are 16 bytes and it has to write them down. That is the floor, and it is fixed
+     by your data rather than by your cleverness.</p>
+
+  <p>The filter is not bound by that floor, because it never writes the keys down. It spends whatever you
+     decide, and the price of each halving of the error rate is a flat 1.44 bits per key. That is the real
+     headline: the error rate falls exponentially in the memory you spend, and the exchange rate never
+     changes.</p>
+
+  <div class="big-idea">
+    <div class="label">The exchange rate</div>
+    <p>Every additional <span class="num">1.44</span> bits per key cuts the false positive rate in half.
+       Forever. Ten bits gets you about one in a hundred, twenty gets you about one in fifteen thousand,
+       and thirty gets you about one in two million.</p>
+  </div>
+</section>
+
+<!-- ============================= 8. CACHE ============================= -->
+<section class="reveal" id="cache">
+  <div class="step-no">Where the time goes</div>
+  <h2>The k probes are the problem</h2>
+
+  <p class="lead">Here is the thing nobody mentions in the tutorials. A classic Bloom filter lookup does
+     <span class="num">k</span> reads at <span class="num">k</span> unrelated addresses. Once the filter
+     is bigger than cache, that is <span class="num">k</span> separate trips to main memory for one
+     membership test.</p>
+
+  <p>The fix is to give up a little accuracy for locality. Pick one block that fits in a single cache line,
+     then put all <span class="num">k</span> bits inside it. One memory access instead of
+     <span class="num">k</span>. The false positive rate gets worse, because keys that land in an unlucky
+     block have less room to spread out, but the lookup touches one line.</p>
+
+  <div class="widget" id="w-cache">
+    <div class="wtitle">Classic versus blocked <span class="tagn">memory traffic</span></div>
+    <p class="wsub">Same query, two layouts. Watch how many cache lines each one has to reach for.</p>
+    <canvas id="cv-cache" data-w="740" data-h="340"></canvas>
+    <div class="btnrow">
+      <button class="btn" id="c-run">Run a lookup</button>
+      <button class="btn ghost" id="c-auto">Loop</button>
+      <div class="ctrl" style="flex:1 1 160px;max-width:230px">
+        <label>k <b id="c-k-l">7</b></label>
+        <input id="c-k" type="range" min="1" max="12" step="1" value="7">
+      </div>
+    </div>
+    <div class="readouts">
+      <div class="pill acc">classic: lines touched <b id="c-lines-a">7</b></div>
+      <div class="pill good">blocked: lines touched <b id="c-lines-b">1</b></div>
+    </div>
+    <p class="hint">This is a cartoon of the access pattern, not a timing simulation. The real numbers are
+       in the chart below, and they are less dramatic than the cartoon suggests. That turned out to be the
+       most interesting thing I measured.</p>
+  </div>
+
+  <h3>What the hardware actually does</h3>
+
+  <p>I expected the blocked filter to win by something close to a factor of <span class="num">k</span>.
+     It does not. Here is the cost per positive lookup on a filter with thirty-two million keys in it,
+     which is far too big for any cache on this machine, as <span class="num">k</span> grows:</p>
+
+  <div class="widget">
+    <div class="wtitle">Cost per lookup as k grows <span class="tagn">real data</span></div>
+    <p class="wsub">n = 32,000,000, 10 bits per key, 38 MB of filter, positive lookups so every probe runs.</p>
+    <canvas id="cv-chart-cache" data-w="740" data-h="330"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--accent)"></i>classic, k scattered probes</span>
+      <span><i style="background:var(--good)"></i>blocked, all k in one line</span>
+    </div>
+  </div>
+
+  <p>The classic filter costs about two nanoseconds per extra probe. A trip to DRAM on this machine is
+     closer to eighty. The gap is memory-level parallelism: the addresses of all <span class="num">k</span>
+     probes are computable from one hash, they do not depend on each other, and a modern out-of-order core
+     will happily have all of them in flight at once. You are not paying <span class="num">k</span>
+     latencies, you are paying one latency plus a bit of bandwidth.</p>
+
+  <p>So the blocked filter still wins, but by
+     <b class="num" data-fig="cacheWin"></b> at <span class="num">k=7</span> rather than the sevenfold
+     speedup the cartoon implies. That is a real win and I would take it. It is just not the win I was told
+     to expect, and the reason is that the "k cache misses" story quietly assumes a processor that stalls
+     on every load.</p>
+
+  <div class="takeaway">The textbook cost model for Bloom filters was written for machines that could only
+     have one memory request outstanding. Yours can have dozens.</div>
+
+  <h3>Where the cliff actually is</h3>
+
+  <p>The other half of the picture is size. Below is negative-lookup cost against the number of keys stored,
+     which is the workload these things are usually deployed for. The hash set and the filters diverge exactly
+     where you would expect them to.</p>
+
+  <div class="widget">
+    <div class="wtitle">Lookup cost against working set <span class="tagn">real data</span></div>
+    <p class="wsub">10 bits per key, k = 7, negative lookups, log x-axis. Hover for exact numbers.</p>
+    <canvas id="cv-chart-size" data-w="740" data-h="360"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--bad)"></i>exact hash set</span>
+      <span><i style="background:var(--accent)"></i>classic</span>
+      <span><i style="background:var(--good)"></i>blocked</span>
+      <span><i style="background:var(--warn)"></i>register-blocked</span>
+    </div>
+  </div>
+
+  <p>At sixty-four million keys the exact set is <b class="num" data-fig="bigSetMB"></b> and costs <b class="num" data-fig="bigSetNs"></b> per miss. The blocked filter is <b class="num"
+     data-fig="bigBlockedMB"></b> and costs <b class="num"
+     data-fig="bigBlockedNs"></b>. The register-blocked one, which is a
+     single 64-bit load and one AND instruction, costs <b class="num"
+     data-fig="bigRegNs"></b>.</p>
+
+  <h3>How big should a block be?</h3>
+
+  <p>If blocking trades accuracy for locality, the block size is the dial. I swept it from 64 bits up to
+     4096 on a sixteen-million-key filter. This machine has 128-byte cache lines, which is not the 64 that
+     most of the literature assumes, so I was curious where the knee would be.</p>
+
+  <div class="widget">
+    <div class="wtitle">Block size against accuracy and speed <span class="tagn">real data</span></div>
+    <p class="wsub">n = 16,000,000, k = 7, 10 bits per key. Bars are false positive rate, the line is
+       nanoseconds per negative lookup.</p>
+    <canvas id="cv-chart-block" data-w="740" data-h="330"></canvas>
+  </div>
+
+  <p>The result surprised me: across a sixty-four-fold range of block sizes the lookup cost barely moves.
+     Every point lands between <b class="num" data-fig="blockNsLo"></b> and
+     <b class="num" data-fig="blockNsHi"></b>, a spread small enough that I would not defend the ordering
+     within it. The false positive rate, meanwhile, moves by nearly a factor of three, from
+     <b class="num" data-fig="block64Fpr"></b> at a 64-bit block down to
+     <b class="num" data-fig="block4096Fpr"></b> at 4096.</p>
+
+  <p>So on this machine the block size is close to a free choice, and the right move is to take the biggest
+     block you can and pocket the accuracy. A 1024-bit block is exactly one cache line here and gets you to
+     <b class="num" data-fig="block1024Fpr"></b>, within striking distance of the
+     <b class="num" data-fig="fpr10"></b> a classic filter achieves, while still reading one line. I would
+     expect the flat part of that curve to be narrower on hardware with less memory-level parallelism, which
+     is the same caveat as the previous section.</p>
+</section>
+
+<!-- ============================= 9. DELETION ============================= -->
+<section class="reveal" id="delete">
+  <div class="step-no">The limitation</div>
+  <h2>You cannot remove anything</h2>
+
+  <p class="lead">Clearing the bits for a key you want to delete would also clear bits that other keys are
+     relying on, and those keys would start coming back as false negatives. That breaks the one guarantee
+     the structure has.</p>
+
+  <p>The standard workaround is to store small counters instead of bits. Insert increments, delete
+     decrements, and a position counts as set if its counter is nonzero. Four bits per counter is the usual
+     choice, which makes the whole thing four times bigger and is often the end of the conversation.</p>
+
+  <div class="widget" id="w-count">
+    <div class="wtitle">Counting Bloom filter <span class="tagn">delete works, at a price</span></div>
+    <p class="wsub">Same layout, 4-bit counters instead of bits. Insert a few, then delete one and watch
+       the shared positions stay standing.</p>
+    <canvas id="cv-count" data-w="740" data-h="230"></canvas>
+    <div class="btnrow">
+      <button class="btn" id="ct-add">Insert a key</button>
+      <button class="btn ghost" id="ct-del">Delete the last one</button>
+      <button class="btn ghost" id="ct-reset">Reset</button>
+    </div>
+    <div class="readouts">
+      <div class="pill">keys <b id="ct-n">0</b></div>
+      <div class="pill acc">counters in use <b id="ct-used">0</b></div>
+      <div class="pill">memory vs plain bits <b>4×</b></div>
+    </div>
+    <p class="hint">Notice the counters that go to 2 or 3. Those are the shared positions, and they are
+       exactly the reason a plain Bloom filter cannot support delete.</p>
+  </div>
+
+  <p>If deletion matters to you, a counting filter is usually the wrong answer in 2026. Cuckoo filters and
+     quotient filters both support deletion, both store small fingerprints rather than raw bits, and at the
+     error rates people actually use they are smaller than a Bloom filter, not four times bigger. The
+     crossover is around 3% false positives: below that, a cuckoo filter wins on space as well as
+     features. The catch is that they can fail to insert when they get full, and they are considerably more
+     code.</p>
+
+  <p>The other workaround, which is what most production systems do, is to not delete. Rebuild the filter
+     periodically from the source of truth, or keep a generation of filters and drop the oldest. If you are
+     tempted to reach for deletion, check first whether you can reach for a rebuild instead.</p>
+</section>
+
+<!-- ============================= 10. WHEN NOT TO ============================= -->
+<section class="reveal" id="when">
+  <div class="step-no">Judgement</div>
+  <h2>When I would not use one</h2>
+
+  <p class="lead">The failure mode of a good idea is applying it everywhere. Here is where I would stop.</p>
+
+  <ul>
+    <li><b>When the answer is usually yes.</b> The whole value is skipping expensive work on a no. If
+        ninety percent of your queries are hits, you are paying for a filter that almost never saves you
+        anything, and you still do the expensive lookup afterwards.</li>
+    <li><b>When you cannot verify a yes.</b> If there is no source of truth behind the filter, a false
+        positive is not a wasted lookup, it is a wrong answer that reaches the user. This is the one that
+        actually bites people.</li>
+    <li><b>When the set is small.</b> At ten thousand keys my exact hash set answers a miss in
+        <b class="num" data-fig="smallSetNs"></b> while the classic filter takes
+        <b class="num" data-fig="smallClassicNs"></b>. Everything fits in cache, so the set does one probe
+        and wins, and the filter does seven and loses. A filter is a memory optimisation, and at that size
+        there is nothing to optimise. The register-blocked variant is still the fastest thing on the chart,
+        but it is fast for reasons that have nothing to do with saving memory.</li>
+    <li><b>When you need to delete.</b> Discussed above. Use a cuckoo filter, or rebuild.</li>
+    <li><b>When you do not know n in advance.</b> The false positive rate is a function of how full the
+        filter is, and a filter sized for a million keys that receives ten million degrades to useless
+        silently. Scalable Bloom filters exist for this, chaining filters of geometrically growing size,
+        but the fixed-size version is what most libraries give you and it will not warn you.</li>
+    <li><b>When an adversary picks the keys.</b> With a fixed, published hash function, anyone can generate
+        keys that collide with a known-set element and force your false positive rate to one. If the input
+        is untrusted, the hash needs a secret seed.</li>
+  </ul>
+
+  <p>Where they genuinely shine is the case they were built for. LSM-tree storage engines put one in front
+     of every SSTable so a read that misses does not touch the disk. Content delivery caches use them to
+     avoid caching one-hit-wonders. Chrome carried one in the browser for Safe Browsing for years. All of
+     those have the same shape:
+     the no is the common case, the no is free, and something authoritative sits behind the yes.</p>
+</section>
+
+<!-- ============================= 11. METHOD ============================= -->
+<section class="reveal" id="method">
+  <div class="step-no">Method</div>
+  <h2>The bug that nearly published wrong numbers</h2>
+
+  <p class="lead">Every chart above rests on the harness being correct, so it is worth saying how close
+     I came to publishing numbers that were not.</p>
+
+  <p>The harness runs its correctness checks before it runs a single benchmark, on purpose. An early version of my
+     hash function ended a 16-byte hash with a 128-bit multiply-fold whose second operand was zero, which
+     made every key in the universe hash to the same value. The filters still worked. They had no false
+     negatives, they returned plausible-looking answers, and the only symptom was that the hash set went
+     quadratic and the benchmark appeared to hang. A Bloom filter with a broken hash does not crash, it
+     just quietly produces numbers you might publish.</p>
+
+  <p>So the test binary checks the hash before it checks anything else: no collisions across a million
+     distinct keys, chi-square on both the high and low bytes, and an avalanche test that flips each of the
+     128 input bits and counts how many of the 64 output bits move. It should be
+     <span class="num">32</span>. Mine measures <span class="num">31.996</span>.</p>
+
+  <div class="aside">
+    <div class="label">Caveats, honestly</div>
+    <p>Single machine, single thread, one microarchitecture. Apple Silicon has unusually deep
+       memory-level parallelism and 128-byte cache lines, so the classic-versus-blocked gap is probably
+       wider on a typical x86 server. Keys are synthetic 16-byte values, not real URLs. Everything is
+       measured with the filter fully built and static, so nothing here says anything about concurrent
+       inserts. If you rerun it somewhere else and get a different shape, I would like to know.</p>
+  </div>
+</section>
+
+<!-- ============================= 12. CLOSING ============================= -->
+<section class="reveal" id="close">
+  <div class="step-no">Closing</div>
+  <h2>The part I keep coming back to</h2>
+
+  <p class="lead">What I find genuinely beautiful about this structure is that it is barely a structure at
+     all. There are no pointers, no buckets, no rebalancing, nothing to invalidate. It is an array of bits
+     and a decision to accept a specific, quantified amount of being wrong.</p>
+
+  <p>Burton Bloom published it in 1970, in a five-page paper whose worked example was a hyphenation
+     dictionary too large to keep in core memory. The tradeoff he described has not aged at all, because
+     the ratio it exploits, between the cost of storing something and the cost of being occasionally wrong
+     about it, is not a property of any particular hardware. The constants moved by six orders of
+     magnitude and the shape of the answer did not move at all.</p>
+
+  <p>If you take one thing from this: the useful move is not "use a Bloom filter". It is noticing that your
+     problem has an asymmetric answer distribution and an authoritative check sitting behind it. Once you
+     see that shape, the filter is the easy part.</p>
+
+  <div class="foot">
+    <p>Happy to share the benchmark harness if it is useful to you. Reach me on
+       <a href="https://github.com/atomnp">GitHub</a> or by
+       <a href="mailto:neupane0403@gmail.com">email</a>.</p>
+  </div>
+</section>
+
+<div class="post-foot">
+  <div class="card">
+    <img src="../../assets/linkedin_pp.jpeg" alt="Aayush Neupane" width="52" height="52">
+    <div class="n"><b>Aayush Neupane</b><br><span>CS Researcher &amp; Engineer · MS CS, University of Kansas</span></div>
+    <a class="to-all" href="../../blog.html">All writing →</a>
+  </div>
+</div>
+
+</div>
+
+<script src="data.js"></script>
+<script src="viz.js"></script>
+</body>
+</html>

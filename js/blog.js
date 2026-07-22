@@ -15,10 +15,17 @@
     });
   }
 
+  /* Most posts are Markdown rendered by post.html. A post may instead set
+     "url" in posts.json and ship as its own page, for pieces that need custom
+     layout or interactivity. Both kinds sit in the same list. */
+  function postUrl(p) {
+    return p.url ? p.url : 'post.html?p=' + encodeURIComponent(p.slug);
+  }
+
   function render(posts, cat) {
     var list = cat === 'All' ? posts : posts.filter(function (p) { return p.category === cat; });
     mount.innerHTML = list.map(function (p) {
-      var url = 'post.html?p=' + encodeURIComponent(p.slug);
+      var url = postUrl(p);
       return '<li>' +
         '<a class="wl" href="' + url + '">' +
           '<span class="wdate">' + fmt(p.date) + '</span>' +

@@ -1,5 +1,14 @@
 [
   {
+    "slug": "bloom-filters",
+    "title": "Bloom filters, and where the bits actually go",
+    "date": "2026-07-27",
+    "category": "Systems",
+    "summary": "Three implementations in C, benchmarked on real hardware, plus interactive explanations of the math. Where the nanoseconds actually go, and why the textbook formula is a lower bound.",
+    "math": false,
+    "url": "projects/bloom_filter/"
+  },
+  {
     "slug": "python-profiling-and-optimization",
     "title": "Python Profiling and Optimization",
     "date": "2023-01-14",
@@ -17,10 +26,10 @@
   },
   {
     "slug": "neural-machine-translation-attention",
-    "title": "Neural Machine Translation with Encoder–Decoder Attention",
+    "title": "Neural Machine Translation with Encoder\u2013Decoder Attention",
     "date": "2022-01-07",
     "category": "NLP",
-    "summary": "The encoder–decoder architecture for neural machine translation, and how attention fits in.",
+    "summary": "The encoder\u2013decoder architecture for neural machine translation, and how attention fits in.",
     "math": false
   },
   {
