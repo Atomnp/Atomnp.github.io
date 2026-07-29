@@ -2,7 +2,7 @@
   {
     "slug": "bloom-filters",
     "title": "Bloom filters, and where the bits actually go",
-    "date": "2026-07-27",
+    "date": "2026-07-28",
     "category": "Systems",
     "summary": "Three implementations in C, benchmarked on real hardware, plus interactive explanations of the math. Where the nanoseconds actually go, and why the textbook formula is a lower bound.",
     "math": false,
