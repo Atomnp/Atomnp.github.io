@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sinusoidal Positional Encoding, from scratch</title>
+<meta name="description" content="An extremely visual, interactive explanation of the sinusoidal positional encoding from 'Attention Is All You Need': why attention is blind to order, why the naive fixes fail, and how a ladder of sine waves solves it.">
+<meta name="author" content="Aayush Neupane">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sinusoidal Positional Encoding, from scratch">
+<meta property="og:description" content="Why attention can't see word order, and how a bank of sine waves at different frequencies fixes it. Fully interactive.">
+<link rel="icon" href="../../../assets/favicon.ico" sizes="any">
+
+<!-- local KaTeX (no CDN) -->
+<link rel="stylesheet" href="../../../vendor/katex/katex.min.css">
+<script defer src="../../../vendor/katex/katex.min.js"></script>
+<script defer src="../../../vendor/katex/auto-render.min.js"></script>
+
+<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<style>
+  :root{
+    --paper:#F6F7F8; --surface:#FFFFFF; --raise:#FBFBFC; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B;
+    --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E;
+    --good:#0F9E77; --warn:#C08A2E; --hot:#C0479A; --bad:#C2413C; --cool:#2E7BB8;
+    --cell-off:#E9EBEF; --cell-edge:#D8DBE1;
+    --grid:rgba(20,23,28,.09); --halo:#FFFFFF;
+    --code-bg:#F1F2F6; --code-ink:#2B3350; --tag:#EDEFF6;
+    --shadow:0 10px 30px -18px rgba(20,23,28,.28);
+    --serif:"Charter","Newsreader","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:"Inter","Helvetica Neue","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+    --mono:"SF Mono","JetBrains Mono","Fira Code",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --paper:#0E1116; --surface:#161A21; --raise:#1B202A; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2;
+    --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6;
+    --good:#38C9A0; --warn:#E3B85A; --hot:#E56DB1; --bad:#E4736E; --cool:#63B3E6;
+    --cell-off:#20252F; --cell-edge:#2A303C;
+    --grid:rgba(231,234,240,.10); --halo:#161A21;
+    --code-bg:#171C26; --code-ink:#C4CCE6; --tag:#1B2130;
+    --shadow:0 14px 34px -18px rgba(0,0,0,.7);
+  }}
+  :root[data-theme="light"]{
+    --paper:#F6F7F8; --surface:#FFFFFF; --raise:#FBFBFC; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B;
+    --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E;
+    --good:#0F9E77; --warn:#C08A2E; --hot:#C0479A; --bad:#C2413C; --cool:#2E7BB8;
+    --cell-off:#E9EBEF; --cell-edge:#D8DBE1;
+    --grid:rgba(20,23,28,.09); --halo:#FFFFFF;
+    --code-bg:#F1F2F6; --code-ink:#2B3350; --tag:#EDEFF6;
+    --shadow:0 10px 30px -18px rgba(20,23,28,.28);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1116; --surface:#161A21; --raise:#1B202A; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2;
+    --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6;
+    --good:#38C9A0; --warn:#E3B85A; --hot:#E56DB1; --bad:#E4736E; --cool:#63B3E6;
+    --cell-off:#20252F; --cell-edge:#2A303C;
+    --grid:rgba(231,234,240,.10); --halo:#161A21;
+    --code-bg:#171C26; --code-ink:#C4CCE6; --tag:#1B2130;
+    --shadow:0 14px 34px -18px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);
+    font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    transition:background .35s,color .35s;}
+  .wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 22px 120px;}
+
+  /* ---------- backbar ---------- */
+  .backbar{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--paper) 85%,transparent);
+    backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);
+    border-bottom:1px solid transparent;transition:border-color .3s;}
+  .backbar.scrolled{border-color:var(--line);}
+  .backbar-in{max-width:780px;margin:0 auto;padding:0 22px;height:56px;display:flex;align-items:center;
+    justify-content:space-between;font-family:var(--sans);}
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:.9rem;font-weight:600;text-decoration:none;}
+  .back:hover{color:var(--accent-ink);}
+  .back svg{width:16px;height:16px;}
+  .toggle{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink);cursor:pointer;display:grid;place-items:center;flex:0 0 auto;}
+  .toggle:hover{border-color:var(--accent);}
+  .toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0;z-index:70;transition:width .1s linear;}
+
+  /* ---------- hero ---------- */
+  header.hero{padding:44px 0 8px;}
+  .eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--sans);margin-bottom:20px;flex-wrap:wrap;}
+  .eyebrow .cat{font-size:.72rem;font-weight:700;color:var(--accent-ink);
+    background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:100px;padding:4px 12px;}
+  .eyebrow .meta{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+  h1.post{font-family:var(--sans);font-size:clamp(2rem,5vw,2.85rem);line-height:1.08;letter-spacing:-.025em;
+    font-weight:720;margin:0 0 18px;text-wrap:balance;color:var(--ink);}
+  h1.post .em{font-family:var(--serif);color:var(--accent-ink);font-style:italic;font-weight:500;}
+  .sub{font-size:1.12rem;color:var(--ink-soft);max-width:64ch;margin:0;}
+  .series-note{font-family:var(--sans);font-size:.82rem;color:var(--ink-soft);margin:18px 0 0;
+    border:1px dashed var(--line);border-radius:10px;padding:10px 14px;background:var(--raise);}
+  .series-note b{color:var(--accent-ink);}
+  .post-rule{height:1px;background:var(--line);margin:26px 0 26px;}
+  .herocanvas{margin:28px 0 0;border:1px solid var(--line);border-radius:14px;background:var(--surface);
+    overflow:hidden;box-shadow:var(--shadow);}
+  .herocanvas canvas{display:block;width:100%;height:auto;}
+  .herocap{font-family:var(--sans);font-size:.76rem;color:var(--ink-soft);padding:10px 14px;border-top:1px solid var(--line-2);}
+
+  /* ---------- typography ---------- */
+  section{margin-top:64px;scroll-margin-top:70px;}
+  .step-no{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--accent-ink);text-transform:uppercase;}
+  h2{font-family:var(--sans);font-weight:680;font-size:clamp(1.5rem,4vw,2.05rem);line-height:1.14;
+    margin:.16em 0 .5em;letter-spacing:-.022em;color:var(--ink);}
+  h3{font-family:var(--sans);font-weight:660;font-size:1.15rem;margin:1.7em 0 .3em;color:var(--ink);letter-spacing:-.01em;}
+  p{margin:.85em 0;color:var(--ink-2);}
+  .lead{font-size:1.13rem;color:var(--ink-2);}
+  strong,b{color:var(--ink);font-weight:640;}
+  a{color:var(--accent-ink);}
+  ul,ol{color:var(--ink-2);padding-left:1.25em;}
+  li{margin:.45em 0;}
+  .fn{font-size:.92rem;color:var(--ink-soft);}
+  .num{font-family:var(--mono);font-size:.94em;color:var(--ink);font-weight:500;}
+  .u-sin{color:var(--accent-ink);font-weight:600;}
+  .u-cos{color:var(--hot);font-weight:600;}
+  .u-good{color:var(--good);font-weight:600;}
+
+  /* ---------- blocks ---------- */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    box-shadow:var(--shadow);margin:24px 0;}
+  .big-idea{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:0 12px 12px 0;padding:16px 20px;margin:24px 0;}
+  .big-idea .label{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);}
+  .big-idea p{font-size:1.06rem;margin:.35em 0 0;}
+  .takeaway{font-family:var(--serif);font-style:italic;font-size:1.06rem;color:var(--ink);
+    border-left:3px solid var(--good);padding:4px 0 4px 16px;margin:22px 0;}
+  .aside{border:1px dashed var(--line);border-radius:12px;padding:14px 18px;margin:22px 0;background:var(--raise);}
+  .aside .label{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+  .aside p{font-size:.96rem;margin:.3em 0 0;}
+  .mathblock{overflow-x:auto;margin:22px 0;padding:6px 0;}
+
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto;
+    font-family:var(--mono);font-size:.82rem;line-height:1.65;color:var(--code-ink);margin:20px 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);color:var(--code-ink);
+    padding:1px 5px;border-radius:5px;}
+  pre code{background:none;padding:0;font-size:1em;}
+  pre .c{color:var(--ink-soft);font-style:italic;}
+  pre .kw{color:var(--accent-ink);}
+
+  /* ---------- widgets ---------- */
+  .widget{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;
+    box-shadow:var(--shadow);margin:26px 0;}
+  .widget canvas{display:block;width:100%;height:auto;border-radius:10px;touch-action:pan-y;}
+  .wtitle{font-family:var(--sans);font-size:.82rem;font-weight:680;letter-spacing:.01em;color:var(--ink);
+    margin:0 0 2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .wtitle .tagn{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);background:var(--tag);border-radius:5px;padding:2px 7px;font-weight:500;white-space:nowrap;}
+  .wsub{font-family:var(--sans);font-size:.84rem;color:var(--ink-soft);margin:0 0 14px;}
+  .controls{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;margin-top:16px;}
+  .ctrl{flex:1 1 190px;min-width:160px;}
+  .ctrl label{font-size:.68rem;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.07em;
+    text-transform:uppercase;display:flex;justify-content:space-between;margin-bottom:7px;}
+  .ctrl label b{color:var(--ink);font-weight:600;}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;
+    background:var(--line);outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;
+    background:var(--accent);cursor:pointer;border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.22);}
+  input[type=range]::-moz-range-thumb{width:19px;height:19px;border-radius:50%;background:var(--accent);
+    cursor:pointer;border:3px solid var(--surface);}
+  .btn{font-family:var(--sans);font-size:.82rem;font-weight:620;background:var(--accent);color:#fff;border:none;
+    border-radius:9px;padding:9px 15px;cursor:pointer;transition:transform .12s,opacity .2s;white-space:nowrap;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn:disabled{opacity:.45;cursor:default;transform:none;}
+  .btn.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line);}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent-ink);}
+  :root[data-theme="dark"] .btn{color:#0E1116;}
+  @media(prefers-color-scheme:dark){.btn{color:#0E1116;}}
+  :root[data-theme="dark"] .btn.ghost{color:var(--ink-2);}
+  @media(prefers-color-scheme:dark){.btn.ghost{color:var(--ink-2);}}
+  .btnrow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px;}
+  .readouts{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px;}
+  .pill{font-family:var(--mono);font-size:.8rem;background:var(--paper);border:1px solid var(--line);
+    border-radius:9px;padding:6px 12px;color:var(--ink-soft);}
+  .pill b{color:var(--ink);font-weight:600;}
+  .pill.sin{border-color:color-mix(in srgb,var(--accent) 50%,var(--line));color:var(--accent-ink);}
+  .pill.sin b{color:var(--accent-ink);}
+  .pill.cos{border-color:color-mix(in srgb,var(--hot) 50%,var(--line));color:var(--hot);}
+  .pill.cos b{color:var(--hot);}
+  .pill.good{border-color:color-mix(in srgb,var(--good) 50%,var(--line));color:var(--good);}
+  .pill.good b{color:var(--good);}
+  .hint{font-family:var(--sans);font-size:.8rem;color:var(--ink-soft);margin:12px 0 0;font-style:normal;}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .seg button{font-family:var(--sans);font-size:.78rem;font-weight:600;background:transparent;color:var(--ink-soft);
+    border:none;padding:8px 13px;cursor:pointer;border-right:1px solid var(--line);}
+  .seg button:last-child{border-right:none;}
+  .seg button.on{background:var(--accent);color:#fff;}
+  :root[data-theme="dark"] .seg button.on{color:#0E1116;}
+  @media(prefers-color-scheme:dark){.seg button.on{color:#0E1116;}}
+
+  /* ---------- post foot ---------- */
+  .post-foot{margin-top:70px;}
+  .post-foot .card{display:flex;align-items:center;gap:14px;}
+  .post-foot img{border-radius:50%;flex:0 0 auto;}
+  .post-foot .n{font-family:var(--sans);font-size:.9rem;color:var(--ink-2);line-height:1.4;}
+  .post-foot .n b{color:var(--ink);}
+  .post-foot .to-all{margin-left:auto;font-family:var(--sans);font-size:.85rem;font-weight:600;white-space:nowrap;}
+  .foot{margin-top:26px;font-family:var(--sans);font-size:.9rem;color:var(--ink-soft);}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="backbar" id="backbar">
+  <div class="backbar-in">
+    <a class="back" href="../../../blog.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All writing
+    </a>
+    <button class="toggle" id="themeBtn" aria-label="Toggle theme"><svg viewBox="0 0 24 24"></svg></button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">
+    <span class="cat">Deep Learning</span>
+    <span class="meta">Context-Length Series · Part 1</span>
+  </div>
+  <h1 class="post">Sinusoidal positional encoding, <span class="em">built from nothing</span></h1>
+  <p class="sub">Self-attention reads a sentence as an unordered bag of words. Before it can matter that
+     "dog bites man" is not "man bites dog", we have to hand each token a sense of <em>where</em> it sits.
+     This is the first, smallest, most elegant answer to that problem, a bank of sine waves, explained
+     from the ground up, with everything here to touch.</p>
+
+  <div class="series-note">
+    <b>This is Part 1 of a series</b> on how language-model context windows grew from
+    <span class="num">512</span> tokens in the original Transformer to millions. It stands entirely on its
+    own. Later parts build learned, relative, and rotary encodings on top of exactly the idea developed here.
+  </div>
+
+  <div class="herocanvas">
+    <canvas id="cv-hero" data-w="740" data-h="300"></canvas>
+    <div class="herecap" id="hero-cap">The positional-encoding matrix: one row per position, one column per
+       dimension. Every row is a different fingerprint. We will earn every stripe of this picture.</div>
+  </div>
+</header>
+
+<div class="post-rule"></div>
+
+<!-- ========================= 1. THE BAG OF WORDS ========================= -->
+<section class="reveal" id="order">
+  <div class="step-no">The problem</div>
+  <h2>Attention cannot see order</h2>
+
+  <p class="lead">Let me start with the single fact that makes everything after it necessary. The attention
+     mechanism, on its own, has no idea what order its inputs came in.</p>
+
+  <p>Here is the whole thing in slow motion. Self-attention takes a set of token vectors and, for each token,
+     produces a new vector that is a <b>weighted sum of all the other tokens' vectors</b>. The weights come
+     from how similar the tokens are to each other, a dot product between a "query" and a "key". Anyone who has
+     read the <a href="../../../post.html?p=attention-is-all-you-need">companion piece on attention</a> will
+     recognise the same machinery; if not, the only thing to hold onto is this: <b>the output for
+     a token is a sum, and a sum does not care about the order of the things being summed.</b></p>
+
+  <p><span class="num">2 + 5 + 9</span> and <span class="num">9 + 2 + 5</span> are the same number.
+     In exactly the same way, if we take the words of a sentence, shuffle them, and feed them to raw
+     attention, every token gets back <em>the identical vector it would have gotten before</em>, just
+     sitting in a different slot. The math is <b>permutation-equivariant</b>: permute the input, and the
+     output is simply permuted the same way, never actually changed. To attention, "dog bites man" and
+     "man bites dog" are the same bag of three words.</p>
+
+  <p>Play with it. Below are the three tokens of a sentence and the attention weights between them (bigger,
+     darker links mean the model mixes those two tokens more). Drag the tiles to reorder the sentence, or hit
+     shuffle. Watch the connections travel <em>with</em> their tokens and never change strength, because
+     strength depends only on which words are present, not where they are.</p>
+
+  <div class="widget" id="w-bag">
+    <div class="wtitle">A sentence is a bag of words <span class="tagn">permutation-invariant</span></div>
+    <p class="wsub">The number on each link is the attention weight between two words. Reorder the tiles
+       in any order and the set of weights stays frozen. Order carries zero information here.</p>
+    <canvas id="cv-bag" data-w="740" data-h="300"></canvas>
+    <div class="btnrow">
+      <button class="btn" id="bag-shuffle">Shuffle the words</button>
+      <button class="btn ghost" id="bag-reset">Reset order</button>
+    </div>
+    <p class="hint">Every arrangement is, to the model, the exact same input. That is the bug we spend the
+       rest of this page fixing.</p>
+  </div>
+
+  <div class="big-idea">
+    <div class="label">The one requirement</div>
+    <p>We need to stamp each position with a signal, a vector, that is <b>unique to that position</b> and
+       that we <b>add into the token's embedding</b> before attention ever runs. Then two identical words in
+       different places arrive at attention already looking different. That signal is a
+       <b>positional encoding</b>.</p>
+  </div>
+
+  <p>So the task is narrow and concrete: invent a function that turns a position, an integer like
+     <span class="num">0, 1, 2, 3, …</span>, into a vector of <span class="num">d</span> numbers, where
+     <span class="num">d</span> is the width of the model's embeddings (<span class="num">512</span> in the
+     original paper). Every position gets its own vector; we add it onto the word's embedding; attention
+     can finally tell the front of the sentence from the back. Simple to state. The rest of this page is
+     about doing it <em>well</em>, because the obvious attempts fail in instructive ways.</p>
+</section>
+
+<!-- ========================= 2. NAIVE ATTEMPTS ========================= -->
+<section class="reveal" id="naive">
+  <div class="step-no">False starts</div>
+  <h2>The obvious ideas, and why they break</h2>
+
+  <p class="lead">Before the clever answer, it is worth feeling the two naive answers fail, because each
+     failure is a requirement in disguise.</p>
+
+  <h3>Attempt 1: just add the position number</h3>
+  <p>Remember the goal from a moment ago: turn a position into a vector of <span class="num">d</span> numbers
+     and <b>add it, slot by slot, onto the word's embedding</b>. The laziest way to do that is to skip
+     building a real vector and simply take the raw position number and add it to <em>every</em> slot. So the
+     token at position <span class="num">0</span> gets <span class="num">0</span> added to each of its
+     numbers, position <span class="num">1</span> gets <span class="num">1</span> added to each, position
+     <span class="num">1000</span> gets <span class="num">1000</span> added to each.</p>
+  <p>Make it concrete. Suppose the word "cat" has the embedding
+     <span class="num">[0.2, -0.5, 0.1, …]</span>, every number sitting roughly between
+     <span class="num">-1</span> and <span class="num">1</span>, as embeddings do. At position
+     <span class="num">1000</span> it becomes <span class="num">[1000.2, 999.5, 1000.1, …]</span>. The
+     original values, the ones that actually carried the <em>meaning</em> of "cat", are now rounding error
+     next to a giant <span class="num">1000</span>. We have not tagged the word with its position; we have
+     <b>erased the word</b> and kept only the position.</p>
+  <p>And it only gets worse further into the text, because position is <b>unbounded</b>: a longer document
+     just means larger and larger numbers with no ceiling. (Tacking the position on as one extra number,
+     <em>concatenating</em> it rather than adding, hits the same wall from the other side: the value still
+     has no upper limit, and now a single lonely slot has to carry all of the position information.) So the
+     first requirement writes itself: whatever we add has to stay <b>small and bounded</b>, no matter how
+     long the sequence.</p>
+
+  <h3>Attempt 2: squash the position into [0, 1]</h3>
+  <p>Fine, bound it. Divide the position by the length of the sequence before adding it, so the first token
+     contributes <span class="num">0.0</span>, the last contributes <span class="num">1.0</span>, and every
+     value sits politely in between. Bounded at last. But now a subtler bug appears, and the widget below is
+     the fastest way to feel it.</p>
+
+  <div class="widget" id="w-naive">
+    <div class="wtitle">"Position ÷ length" quietly changes what a step means <span class="tagn">not consistent</span></div>
+    <p class="wsub">Each dot is a token's positional value under the normalize-by-length scheme. Slide the
+       sequence length and watch the <em>same</em> position land on a different value, and the spacing
+       between neighbours shrink.</p>
+    <canvas id="cv-naive" data-w="740" data-h="240"></canvas>
+    <div class="controls">
+      <div class="ctrl">
+        <label>Sequence length <b id="nv-len-v">10</b></label>
+        <input type="range" id="nv-len" min="4" max="60" value="10" step="1">
+      </div>
+    </div>
+    <div class="readouts">
+      <div class="pill">token 3 sits at <b id="nv-p3">0.33</b></div>
+      <div class="pill">gap between neighbours <b id="nv-gap">0.111</b></div>
+    </div>
+    <p class="hint">"Third word in" should mean the same thing in a tweet and in an essay. Here it does not:
+       the value of position 3, and the distance to position 4, both depend on how long the sentence
+       happens to be. The model can never learn a stable notion of "three tokens apart".</p>
+  </div>
+
+  <p>Between these two failures we have quietly written a specification. A good positional encoding must be:</p>
+  <ul>
+    <li><b>Bounded</b>: values stay in a small range no matter the position (Attempt 1's lesson).</li>
+    <li><b>Consistent</b>: position <span class="num">3</span> means the same thing, and the step from
+        <span class="num">3</span> to <span class="num">4</span> is the same size, regardless of total
+        length (Attempt 2's lesson).</li>
+    <li><b>Unique</b>: no two positions share the same encoding, or the model literally cannot tell them
+        apart.</li>
+    <li><b>Extendable</b>: it should keep producing sensible values for positions longer than anything seen
+        in training, so a model can read a document longer than its training examples.</li>
+    <li><b>Relative-friendly</b>: ideally it makes "how far apart are these two tokens" easy to compute,
+        because that is what attention actually wants to know. (We will see this fall out for free, and it
+        is the most beautiful part.)</li>
+  </ul>
+
+  <p>Here is the tension that makes this a real puzzle. "Bounded" pushes us toward something that
+     <b>repeats</b>, a wave that cycles between fixed limits. But anything that repeats is, by definition,
+     <b>not unique</b>: a plain sine wave gives position <span class="num">0</span> and position
+     $2\pi$ the exact same value. How do we build something bounded out of repeating
+     parts that is nonetheless unique over a huge range of positions? The answer is an idea we already
+     understand from a completely different context.</p>
+</section>
+
+<!-- ========================= 3. BINARY COUNTER ========================= -->
+<section class="reveal" id="binary">
+  <div class="step-no">The key intuition</div>
+  <h2>We already know the trick: it's binary counting</h2>
+
+  <p class="lead">How do we represent every integer uniquely using only components that each just flip
+     back and forth between two bounded values? We have all done it since grade school. It is binary.</p>
+
+  <p>Count in binary and watch the columns. The rightmost bit flips every single step:
+     <span class="num">0,1,0,1,0,1…</span>. The next bit flips half as often, every two steps:
+     <span class="num">0,0,1,1,0,0,1,1…</span>. The next, every four steps. Each column is a bounded,
+     repeating signal, it only ever shows <span class="num">0</span> or <span class="num">1</span>, yet by
+     running the columns at <b>different frequencies</b> and reading them <em>together</em>, every number
+     gets a unique pattern. Low bits change fast and capture the fine detail; high bits change slowly and
+     capture the coarse, large-scale position.</p>
+
+  <div class="widget" id="w-binary">
+    <div class="wtitle">Binary counting is positional encoding with square waves <span class="tagn">different frequencies</span></div>
+    <p class="wsub">The counter ticks upward. Each column is one bit; notice how much slower each bit flips
+       than the one to its right, every column halves the frequency. Then flip on "smooth" to replace each
+       square wave with a sine wave of the same frequency. That single change <em>is</em> the leap to
+       sinusoidal encoding.</p>
+    <canvas id="cv-binary" data-w="740" data-h="320"></canvas>
+    <div class="btnrow">
+      <button class="btn" id="bin-play">Pause</button>
+      <button class="btn ghost" id="bin-step">Step +1</button>
+      <button class="btn ghost" id="bin-reset">Back to 0</button>
+      <span style="flex:1"></span>
+      <div class="seg" id="bin-seg">
+        <button data-m="square" class="on">Square (bits)</button>
+        <button data-m="smooth">Smooth (sines)</button>
+      </div>
+    </div>
+    <div class="readouts">
+      <div class="pill">counter <b id="bin-n">0</b></div>
+      <div class="pill sin">bit 0 flips every <b>1</b> step</div>
+      <div class="pill">bit 1 every <b>2</b></div>
+      <div class="pill">bit 2 every <b>4</b></div>
+      <div class="pill">bit 3 every <b>8</b></div>
+    </div>
+    <p class="hint">Two facts to carry forward: (1) uniqueness comes from combining <em>many</em> frequencies,
+       not from any single one; (2) each frequency is a fixed fraction of the one below it, a
+       <em>geometric</em> ladder of rates.</p>
+  </div>
+
+  <p>Why not literally use binary bits, then? Because they are jagged. Those hard <span class="num">0→1</span>
+     jumps are discontinuous, a tiny change in position can flip a bit completely, and neural networks
+     learn best from smooth signals where a small change in the input makes a small, predictable change in
+     the output. So we keep the brilliant part of binary (a geometric ladder of frequencies, read together)
+     and throw away the jagged part. The smooth, continuous version of a signal that oscillates between two
+     bounded values is exactly a <b>sine wave</b>. Toggle "smooth" above and we have, essentially, invented
+     the encoding.</p>
+
+  <div class="takeaway">Sinusoidal positional encoding is binary counting with the corners rounded off:
+     a stack of sine and cosine waves whose frequencies form a geometric ladder from fast to slow.</div>
+</section>
+
+<!-- ========================= 4. THE FORMULA ========================= -->
+<section class="reveal" id="formula">
+  <div class="step-no">The definition</div>
+  <h2>The formula, one symbol at a time</h2>
+
+  <p class="lead">Now the actual equation from the paper. It looks dense; it is really just "sine and cosine
+     waves at a geometric ladder of frequencies", which we already have in hand.</p>
+
+  <div class="mathblock">
+    $$ PE_{(pos,\,2i)} = \sin\!\left(\frac{pos}{10000^{\,2i/d}}\right) \qquad
+       PE_{(pos,\,2i+1)} = \cos\!\left(\frac{pos}{10000^{\,2i/d}}\right) $$
+  </div>
+
+  <p>Every letter, slowly:</p>
+  <ul>
+    <li><b><span class="num">pos</span></b>: the position of the token in the sequence:
+        <span class="num">0</span> for the first token, <span class="num">1</span> for the second, and so
+        on. This is the <em>input</em> to the encoding.</li>
+    <li><b><span class="num">d</span></b>: the dimension of the encoding vector, the same width as the word
+        embeddings so we can add them. In the paper, <span class="num">d = 512</span>.</li>
+    <li><b><span class="num">i</span></b>: indexes the <em>pairs</em> of dimensions. It runs from
+        <span class="num">0</span> up to <span class="num">d/2 - 1</span>. Each value of
+        <span class="num">i</span> owns two slots in the output vector: an even slot
+        (<span class="num">2i</span>) filled by a <span class="u-sin">sine</span>, and the next odd slot
+        ($2i{+}1$) filled by a <span class="u-cos">cosine</span> at the
+        <em>same</em> frequency.</li>
+    <li><b><span class="num">10000</span></b>: a hand-chosen constant that sets how slow the slowest wave
+        gets. It stretches the wavelengths across a huge range so the ladder spans from very fast to very
+        slow. More on why <span class="num">10000</span> below.</li>
+  </ul>
+
+  <p>The whole engine is the denominator $10000^{2i/d}$, which sets the
+     <b>frequency</b> of pair <span class="num">i</span>. When <span class="num">i = 0</span> the denominator
+     is $10000^0 = 1$, so the wave is $\sin(pos)$, the fastest
+     wave, our "bit 0". As <span class="num">i</span> climbs toward <span class="num">d/2</span>, the exponent
+     climbs toward <span class="num">1</span>, the denominator climbs toward <span class="num">10000</span>,
+     and the argument <span class="num">pos/10000</span> crawls, the slowest wave, our high bit. In between,
+     the frequencies are spaced <b>geometrically</b>, each a fixed ratio slower than the last. That is the
+     binary ladder, made continuous.</p>
+
+  <p>Equivalently, in terms of <b>wavelength</b>, how many positions it takes a wave to complete one full
+     cycle, pair <span class="num">i</span> has wavelength
+     $2\pi \cdot 10000^{2i/d}$. The fast waves cycle every
+     $2\pi \approx 6.28$ positions; the slow ones take tens of thousands of positions
+     to come around once. A given position lands at a different phase on every one of these waves, and the
+     full collection of those phases <em>is</em> its encoding vector.</p>
+
+  <h3>Why a sine <em>and</em> a cosine?</h3>
+
+  <p>One detail of the formula is worth flagging now, though its full answer comes a little later. Each
+     frequency appears <em>twice</em>: a sine in one slot, a cosine in the next. This is not for uniqueness.
+     Many plain sine waves at different wavelengths could already tell every position apart, which is just the
+     binary-ladder idea again. The pairing buys something else, a property about the <em>distance</em> between
+     two positions, and it is far easier to see once we can watch two encodings being compared. We come back
+     to it, and it turns out to be the whole reason sinusoids are used, in
+     <a href="#relative">the section on relative position</a>.</p>
+</section>
+
+<!-- ========================= 5. FREQUENCY LADDER ========================= -->
+<section class="reveal" id="ladder">
+  <div class="step-no">See it move</div>
+  <h2>The ladder of waves, and reading off a vector</h2>
+
+  <p class="lead">Time to make the formula concrete. Here is the ladder of waves itself, the fast ones up
+     top, the slow ones at the bottom, with a movable position line. Where the line crosses each wave, we
+     sample a value. Stack those samples and we have the positional encoding vector for that position.</p>
+
+  <div class="widget" id="w-ladder">
+    <div class="wtitle">The frequency ladder <span class="tagn">drag the position line</span></div>
+    <p class="wsub">Each row is one pair of dimensions: a <span class="u-sin">sine</span> and its
+       <span class="u-cos">cosine</span> partner at the same frequency. Top rows are fast (low
+       <span class="num">i</span>), bottom rows are slow (high <span class="num">i</span>). The dots where the
+       vertical line meets each wave are the numbers that make up the encoding vector, listed with their
+       values in the strip on the right.</p>
+    <canvas id="cv-ladder" data-w="740" data-h="380"></canvas>
+    <div class="controls">
+      <div class="ctrl">
+        <label>Position <b id="ld-pos-v">8</b></label>
+        <input type="range" id="ld-pos" min="0" max="127" value="8" step="1">
+      </div>
+      <div class="ctrl">
+        <label>Pairs shown (d/2) <b id="ld-pairs-v">6</b></label>
+        <input type="range" id="ld-pairs" min="3" max="10" value="6" step="1">
+      </div>
+      <div class="ctrl">
+        <label>Base constant <b id="ld-base-v">10000</b></label>
+        <input type="range" id="ld-base" min="100" max="10000" value="10000" step="100">
+      </div>
+    </div>
+    <p class="hint">Slide the position slowly. The top wave races through whole cycles while the bottom wave
+       barely stirs, fast bits for fine detail, slow bits for coarse location, exactly like the binary
+       counter. Drop the base constant and watch the slow waves speed up, cramming the ladder into a smaller
+       range of frequencies.</p>
+  </div>
+
+  <p>Notice what "unique" looks like here. Any single wave repeats, the top one returns to the same height
+     every few positions, so on its own it could never distinguish, say, position <span class="num">3</span>
+     from position <span class="num">3</span>-plus-one-wavelength. But the <em>combination</em> across all
+     the rows never repeats over any range that matters in practice: for two positions to collide, they
+     would have to line up simultaneously on the fast wave <em>and</em> the medium waves <em>and</em> the
+     glacial bottom wave, and the geometric spacing of frequencies makes that astronomically far away. Many
+     bounded, repeating parts; one unique whole. That is the binary trick, still doing its job.</p>
+</section>
+
+<!-- ========================= 6. HEATMAP ========================= -->
+<section class="reveal" id="heatmap">
+  <div class="step-no">The whole picture</div>
+  <h2>The heatmap everyone has seen</h2>
+
+  <p class="lead">Stack the encoding vector for every position into rows and paint the numbers as colour, and
+     we get the image at the very top of this page, the one on a thousand slides. Now we can read it.</p>
+
+  <p>Each <b>row</b> is one position's full encoding vector. Each <b>column</b> is one dimension, one slot
+     in that vector, which is a single wave sampled down the page as position increases. Scan a column from
+     top to bottom and it is literally one sine wave oscillating: the leftmost columns (low
+     <span class="num">i</span>, high frequency) flicker rapidly into thin stripes, and moving right the
+     stripes stretch into slow, broad bands. Read across a row instead and we get that position's unique
+     fingerprint. Hover anywhere to read the exact value, position, and dimension under the cursor.</p>
+
+  <div class="widget" id="w-heat">
+    <div class="wtitle">The positional-encoding matrix <span class="tagn">hover to inspect</span></div>
+    <p class="wsub">Colour is the value of <span class="num">PE(pos, dim)</span>: deep
+       <span class="u-sin">indigo</span> is <span class="num">-1</span>, warm
+       <span class="u-cos">magenta</span> is <span class="num">+1</span>, pale is near
+       <span class="num">0</span>. Columns are dimensions, rows are positions. Change the width and base to
+       see the pattern breathe, or switch to <b>Numbers</b> to read the actual encoding values.</p>
+    <canvas id="cv-heat" data-w="740" data-h="420"></canvas>
+    <div class="controls">
+      <div class="ctrl">
+        <label>Dimensions d <b id="ht-d-v">64</b></label>
+        <input type="range" id="ht-d" min="8" max="128" value="64" step="2">
+      </div>
+      <div class="ctrl">
+        <label>Base constant <b id="ht-base-v">10000</b></label>
+        <input type="range" id="ht-base" min="100" max="10000" value="10000" step="100">
+      </div>
+      <div class="ctrl" style="flex:0 0 auto;min-width:0">
+        <label>View</label>
+        <div class="seg" id="ht-seg">
+          <button data-m="colour" class="on">Colour</button>
+          <button data-m="num">Numbers</button>
+        </div>
+      </div>
+    </div>
+    <div class="readouts">
+      <div class="pill">pos <b id="ht-pos">–</b></div>
+      <div class="pill">dim <b id="ht-dim">–</b></div>
+      <div class="pill sin">value <b id="ht-val">–</b></div>
+    </div>
+    <p class="hint">Everything to the left flickers; everything to the right drifts. That gradient from fast
+       to slow, left to right, is the geometric frequency ladder rendered as an image.</p>
+  </div>
+</section>
+
+<!-- ========================= 7. RELATIVE / ROTATION ========================= -->
+<section class="reveal" id="relative">
+  <div class="step-no">The payoff</div>
+  <h2>Why the pairing matters: distance, not position</h2>
+
+  <p class="lead">Here is the property that makes the sine-and-cosine pairing worth it, the one flagged back
+     at the formula. Attention never looks at a positional vector on its own; it always compares two of them
+     with a <b>dot product</b>. So the question that decides everything is simple: what does that dot product
+     depend on?</p>
+
+  <p>Recall that the encoding vector is a stack of <b>(sine, cosine) pairs</b>, one pair per frequency. A dot
+     product is the sum of the products of matching entries, so comparing position <span class="num">m</span>
+     with position <span class="num">n</span> splits into one contribution per frequency. Take a single
+     frequency $\omega$: its pair holds $\big(\sin(\omega m),\, \cos(\omega m)\big)$ and
+     $\big(\sin(\omega n),\, \cos(\omega n)\big)$, so it adds one sine-times-sine plus one
+     cosine-times-cosine, which a standard identity collapses to a single term:</p>
+
+  <div class="mathblock">
+    $$ \sin(\omega m)\,\sin(\omega n) + \cos(\omega m)\,\cos(\omega n) \;=\; \cos\!\big(\omega\,(m - n)\big) $$
+  </div>
+
+  <p>Only <span class="num">m - n</span> survives: the <b>gap between the two positions</b>. Every frequency's
+     pair behaves the same way, so the dot product of the two full vectors is just the sum of these terms:</p>
+
+  <div class="mathblock">
+    $$ PE(m)\cdot PE(n) \;=\; \sum_{i} \cos\!\big(\omega_i\,(m - n)\big) $$
+  </div>
+
+  <p>The right-hand side has no absolute position in it, only the gap <span class="num">m - n</span>. Two
+     tokens a fixed distance apart give the same positional similarity wherever they sit in the text, and that
+     is exactly what a Transformer wants: attention can learn "attend one token back" or "attend fifty tokens
+     back" once and reuse it at every position, instead of memorising a separate relationship for every
+     absolute pair.</p>
+
+  <p>It is not a perfect distance signal, though. Because that sum runs over many cosines at different
+     frequencies, it does not fall off cleanly as the gap grows; it <b>ripples</b>, so two different gaps can
+     end up with the same similarity. That rippling is a genuine limitation of raw sinusoidal encodings, and
+     one of the reasons the later positional schemes in this series were invented.</p>
+</section>
+
+<!-- ========================= 8. ADDING + HOOK ========================= -->
+<section class="reveal" id="adding">
+  <div class="step-no">Loose ends</div>
+  <h2>Two last questions, and the door to the rest of the series</h2>
+
+  <h3>Why <em>add</em> it to the embedding instead of gluing it on the side?</h3>
+  <p>A fair objection: adding the positional vector to the word vector seems to <em>corrupt</em> the word.
+     Why not concatenate, keep the word in its own slots and the position in separate slots? The practical
+     answer is cost and freedom: concatenation would widen every vector and every matrix in the model.
+     Addition keeps the width at <span class="num">d</span>, and in a space of hundreds of dimensions there
+     is ample room for the network to learn to keep the two signals separable, to read "which word" and
+     "where" out of the same summed vector using different learned projections. In practice it simply works,
+     and the whole Transformer is built on the assumption that it does.</p>
+
+  <h3>Why the number <span class="num">10000</span>?</h3>
+  <p>It sets the wavelength of the slowest wave, and therefore the longest distance the encoding can
+     represent before its slowest component starts to wrap around. <span class="num">10000</span> was chosen
+     to comfortably cover the sequence lengths of the day, hundreds of tokens, with headroom. It is not
+     sacred; it is a knob, as the base slider in the widgets above showed. Hold onto that fact,
+     because it is the hinge for everything that follows.</p>
+
+  <div class="big-idea">
+    <div class="label">The hook to context length</div>
+    <p>Because these are real sine waves, the formula happily produces a vector for position
+       <span class="num">1{,}000{,}000</span> even if the model only ever trained on positions up to
+       <span class="num">512</span>. In principle it <em>extrapolates</em> to any length for free. In
+       practice it mostly does not, a model trained on short sequences has never seen the particular phase
+       combinations that long positions produce, and it stumbles. That gap between "the encoding is defined
+       everywhere" and "the model actually behaves well out there" is the entire drama of the
+       context-length story.</p>
+  </div>
+
+  <p>The next parts of this series are, in a real sense, sustained attempts to fix the failure this section
+     just named. <b>Learned</b> positional embeddings drop the formula and let the model memorise a vector
+     per position, flexible, but with a hard ceiling at the longest position ever trained. <b>Relative</b>
+     schemes encode the offset <span class="num">k</span> directly rather than absolute positions, leaning
+     hard on the same translation-invariance the dot product showed us above. And
+     <b>rotary embeddings (RoPE)</b>, instead of adding a positional signal at all, rotate the query and key
+     vectors themselves by an angle set by the position, which turns out to extrapolate far better and is what
+     most modern long-context models actually use. Every one of them is a direct descendant of the ladder of
+     sine waves we just built by hand.</p>
+
+  <div class="takeaway">Start from "attention can't see order", demand bounded-consistent-unique, borrow the
+     geometric frequency ladder from binary, round off the corners into sines, and pair each sine with a
+     cosine so a dot product depends only on the distance between positions. That is the whole idea, and the
+     seed of every positional scheme that carried context windows from 512 to millions.</div>
+
+  <div class="foot">
+    <p>Part 1 of a series. Next: learned and relative positional embeddings. Reach me on
+       <a href="https://github.com/atomnp">GitHub</a> or by
+       <a href="mailto:neupane0403@gmail.com">email</a>, corrections and questions welcome.</p>
+  </div>
+</section>
+
+<div class="post-foot">
+  <div class="card">
+    <img src="../../../assets/linkedin_pp.jpeg" alt="Aayush Neupane" width="52" height="52">
+    <div class="n"><b>Aayush Neupane</b><br><span>CS Researcher &amp; Engineer · MS CS, University of Kansas</span></div>
+    <a class="to-all" href="../../../blog.html">All writing →</a>
+  </div>
+</div>
+
+</div>
+
+<script>
+  // Render KaTeX once loaded. Inline $...$ and display $$...$$ both handled.
+  window.addEventListener('DOMContentLoaded', function () {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    }
+  });
+</script>
+<script src="pe.js"></script>
+</body>
+</html>

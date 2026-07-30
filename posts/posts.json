@@ -1,5 +1,14 @@
 [
   {
+    "slug": "sinusoidal-positional-encoding",
+    "title": "Sinusoidal positional encoding, built from nothing",
+    "date": "2026-07-29",
+    "category": "Deep Learning",
+    "summary": "Why self-attention is blind to word order, and how a ladder of sine and cosine waves fixes it, built from the ground up and interactive throughout. Part 1 of a series on how context windows grew from 512 tokens to millions.",
+    "math": true,
+    "url": "projects/context-length/positional-encoding/"
+  },
+  {
     "slug": "bloom-filters",
     "title": "Bloom filters, and where the bits actually go",
     "date": "2026-07-28",
