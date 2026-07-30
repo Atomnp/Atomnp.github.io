@@ -1,5 +1,14 @@
 [
   {
+    "slug": "sinusoidal-positional-encoding",
+    "title": "About sinusoidal position embedding",
+    "date": "2026-07-29",
+    "category": "Deep Learning",
+    "summary": "Why self-attention is blind to word order, and how sine and cosine waves fix it.",
+    "math": true,
+    "url": "projects/context-length/positional-encoding/"
+  },
+  {
     "slug": "python-profiling-and-optimization",
     "title": "Python Profiling and Optimization",
     "date": "2023-01-14",

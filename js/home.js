@@ -19,7 +19,8 @@
     .then(function (posts) {
       var latest = posts.slice(0, 5);
       mount.innerHTML = latest.map(function (p) {
-        var url = 'post.html?p=' + encodeURIComponent(p.slug);
+        /* a post with "url" ships as its own page instead of Markdown */
+        var url = p.url ? p.url : 'post.html?p=' + encodeURIComponent(p.slug);
         return '<li>' +
           '<a class="wl" href="' + url + '">' +
             '<span class="wdate">' + fmt(p.date) + '</span>' +
