@@ -1,5 +1,14 @@
 [
   {
+    "slug": "rotary-position-embeddings",
+    "title": "About RoPE",
+    "date": "2026-07-30",
+    "category": "Deep Learning",
+    "summary": "Rotating the query and key instead of adding a position signal, and why that makes attention read relative distance.",
+    "math": true,
+    "url": "projects/context-length/rope/"
+  },
+  {
     "slug": "sinusoidal-positional-encoding",
     "title": "About sinusoidal position embedding",
     "date": "2026-07-29",

@@ -8,7 +8,7 @@
 
   function fmtLong(iso) {
     var p = iso.split('-');
-    return MONTHS[parseInt(p[1], 10) - 1] + ' ' + parseInt(p[2], 10) + ', ' + p[0];
+    return MONTHS[parseInt(p[1], 10) - 1] + ' ' + p[0];
   }
   function fail(msg) {
     body.innerHTML = '<p style="color:var(--muted)">' + msg + ' <a href="blog.html">Back to all writing →</a></p>';

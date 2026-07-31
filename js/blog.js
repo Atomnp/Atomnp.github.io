@@ -7,7 +7,7 @@
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmt(iso) {
     var p = iso.split('-');
-    return MONTHS[parseInt(p[1], 10) - 1] + ' ' + parseInt(p[2], 10) + ', ' + p[0];
+    return MONTHS[parseInt(p[1], 10) - 1] + ' ' + p[0];
   }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
