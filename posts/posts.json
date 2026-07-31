@@ -1,5 +1,14 @@
 [
   {
+    "slug": "rotary-position-embeddings",
+    "title": "Rotary position embeddings, one rotation at a time",
+    "date": "2026-07-30",
+    "category": "Deep Learning",
+    "summary": "Do not add a position signal, rotate the query and key instead. How rotary embeddings (RoPE) make attention read relative distance for free, built from a single fact about dot products. Part 2 of the context-length series, beginner-friendly and interactive.",
+    "math": true,
+    "url": "projects/context-length/rope/"
+  },
+  {
     "slug": "sinusoidal-positional-encoding",
     "title": "Sinusoidal positional encoding, built from nothing",
     "date": "2026-07-29",

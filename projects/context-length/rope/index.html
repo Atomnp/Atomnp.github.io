@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rotary Position Embeddings (RoPE), from scratch</title>
+<meta name="description" content="How rotary position embeddings (RoPE) work, built from scratch: rotate a token's query and key by its position so attention naturally reads relative distance. Beginner-friendly and fully interactive.">
+<meta name="author" content="Aayush Neupane">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rotary Position Embeddings (RoPE), from scratch">
+<meta property="og:description" content="Do not add a position signal, rotate the query and key instead. RoPE from the ground up, fully interactive.">
+<link rel="icon" href="../../../assets/favicon.ico" sizes="any">
+
+<!-- local KaTeX (no CDN) -->
+<link rel="stylesheet" href="../../../vendor/katex/katex.min.css">
+<script defer src="../../../vendor/katex/katex.min.js"></script>
+<script defer src="../../../vendor/katex/auto-render.min.js"></script>
+
+<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<style>
+  :root{
+    --paper:#F6F7F8; --surface:#FFFFFF; --raise:#FBFBFC; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B;
+    --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E;
+    --good:#0F9E77; --warn:#C08A2E; --hot:#C0479A; --bad:#C2413C; --cool:#2E7BB8;
+    --cell-off:#E9EBEF; --cell-edge:#D8DBE1;
+    --grid:rgba(20,23,28,.09); --halo:#FFFFFF;
+    --code-bg:#F1F2F6; --code-ink:#2B3350; --tag:#EDEFF6;
+    --shadow:0 10px 30px -18px rgba(20,23,28,.28);
+    --serif:"Charter","Newsreader","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:"Inter","Helvetica Neue","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+    --mono:"SF Mono","JetBrains Mono","Fira Code",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --paper:#0E1116; --surface:#161A21; --raise:#1B202A; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2;
+    --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6;
+    --good:#38C9A0; --warn:#E3B85A; --hot:#E56DB1; --bad:#E4736E; --cool:#63B3E6;
+    --cell-off:#20252F; --cell-edge:#2A303C;
+    --grid:rgba(231,234,240,.10); --halo:#161A21;
+    --code-bg:#171C26; --code-ink:#C4CCE6; --tag:#1B2130;
+    --shadow:0 14px 34px -18px rgba(0,0,0,.7);
+  }}
+  :root[data-theme="light"]{
+    --paper:#F6F7F8; --surface:#FFFFFF; --raise:#FBFBFC; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B;
+    --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E;
+    --good:#0F9E77; --warn:#C08A2E; --hot:#C0479A; --bad:#C2413C; --cool:#2E7BB8;
+    --cell-off:#E9EBEF; --cell-edge:#D8DBE1;
+    --grid:rgba(20,23,28,.09); --halo:#FFFFFF;
+    --code-bg:#F1F2F6; --code-ink:#2B3350; --tag:#EDEFF6;
+    --shadow:0 10px 30px -18px rgba(20,23,28,.28);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1116; --surface:#161A21; --raise:#1B202A; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2;
+    --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6;
+    --good:#38C9A0; --warn:#E3B85A; --hot:#E56DB1; --bad:#E4736E; --cool:#63B3E6;
+    --cell-off:#20252F; --cell-edge:#2A303C;
+    --grid:rgba(231,234,240,.10); --halo:#161A21;
+    --code-bg:#171C26; --code-ink:#C4CCE6; --tag:#1B2130;
+    --shadow:0 14px 34px -18px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);
+    font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    transition:background .35s,color .35s;}
+  .wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 22px 120px;}
+
+  /* ---------- backbar ---------- */
+  .backbar{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--paper) 85%,transparent);
+    backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);
+    border-bottom:1px solid transparent;transition:border-color .3s;}
+  .backbar.scrolled{border-color:var(--line);}
+  .backbar-in{max-width:780px;margin:0 auto;padding:0 22px;height:56px;display:flex;align-items:center;
+    justify-content:space-between;font-family:var(--sans);}
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:.9rem;font-weight:600;text-decoration:none;}
+  .back:hover{color:var(--accent-ink);}
+  .back svg{width:16px;height:16px;}
+  .toggle{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink);cursor:pointer;display:grid;place-items:center;flex:0 0 auto;}
+  .toggle:hover{border-color:var(--accent);}
+  .toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0;z-index:70;transition:width .1s linear;}
+
+  /* ---------- hero ---------- */
+  header.hero{padding:44px 0 8px;}
+  .eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--sans);margin-bottom:20px;flex-wrap:wrap;}
+  .eyebrow .cat{font-size:.72rem;font-weight:700;color:var(--accent-ink);
+    background:color-mix(in srgb,var(--accent) 9%,transparent);border-radius:100px;padding:4px 12px;}
+  .eyebrow .meta{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+  h1.post{font-family:var(--sans);font-size:clamp(2rem,5vw,2.85rem);line-height:1.08;letter-spacing:-.025em;
+    font-weight:720;margin:0 0 18px;text-wrap:balance;color:var(--ink);}
+  h1.post .em{font-family:var(--serif);color:var(--accent-ink);font-style:italic;font-weight:500;}
+  .sub{font-size:1.12rem;color:var(--ink-soft);max-width:64ch;margin:0;}
+  .series-note{font-family:var(--sans);font-size:.82rem;color:var(--ink-soft);margin:18px 0 0;
+    border:1px dashed var(--line);border-radius:10px;padding:10px 14px;background:var(--raise);}
+  .series-note b{color:var(--accent-ink);}
+  .post-rule{height:1px;background:var(--line);margin:26px 0 26px;}
+  .herocanvas{margin:28px 0 0;border:1px solid var(--line);border-radius:14px;background:var(--surface);
+    overflow:hidden;box-shadow:var(--shadow);}
+  .herocanvas canvas{display:block;width:100%;height:auto;}
+  .herocap{font-family:var(--sans);font-size:.76rem;color:var(--ink-soft);padding:10px 14px;border-top:1px solid var(--line-2);}
+
+  /* ---------- typography ---------- */
+  section{margin-top:64px;scroll-margin-top:70px;}
+  .step-no{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--accent-ink);text-transform:uppercase;}
+  h2{font-family:var(--sans);font-weight:680;font-size:clamp(1.5rem,4vw,2.05rem);line-height:1.14;
+    margin:.16em 0 .5em;letter-spacing:-.022em;color:var(--ink);}
+  h3{font-family:var(--sans);font-weight:660;font-size:1.15rem;margin:1.7em 0 .3em;color:var(--ink);letter-spacing:-.01em;}
+  p{margin:.85em 0;color:var(--ink-2);}
+  .lead{font-size:1.13rem;color:var(--ink-2);}
+  strong,b{color:var(--ink);font-weight:640;}
+  a{color:var(--accent-ink);}
+  ul,ol{color:var(--ink-2);padding-left:1.25em;}
+  li{margin:.45em 0;}
+  .fn{font-size:.92rem;color:var(--ink-soft);}
+  .num{font-family:var(--mono);font-size:.94em;color:var(--ink);font-weight:500;}
+  .u-sin{color:var(--accent-ink);font-weight:600;}
+  .u-cos{color:var(--hot);font-weight:600;}
+  .u-good{color:var(--good);font-weight:600;}
+
+  /* ---------- blocks ---------- */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    box-shadow:var(--shadow);margin:24px 0;}
+  .big-idea{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:0 12px 12px 0;padding:16px 20px;margin:24px 0;}
+  .big-idea .label{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);}
+  .big-idea p{font-size:1.06rem;margin:.35em 0 0;}
+  .takeaway{font-family:var(--serif);font-style:italic;font-size:1.06rem;color:var(--ink);
+    border-left:3px solid var(--good);padding:4px 0 4px 16px;margin:22px 0;}
+  .aside{border:1px dashed var(--line);border-radius:12px;padding:14px 18px;margin:22px 0;background:var(--raise);}
+  .aside .label{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+  .aside p{font-size:.96rem;margin:.3em 0 0;}
+  .mathblock{overflow-x:auto;margin:22px 0;padding:6px 0;}
+
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto;
+    font-family:var(--mono);font-size:.82rem;line-height:1.65;color:var(--code-ink);margin:20px 0;}
+  code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);color:var(--code-ink);
+    padding:1px 5px;border-radius:5px;}
+  pre code{background:none;padding:0;font-size:1em;}
+  pre .c{color:var(--ink-soft);font-style:italic;}
+  pre .kw{color:var(--accent-ink);}
+
+  /* ---------- widgets ---------- */
+  .widget{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;
+    box-shadow:var(--shadow);margin:26px 0;}
+  .widget canvas{display:block;width:100%;height:auto;border-radius:10px;touch-action:pan-y;}
+  .wtitle{font-family:var(--sans);font-size:.82rem;font-weight:680;letter-spacing:.01em;color:var(--ink);
+    margin:0 0 2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .wtitle .tagn{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);background:var(--tag);border-radius:5px;padding:2px 7px;font-weight:500;white-space:nowrap;}
+  .wsub{font-family:var(--sans);font-size:.84rem;color:var(--ink-soft);margin:0 0 14px;}
+  .controls{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;margin-top:16px;}
+  .ctrl{flex:1 1 190px;min-width:160px;}
+  .ctrl label{font-size:.68rem;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.07em;
+    text-transform:uppercase;display:flex;justify-content:space-between;margin-bottom:7px;}
+  .ctrl label b{color:var(--ink);font-weight:600;}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;
+    background:var(--line);outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;
+    background:var(--accent);cursor:pointer;border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.22);}
+  input[type=range]::-moz-range-thumb{width:19px;height:19px;border-radius:50%;background:var(--accent);
+    cursor:pointer;border:3px solid var(--surface);}
+  .btn{font-family:var(--sans);font-size:.82rem;font-weight:620;background:var(--accent);color:#fff;border:none;
+    border-radius:9px;padding:9px 15px;cursor:pointer;transition:transform .12s,opacity .2s;white-space:nowrap;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn:disabled{opacity:.45;cursor:default;transform:none;}
+  .btn.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line);}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent-ink);}
+  :root[data-theme="dark"] .btn{color:#0E1116;}
+  @media(prefers-color-scheme:dark){.btn{color:#0E1116;}}
+  :root[data-theme="dark"] .btn.ghost{color:var(--ink-2);}
+  @media(prefers-color-scheme:dark){.btn.ghost{color:var(--ink-2);}}
+  .btnrow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px;}
+  .readouts{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px;}
+  .pill{font-family:var(--mono);font-size:.8rem;background:var(--paper);border:1px solid var(--line);
+    border-radius:9px;padding:6px 12px;color:var(--ink-soft);}
+  .pill b{color:var(--ink);font-weight:600;}
+  .pill.sin{border-color:color-mix(in srgb,var(--accent) 50%,var(--line));color:var(--accent-ink);}
+  .pill.sin b{color:var(--accent-ink);}
+  .pill.cos{border-color:color-mix(in srgb,var(--hot) 50%,var(--line));color:var(--hot);}
+  .pill.cos b{color:var(--hot);}
+  .pill.good{border-color:color-mix(in srgb,var(--good) 50%,var(--line));color:var(--good);}
+  .pill.good b{color:var(--good);}
+  .hint{font-family:var(--sans);font-size:.8rem;color:var(--ink-soft);margin:12px 0 0;font-style:normal;}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .seg button{font-family:var(--sans);font-size:.78rem;font-weight:600;background:transparent;color:var(--ink-soft);
+    border:none;padding:8px 13px;cursor:pointer;border-right:1px solid var(--line);}
+  .seg button:last-child{border-right:none;}
+  .seg button.on{background:var(--accent);color:#fff;}
+  :root[data-theme="dark"] .seg button.on{color:#0E1116;}
+  @media(prefers-color-scheme:dark){.seg button.on{color:#0E1116;}}
+
+  /* ---------- post foot ---------- */
+  .post-foot{margin-top:70px;}
+  .post-foot .card{display:flex;align-items:center;gap:14px;}
+  .post-foot img{border-radius:50%;flex:0 0 auto;}
+  .post-foot .n{font-family:var(--sans);font-size:.9rem;color:var(--ink-2);line-height:1.4;}
+  .post-foot .n b{color:var(--ink);}
+  .post-foot .to-all{margin-left:auto;font-family:var(--sans);font-size:.85rem;font-weight:600;white-space:nowrap;}
+  .foot{margin-top:26px;font-family:var(--sans);font-size:.9rem;color:var(--ink-soft);}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="backbar" id="backbar">
+  <div class="backbar-in">
+    <a class="back" href="../../../blog.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      All writing
+    </a>
+    <button class="toggle" id="themeBtn" aria-label="Toggle theme"><svg viewBox="0 0 24 24"></svg></button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">
+    <span class="cat">Deep Learning</span>
+    <span class="meta">Context-Length Series · Part 2</span>
+  </div>
+  <h1 class="post">Rotary position embeddings, <span class="em">one rotation at a time</span></h1>
+  <p class="sub">Part 1 handed every token a position by adding a bank of sine waves onto it. Rotary embeddings
+     throw that recipe out and do something stranger and simpler: they spin each token's query and key
+     vectors by an angle set by its position. Because a dot product only cares about the angle between two
+     vectors, the attention score falls out depending only on how far apart the two tokens are. This is the
+     trick inside almost every modern long-context model, built here from the ground up.</p>
+
+  <div class="series-note">
+    <b>Part 2 of a series</b> on how language-model context windows grew from <span class="num">512</span>
+    tokens to millions. It stands on its own, but it picks up a thread from
+    <a href="../positional-encoding/">Part 1, on sinusoidal positional encoding</a>.
+  </div>
+
+  <div class="herocanvas">
+    <canvas id="cv-hero" data-w="740" data-h="300"></canvas>
+    <div class="herecap" id="hero-cap">RoPE turns a position into a rotation angle. Here one 2D slice of a
+       query vector, drawn for a run of positions: each later position turns the same arrow a little further
+       around its circle.</div>
+  </div>
+</header>
+
+<div class="post-rule"></div>
+
+<!-- ========================= 1. THE WISH ========================= -->
+<section class="reveal" id="wish">
+  <div class="step-no">The wish</div>
+  <h2>What we actually wanted from a position</h2>
+
+  <p class="lead">Part 1 ended on a small disappointment, and rotary embeddings are the fix. It is worth
+     naming the disappointment first.</p>
+
+  <p>The sinusoidal scheme built a vector out of sine and cosine waves and <b>added</b> it onto each token's
+     embedding at the very bottom of the model. That gave a nice property: the dot product between two
+     positional vectors depended only on the gap between the positions, not on their absolute location. But
+     that property lived on the positional part alone. The moment it was added to the word content the two
+     were tangled together, and the whole signal was injected just once, at the input, then left to survive
+     dozens of layers of mixing.</p>
+
+  <p>What we really want is sharper. Attention compares a <b>query</b> from one token with a <b>key</b> from
+     another using a dot product, and that dot product is the attention score. The dream is for that score to
+     depend on the two tokens' contents and on <b>how far apart they sit</b>, and on nothing else about where
+     they are in the text. Not approximately. Exactly, and everywhere attention runs.</p>
+
+  <div class="big-idea">
+    <div class="label">The target</div>
+    <p>Make the attention score between a token at position <span class="num">m</span> and a token at
+       position <span class="num">n</span> depend only on their contents and on the gap
+       <span class="num">n - m</span>. Absolute position should leave no other trace.</p>
+  </div>
+</section>
+
+<!-- ========================= 2. THE MOVE ========================= -->
+<section class="reveal" id="idea">
+  <div class="step-no">The move</div>
+  <h2>The whole idea: rotate, do not add</h2>
+
+  <p class="lead">Here is the entire trick in one line. The rest of the page is just unpacking it.</p>
+
+  <p>Instead of adding anything to a token, <b>rotate its query and key vectors by an angle proportional to
+     the token's position</b>. A token at position <span class="num">m</span> has its query and key spun by an
+     angle $m\theta$; a token at position <span class="num">n</span> has its own spun by $n\theta$. Then let
+     attention take its usual dot product, unchanged.</p>
+
+  <p>Why would that possibly help? Because of one fact about dot products that we will build up carefully in a
+     moment: a dot product measures how aligned two vectors are, and rotating both of them by the same amount
+     does not change how aligned they are. Only the <em>difference</em> in their rotations matters. Rotate the
+     query by $m\theta$ and the key by $n\theta$, and the part of the score that comes from position depends
+     only on $(n - m)\theta$, the gap. Absolute position cancels itself out. That is exactly the target we set,
+     and it happens for free, with no extra vector added and nothing for the model to memorise.</p>
+</section>
+
+<!-- ========================= 3. WARM-UP ========================= -->
+<section class="reveal" id="warmup">
+  <div class="step-no">Ground floor</div>
+  <h2>Warm-up: what a dot product actually sees</h2>
+
+  <p class="lead">No linear-algebra background needed here. A vector is just an arrow with a length and a
+     direction, and the dot product between two arrows has one clean geometric meaning.</p>
+
+  <p>Take two arrows. Their dot product is their two lengths multiplied together, times the cosine of the
+     angle between them:</p>
+
+  <div class="mathblock">
+    $$ a \cdot b = |a|\,|b|\,\cos\varphi $$
+  </div>
+
+  <p>where $\varphi$ is the angle between them. The lengths do not change when we spin the arrows around, so
+     the interesting part is $\cos\varphi$: the dot product is largest when the arrows point the same way,
+     zero when they are at right angles, and negative when they point apart. In one sentence, <b>a dot product
+     is a measure of alignment, and alignment is an angle</b>.</p>
+
+  <p>Now the fact that makes rotary embeddings work. Suppose we rotate <em>both</em> arrows by the same angle.
+     The angle <em>between</em> them has not moved, so their dot product is exactly what it was before.
+     Rotating the two by <em>different</em> amounts does change the angle between them, by exactly the
+     difference of the two rotations. Spin the arrows below and watch the readout: the dot product moves only
+     when the two rotation angles differ.</p>
+
+  <div class="widget" id="w-rotdot">
+    <div class="wtitle">Rotating both arrows keeps the dot product <span class="tagn">only the difference matters</span></div>
+    <p class="wsub">Two unit arrows: a <span class="u-sin">query</span> and a <span class="u-cos">key</span>.
+       Rotate each with its slider. The dot product is the cosine of the angle between them, so it depends only
+       on how far the two rotations differ.</p>
+    <canvas id="cv-rotdot" data-w="740" data-h="320"></canvas>
+    <div class="controls">
+      <div class="ctrl"><label>Rotate query <b id="rd-a-v">40°</b></label>
+        <input type="range" id="rd-a" min="0" max="360" value="40" step="1"></div>
+      <div class="ctrl"><label>Rotate key <b id="rd-b-v">110°</b></label>
+        <input type="range" id="rd-b" min="0" max="360" value="110" step="1"></div>
+    </div>
+    <div class="readouts">
+      <div class="pill">angle between <b id="rd-gap">70°</b></div>
+      <div class="pill sin">dot product <b id="rd-dot">0.34</b></div>
+    </div>
+    <div class="btnrow"><button class="btn ghost" id="rd-both">Rotate both by +30°</button></div>
+    <p class="hint">Press "rotate both" a few times: the arrows travel around the circle together and the dot
+       product does not budge. Move one slider on its own and it changes at once.</p>
+  </div>
+
+  <p>That is the seed of the whole method. If we can make one arrow's rotation carry the query token's
+     position and the other arrow's rotation carry the key token's position, their dot product will depend only
+     on the difference between the two positions.</p>
+</section>
+
+<!-- ========================= 4. POSITION -> ANGLE ========================= -->
+<section class="reveal" id="position">
+  <div class="step-no">The link</div>
+  <h2>Turning a position into an angle</h2>
+
+  <p class="lead">Now we connect rotation to position. It is the shortest step in the whole piece.</p>
+
+  <p>Pick a single frequency, a fixed small angle $\theta$. For a token at position <span class="num">m</span>,
+     rotate its query arrow by $m\theta$: position <span class="num">0</span> is not turned at all, position
+     <span class="num">1</span> is turned by $\theta$, position <span class="num">2</span> by $2\theta$, and so
+     on. Do the same to every token's key arrow using its own position. A token's position is now baked into
+     the <em>direction</em> of its query and key.</p>
+
+  <p>When attention compares the query at position <span class="num">m</span> with the key at position
+     <span class="num">n</span>, the warm-up tells us the score depends only on the difference of their
+     rotations, which is $m\theta - n\theta = (m - n)\theta$. Slide the two positions below. Move them together,
+     keeping the gap fixed, and the score holds perfectly still. Change the gap and it moves. Absolute position
+     has become invisible to attention, exactly as we wanted.</p>
+
+  <div class="widget" id="w-posrot">
+    <div class="wtitle">Position rotates the arrow; the score sees only the gap <span class="tagn">translation-invariant</span></div>
+    <p class="wsub">The <span class="u-sin">query</span> at position m and the <span class="u-cos">key</span> at
+       position n, each turned by its position times a fixed frequency. The two contents are identical here, so
+       the score is pure position. Slide both to see it depend only on the gap n − m.</p>
+    <canvas id="cv-posrot" data-w="740" data-h="300"></canvas>
+    <div class="controls">
+      <div class="ctrl"><label>Query position m <b id="pr-m-v">2</b></label>
+        <input type="range" id="pr-m" min="0" max="24" value="2" step="1"></div>
+      <div class="ctrl"><label>Key position n <b id="pr-n-v">6</b></label>
+        <input type="range" id="pr-n" min="0" max="24" value="6" step="1"></div>
+    </div>
+    <div class="readouts">
+      <div class="pill">gap n − m <b id="pr-gap">4</b></div>
+      <div class="pill sin">attention score <b id="pr-score">0.60</b></div>
+    </div>
+    <p class="hint">Raise both sliders by the same amount so the gap stays fixed: the score freezes. That
+       frozen score is the whole point of rotary embeddings.</p>
+  </div>
+
+  <p>In two dimensions, turning an arrow <span class="num">(x, y)</span> by an angle $\phi$ is a small piece of
+     standard trigonometry:</p>
+
+  <div class="mathblock">
+    $$ \begin{pmatrix} x' \\ y' \end{pmatrix} =
+       \begin{pmatrix} \cos\phi & -\sin\phi \\ \sin\phi & \cos\phi \end{pmatrix}
+       \begin{pmatrix} x \\ y \end{pmatrix} $$
+  </div>
+
+  <p>For rotary embeddings that angle $\phi$ is simply the token's position times the frequency, $m\theta$.
+     Nothing more.</p>
+</section>
+
+<!-- ========================= 5. LADDER OF WHEELS ========================= -->
+<section class="reveal" id="ladder">
+  <div class="step-no">Scaling up</div>
+  <h2>A ladder of rotation speeds</h2>
+
+  <p class="lead">One rotation angle can only say so much, for the same reason a single sine wave could not in
+     Part 1. The fix is the same idea: use many frequencies at once.</p>
+
+  <p>A real query or key vector has hundreds of dimensions, not two. RoPE cuts that vector into
+     <span class="num">d/2</span> pairs of coordinates and treats each pair as its own little 2D arrow. Every
+     pair is turned by the position, but each at its <b>own frequency</b>. The frequencies form a geometric
+     ladder from fast to slow, the very same ladder as the sine waves in Part 1: pair <span class="num">i</span>
+     turns at frequency $\theta_i = 10000^{-2i/d}$.</p>
+
+  <p>So a token at position <span class="num">m</span> spins its fast pairs through many turns and its slow
+     pairs hardly at all. The fast pairs resolve fine, short-range differences in position; the slow pairs
+     carry coarse, long-range position. Drag the position below and watch the row of wheels: the ones on the
+     left race, the ones on the right creep.</p>
+
+  <div class="widget" id="w-wheels">
+    <div class="wtitle">Every pair of dimensions is a wheel at its own speed <span class="tagn">drag the position</span></div>
+    <p class="wsub">Each circle is one pair of the query vector, turned by the position times its frequency.
+       Wheels on the left are fast (low <span class="num">i</span>), wheels on the right are slow (high
+       <span class="num">i</span>). The arrow's length never changes.</p>
+    <canvas id="cv-wheels" data-w="740" data-h="300"></canvas>
+    <div class="controls">
+      <div class="ctrl"><label>Position <b id="wh-pos-v">8</b></label>
+        <input type="range" id="wh-pos" min="0" max="200" value="8" step="1"></div>
+      <div class="ctrl"><label>Wheels shown <b id="wh-n-v">6</b></label>
+        <input type="range" id="wh-n" min="3" max="8" value="6" step="1"></div>
+    </div>
+    <p class="hint">Push the position far to the right: the fast wheels have spun through many whole turns while
+       the slowest has barely moved. That spread of speeds is how one vector pins down both nearby and faraway
+       positions at the same time.</p>
+  </div>
+
+  <p>Notice what rotation never does: it never changes an arrow's <b>length</b>. Every wheel's arrow stays
+     pinned to its circle no matter the position. Hold onto that, because it is one of the reasons rotating
+     beats adding.</p>
+</section>
+
+<!-- ========================= 6. FORMULA ========================= -->
+<section class="reveal" id="formula">
+  <div class="step-no">The definition</div>
+  <h2>The formula, in one picture</h2>
+
+  <p class="lead">With the wheels in mind, the official formula is almost anticlimactic.</p>
+
+  <p>Stack all <span class="num">d/2</span> rotations into one big matrix that is zero everywhere except for the
+     little 2x2 rotation blocks running down its diagonal, one block per pair. Call it $R_m$, the rotation for
+     position <span class="num">m</span>. RoPE replaces every query <span class="num">q</span> and key
+     <span class="num">k</span> with $R_m q$ and $R_n k$ before attention takes their dot product.</p>
+
+  <div class="mathblock">
+    $$ R_m = \begin{pmatrix}
+       \cos m\theta_0 & -\sin m\theta_0 & 0 & 0 \\
+       \sin m\theta_0 & \cos m\theta_0 & 0 & 0 \\
+       0 & 0 & \cos m\theta_1 & -\sin m\theta_1 \\
+       0 & 0 & \sin m\theta_1 & \cos m\theta_1
+       \end{pmatrix} \;\; \cdots \qquad \theta_i = 10000^{-2i/d} $$
+  </div>
+
+  <p>(the blocks continue down the diagonal, one for each of the <span class="num">d/2</span> pairs). And the
+     property that earns it all, which the warm-up already proved in two dimensions and which stacks cleanly
+     across every pair:</p>
+
+  <div class="mathblock">
+    $$ (R_m q) \cdot (R_n k) \;=\; q^{\top} R_{\,n-m}\, k $$
+  </div>
+
+  <p>The right-hand side has only <span class="num">n - m</span> in it. The absolute positions
+     <span class="num">m</span> and <span class="num">n</span> have vanished, leaving the content vectors and the
+     gap between the tokens. That one equation is the reason rotary embeddings exist.</p>
+</section>
+
+<!-- ========================= 7. WHY IT BEATS ADDING ========================= -->
+<section class="reveal" id="why">
+  <div class="step-no">The payoff</div>
+  <h2>Why rotating beats adding</h2>
+
+  <p class="lead">Rotary embeddings are not just a different flavour of Part 1. They fix three concrete
+     problems at once.</p>
+
+  <ul>
+    <li><b>Relative position is exact, not approximate.</b> The gap <span class="num">n - m</span> is the only
+        positional quantity left in the score, by construction. There is no leftover absolute-position term
+        that has to cancel out roughly, the way there was when we added sinusoids. Here it cancels exactly, in
+        every attention dot product.</li>
+    <li><b>It acts on queries and keys, at every layer.</b> Adding a signal at the input means the positional
+        information has to survive being mixed and reshaped by every layer above it. RoPE turns the queries and
+        keys right where attention uses them, so the relative-position property is renewed at each attention
+        step instead of merely hoped for.</li>
+    <li><b>It never drowns the word.</b> Recall the very first failed idea in Part 1, adding a big position
+        number that swamped the embedding. Rotation cannot do that, because rotation never changes a vector's
+        length. It only turns the vector, so the token's content is preserved intact and only its direction
+        carries the position.</li>
+  </ul>
+
+  <p>There is a fourth, quieter gift. Because far-apart tokens have their fast wheels turned into very
+     different directions, those pairs contribute dot products that scatter around zero and tend to cancel, so
+     RoPE hands attention a gentle built-in preference for nearby tokens that nobody had to design. It is a
+     soft lean, not a hard cutoff, and like the ripples in Part 1 it is not perfectly clean, but it points the
+     right way.</p>
+</section>
+
+<!-- ========================= 8. CONTEXT LENGTH ========================= -->
+<section class="reveal" id="context">
+  <div class="step-no">The context-length link</div>
+  <h2>Stretching the window past what it trained on</h2>
+
+  <p class="lead">This is where rotary embeddings meet the theme of the series: getting from a few thousand
+     tokens to a few million.</p>
+
+  <p>During training a model only ever sees positions up to some length, call it <span class="num">L</span>.
+     That means each wheel only ever turns through the angles it can reach within <span class="num">L</span>
+     steps. Ask the trained model to read a sequence twice as long and the fast wheels swing into angles it has
+     never seen, and it stumbles: the same failure to extrapolate we met at the end of Part 1.</p>
+
+  <p>The simplest repair is beautifully blunt. If the model is comfortable with positions up to
+     <span class="num">L</span> and we want to feed it <span class="num">2L</span> tokens, just <b>pretend
+     every position is half as large</b>: turn by $(m/2)\theta_i$ instead of $m\theta_i$. Now position
+     <span class="num">2L</span> lands on the same angle the model handled happily at <span class="num">L</span>.
+     This is <b>position interpolation</b>: squeeze more tokens into the same range of angles the model already
+     trusts. The cost is that neighbouring tokens now sit closer together in angle, so fine positional detail
+     gets a little blurrier, but the model keeps working far past its training length.</p>
+
+  <p>Slide the stretch factor below. At a factor of <span class="num">1</span> the wheel turns at its normal
+     rate and a long sequence spills past the range the model was trained on. Turn the factor up and every
+     position is scaled down in lockstep, packing the whole sequence back inside the trusted arc.</p>
+
+  <div class="widget" id="w-context">
+    <div class="wtitle">Slowing the turns to fit a longer sequence <span class="tagn">position interpolation</span></div>
+    <p class="wsub">A number line for how far the wheel has turned. The <span class="u-good">green band</span> is
+       the range the model saw in training; anything in the <span class="u-hot">red</span> is a position it never
+       encountered. Each tick is a token. Raise the stretch factor and the ticks pull back into the trusted
+       green, crowding together as they go.</p>
+    <canvas id="cv-context" data-w="740" data-h="240"></canvas>
+    <div class="controls">
+      <div class="ctrl"><label>Stretch factor <b id="cx-s-v">1×</b></label>
+        <input type="range" id="cx-s" min="1" max="8" value="1" step="1"></div>
+      <div class="ctrl"><label>Sequence length <b id="cx-len-v">128</b></label>
+        <input type="range" id="cx-len" min="16" max="256" value="128" step="8"></div>
+    </div>
+    <div class="readouts">
+      <div class="pill good">tokens inside trained range <b id="cx-in">64</b></div>
+      <div class="pill hot">tokens past it <b id="cx-out">64</b></div>
+    </div>
+    <p class="hint">At a big stretch factor the ticks for consecutive positions crowd together. That crowding is
+       the price of interpolation: a loss of fine positional resolution in exchange for far more reach.</p>
+  </div>
+
+  <p>Position interpolation is the plain version. The methods behind today's long-context models refine it:
+     <b>NTK-aware scaling</b> stretches the slow frequencies more than the fast ones, so short-range detail is
+     kept while long-range reach grows, and <b>YaRN</b> tunes this frequency by frequency with a couple of extra
+     tricks. They are all variations on the single move the knob above performs: change how fast the wheels
+     turn so a fixed budget of trusted angles covers many more tokens. That is a large part of how a model born
+     with a <span class="num">512</span> or <span class="num">4096</span> token window ends up reading a whole
+     book.</p>
+</section>
+
+<!-- ========================= 9. CLOSE ========================= -->
+<section class="reveal" id="close">
+  <div class="step-no">Closing</div>
+  <h2>The whole thing, in one breath</h2>
+
+  <p class="lead">Attention cannot see order, so we have to hand it position. Part 1 added a signal; rotary
+     embeddings turn the query and key instead.</p>
+
+  <p>Rotate each token's query and key by its position, using a ladder of frequencies. A dot product sees only
+     the angle between two arrows, so absolute position cancels and the attention score depends only on the gap
+     between tokens: exact relative position, refreshed at every layer, with the word's meaning left untouched
+     because rotation never changes a length. Then, because position is now just an angle turned at a known
+     rate, we can stretch the window simply by turning the wheels a little slower. That is rotary embeddings,
+     and it is most of the reason a modern model can read far more than it was ever trained on.</p>
+
+  <div class="takeaway">Sinusoidal encoding writes position into what a token <em>is</em>. Rotary encoding writes
+     it into which way the token <em>points</em>, and that small change is what carried context windows from a
+     few thousand tokens toward a few million.</div>
+
+  <div class="foot">
+    <p>Part 2 of a series. Next: the attention cost that made long context expensive in the first place. Reach
+       me on <a href="https://github.com/atomnp">GitHub</a> or by
+       <a href="mailto:neupane0403@gmail.com">email</a>, corrections and questions welcome.</p>
+  </div>
+</section>
+
+<div class="post-foot">
+  <div class="card">
+    <img src="../../../assets/linkedin_pp.jpeg" alt="Aayush Neupane" width="52" height="52">
+    <div class="n"><b>Aayush Neupane</b><br><span>CS Researcher &amp; Engineer · MS CS, University of Kansas</span></div>
+    <a class="to-all" href="../../../blog.html">All writing →</a>
+  </div>
+</div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    }
+  });
+</script>
+<script src="rope.js"></script>
+</body>
+</html>
