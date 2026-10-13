@@ -29,7 +29,6 @@
       <a href="#news">News</a>
       <a href="#pubs">Publications</a>
       <a href="#exp">Experience</a>
-      <a href="#teaching">Tutorials</a>
       <a href="blog.html">Writing</a>
       <button class="toggle" aria-label="Toggle color theme" title="Toggle theme">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg>
@@ -53,8 +52,8 @@
 
     <div class="side-label">Interests</div>
     <div class="tags">
-      <span>Software Engineering</span><span>Machine Learning</span><span>Data Engineering</span>
-      <span>NLP</span><span>Programming Languages</span><span>Software Systems</span>
+      <span>Agentic AI</span><span>Large Language Models</span>
+      <span>Machine Learning</span><span>Reinforcement Learning</span>
     </div>
   </aside>
 
@@ -62,8 +61,10 @@
     <section id="about" class="reveal">
       <h2 class="sec">About</h2>
       <div class="prose">
-        <p>I'm a Computer Science graduate student at the <strong>University of Kansas</strong> and a Software Engineer Intern on the AI/ML infrastructure team at <strong>Flyover Capital</strong>. I work where software engineering meets machine learning and data, building systems that retrieve, extract, and reason over messy real-world information.</p>
-        <p>At Flyover Capital I build hybrid semantic retrieval over knowledge graphs (ChromaDB and Neo4j) and LLM-powered data pipelines. Before that, I worked on information extraction from scanned medical documents at <strong>Smart Data Solutions</strong>, and built LLM and retrieval-based systems at <strong>Naamche</strong>. My interests span data engineering, distributed systems, NLP, and applied machine learning, and I like teaching what I learn along the way.</p>
+        <p>I'm a Computer Science graduate student at the <strong>University of Kansas</strong>, where I work as a Graduate Research Assistant on machine learning research.</p>
+        <p>My research is about trusting model translation. Scientific models written in Fortran are being ported to JAX and PyTorch so they can be differentiated and run on GPUs. I work on verifying that a translated model is actually correct: that it matches the original's outputs and that its gradients are correct too, since a port can agree on every forward pass and still differentiate wrongly.</p>
+        <p>Before this, I spent a few years building AI systems in industry: AI agents, MCP servers and internal AI tooling, RAG and hybrid retrieval over knowledge graphs, and fine-tuned LLMs for extracting structured data from messy documents.</p>
+        <p>I'm interested in agentic AI, large language models, machine learning, and reinforcement learning. I write here about things I want to understand properly.</p>
       </div>
     </section>
 
@@ -72,7 +73,7 @@
       <div class="prose">
         <p>I firmly believe Artificial General Intelligence is possible. To those who doubt it: think about how human intelligence came to be. Isn't it the product of evolution? Nature, through randomness, created something capable of thought, reflection, and consciousness.</p>
         <p>Now consider this: if randomness can produce intelligence, could intentionality and design be any less powerful? We are, after all, just clusters of atoms. If nature could generate intelligence from chance, surely we can consciously create it too. The real question is not whether we can create intelligence, but what we choose to do with it.</p>
-        <p>I'm optimistic about a future with AI, and I believe what we choose to do with it will be for the betterment of society. I'm optimistic about the job market, too. Like Jensen Huang, Nvidia's CEO, I don't see AI as simply replacing jobs; it makes people more productive, and that productivity lets companies save and reinvest into new ideas and new companies, creating new opportunities and, over time, a positive impact on society.</p>
+        <p>I'm optimistic about a future with AI, and I believe what we choose to do with it will be for the betterment of society.</p>
       </div>
     </section>
 
@@ -187,30 +188,6 @@
 
 
 
-    <section id="teaching" class="reveal">
-      <h2 class="sec">Tutorials</h2>
-      <p class="teach-intro">Small, animated explainers that build the fundamentals from the ground up. I started them for my younger brother, and I keep making them because I genuinely love it. <span class="ai">Each was built with AI as a hands-on collaborator, from drafting the explanations to generating the interactive visualizations.</span></p>
-      <div class="courses">
-        <a class="course" href="tutorials/python/">
-          <div class="course-top">
-            <h3>Python</h3>
-            <span class="arw"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
-        <a class="course" href="tutorials/math/">
-          <div class="course-top">
-            <h3>Math</h3>
-            <span class="arw"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
-        <a class="course" href="tutorials/physics/">
-          <div class="course-top">
-            <h3>Physics</h3>
-            <span class="arw"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
-      </div>
-    </section>
     <section id="writing" class="reveal">
       <h2 class="sec">Writing</h2>
       <ul class="writing" id="writing-list">
