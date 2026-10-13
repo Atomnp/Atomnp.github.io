@@ -1,5 +1,13 @@
 [
   {
+    "slug": "about-floating-point-numbers",
+    "title": "About floating point numbers",
+    "date": "2026-10-13",
+    "category": "Machine Learning",
+    "summary": "Fixed vs floating point, how IEEE 754 stores numbers, why Python prints 4.52, and what that means for BF16, FP8 and quantization.",
+    "math": true
+  },
+  {
     "slug": "rotary-position-embeddings",
     "title": "About RoPE",
     "date": "2026-07-30",

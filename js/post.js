@@ -43,11 +43,35 @@
         window.renderMathInElement(body, {
           delimiters: [
             { left: '$$', right: '$$', display: true },
-            { left: '$', right: '$', display: false }
+            { left: '$', right: '$', display: false },
+            { left: '\\[', right: '\\]', display: true },
+            { left: '\\(', right: '\\)', display: false }
           ],
           throwOnError: false
         });
       });
+  }
+
+  function escapeHtml(t) {
+    return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  /* Drop YAML front matter, and a leading "# Title" that repeats the page title. */
+  function stripHeader(md, title) {
+    md = md.replace(/^\uFEFF?---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
+    var m = md.match(/^\s*#\s+(.+?)\s*\r?\n/);
+    if (m && m[1].toLowerCase() === title.toLowerCase()) md = md.slice(m[0].length);
+    return md;
+  }
+  /* Hide \( \) and \[ \] math from marked (it would eat the backslashes),
+     skipping fenced and inline code. Restored after parsing. */
+  function protectMath(md, stash) {
+    return md.split(/(```[\s\S]*?```|`[^`\n]*`)/).map(function (part, i) {
+      if (i % 2) return part;
+      return part.replace(/\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)/g, function (m) {
+        stash.push(m);
+        return 'MATHSTASH' + (stash.length - 1) + 'X';
+      });
+    }).join('');
   }
 
   if (!slug) { fail('No post specified.'); return; }
@@ -72,8 +96,13 @@
         .then(function (md) {
           var base = 'posts/' + slug + '/';
 
+          var stash = [];
+          md = protectMath(stripHeader(md, meta.title), stash);
+
           marked.setOptions({ gfm: true, breaks: false });
-          body.innerHTML = marked.parse(md);
+          body.innerHTML = marked.parse(md).replace(/MATHSTASH(\d+)X/g, function (_, i) {
+            return escapeHtml(stash[+i]);
+          });
 
           // resolve relative images/links against the post folder
           body.querySelectorAll('img').forEach(function (img) {
@@ -96,14 +125,10 @@
           }
           syncHljsTheme();
 
-          // reading time
-          var words = body.textContent.trim().split(/\s+/).length;
-          var mins = Math.max(1, Math.round(words / 200));
-          document.getElementById('post-meta').textContent =
-            fmtLong(meta.date) + ' · ' + mins + ' min read';
+          document.getElementById('post-meta').textContent = fmtLong(meta.date);
 
           // math only when needed
-          if (meta.math || /\$\$?[^$]/.test(md)) { return renderMath(); }
+          if (meta.math || stash.length || /\$\$?[^$]/.test(md)) { return renderMath(); }
         });
     })
     .catch(function (e) {
