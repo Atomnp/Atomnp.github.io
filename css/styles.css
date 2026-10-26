@@ -128,7 +128,10 @@ h2.sec::before{content:"";width:6px;height:6px;border-radius:50%;background:var(
 .more{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-family:var(--sans);
   font-size:.82rem;font-weight:600;color:var(--accent-ink);transition:gap .2s}
 .more:hover{gap:10px}
-.more svg{width:15px;height:15px}
+.more svg{width:15px;height:15px;transition:transform .2s}
+button.more{background:none;border:0;padding:0;cursor:pointer}
+button.more[hidden]{display:none}
+button.more[aria-expanded="true"] svg{transform:rotate(180deg)}
 
 /* projects */
 .projs{display:grid;grid-template-columns:1fr 1fr;gap:2px 26px}
