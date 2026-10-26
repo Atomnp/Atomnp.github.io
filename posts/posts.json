@@ -1,5 +1,13 @@
 [
   {
+    "slug": "about-j-lens",
+    "title": "About J-lens and LLM interpretability",
+    "date": "2026-10-25",
+    "category": "Deep Learning",
+    "summary": "Reading what an LLM is \"thinking\" in its middle layers: the logit lens, why it falls short, and the J-lens, which translates a layer with an average Jacobian first. A toy you can check by hand, then Qwen3.5-4B finding hidden countries like Nepal on the way to the answer.",
+    "math": false
+  },
+  {
     "slug": "about-floating-point-numbers",
     "title": "About floating point numbers",
     "date": "2026-10-13",

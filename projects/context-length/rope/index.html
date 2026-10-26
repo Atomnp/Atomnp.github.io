@@ -16,7 +16,7 @@
 <script defer src="../../../vendor/katex/katex.min.js"></script>
 <script defer src="../../../vendor/katex/auto-render.min.js"></script>
 
-<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<script>document.documentElement.setAttribute("data-theme","light");</script>
 <style>
   :root{
     --paper:#F6F7F8; --surface:#FFFFFF; --raise:#FBFBFC; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B;
@@ -30,15 +30,6 @@
     --sans:"Inter","Helvetica Neue","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
     --mono:"SF Mono","JetBrains Mono","Fira Code",ui-monospace,Menlo,Consolas,monospace;
   }
-  @media (prefers-color-scheme:dark){:root{
-    --paper:#0E1116; --surface:#161A21; --raise:#1B202A; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2;
-    --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6;
-    --good:#38C9A0; --warn:#E3B85A; --hot:#E56DB1; --bad:#E4736E; --cool:#63B3E6;
-    --cell-off:#20252F; --cell-edge:#2A303C;
-    --grid:rgba(231,234,240,.10); --halo:#161A21;
-    --code-bg:#171C26; --code-ink:#C4CCE6; --tag:#1B2130;
-    --shadow:0 14px 34px -18px rgba(0,0,0,.7);
-  }}
   :root[data-theme="light"]{
     --paper:#F6F7F8; --surface:#FFFFFF; --raise:#FBFBFC; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B;
     --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E;
@@ -167,9 +158,7 @@
   .btn.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line);}
   .btn.ghost:hover{border-color:var(--accent);color:var(--accent-ink);}
   :root[data-theme="dark"] .btn{color:#0E1116;}
-  @media(prefers-color-scheme:dark){.btn{color:#0E1116;}}
   :root[data-theme="dark"] .btn.ghost{color:var(--ink-2);}
-  @media(prefers-color-scheme:dark){.btn.ghost{color:var(--ink-2);}}
   .btnrow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px;}
   .readouts{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px;}
   .pill{font-family:var(--mono);font-size:.8rem;background:var(--paper);border:1px solid var(--line);
@@ -188,7 +177,6 @@
   .seg button:last-child{border-right:none;}
   .seg button.on{background:var(--accent);color:#fff;}
   :root[data-theme="dark"] .seg button.on{color:#0E1116;}
-  @media(prefers-color-scheme:dark){.seg button.on{color:#0E1116;}}
 
   /* ---------- post foot ---------- */
   .post-foot{margin-top:70px;}
@@ -213,7 +201,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       All writing
     </a>
-    <button class="toggle" id="themeBtn" aria-label="Toggle theme"><svg viewBox="0 0 24 24"></svg></button>
+    <button class="toggle" style="display:none" id="themeBtn" aria-label="Toggle theme"><svg viewBox="0 0 24 24"></svg></button>
   </div>
 </div>
 

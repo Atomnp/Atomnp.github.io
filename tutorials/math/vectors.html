@@ -4,10 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Vectors, The Language of Arrows</title>
-<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<script>document.documentElement.setAttribute("data-theme","light");</script>
 <style>
   :root{ --paper:#F6F7F8; --surface:#FFFFFF; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B; --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E; --va:#33409E; --vb:#C0479A; --res:#C0503A; --teal:#0F9E77; --ang:#C08A2E; --vio:#6A4CC0; --code-bg:#F1F2F6; --code-ink:#2B3350; --grid:rgba(20,23,28,.09); --halo:#FFFFFF; --guide:rgba(20,23,28,.34); --shadow:0 10px 30px -18px rgba(20,23,28,.28); --serif:"Charter","Newsreader","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif; --sans:"Inter","Helvetica Neue","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif; --mono:"SF Mono","JetBrains Mono","Fira Code",ui-monospace,Menlo,Consolas,monospace; }
-  @media (prefers-color-scheme:dark){:root{ --paper:#0E1116; --surface:#161A21; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2; --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6; --va:#8FA0FF; --vb:#E56DB1; --res:#F0876A; --teal:#38C9A0; --ang:#E3B85A; --vio:#B39CF5; --code-bg:#171C26; --code-ink:#C4CCE6; --grid:rgba(231,234,240,.10); --halo:#161A21; --guide:rgba(231,234,240,.30); --shadow:0 14px 34px -18px rgba(0,0,0,.7); }}
   :root[data-theme="light"]{ --paper:#F6F7F8; --surface:#FFFFFF; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B; --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E; --va:#33409E; --vb:#C0479A; --res:#C0503A; --teal:#0F9E77; --ang:#C08A2E; --vio:#6A4CC0; --code-bg:#F1F2F6; --code-ink:#2B3350; --grid:rgba(20,23,28,.09); --halo:#FFFFFF; --guide:rgba(20,23,28,.34); --shadow:0 10px 30px -18px rgba(20,23,28,.28); }
   :root[data-theme="dark"]{ --paper:#0E1116; --surface:#161A21; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2; --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6; --va:#8FA0FF; --vb:#E56DB1; --res:#F0876A; --teal:#38C9A0; --ang:#E3B85A; --vio:#B39CF5; --code-bg:#171C26; --code-ink:#C4CCE6; --grid:rgba(231,234,240,.10); --halo:#161A21; --guide:rgba(231,234,240,.30); --shadow:0 14px 34px -18px rgba(0,0,0,.7); }
   *{box-sizing:border-box}
@@ -103,7 +102,6 @@
   .btn.on{background:var(--res);color:#fff;}
   .btn.ghost{background:var(--surface);color:var(--ink-2);border:1px solid var(--line);}
   :root[data-theme="dark"] .btn:not(.ghost){color:#0E1116;}
-  @media(prefers-color-scheme:dark){.btn:not(.ghost){color:#0E1116;}}
   :root[data-theme="dark"] .btn.ghost{color:var(--ink-2);}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
 
@@ -127,7 +125,7 @@
 <div class="backbar" id="backbar">
   <div class="backbar-in">
     <a class="back" href="/tutorials/math/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Math</a>
-    <button class="toggle" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
+    <button class="toggle" style="display:none" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
   </div>
 </div>
 <div class="wrap">

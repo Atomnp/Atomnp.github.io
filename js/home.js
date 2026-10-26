@@ -17,7 +17,7 @@
   fetch('posts/posts.json')
     .then(function (r) { return r.json(); })
     .then(function (posts) {
-      var latest = posts.slice(0, 5);
+      var latest = posts.slice(0, 3);
       mount.innerHTML = latest.map(function (p) {
         /* a post with "url" ships as its own page instead of Markdown */
         var url = p.url ? p.url : 'post.html?p=' + encodeURIComponent(p.slug);

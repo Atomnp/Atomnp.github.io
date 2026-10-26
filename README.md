@@ -9,9 +9,9 @@ vanilla JS, no framework or build step). Deployed to GitHub Pages.
 index.html          Home (profile, about, news, publications, experience, projects, writing)
 blog.html           All posts, with category filters
 post.html           Renders a single post: post.html?p=<slug>
-css/styles.css      All styles (light + dark themes via CSS variables)
+css/styles.css      All styles (light theme, via CSS variables)
 js/
-  site.js           Theme toggle, nav shadow, scroll reveals (shared)
+  site.js           Nav shadow, scroll reveals (shared)
   home.js           Builds the homepage "Writing" list from posts.json
   blog.js           Builds the blog index + filters from posts.json
   post.js           Loads a post's Markdown and renders it (marked + highlight.js + KaTeX)

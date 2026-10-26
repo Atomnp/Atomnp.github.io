@@ -4,10 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Derivatives, Made Simple, A Visual Tutorial</title>
-<script>(function(){try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<script>document.documentElement.setAttribute("data-theme","light");</script>
 <style>
   :root{ --paper:#F6F7F8; --surface:#FFFFFF; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B; --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E; --curve:#33409E; --tangent:#0F9E77; --secant:#C08A2E; --hill:#C0479A; --good:#0F9E77; --grid:rgba(20,23,28,.09); --halo:#FFFFFF; --guide:rgba(20,23,28,.34); --shadow:0 10px 30px -18px rgba(20,23,28,.28); --serif:"Charter","Newsreader","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif; --sans:"Inter","Helvetica Neue","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif; --mono:"SF Mono","JetBrains Mono","Fira Code",ui-monospace,Menlo,Consolas,monospace; }
-  @media (prefers-color-scheme:dark){:root{ --paper:#0E1116; --surface:#161A21; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2; --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6; --curve:#8FA0FF; --tangent:#38C9A0; --secant:#E3B85A; --hill:#E56DB1; --good:#38C9A0; --grid:rgba(231,234,240,.10); --halo:#161A21; --guide:rgba(231,234,240,.30); --shadow:0 14px 34px -18px rgba(0,0,0,.7); }}
   :root[data-theme="light"]{ --paper:#F6F7F8; --surface:#FFFFFF; --ink:#14171C; --ink-2:#333A44; --ink-soft:#5A616B; --line:#E5E7EB; --line-2:#EEF0F2; --accent:#33409E; --accent-ink:#33409E; --curve:#33409E; --tangent:#0F9E77; --secant:#C08A2E; --hill:#C0479A; --good:#0F9E77; --grid:rgba(20,23,28,.09); --halo:#FFFFFF; --guide:rgba(20,23,28,.34); --shadow:0 10px 30px -18px rgba(20,23,28,.28); }
   :root[data-theme="dark"]{ --paper:#0E1116; --surface:#161A21; --ink:#E7EAF0; --ink-2:#C3C9D2; --ink-soft:#8E96A2; --line:#232833; --line-2:#1C212A; --accent:#93A0F2; --accent-ink:#A6B1F6; --curve:#8FA0FF; --tangent:#38C9A0; --secant:#E3B85A; --hill:#E56DB1; --good:#38C9A0; --grid:rgba(231,234,240,.10); --halo:#161A21; --guide:rgba(231,234,240,.30); --shadow:0 14px 34px -18px rgba(0,0,0,.7); }
   *{box-sizing:border-box}
@@ -71,13 +70,11 @@
   .btn:hover{transform:translateY(-1px);}
   .btn.alt{background:var(--tangent);}
   :root[data-theme="dark"] .btn{color:#0E1116;}
-  @media(prefers-color-scheme:dark){.btn{color:#0E1116;}}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
 
   .machine{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px;text-align:center;margin:10px 0;}
   .machine .box{background:var(--accent);color:#fff;border-radius:12px;padding:18px 6px;font-family:var(--sans);font-weight:640;}
   :root[data-theme="dark"] .machine .box{color:#0E1116;}
-  @media(prefers-color-scheme:dark){.machine .box{color:#0E1116;}}
   .machine .val{font-family:var(--mono);font-size:1.7rem;color:var(--curve);}
   .machine .arrow{font-size:1.5rem;color:var(--ink-soft);}
   @media(max-width:560px){.machine{grid-template-columns:1fr;}.machine .arrow{transform:rotate(90deg);}}
@@ -98,7 +95,7 @@
 <div class="backbar" id="backbar">
   <div class="backbar-in">
     <a class="back" href="/tutorials/math/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Math</a>
-    <button class="toggle" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
+    <button class="toggle" style="display:none" id="themeBtn" aria-label="Toggle theme" title="Toggle theme"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></svg></button>
   </div>
 </div>
 <div class="wrap">
