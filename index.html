@@ -105,7 +105,7 @@
           <div>
             <h3>Graduate Research Assistant</h3>
             <div><span class="org">University of Kansas</span> <span class="loc">· Lawrence, KS</span></div>
-            <p>Applied machine learning research, building deep learning models for large scientific datasets. This work will form the basis of my MS thesis.</p>
+            <p>Research on the correctness of LLM-translated scientific code. LLMs are increasingly used to port Fortran code to JAX and PyTorch, and a translation is usually judged only by whether its outputs match the original. I am working on testing whether it is also correct in its gradients. If translated code is going to be used for machine learning or gradient-based optimization, the gradients matter as much as the outputs, and automatic differentiation differentiates the program, not the underlying math. The rewrites a translation needs to fit JAX's tracing and compilation model, such as fixed iteration counts in place of convergence loops, branches evaluated on both sides, or reduced precision on GPU, can keep outputs intact while silently breaking gradients. This work forms the basis of my MS thesis.</p>
           </div>
         </div>
         <div class="row">
