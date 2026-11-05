@@ -39,7 +39,8 @@ Kathmandu. When I answer this, my head quietly does a few hops: Everest → Nepa
 <em>say</em> "Kathmandu", but my brain also thought about Nepal, countries and capitals along the way.</p>
 <p>Does an LLM do something similar? Does "Nepal" show up somewhere inside the model, even though it never says it?
 Let's try to find out with a recent tool from Anthropic's interpretability research: the <strong>J-lens</strong>
-(Jacobian lens). I use Qwen3.5-4B as the example model throughout, but the ideas apply to any transformer LLM.</p>
+(Jacobian lens), from the paper <a href="https://transformer-circuits.pub/2026/workspace/index.html">Verbalizable Representations Form a Global Workspace in Language Models</a>
+(<a href="https://github.com/anthropics/jacobian-lens">code</a>). I use Qwen3.5-4B as the example model throughout, but the ideas apply to any transformer LLM.</p>
 
 <h2>How an LLM works, in three parts</h2>
 <figure>
@@ -118,7 +119,8 @@ does h point towards this word?"</p>
 <h2>The logit lens: read a middle layer with the LM head</h2>
 <p>Here's a simple idea. The LM head was trained to read the vector after the <em>last</em> block. What if we hand it the
 vector after block 12 instead? The shapes fit (<code>[2560]</code> in either case), so we get a list of top words for
-every layer. This is called the <strong>logit lens</strong>.</p>
+every layer. This is called the <strong>logit lens</strong>
+(<a href="https://www.lesswrong.com/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens">nostalgebraist, 2020</a>).</p>
 <figure>
 <svg viewBox="0 0 760 170" role="img" aria-label="Logit lens">
   <defs><marker id="c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="jt-a"/></marker></defs>
@@ -402,7 +404,7 @@ it's a tool, not magic.</p>
 
 <h2>Questions I had</h2>
 <p><strong>The Jacobian depends on the prompt. How many prompts are enough, and why does it work on topics that weren't
-in them?</strong> It's a real question, and the paper looks at it too. In my own test on a smaller Qwen model, a lens
+in them?</strong> It's a real question, and <a href="https://transformer-circuits.pub/2026/workspace/index.html">the paper</a> looks at it too. In my own test on a smaller Qwen model, a lens
 from <strong>5 documents worked as well as one from 50</strong>, and the matrices barely changed after about 25. The
 reason it generalizes: J mostly captures <em>how the model moves information</em> (how directions get rotated and
 passed between tokens), and that machinery is shared across topics. The fitting text is generic web text with no
@@ -410,7 +412,7 @@ Everest or capitals in it. Two caveats: early layers need more data, and fitting
 lens towards that topic.</p>
 <p><strong>Do I need to compute it myself?</strong> No. J is computed <strong>once per model</strong> and can be reused
 for any prompt. Someone fits it, uploads the file, and anyone can download it. That's what I did: the Qwen3.5-4B lens
-is one 406 MB file (31 matrices of 2560 × 2560) from <code>camilablank/workspace-lenses</code> on Hugging Face. It
+is one 406 MB file (31 matrices of 2560 × 2560) from <a href="https://huggingface.co/camilablank/workspace-lenses"><code>camilablank/workspace-lenses</code></a> on Hugging Face. It
 only works for that exact model.</p>
 <figure>
 <svg viewBox="0 0 760 80" role="img" aria-label="Fit once, share">
@@ -429,3 +431,11 @@ only works for that exact model.</p>
 <p>The logit lens reads middle layers with a dictionary made for the last layer. The J-lens first translates the middle
 layer into the last layer's coordinate system with an average Jacobian, and then reads it. It's cheap, needs no labels, and sometimes catches the model thinking about words it never says, like Nepal
 on the way to Kathmandu.</p>
+
+<h2>References</h2>
+<ul>
+<li><a href="https://transformer-circuits.pub/2026/workspace/index.html">Verbalizable Representations Form a Global Workspace in Language Models</a> (Anthropic, Transformer Circuits, 2026): the J-lens.</li>
+<li><a href="https://github.com/anthropics/jacobian-lens">anthropics/jacobian-lens</a>: reference implementation used to apply the lens.</li>
+<li><a href="https://huggingface.co/camilablank/workspace-lenses">camilablank/workspace-lenses</a>: the pre-fitted Qwen3.5-4B lens used in this post.</li>
+<li><a href="https://www.lesswrong.com/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens">interpreting GPT: the logit lens</a> (nostalgebraist, 2020).</li>
+</ul>
