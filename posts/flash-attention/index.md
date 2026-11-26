@@ -325,13 +325,6 @@ When we have large values in s, calculating \(e^{s}\) becomes a problem: in fp16
 
 But the problem is, if we are doing the calculation block by block, we don't know the global max of the row. The solution is that we use the local max (the max seen so far), and when we discover a new max, we correct the existing N and D by multiplying them with one small factor. This is called **online softmax**, and the [FlashAttention paper](https://arxiv.org/abs/2205.14135) has the details.
 
-## Summary
-
-- Standard attention builds S and P, both \(n \times n\), and moves them to and from HBM. For long prompts that is gigabytes per head, and the GPU spends its time waiting on memory.
-- We don't need P to get O. We can write \(o_i = N / D\), where N and D are sums that can be built one block of keys at a time.
-- Each output row is independent, so blocks of Q rows go to different cores, and each core streams K and V through its SRAM.
-- The result is exactly the same attention output, with far fewer trips to HBM.
-
 ## References
 
 - Tri Dao, Daniel Y. Fu, Stefano Ermon, Atri Rudra, Christopher Ré. [FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness](https://arxiv.org/abs/2205.14135), 2022.
