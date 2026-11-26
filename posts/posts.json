@@ -1,5 +1,13 @@
 [
   {
+    "slug": "flash-attention",
+    "title": "Flash attention",
+    "date": "2026-11-25",
+    "category": "LLM Inference",
+    "summary": "Why standard attention is slow for long prompts, and how flash attention gets the exact same output without ever building the n \u00d7 n score matrix: split the softmax into a running numerator and denominator, and spread the work across GPU cores.",
+    "math": true
+  },
+  {
     "slug": "about-j-lens",
     "title": "About J-lens and LLM interpretability",
     "date": "2026-10-25",
